@@ -148,7 +148,7 @@ void  BaseballState_PlayerControll_Move::Pitcher(BaseballPlayer* b){
 	}
 	//@‰ñ”ðs“®[~]
 	if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number)){
-		b->SetState(new BaseballState_PlayerControll_Evasion(0.65f));
+		b->SetState(new BaseballState_PlayerControll_Evasion(0.45f));
 		return;
 	}
 }
