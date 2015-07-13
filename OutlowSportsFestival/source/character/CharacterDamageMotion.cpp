@@ -21,6 +21,7 @@ CharacterDamageMotion::CharacterDamageMotion(
 CharacterDamageMotion::~CharacterDamageMotion()
 {
 	delete m_pEvent;
+	delete m_pHitEvent;
 }
 
 
