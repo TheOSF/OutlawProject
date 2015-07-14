@@ -17,7 +17,7 @@ class MilderHoming :public GameObjectBase
 {
 private:
 	int homingtime;//　ホーミング時間
-	
+	int num;//　ターゲット番号
 public:
 	BaseballPlayer* pBaseball;
 	Vector3 target;
@@ -28,7 +28,8 @@ public:
 		BallBase::Params	params,			//ボールパラメータ
 		Vector3		        t,				//ボールターゲット
 		DamageBase::Type	damage_type,	//ダメージ判定のタイプ
-		float				damage_val		//ダメージ量
+		float				damage_val,   	//ダメージ量
+		int number							//　ターゲットのナンバー
 		);
 	~MilderHoming();
 

@@ -27,6 +27,8 @@ namespace baseball_player{
 		_mt_CounterPose,
 		_mt_Counter,
 		_mt_Evasion = 5,  // 回避
+		_mt_Damage_Weak,
+
 	};
 
 	enum PositionMode
@@ -42,6 +44,25 @@ protected:
 	bool batterflg;//　(true:バッター,false:投手)
 	int characounter;//　出現キャラ数
 	int outcounter;//　視野角外,死んでる数
+	int num;       //　ターゲットナンバー
+protected:
+	//　視野角用
+	Vector3 vf;
+	Vector3 vt;
+	float cross ;
+	float dot;
+	//　距離関係
+	Vector3 v;
+	float len;
+	float templen;
+	//　pos一時保存用
+	Vector3 temppos;
+	//　targetのpos
+	Vector3 target;
+	//　ホーミング関係
+	D3DXQUATERNION q, invq, qpos;
+	Vector3 v1, v2, axis;
+	BallBase::Params tempparam;
 
 private:
 	BaseballStateMachine*		m_pStateMachine;
@@ -53,6 +74,7 @@ public:
 	~BaseballPlayer();
 
 	CharacterRenderer	m_Renderer;
+	const float m_ModelSize;
 
 
 	void SetState(BaseballState* state);
@@ -62,16 +84,26 @@ public:
 	//　切り替え
 	void Change();
 	//　遠距離関数化
-	BallBase::Params BaseballShot(BaseballPlayer* b, BallBase::Params p);
+	BallBase::Params BaseballShot(BaseballPlayer* b, BallBase::Params p, float speed);
+	//　視野角内計算
+	Vector3 AngleField(Vector3 t, float range);
 	//　遠距離ターゲット選定
 	BallBase::Params TargetDecision( BallBase::Params p, Vector3 t);
+	//　ホーミング計算
+	BallBase::Params Homing(BallBase::Params p, Vector3 t);
+	
+
 public:
 	//　ゲッター
 	bool getBatterFlg(){ return batterflg; }
-
-public:
+	int getCharacounter(){ return characounter; }
+	int getOutcounter(){ return outcounter; }
+	int getNum(){ return num; }
+public:	   
 	//　セッター
 	void setAcc(float a){ acc = a; }//　加速度
+	void setCharacounter(int num){ characounter = num; }
+	void setOutcounter(int num){ outcounter = num; }
 public:
 
 };
