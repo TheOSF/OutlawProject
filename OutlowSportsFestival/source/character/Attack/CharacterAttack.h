@@ -59,7 +59,11 @@ public:
 private:
 	CharacterBase*	m_pCharacter;
 	AttackEvent*	m_pAttackEvent;
+<<<<<<< HEAD
 	DamageShpere	m_Damage;
+=======
+
+>>>>>>> 8b43542fee29f77e3648977d2dee6f5757ca1c54
 	Params			m_Params;
 	int             m_timer;
 	Vector2			m_StickValue;
