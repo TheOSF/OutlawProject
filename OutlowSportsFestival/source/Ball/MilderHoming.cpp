@@ -78,20 +78,11 @@ bool MilderHoming::GetBallMesh(
 
 bool MilderHoming::Update()
 {
-	//　map代入
-	const CharacterManager::CharacterMap& chr_map = DefCharacterMgr.GetCharacterMap();
-	//　ターゲットの座標再取得
-	for (auto it = chr_map.begin(); it != chr_map.end(); ++it){
-		if (num == it->first->m_PlayerInfo.number){
-			target = it->first->m_Params.pos;
-			break;
-		}
-	}
 
 	homingtime++;
 	//　ホーミング時間
 	if (homingtime < 60){
-		m_BallBase.m_Params = pBaseball->Homing(m_BallBase.m_Params, target);
+		m_BallBase.m_Params = pBaseball->TargetDecision(m_BallBase.m_Params, target);
 	}
 
 	m_BallBase.m_Params.pos += m_BallBase.m_Params.move;

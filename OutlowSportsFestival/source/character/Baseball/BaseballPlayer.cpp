@@ -76,7 +76,21 @@ BallBase::Params BaseballPlayer::BaseballShot(BaseballPlayer* b, BallBase::Param
 }
 
 //　視野角内計算
-Vector3 BaseballPlayer::AngleField(Vector3 t,float range){
+Vector3 BaseballPlayer::AngleField( Vector3 t, float range){
+
+	//　視野角用
+	vf = Vector3(0, 0, 0);
+	vt = Vector3(0, 0, 0);
+	cross = 0;
+	dot = 0;
+
+	//　距離関係
+	len = 2000.0f;
+	templen = 0.0f;
+
+	//　pos一時保存用
+	temppos = Vector3(0, 0, 0);
+
 	//　map代入
 	const CharacterManager::CharacterMap& chr_map = DefCharacterMgr.GetCharacterMap();
 
@@ -120,11 +134,13 @@ Vector3 BaseballPlayer::AngleField(Vector3 t,float range){
 		}
 	}
 
+
 	return temppos;
 }
 
 //　ホーミング計算
 BallBase::Params BaseballPlayer::Homing(BallBase::Params p, Vector3 t){
+
 	BallBase::Params params = p;
 	//　ホーミング計算
 	v1 = (t - params.pos);
@@ -162,6 +178,7 @@ BallBase::Params BaseballPlayer::Homing(BallBase::Params p, Vector3 t){
 		acc += 0.04f;
 		params.move = m*acc;
 	}
+
 	//　最大加速度
 	if (acc >= MaxAcceleration){
 		acc = MaxAcceleration;
@@ -174,7 +191,7 @@ BallBase::Params BaseballPlayer::Homing(BallBase::Params p, Vector3 t){
 BallBase::Params BaseballPlayer::TargetDecision(BallBase::Params p, Vector3 t){
 
 	//　視野角内計算
-	target=AngleField(t,0.707f);
+	target = AngleField(t, 0.707f);
 
 	//　全員視野角外,死んでいる
 	if (characounter == outcounter){
@@ -183,9 +200,9 @@ BallBase::Params BaseballPlayer::TargetDecision(BallBase::Params p, Vector3 t){
 		//target=Vector3(0, 0, 0);
 		return p;
 	}
-
+	
 	//　ホーミング計算
-	tempparam=Homing(p,target);
+	tempparam = Homing(p, target);
 
 	//　カウンターリセット
 	characounter = 0;

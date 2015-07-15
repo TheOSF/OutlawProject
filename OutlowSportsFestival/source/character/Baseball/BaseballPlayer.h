@@ -86,7 +86,7 @@ public:
 	//　遠距離関数化
 	BallBase::Params BaseballShot(BaseballPlayer* b, BallBase::Params p, float speed);
 	//　視野角内計算
-	Vector3 AngleField(Vector3 t, float range);
+	Vector3 AngleField( Vector3 t, float range);
 	//　遠距離ターゲット選定
 	BallBase::Params TargetDecision( BallBase::Params p, Vector3 t);
 	//　ホーミング計算
