@@ -155,5 +155,5 @@ void VolleyBallState_PlayerControll_Attack::Enter(VolleyBallPlayer* v)
 
 	timer = 0;
 
-	m_pAttackClass = new CharacterNearAttack(v, p, new VolleyBallAttackEvent(v));
+	m_pAttackClass = new CharacterNearAttack(v, p, new VolleyBallAttackEvent(v) ,DamageBase::Type::_WeekDamage, 1);
 }
