@@ -1,5 +1,6 @@
 #include "BaseballPlayerState.h"
 #include "Baseball_HitEvent.h"
+#include "BaseballState_PlayerControll_ShotAttack_B.h"
 #include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
 #include "../CharacterManager.h"
@@ -22,7 +23,7 @@ BaseballState_PlayerControll_ShotAttack_B::BaseballState_PlayerControll_ShotAtta
 
 //　ステート開始
 void BaseballState_PlayerControll_ShotAttack_B::Enter(BaseballPlayer* b){
-	// 回避クラス作成
+	// 遠距離(バッター)クラス作成
 	m_pShotAttackClass_B = this->CreateShotAttackClass_B(b);
 }
 
@@ -73,10 +74,22 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_B::CreateShotAttack
 		{
 			//ボール発射
 			BallBase::Params param;
+			
+			////　向き補正
+			//Vector3 Target(0, 0, 0);
+			//Target = m_pBaseball->AngleField(Target,0.866f);
+
+			////　一人でも視野角内で生きていたら
+			//if (m_pBaseball->getOutcounter() != m_pBaseball->getCharacounter()){
+			//	chr_func::AngleControll(m_pBaseball, Target);
+			//}
+			////　カウンターリセット
+			//m_pBaseball->setCharacounter(0);
+			//m_pBaseball->setOutcounter(0);
 
 			//　遠距離攻撃(param計算)
-			param = m_pBaseball->BaseballShot(m_pBaseball, param);
-
+			param = m_pBaseball->BaseballShot(m_pBaseball, param,0.8f);
+			
 			//生成
 			new UsualBall(param, DamageBase::Type::_WeekDamage, 1);
 		}

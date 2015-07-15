@@ -1,6 +1,7 @@
 
 #include "BaseballPlayerState.h"
 #include "Baseball_HitEvent.h"
+#include "BaseballState_PlayerControll_ShotAttack_P.h"
 #include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
 #include "../CharacterManager.h"
@@ -59,7 +60,7 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 		Vector3 target;
 	public:
 		//　コンストラクタ
-		ShotAttackEvent_P(BaseballPlayer* pBaseball) :
+		ShotAttackEvent_P(BaseballPlayer* pBaseball) :target(0,0,0),
 			m_pBaseball(pBaseball){}
 		//　更新
 		void Update()override{
@@ -77,12 +78,12 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 		void Shot()
 		{
 			//　遠距離攻撃(param計算)
-			param = m_pBaseball->BaseballShot(m_pBaseball, param);
+			param = m_pBaseball->BaseballShot(m_pBaseball, param,0.45f);
 			//　ターゲット決定
 			param = m_pBaseball->TargetDecision(param, target);
 
 			//生成
-			new MilderHoming(m_pBaseball, param, target, DamageBase::Type::_WeekDamage, 1);
+			new MilderHoming(m_pBaseball, param, target, DamageBase::Type::_WeekDamage, 1,m_pBaseball->getNum());
 		}
 
 		//　遠距離攻撃開始
