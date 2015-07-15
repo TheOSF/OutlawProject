@@ -12,7 +12,8 @@
 
 //　コンストラクタ
 BaseballPlayer::BaseballPlayer(const CharacterBase::PlayerInfo& info) :
-CharacterBase(info), batterflg(true), acc(0.2f), outcounter(0), characounter(0),
+CharacterBase(info), batterflg(true), acc(0.2f), outcounter(0), characounter(0), m_ModelSize(0.05f),
+vf(0, 0, 0), vt(0, 0, 0), cross(0), dot(0), v(0, 0, 0), len(2000.0f), templen(0.0f), temppos(0, 0, 0), num(0),
 m_Renderer(new  BlendAnimationMesh("DATA\\CHR\\BaseBall\\player_B.iem"))
 {
 	m_pStateMachine = new BaseballStateMachine(this);
@@ -57,11 +58,11 @@ void BaseballPlayer::Change(){
 }
 
 //　遠距離関数化
-BallBase::Params BaseballPlayer::BaseballShot(BaseballPlayer* b, BallBase::Params p){
+BallBase::Params BaseballPlayer::BaseballShot(BaseballPlayer* b, BallBase::Params p, float speed){
 	//移動は前向き
 	chr_func::GetFront(b, &p.move);
 	//スピードは適当
-	p.move *= 0.45f;
+	p.move *= speed;
 	//キャラの場所に(最終的に腕の位置に？)
 	p.pos = b->m_Params.pos;
 	//高さをキャラ共通ボール発射のYに
@@ -74,29 +75,24 @@ BallBase::Params BaseballPlayer::BaseballShot(BaseballPlayer* b, BallBase::Param
 	return p;
 }
 
-//　遠距離ターゲット選定
-BallBase::Params BaseballPlayer::TargetDecision(BallBase::Params p, Vector3 t){
+//　視野角内計算
+Vector3 BaseballPlayer::AngleField( Vector3 t, float range){
+
 	//　視野角用
-	Vector3 vf(0, 0, 0);
-	Vector3 vt(0, 0, 0);
-	float cross = 0;
-	float dot = 0;
+	vf = Vector3(0, 0, 0);
+	vt = Vector3(0, 0, 0);
+	cross = 0;
+	dot = 0;
+
+	//　距離関係
+	len = 2000.0f;
+	templen = 0.0f;
+
+	//　pos一時保存用
+	temppos = Vector3(0, 0, 0);
 
 	//　map代入
 	const CharacterManager::CharacterMap& chr_map = DefCharacterMgr.GetCharacterMap();
-
-	//　距離関係
-	Vector3 v(0, 0, 0);
-	float len = 2000.0f;
-	float templen = 0.0f;
-
-	//　pos一時保存用
-	Vector3 temppos(0, 0, 0);
-
-	//　ホーミング関係
-	D3DXQUATERNION q, invq, qpos;
-	Vector3 v1, v2, axis;
-
 
 	//キャラクタ座標を算出
 	for (auto it = chr_map.begin(); it != chr_map.end(); ++it){
@@ -120,7 +116,7 @@ BallBase::Params BaseballPlayer::TargetDecision(BallBase::Params p, Vector3 t){
 		dot /= vt.Length();
 
 		//　視野角外ならcontinue
-		if (dot<0.707){
+		if (dot<range){
 			outcounter++;
 			continue;
 		}
@@ -131,20 +127,24 @@ BallBase::Params BaseballPlayer::TargetDecision(BallBase::Params p, Vector3 t){
 		//　一番近い距離・位置算出
 		if (len > templen){
 			len = templen;
+			//　pos保存
 			temppos = it->first->m_Params.pos;
+			//　number保存
+			num = it->first->m_PlayerInfo.number;
 		}
 	}
 
-	//　全員視野角外,死んでいる
-	if (characounter == outcounter){
-		characounter = 0;
-		outcounter = 0;
-		return p;
-	}
 
+	return temppos;
+}
+
+//　ホーミング計算
+BallBase::Params BaseballPlayer::Homing(BallBase::Params p, Vector3 t){
+
+	BallBase::Params params = p;
 	//　ホーミング計算
-	v1 = (temppos - p.pos);
-	v2 = p.move;
+	v1 = (t - params.pos);
+	v2 = params.move;
 
 	Vector3Cross(axis, v2, v1);
 	axis.Normalize();
@@ -176,16 +176,37 @@ BallBase::Params BaseballPlayer::TargetDecision(BallBase::Params p, Vector3 t){
 	//　一定以上でさらに加速&ホーミング開始
 	else{
 		acc += 0.04f;
-		p.move = m*acc;
+		params.move = m*acc;
 	}
+
 	//　最大加速度
 	if (acc >= MaxAcceleration){
 		acc = MaxAcceleration;
 	}
 
+	return params;
+}
+
+//　遠距離ターゲット選定
+BallBase::Params BaseballPlayer::TargetDecision(BallBase::Params p, Vector3 t){
+
+	//　視野角内計算
+	target = AngleField(t, 0.707f);
+
+	//　全員視野角外,死んでいる
+	if (characounter == outcounter){
+		characounter = 0;
+		outcounter = 0;
+		//target=Vector3(0, 0, 0);
+		return p;
+	}
+	
+	//　ホーミング計算
+	tempparam = Homing(p, target);
+
 	//　カウンターリセット
 	characounter = 0;
 	outcounter = 0;
 
-	return p;
+	return tempparam;
 }

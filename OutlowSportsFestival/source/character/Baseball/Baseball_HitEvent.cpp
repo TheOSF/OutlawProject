@@ -21,7 +21,7 @@ bool BaseballHitEvent::Hit(DamageBase* pDmg)
 	{
 	case DamageBase::Type::_WeekDamage:
 		//ãUŒ‚
-		//m_pBaseball->SetState(new BaseballState_DamageMotion_Weak(m_pBaseball, pDmg->vec));
+		m_pBaseball->SetState(new BaseballState_DamageMotion_Weak(m_pBaseball, pDmg->vec));
 		return true;
 
 		/*

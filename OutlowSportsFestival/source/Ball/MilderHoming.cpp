@@ -2,13 +2,15 @@
 #include "../character/CharacterBase.h"
 #include "../Render/MeshRenderer.h"
 
-
+#include "character/CharacterFunction.h"
+#include "character/CharacterManager.h"
 MilderHoming::MilderHoming(
 	BaseballPlayer*		b,
 	BallBase::Params	params,			//ボールパラメータ
 	Vector3		        t,				//ボールターゲット
 	DamageBase::Type	damage_type,	//ダメージ判定のタイプ
-	float				damage_val		//ダメージ量
+	float				damage_val,  	//ダメージ量
+	int					number			//ターゲットのナンバー
 	) :
 	m_FreezeCount(0),
 	m_FreezeDeleteFrame(60),
@@ -22,6 +24,7 @@ MilderHoming::MilderHoming(
 	m_BallBase.m_Params = params;
 	//ターゲット代入
 	target = t;
+	num = number;
 	//　加速度初期化
 	pBaseball->setAcc(0.2f);
 	//ダメージ判定のパラメータを代入
@@ -75,10 +78,13 @@ bool MilderHoming::GetBallMesh(
 
 bool MilderHoming::Update()
 {
+
 	homingtime++;
+	//　ホーミング時間
 	if (homingtime < 60){
 		m_BallBase.m_Params = pBaseball->TargetDecision(m_BallBase.m_Params, target);
 	}
+
 	m_BallBase.m_Params.pos += m_BallBase.m_Params.move;
 
 	if (isOutofField())

@@ -1,4 +1,8 @@
 #include "BaseballPlayerState.h"
+#include "BaseballState_PlayerControll_Evasion.h"
+#include "BaseballState_PlayerControll_ShotAttack_B.h"
+#include "BaseballState_PlayerControll_ShotAttack_P.h"
+
 #include "Baseball_HitEvent.h"
 #include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
@@ -13,6 +17,33 @@
 //***************************************
 //　移動
 //***************************************
+
+BaseballState* BaseballState_PlayerControll_Move::GetPlayerControllMove(
+	BaseballPlayer* pt)
+{
+	switch (pt->m_PlayerInfo.player_type)
+	{
+	case PlayerType::_Player:
+		return new BaseballState_PlayerControll_Move();
+
+	case PlayerType::_Computer:
+		switch (pt->m_PlayerInfo.strong_type)
+		{
+		case StrongType::_Weak:
+			//return new 弱い通常移動
+		case StrongType::_Usual:
+			//return new 弱い通常移動
+		case StrongType::_Strong:
+			//return new 弱い通常移動
+		default:break;
+		}
+	default:break;
+	}
+
+	assert("通常ステートが作成できないキャラクタタイプです TennisState_PlayerControll_Move::GetPlayerControllMove" && 0);
+	return nullptr;
+}
+
 
 //　ステート開始
 void BaseballState_PlayerControll_Move::Enter(BaseballPlayer* b)
@@ -42,10 +73,10 @@ void BaseballState_PlayerControll_Move::Enter(BaseballPlayer* b)
 	//　ダメージイベントクラスの作成
 	class BaseballDamageHitEvent :public DamageManager::HitEventBase
 	{
-		BaseballPlayer* m_pTennis;
+		BaseballPlayer* m_pBaseball;
 	public:
-		BaseballDamageHitEvent(BaseballPlayer* pTennis) :
-			m_pTennis(pTennis){}
+		BaseballDamageHitEvent(BaseballPlayer* pBaseball) :
+			m_pBaseball(pBaseball){}
 
 		//当たった時にそのダメージの種類から、それぞれのステートに派生させる
 		bool Hit(DamageBase* pDmg)
@@ -85,7 +116,7 @@ void BaseballState_PlayerControll_Move::Enter(BaseballPlayer* b)
 		b,
 		p,
 		new BaseballMoveEvent(b),
-		new BaseballDamageHitEvent(b)
+		new BaseballHitEvent(b)
 		);
 }
 
@@ -103,7 +134,7 @@ void BaseballState_PlayerControll_Move::Execute(BaseballPlayer* b){
 	m_pMoveClass->Update();
 
 	//　モデルのワールド変換行列を更新
-	chr_func::CreateTransMatrix(b, 0.05f, &b->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
 
 	//　切り替え
 
@@ -148,7 +179,7 @@ void  BaseballState_PlayerControll_Move::Pitcher(BaseballPlayer* b){
 	}
 	//　回避行動[×]
 	if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number)){
-		b->SetState(new BaseballState_PlayerControll_Evasion(0.65f));
+		b->SetState(new BaseballState_PlayerControll_Evasion(0.45f));
 		return;
 	}
 }

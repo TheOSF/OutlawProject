@@ -1,6 +1,6 @@
 #include "BaseballPlayerState_DamageMotionWeak.h"
-//#include "BaseballPlayerState_UsualMove.h"
 #include "Baseball_HitEvent.h"
+#include "BaseballPlayerState.h"
 #include "../CharacterFunction.h"
 
 BaseballState_DamageMotion_Weak::BaseballState_DamageMotion_Weak(
@@ -25,19 +25,19 @@ void BaseballState_DamageMotion_Weak::Enter(BaseballPlayer* t)
 		{
 			//モデルの更新のみ
 			m_pBaseball->m_Renderer.Update(speed);
-			//chr_func::CreateTransMatrix(m_pBaseball, m_pBaseball->m_ModelSize, &m_pBaseball->m_Renderer.m_TransMatrix);
+			chr_func::CreateTransMatrix(m_pBaseball, m_pBaseball->m_ModelSize, &m_pBaseball->m_Renderer.m_TransMatrix);
 		}
 		void Start()
 		{
 			//ひるみモーションをセット
-			//m_pBaseball->m_Renderer.SetMotion(BaseballPlayer::_mt_Damage_Weak);
+			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mt_Damage_Weak);
 		}
 		void End()
 		{
 			//通常ステートをセット
-		//	m_pBaseball->SetState(
-		//		BaseballState_PlayerControll_Move::GetPlayerControllMove(m_pBaseball)
-		//		);
+			m_pBaseball->SetState(
+				BaseballState_PlayerControll_Move::GetPlayerControllMove(m_pBaseball)
+				);
 		}
 	private:
 		BaseballPlayer*  m_pBaseball;

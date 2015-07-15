@@ -1,13 +1,12 @@
 
 #include "BaseballPlayerState.h"
+#include "BaseballState_PlayerControll_Evasion.h"
 #include "Baseball_HitEvent.h"
 #include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
 #include "../CharacterManager.h"
 #include "../CharacterEvasionClass.h"
 
-#include "../../Ball/UsualBall.h"
-#include "../../Ball/MilderHoming.h"
 #include "../../Damage/Damage.h"
 #include "../CharacterCounterClass.h"
 
