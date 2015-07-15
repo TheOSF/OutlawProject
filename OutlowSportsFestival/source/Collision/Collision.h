@@ -30,7 +30,8 @@ public:
 		) = 0;
 	
 	//当たったときの処理
-	virtual void Hit(			
+	virtual void Hit(		
+        RayType     hit_Raytype,
 		CrVector3	hit_pos,
 		int			hit_material
 		) = 0;
@@ -49,7 +50,7 @@ public:
 	static void Release();
 
 	//レイピック
-	bool RayPick(
+    CollisionBase* RayPick(
 		LPVECTOR3	pOut,		//レイが当たった場合その場所を格納する
 		LPVECTOR3	pPos,		//レイを打ち始める場所
 		LPVECTOR3	pVec,		//レイを打つ方向
@@ -64,6 +65,9 @@ private:
 
 	static CollisionManager*	m_pInstance;
 	CollisionMap				m_CollisionMap;
+
+	CollisionManager();
+	~CollisionManager();
 
 	bool Add(CollisionBase* pIn);
 	bool Erace(CollisionBase* pIn);

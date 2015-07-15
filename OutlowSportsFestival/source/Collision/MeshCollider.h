@@ -14,6 +14,7 @@ public:
 	{
 	public:
 		virtual void Hit(
+            RayType     hit_Raytype,
 			CrVector3	hit_pos,
 			int			hit_material) = 0;
 	};
@@ -22,6 +23,7 @@ public:
 		LPIEXMESH		pMesh,		//デストラクタでdeleteしない
 		HitEvent*		pHitEvent	//デストラクタでdeleteする
 		);
+
 	~MeshCollider();
 
 	bool RayPick(
@@ -33,13 +35,22 @@ public:
 		RayType		type		//レイのタイプ(処理を分ける可能性があるため)
 		);
 
+    //当たった時の処理関数を呼び出す
 	void Hit(
+        RayType     hit_Raytype,
 		CrVector3	hit_pos,
 		int			hit_material
 		);
+
+    //ワールド変換行列をセットする
+    void SetWorldMatrix(const Matrix& mat);
+    
 private:
 	LPIEXMESH		m_pMesh;
 	HitEvent*		m_pHitEvent;
+    Matrix          m_TransMatrix;
+    Matrix          m_TransInvMatrix;
+    bool            m_ChangeMatrix;
 };
 
 #endif

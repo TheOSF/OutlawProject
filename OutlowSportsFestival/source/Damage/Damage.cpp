@@ -1,5 +1,6 @@
 #include "Damage.h"
-
+#include "../debug/DebugDraw.h"
+#include "../character/CharacterBase.h"
 
 //ダメージクラス
 DamageBase::DamageBase() :
@@ -28,11 +29,31 @@ m_Enable(true)
 //ダメージクラス(球)
 bool DamageShpere::HitCheckSphere(const ShpereParam* sp)
 {
+	if (!m_Enable)
+	{
+		return false;
+	}
 	const float L = Vector3Length(sp->pos - this->m_Param.pos);
 
 	return L < (sp->size + this->m_Param.size);
 }
 
+void DamageShpere::DebugDraw()
+{
+    COLORf color(0.4f, 1, 1, 1);
+
+    if (pParent)
+    {
+        color.SetColor(CharacterBase::GetPlayerColor(pParent->m_PlayerInfo.number));
+        color.a = 0.4f;
+    }
+
+    new DebugDrawSphere(
+        m_Param.pos,
+        m_Param.size,
+        color
+        );
+}
 
 //*************************************************************
 //		ダメージ判定マネージャ
@@ -78,6 +99,17 @@ void DamageManager::HitCheckSphere(
 	}
 }
 
+//あたり判定をデバッグ描画
+void DamageManager::DebugDraw()
+{
+    for (auto it = m_DamageBaseMap.begin();
+         it != m_DamageBaseMap.end();
+         ++it
+         )
+    {
+        it->first->DebugDraw();
+    }
+}
 
 DamageManager::DamageManager()
 {

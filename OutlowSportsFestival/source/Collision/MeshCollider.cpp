@@ -1,13 +1,15 @@
 #include "MeshCollider.h"
 
 MeshCollider::MeshCollider(
-	LPIEXMESH		pMesh,
-	HitEvent*		pHitEvent
-	):
-	m_pMesh(pMesh),
-	m_pHitEvent(pHitEvent)
+    LPIEXMESH		pMesh,
+    HitEvent*		pHitEvent
+    ) :
+    m_pMesh(pMesh),
+    m_pHitEvent(pHitEvent),
+    m_ChangeMatrix(false)
 {
-
+    D3DXMatrixIdentity(&m_TransMatrix);
+    D3DXMatrixIdentity(&m_TransInvMatrix);
 }
 
 MeshCollider::~MeshCollider()
@@ -24,20 +26,40 @@ bool MeshCollider::RayPick(
 	RayType		type		//レイのタイプ(処理を分ける可能性があるため)
 	)
 {
-	*pMaterial = 0;
+    //ワールド変換行列が変更されていた場合、逆行列を更新する
+    if (m_ChangeMatrix)
+    {
+        m_ChangeMatrix = false;
+        D3DXMatrixInverse(&m_TransInvMatrix, 0, &m_TransMatrix);
+    }
 
+	*pMaterial = 0;
+    
 	return m_pMesh->RayPickPlus(
 		pOut,
 		pPos,
 		pVec,
-		pDist
+		pDist,
+        m_TransMatrix,
+        m_TransInvMatrix
 		) >= 0;
 }
 
 void MeshCollider::Hit(
+    RayType     hit_Raytype,
 	CrVector3	hit_pos,
 	int			hit_material
 	)
 {
-	m_pHitEvent->Hit(hit_pos, hit_material);
+    if (m_pHitEvent)
+    {
+        m_pHitEvent->Hit(hit_Raytype, hit_pos, hit_material);
+    }
+    
+}
+
+void MeshCollider::SetWorldMatrix(const Matrix& mat)
+{
+    m_TransMatrix = mat;
+    m_ChangeMatrix = true;  //行列変更フラグをtrueに
 }

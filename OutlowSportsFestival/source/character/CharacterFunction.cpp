@@ -119,14 +119,10 @@ void chr_func::CreateTransMatrix(CharacterBase* p, float Scale, Matrix* pOutMatr
 
 	*pOutMatrix *= m;
 
-	D3DXMatrixTranslation(
-		&m,
-		p->m_Params.pos.x,
-		p->m_Params.pos.y,
-		p->m_Params.pos.z
-		);
+    pOutMatrix->_41 = p->m_Params.pos.x;
+    pOutMatrix->_42 = p->m_Params.pos.y;
+    pOutMatrix->_43 = p->m_Params.pos.z;
 
-	*pOutMatrix *= m;
 }
 
 //前方向ベクトルを得る
@@ -156,4 +152,28 @@ void chr_func::DamageCheck(
 	sp.size = pCharacter->m_Params.hitScale;
 
 	DefDamageMgr.HitCheckSphere(sp, *pHitEvent);
+}
+
+//地面判定をとる(戻り値：地面についているかどうか)
+bool chr_func::isTouchGround(CharacterBase* p)
+{
+    return p->m_Params.pos.y <= CharacterBase::m_CommonParams.GroundY;
+}
+
+
+//Y軸方向の移動、速度を更新する
+void chr_func::UpdateMoveY(CharacterBase* p)
+{
+    p->m_Params.move.y += CharacterBase::m_CommonParams.Glavity;
+}
+
+
+//Y軸方向の地面判定を行う
+void chr_func::CheckGround(CharacterBase* p)
+{
+    if (isTouchGround(p))
+    {
+        p->m_Params.pos.y = CharacterBase::m_CommonParams.GroundY;
+        p->m_Params.move.y = 0;
+    }
 }

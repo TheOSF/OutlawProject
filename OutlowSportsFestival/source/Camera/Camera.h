@@ -36,6 +36,9 @@ public:
 	//プロジェクション空間座標をワールド座標に変換する
 	void ProjectionToWorld(Vector3* pOut, CrVector3 In);
 
+    //ビュー空間上でのZ座標を得る
+    float GetCameraZ(CrVector3 in);
+
 	//カメラの各方向ベクトルを得る
 	CrVector3 GetRight()const;
 	CrVector3 GetUp()const;

@@ -77,6 +77,12 @@ void Camera::ProjectionToWorld(Vector3* pOut, CrVector3 In)
 	*pOut = Vector3MulMatrix(In, m_VP_inv);
 }
 
+//ƒrƒ…[‹óŠÔã‚Å‚ÌZÀ•W‚ğ“¾‚é
+float Camera::GetCameraZ(CrVector3 in)
+{
+    return in.x*matView._13 + in.y*matView._23 + in.z*matView._33 + matView._43;
+}
+
 CrVector3 Camera::GetRight()const
 {
 	return m_Right;

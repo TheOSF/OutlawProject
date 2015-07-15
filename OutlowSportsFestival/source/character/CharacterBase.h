@@ -3,7 +3,6 @@
 
 #include "../GameSystem/GameObject.h"
 #include "../GameSystem/GameSystem.h"
-
 #include "iextreme.h"
 
 //***************************************************
@@ -36,16 +35,23 @@ public:
 		float				SP;			//０～１００
 	};
 
-	const PlayerInfo	m_PlayerInfo;
-	Params				m_Params;
+    //キャラクタ共通パラメータ
+    struct CommonParams
+    {
+        float  GroundY; //地面の高さ    
+        float  Glavity; //重力加速度
+    };
 
-	inline const Params& Getparam()
-		const{
-		return m_Params;
-	}
+    static const CommonParams m_CommonParams;
 
+	const PlayerInfo	m_PlayerInfo; //プレイヤー情報にする構造体
+	Params				m_Params;     //キャラクタ基本パラメーター
+
+   
 	CharacterBase(const PlayerInfo& info);
 	virtual ~CharacterBase();
+
+    static COLOR GetPlayerColor(PlayerNum::Value number);
 
 	virtual bool Update() = 0;	//この関数がfalseを返すとdeleteされる
 	virtual bool Msg(MsgType mt) = 0;	//受信できたメッセージはtrueを

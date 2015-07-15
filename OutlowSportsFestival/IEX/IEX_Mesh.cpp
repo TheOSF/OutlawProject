@@ -497,6 +497,30 @@ int iexMesh::RayPickPlus(Vector3* out, Vector3* pos, Vector3* vec, float *dist)
 	return ret;
 }
 
+int iexMesh::RayPickPlus(
+    Vector3* out, Vector3* pos, Vector3* vec, float *dist, const Matrix& TransMat, const Matrix& TransInvMat)
+{
+    //戻り値
+    int ret;
+
+    //レイピックの引数をワールド変換の逆行列をかけてローカルに変換
+    MulVec3MatCoord(*pos, *pos, TransInvMat);
+    MulVec3Mat(*vec, *vec, TransInvMat);
+
+    //一応正規化？
+    vec->Normalize();
+
+    //レイピックを行う
+    ret = RayPick(out, pos, vec, dist);
+
+    //レイピックの戻り値(?)をワールド変換をかけてローカルに変換
+    MulVec3MatCoord(*out, *out, TransMat);
+    MulVec3Mat(*vec, *vec, TransMat);
+
+    //返す
+    return ret;
+}
+
 
 //**************************************************************************************************
 //

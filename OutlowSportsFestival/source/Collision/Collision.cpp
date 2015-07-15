@@ -22,6 +22,16 @@ CollisionBase::~CollisionBase()
 
 CollisionManager* CollisionManager::m_pInstance = nullptr;
 
+CollisionManager::CollisionManager()
+{
+
+}
+
+CollisionManager::~CollisionManager()
+{
+
+}
+
 CollisionManager& CollisionManager::GetInstance()
 {
 	if (m_pInstance == nullptr)
@@ -39,7 +49,7 @@ void CollisionManager::Release()
 }
 
 //レイピック
-bool CollisionManager::RayPick(
+CollisionBase* CollisionManager::RayPick(
 	LPVECTOR3	pOut,		//レイが当たった場合その場所を格納する
 	LPVECTOR3	pPos,		//レイを打ち始める場所
 	LPVECTOR3	pVec,		//レイを打つ方向
@@ -48,7 +58,7 @@ bool CollisionManager::RayPick(
 	RayType		type		//レイのタイプ(処理を分ける可能性があるため)
 	)
 {
-	bool ret = false;
+    CollisionBase* ret = nullptr;
 
 	const Vector3 fpos(*pPos), fvec(*pVec);
 	const float fdist(1000000);	//スケール変換を無視したい
@@ -89,7 +99,7 @@ bool CollisionManager::RayPick(
 				*pDist = mostnear;
 				*pMaterial = tMaterial;
 
-				ret = true;
+                ret = it->first;
 			}
 		}
 	}

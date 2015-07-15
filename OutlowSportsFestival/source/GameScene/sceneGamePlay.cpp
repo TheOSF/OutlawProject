@@ -5,6 +5,10 @@
 #include	"../Ball/Ball.h"
 #include	"../Camera/Camera.h"
 #include	"../character/CharacterManager.h"
+#include    "../Collision/Collision.h"
+#include    "../Collision/GameObjectCollisionMesh.h"
+#include    "../GameSystem/ResourceManager.h"
+#include    "../debug/DebugDraw.h"
 
 #include	"../character/Tennis/TennisPlayer.h"
 #include	"../character/Tennis/TennisPlayerState_UsualMove.h"
@@ -55,7 +59,7 @@ void CreateCharacter(
 	PlayerType::Value     pl,
 	CharacterType::Value  chr)
 {
-	Vector3 pos[4] = 
+	const Vector3 pos[4] = 
 	{
 		Vector3(-20, 0, 20),
 		Vector3(20, 0, 20),
@@ -209,6 +213,11 @@ bool sceneGamePlay::Initialize()
 
 	};
 
+    DefResource.Regist(
+        Resource::MeshType::Sphere,
+        new iexMesh("DATA\\Mesh\\sphere.imo")
+        );
+
 	return true;
 }
 
@@ -239,6 +248,8 @@ sceneGamePlay::~sceneGamePlay()
 	DefDamageMgr.Release();
 	DefBallMgr.Release();
 	DefCamera.Release();
+	DefCollisionMgr.Release();
+    DefResource.Release();
 }
 
 //*****************************************************************************************************************************
@@ -308,8 +319,9 @@ void	sceneGamePlay::Update()
 	};
 
 	DefCamera.Update();
-
-	DefGameObjMgr.Update();
+    
+    DefGameObjMgr.Update();
+    DefDamageMgr.DebugDraw();
 }
 
 //*****************************************************************************************************************************

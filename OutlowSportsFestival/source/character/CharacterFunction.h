@@ -46,6 +46,15 @@ namespace chr_func
 		LpCharacterBase					pCharacter,	//判定をとるキャラクタ
 		DamageManager::HitEventBase*	pHitEvent	//イベント処理
 		);
+
+    //地面判定をとる(戻り値：地面についているかどうか)
+    bool isTouchGround(CharacterBase* p);
+
+    //Y軸方向の速度を更新する
+    void UpdateMoveY(CharacterBase* p);
+
+    //Y軸方向の地面判定を行う
+    void CheckGround(CharacterBase* p);
 }
 
 #endif

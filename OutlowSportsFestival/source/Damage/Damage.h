@@ -40,7 +40,7 @@ public:
 	DamageBase();
 	virtual ~DamageBase();
 	virtual bool HitCheckSphere(const ShpereParam* sp) = 0;
-
+    virtual void DebugDraw() = 0;
 };
 
 
@@ -56,6 +56,7 @@ public:
 	DamageShpere();
 private:
 	bool HitCheckSphere(const ShpereParam* sp);
+    void DebugDraw();
 };
 
 //*************************************************************
@@ -82,6 +83,9 @@ public:
 		const ShpereParam&	sp,
 		HitEventBase&		HitEvent
 		);
+
+    //あたり判定をデバッグ描画
+    void DebugDraw();
 
 private:
 	friend class DamageBase;

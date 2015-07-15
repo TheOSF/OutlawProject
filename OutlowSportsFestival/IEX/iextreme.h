@@ -913,6 +913,9 @@ public:
 	//Rayワールド変換レイピック(スケールとか回転とかしててもちゃんとあたる)
 	int RayPickPlus(Vector3* out, Vector3* pos, Vector3* vec, float *Dist);
 
+    //Rayワールド変換レイピック(スケールとか回転とかしててもちゃんとあたる)
+    int RayPickPlus(Vector3* out, Vector3* pos, Vector3* vec, float *Dist, const Matrix& TransMat, const Matrix& TransInvMat);
+
 	//------------------------------------------------------
 	//	情報設定・取得
 	//------------------------------------------------------

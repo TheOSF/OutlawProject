@@ -1,5 +1,6 @@
 #include "Tennis_HitEvent.h"
 #include "TennisPlayerState_DamageMotionWeak.h"
+#include "TennisPlayerState_Vanish.h"
 
 TennisHitEvent::TennisHitEvent(TennisPlayer* pt) :
 m_pTennis(pt)
@@ -23,13 +24,13 @@ bool TennisHitEvent::Hit(DamageBase* pDmg)
 		//ãUŒ‚
 		m_pTennis->SetState(new TennisState_DamageMotion_Weak(m_pTennis, pDmg->vec));
 		return true;
-
-	/*
+	
 	//–¢ì¬
 	case DamageBase::Type::_VanishDamage:
 		//‚«”ò‚Ñƒ_ƒ[ƒW
-		m_pTennis->SetState(new TennisState_(m_pTennis));
+        m_pTennis->SetState(new TennisState_DamageVanish(m_pTennis, pDmg->vec));
 		return true;
+        /*
 	case DamageBase::Type::_UpDamage:
 		//ã‚É‚«”ò‚Ñ
 		m_pTennis->SetState(new TennisState_(m_pTennis));

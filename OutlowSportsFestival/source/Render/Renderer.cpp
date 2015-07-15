@@ -153,7 +153,8 @@ void RendererManager::ForwardRender()
 			it != m_ForwardRendererMap.end();
 			++it)
 		{
-			SortData[count++] = it->second;
+			SortData[count] = it->second;
+            ++count;
 
 			//Z’l‚ðŒvŽZ‚·‚é
 			it->second->CalcZ();
