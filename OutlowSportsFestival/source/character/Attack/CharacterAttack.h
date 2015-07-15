@@ -53,6 +53,7 @@ public:
 private:
 	CharacterBase*	m_pCharacter;
 	AttackEvent*	m_pAttackEvent;
+
 	Params			m_Params;
 	int             m_timer;
 	Vector2			m_StickValue;
