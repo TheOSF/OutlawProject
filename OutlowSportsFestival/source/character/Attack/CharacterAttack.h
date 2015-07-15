@@ -4,6 +4,7 @@
 class CharacterBase;
 
 #include "iextreme.h"
+#include "Damage/Damage.h"
 
 //****************************************************************
 //		キャラクタ共通の攻撃クラス
@@ -23,6 +24,8 @@ public:
 		float TurnSpeed;	//角度変化スピード
 		int    CanDoComboFrame;       // 次のコンボ受付フレーム
 		int    GoNextComboFrame;      // コンボを実行するフレーム
+		float  HitCenter;//攻撃の発生中心点
+		int   CanHitNum;//最大何ヒットするか
 	};
 
 	class AttackEvent
@@ -38,7 +41,10 @@ public:
 	CharacterNearAttack(
 		CharacterBase*	pParent,	//操るキャラクタのポインタ
 		const Params&	param,
-		AttackEvent*		pAtttackEvent);
+		AttackEvent*		pAtttackEvent,
+		DamageBase::Type	damage_type,	//ダメージ判定のタイプ
+		float				damage_val		//ダメージ量
+		);
 
 	~CharacterNearAttack();
 
@@ -53,6 +59,7 @@ public:
 private:
 	CharacterBase*	m_pCharacter;
 	AttackEvent*	m_pAttackEvent;
+	DamageShpere	m_Damage;
 	Params			m_Params;
 	int             m_timer;
 	Vector2			m_StickValue;

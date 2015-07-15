@@ -10,13 +10,21 @@
 CharacterNearAttack::CharacterNearAttack(
 	CharacterBase*	pParent,
 	const Params&	param,
-	AttackEvent*		pMoveEvent) :
+	AttackEvent*		pMoveEvent,
+	DamageBase::Type	damage_type,
+	float				damage_val) :
 	m_StickValue(0, 0),
 	m_pCharacter(pParent),
 	m_timer(0),
 	m_pAttackEvent(pMoveEvent)
 {
 	m_Params = param;
+
+	m_Damage.pBall = NULL;
+	m_Damage.pParent = pParent;
+	m_Damage.m_Param.size = 2;
+	m_Damage.type = damage_type;
+	m_Damage.Value = damage_val;
 }
 CharacterNearAttack::~CharacterNearAttack()
 {
@@ -50,6 +58,9 @@ bool CharacterNearAttack::Update()
 			m_Params.TurnSpeed
 			);
 	}
+	chr_func::GetFront(m_pCharacter, &m_Damage.vec);
+	m_Damage.m_Param.pos = m_pCharacter->m_Params.pos;
+	m_Damage.m_Param.pos += m_Damage.vec*m_Params.HitCenter;
 	// 座標更新
 	chr_func::PositionUpdate(m_pCharacter);
 
@@ -63,7 +74,9 @@ bool CharacterNearAttack::Update()
 
 	if (m_timer == m_Params.AttackFrame)
 	{// ダメージ発生フレーム
-		m_pAttackEvent->Assault();
+		//m_pAttackEvent->Assault();
+		if (m_Params.CanHitNum==m_Damage.HitCount)
+			m_Damage.m_Enable = false;
 	}
 	if (m_timer >= m_Params.EndFrame)
 	{// 攻撃終了

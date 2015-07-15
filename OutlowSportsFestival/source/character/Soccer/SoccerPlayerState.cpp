@@ -58,7 +58,7 @@ void SoccerState_PlayerControll_Move::Execute(SoccerPlayer* s)
 	// [R1] で カウンター
 	if (controller::GetTRG(controller::button::_R1, s->m_PlayerInfo.number))
 	{
-		s->SetState(new SoccerState_PlayerControll_Counter());
+		//s->SetState(new SoccerState_PlayerControll_Counter());
 	}
 	// [L1] で 固有技(ダッシュ)
 	if (controller::GetTRG(controller::button::_L1, s->m_PlayerInfo.number))
@@ -145,10 +145,12 @@ void SoccerState_PlayerControll_Attack::Enter(SoccerPlayer* s)
 	p.EndFrame = 35;
 	p.damage = 20;
 	p.speed = 0.2f;
+	p.CanHitNum = 1;
+	p.HitCenter = 0.5f;
 
 	timer = 0;
 
-	m_pMoveClass = new CharacterNearAttack(s, p, new SoccerAttackEvent(s));
+	m_pMoveClass = new CharacterNearAttack(s, p, new SoccerAttackEvent(s), DamageBase::Type::_WeekDamage, 1);
 }
 void SoccerState_PlayerControll_Attack::Execute(SoccerPlayer* s)
 {
@@ -209,7 +211,7 @@ void SoccerState_PlayerControll_AttackCombo::Enter(SoccerPlayer* s)
 
 	timer = 0;
 
-	m_pMoveClass = new CharacterNearAttack(s, p, new SoccerAttackEvent(s));
+	m_pMoveClass = new CharacterNearAttack(s, p, new SoccerAttackEvent(s), DamageBase::Type::_WeekDamage, 1);
 }
 void SoccerState_PlayerControll_AttackCombo::Execute(SoccerPlayer* s)
 {
@@ -272,7 +274,7 @@ void SoccerState_PlayerControll_AttackFinish::Enter(SoccerPlayer* s)
 
 	p.TurnSpeed = 0.1f;
 
-	m_pMoveClass = new CharacterNearAttack(s, p, new SoccerAttackEvent(s));
+	m_pMoveClass = new CharacterNearAttack(s, p, new SoccerAttackEvent(s), DamageBase::Type::_WeekDamage, 1);
 }
 void SoccerState_PlayerControll_AttackFinish::Execute(SoccerPlayer* s)
 {
