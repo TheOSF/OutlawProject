@@ -36,6 +36,9 @@
 // Bullet
 #include "../Library/Bullet/BulletSystem.h"
 
+#include "../GameSystem/GameEventer.h"
+#include "../character/CharacterFunction.h"
+
 //*****************************************************************************************************************************
 //
 //	ƒOƒ[ƒoƒ‹•Ï”
@@ -110,6 +113,8 @@ void CreateCharacter(
 	}
 
 	pChr->m_Params.pos = pos[(int)n];
+	chr_func::AngleControll(pChr, Vector3Zero);
+
 }
 
 
@@ -219,6 +224,7 @@ bool sceneGamePlay::Initialize()
         Resource::MeshType::Sphere,
         new iexMesh("DATA\\Mesh\\sphere.imo")
         );
+
 
 	return true;
 }

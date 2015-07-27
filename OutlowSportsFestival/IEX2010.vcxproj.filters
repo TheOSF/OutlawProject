@@ -129,6 +129,8 @@
     <ClCompile Include="source\character\Tennis\TennisPlayerState_Vanish.cpp" />
     <ClCompile Include="source\Camera\Camera.cpp" />
     <ClCompile Include="source\Camera\CameraState.cpp" />
+    <ClCompile Include="source\utillity\PlayerGauge.cpp" />
+    <ClCompile Include="source\GameSystem\GameEventer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -209,6 +211,9 @@
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Vanish.h" />
     <ClInclude Include="source\Camera\Camera.h" />
     <ClInclude Include="source\Camera\CameraState.h" />
+    <ClInclude Include="source\Render\Header.h" />
+    <ClInclude Include="source\utillity\PlayerGauge.h" />
+    <ClInclude Include="source\GameSystem\GameEventer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

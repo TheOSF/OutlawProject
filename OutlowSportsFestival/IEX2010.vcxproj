@@ -45,8 +45,8 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(DXSDK_DIR)include;$(ProjectDir)\library\bullet\src;$(ProjectDir)\library\effekseer\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(DXSDK_DIR)lib/x86;$(ProjectDir)\library\bullet\lib\Debug;$(ProjectDir)\library\effekseer\lib\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(DXSDK_DIR)include;$(ProjectDir)\library\bullet\src;$(ProjectDir)\library\effekseer\include;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(DXSDK_DIR)lib/x86;$(ProjectDir)\library\bullet\lib\Debug;$(ProjectDir)\library\effekseer\lib\Debug;C:\Program Files\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(DXSDK_DIR)include;$(ProjectDir)\library\bullet\src;$(ProjectDir)\library\effekseer\include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(DXSDK_DIR)lib/x86;$(ProjectDir)\library\bullet\lib\Release;$(ProjectDir)\library\effekseer\lib\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -179,6 +179,7 @@
     <ClCompile Include="source\GameScene\sceneGamePlay.cpp" />
     <ClCompile Include="source\GameScene\sceneMain.cpp" />
     <ClCompile Include="source\GameSystem\GameController.cpp" />
+    <ClCompile Include="source\GameSystem\GameEventer.cpp" />
     <ClCompile Include="source\GameSystem\GameObject.cpp" />
     <ClCompile Include="source\GameSystem\GameState.cpp" />
     <ClCompile Include="source\GameSystem\ResourceManager.cpp" />
@@ -196,6 +197,7 @@
     <ClCompile Include="source\Render\MeshRenderer.cpp" />
     <ClCompile Include="source\Render\Renderer.cpp" />
     <ClCompile Include="source\utillity\ColorUtility.cpp" />
+    <ClCompile Include="source\utillity\PlayerGauge.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -254,6 +256,7 @@
     <ClInclude Include="source\GameScene\sceneMain.h" />
     <ClInclude Include="source\GameSystem\ForwardDecl.h" />
     <ClInclude Include="source\GameSystem\GameController.h" />
+    <ClInclude Include="source\GameSystem\GameEventer.h" />
     <ClInclude Include="source\GameSystem\GameObject.h" />
     <ClInclude Include="source\GameSystem\GameState.h" />
     <ClInclude Include="source\GameSystem\GameSystem.h" />
@@ -266,11 +269,13 @@
     <ClInclude Include="source\Library\Effekseer\EffekseerEffect.h" />
     <ClInclude Include="source\Library\Effekseer\EffekseerEffectManager.h" />
     <ClInclude Include="source\Library\Effekseer\EffekseerSystem.h" />
+    <ClInclude Include="source\Render\Header.h" />
     <ClInclude Include="source\Render\MeshRenderer.h" />
     <ClInclude Include="source\Render\Renderer.h" />
     <ClInclude Include="source\utillity\Collision.h" />
     <ClInclude Include="source\utillity\ColorUtility.h" />
     <ClInclude Include="source\utillity\NonCopyable.h" />
+    <ClInclude Include="source\utillity\PlayerGauge.h" />
     <ClInclude Include="source\utillity\SafeMethod.h" />
     <ClInclude Include="source\utillity\Singleton.h" />
     <ClInclude Include="source\utillity\StateTemplate.h" />

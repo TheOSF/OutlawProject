@@ -84,3 +84,83 @@ void CameraStateGamePlay::Exit(Camera* c)
 
 
 }
+
+
+
+//目標に向かって２次式で移動ステート
+
+CameraStateMovetoPoint::CameraStateMovetoPoint(
+	CrVector3      pos,
+	CrVector3      target,
+	float          speed,
+	UINT           frame,
+	CalcType       calcType,
+	CameraState*   pNextState
+	) :
+	m_Pos(pos),
+	m_Target(target),
+	m_Speed(speed),
+	m_Frame(frame),
+	m_pNextState(pNextState),
+	m_FrameCount(0),
+	m_CalcType(calcType)
+{
+
+}
+
+CameraStateMovetoPoint::~CameraStateMovetoPoint()
+{
+	delete m_pNextState;
+}
+
+void CameraStateMovetoPoint::Enter(Camera* c)
+{
+
+}
+
+void CameraStateMovetoPoint::Execute(Camera* c)
+{
+	//線形
+	if (m_CalcType == CalcType::_Linear)
+	{
+		Vector3 vec;
+
+		vec = m_Pos - c->m_Position;
+		if (vec.Length() > m_Speed)
+		{
+			vec.Normalize();
+			vec *= m_Speed;
+		}
+		c->m_Position += vec;
+
+		vec = m_Target - c->m_Target;
+		if (vec.Length() > m_Speed)
+		{
+			vec.Normalize();
+			vec *= m_Speed;
+		}
+		c->m_Target += vec;
+	}
+
+	//cos式
+	if (m_CalcType == CalcType::_Cos)
+	{
+		c->m_Position += (m_Pos - c->m_Position)*m_Speed;
+		c->m_Target += (m_Target - c->m_Target)*m_Speed;
+	}
+
+
+	//ステート移行
+	if (++m_FrameCount > m_Frame)
+	{
+		CameraState* tmp = m_pNextState;
+
+		m_pNextState = nullptr;
+		c->SetNewState(tmp);
+	}
+}
+
+void CameraStateMovetoPoint::Exit(Camera* c)
+{
+
+}

@@ -19,4 +19,41 @@ private:
 
 };
 
+
+//–Ú•W‚ÉŒü‚©‚Á‚ÄˆÚ“®
+class CameraStateMovetoPoint :public CameraState
+{
+public:
+	enum class CalcType
+	{
+		_Linear, //üŒ`
+		_Cos     //cos®
+	};
+
+	CameraStateMovetoPoint(
+		CrVector3      pos,
+		CrVector3      target,
+		float          speed,
+		UINT           frame,
+		CalcType       calcType,
+		CameraState*   pNextState
+		);
+
+	~CameraStateMovetoPoint();
+
+private:
+	Vector3        m_Pos;
+	Vector3        m_Target;
+	float          m_Speed;
+	CameraState*   m_pNextState;
+	UINT           m_Frame;
+	CalcType       m_CalcType;
+
+	UINT           m_FrameCount;
+
+	void Enter(Camera* c);
+	void Execute(Camera* c);
+	void Exit(Camera* c);
+};
+
 #endif

@@ -26,6 +26,7 @@ public:
 
 	struct Params
 	{
+		UINT                win;        //Ÿ‚Á‚½ƒ‰ƒEƒ“ƒh”
 		Vector3				pos;		//À•W
 		Vector3				move;		//ˆÚ“®—Ê
 		float				hitScale;	//‚ ‚½‚è”»’è‚Ì‰~‚Ì‘å‚«‚³

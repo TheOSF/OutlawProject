@@ -78,10 +78,16 @@ void Camera::ProjectionToWorld(Vector3* pOut, CrVector3 In)
 }
 
 //ÉrÉÖÅ[ãÛä‘è„Ç≈ÇÃZç¿ïWÇìæÇÈ
-float Camera::GetCameraZ(CrVector3 in)
+float Camera::GetCameraZ(CrVector3 in)const
 {
     return in.x*matView._13 + in.y*matView._23 + in.z*matView._33 + matView._43;
 }
+
+const Matrix& Camera::GetBillbordMatrix()const
+{
+	return m_Billbord;
+}
+
 
 CrVector3 Camera::GetRight()const
 {
@@ -120,6 +126,11 @@ void Camera::UpdateMatrix(Vector3 pos, Vector3 target)
 {
 	m_IexView.Set(pos, target);
 	m_IexView.Activate();
+
+	m_Billbord = matView;
+	m_Billbord._14 = m_Billbord._24 = m_Billbord._34 = 0.0f;
+
+	D3DXMatrixInverse(&m_Billbord, 0, &m_Billbord);
 
 	m_VP = matView;
 	m_VP *= matProjection;

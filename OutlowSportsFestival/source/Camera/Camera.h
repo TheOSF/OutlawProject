@@ -37,7 +37,10 @@ public:
 	void ProjectionToWorld(Vector3* pOut, CrVector3 In);
 
     //ビュー空間上でのZ座標を得る
-    float GetCameraZ(CrVector3 in);
+    float GetCameraZ(CrVector3 in)const;
+
+	//ビルボード計算用行列を得る
+	const Matrix& GetBillbordMatrix()const;
 
 	//カメラの各方向ベクトルを得る
 	CrVector3 GetRight()const;
@@ -65,6 +68,7 @@ private:
 	iexView					m_IexView;
 	Matrix					m_VP;
 	Matrix					m_VP_inv;
+	Matrix                  m_Billbord;
 	Vector3					m_Right, m_Up, m_Forward;
 	
 	struct
