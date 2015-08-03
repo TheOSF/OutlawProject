@@ -88,6 +88,11 @@ const Matrix& Camera::GetBillbordMatrix()const
 	return m_Billbord;
 }
 
+//ビュープロジェクション変換をする行列を得る
+const Matrix& Camera::GetViewProjectionMatrix()const
+{
+    return m_VP;
+}
 
 CrVector3 Camera::GetRight()const
 {
@@ -113,7 +118,7 @@ Camera::Camera()
 	ShockParam.time = 0;
 	ShockParam.max_time = 0;
 
-
+    m_IexView.SetProjection(D3DX_PI /4, 5, 150);
 }
 
 Camera::~Camera()

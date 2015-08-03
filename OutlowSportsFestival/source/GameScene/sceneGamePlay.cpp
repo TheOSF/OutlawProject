@@ -9,6 +9,7 @@
 #include    "../Collision/GameObjectCollisionMesh.h"
 #include    "../GameSystem/ResourceManager.h"
 #include    "../debug/DebugDraw.h"
+#include    "../Render/ShaderManager.h"
 
 #include	"../character/Tennis/TennisPlayer.h"
 #include	"../character/Tennis/TennisPlayerState_UsualMove.h"
@@ -27,6 +28,8 @@
 
 #include    "../character/VolleyBall/VolleyBallPlayer.h"
 #include    "../character/VolleyBall/VolleyBallPlayerState.h"
+
+#include    "../Render/PointLightObject.h"
 
 // Effekseer
 #include "../Library/Effekseer/EffekseerSystem.h"
@@ -226,6 +229,7 @@ bool sceneGamePlay::Initialize()
         );
 
 
+    
 	return true;
 }
 
@@ -258,6 +262,7 @@ sceneGamePlay::~sceneGamePlay()
 	DefCamera.Release();
 	DefCollisionMgr.Release();
     DefResource.Release();
+    DefShaderMgr.Release();
 }
 
 //*****************************************************************************************************************************
@@ -326,10 +331,34 @@ void	sceneGamePlay::Update()
 		DefBulletSystem.StepSimulation(1.0f / 60.0f);
 	};
 
+
+    if (KEY(KEY_ENTER, 0) == 3)
+    {
+        new PointLightObject(
+            Vector3(0, 5, 0),
+            Vector3(1, 1, 1),
+            30,
+            0.05f
+            );
+    }
+
+    static float power = 1.0f;
+
+    if (KEY(KEY_ENTER, 0))
+    {
+        power += controller::GetStickValue(controller::stick::right, 0).x*0.03f;
+        power = max(0, power);
+    }
+
+    DefShaderMgr.SetDirLight(Vector3Normalize(Vector3(1.0f, -1, 1.0)), Vector3(1, 1, 1)*power);
+
+
 	DefCamera.Update();
     
     DefGameObjMgr.Update();
     DefDamageMgr.DebugDraw();
+    DefShaderMgr.Update();
+    DefShaderMgr.SetCamera(DefCamera.m_Position, DefCamera.m_Target);
 }
 
 //*****************************************************************************************************************************
@@ -350,11 +379,9 @@ void	sceneGamePlay::Render()
 	}
 	else
 	{
-		pStage->Render();
+		pStage->Render(shader,"Toon");
 
-
-		DefRendererMgr.DeferredRender();
-		DefRendererMgr.ForwardRender();
+        DefRendererMgr.Render();
 
 		{// Effekseer
 			pEffekseerSystem->BeginRendering();

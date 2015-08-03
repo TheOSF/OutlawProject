@@ -56,4 +56,19 @@ private:
 	void Exit(Camera* c);
 };
 
+
+//デバッグ用自由移動カメラ
+class CameraStateFreeMove :public CameraState
+{
+public:
+    void Enter(Camera* c);
+    void Execute(Camera* c);
+    void Exit(Camera* c);
+private:
+    Vector2 GetKeyWASD()const;
+    Vector2 GetRightStick()const;
+};
+
+
+
 #endif

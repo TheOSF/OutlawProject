@@ -205,9 +205,7 @@ void iexMesh::Render( iexShader* shader, char* name )
 	u32 pass = shader->Begine(name);
 
 	// ローカル-射影変換行列
-	Matrix m = TransMatrix * matView * matProjection;
-	shader->SetValue("TransMatrix", TransMatrix );
-	shader->SetMatrix( &m );
+	shader->SetValue("g_W_mat", TransMatrix );
 
 	for( u32 p=0 ; p<pass ; p++ )
 	{
@@ -217,9 +215,9 @@ void iexMesh::Render( iexShader* shader, char* name )
 		{
 			//	テクスチャ指定
 			shader->SetTexture( lpTexture[i] );
-			shader->SetValue( "NormalMap", lpNormal[i] );
+			shader->SetValue( "ToonMap", lpNormal[i] );
 			shader->SetValue( "SpecularMap", lpSpecular[i] );
-			shader->SetValue( "HeightMap", lpHeight[i] );
+		//	shader->SetValue( "ToonSpMap", lpHeight[i] );
 			shader->CommitChanges();
 			//	材質グループ描画
 			lpMesh->DrawSubset( i );
@@ -677,27 +675,45 @@ BOOL iexMesh::LoadIMO( LPSTR filename )
 	lpSpecular = new Texture2D* [ imo.NumMaterial ];
 	lpHeight   = new Texture2D* [ imo.NumMaterial ];
 
-	char temp[256];
-	for( i=0 ; i<MaterialCount ; i++ ){
-		lpTexture[i]  = NULL;
-		lpNormal[i]   = NULL;
-		lpSpecular[i] = NULL;
-		lpHeight[i]   = NULL;
+    char	    temp[256];
+    char        Name[FILENAME_MAX];
+    char        ext[64];
 
-		if( imo.Texture[i][0] == '\0' ) continue;
-		//	テクスチャ読み込み
-		sprintf( temp, "%s%s", workpath, imo.Texture[i] );
-		lpTexture[i] = iexTexture::Load( temp );
+    for (i = 0; i<MaterialCount; i++)
+    {
+        lpTexture[i] = NULL;
+        lpNormal[i] = NULL;
+        lpSpecular[i] = NULL;
+        lpHeight[i] = NULL;
 
-		sprintf( temp, "%sN%s", workpath, imo.Texture[i] );
-		lpNormal[i] = iexTexture::Load( temp );
+        if (imo.Texture[i][0] == '\0') continue;
 
-		sprintf( temp, "%sS%s", workpath, imo.Texture[i] );
-		lpSpecular[i] = iexTexture::Load( temp );
+        //	テクスチャ読み込み
+        strcpy_s<FILENAME_MAX>(Name, imo.Texture[i]);
 
-		sprintf( temp, "%sH%s", workpath, imo.Texture[i] );
-		lpHeight[i] = iexTexture::Load( temp, 1 );
-	}
+        for (int j = 0; true; ++j)
+        {
+            if (Name[j] == '.')
+            {
+                Name[j] = '\0';
+                strcpy_s<64>(ext, Name + (j + 1));
+                break;
+            }
+        }
+
+        sprintf(temp, "%s%s", workpath, imo.Texture[i]);
+        lpTexture[i] = iexTexture::Load(temp);
+
+        sprintf(temp, "%s%s_T.%s", workpath, Name, ext);
+        lpNormal[i] = iexTexture::Load(temp);
+
+        sprintf(temp, "%s%s_S.%s", workpath, Name, ext);
+        lpSpecular[i] = iexTexture::Load(temp);
+
+        sprintf(temp, "%s%s_ST.%s", workpath, Name, ext);
+        lpHeight[i] = iexTexture::Load(temp);
+    }
+
 	CloseHandle(hfile);
 
 	delete[] workV;
@@ -763,18 +779,19 @@ BOOL	iexMesh::LoadX( LPSTR filename )
 		lpSpecular[i] = NULL;
 		lpHeight[i]   = NULL;
 
-		if( d3dxMaterial[i].pTextureFilename != NULL ){
+		if( d3dxMaterial[i].pTextureFilename != NULL )
+        {
 			//	テクスチャ読み込み
 			sprintf( temp, "%s%s", workpath, d3dxMaterial[i].pTextureFilename );
 			lpTexture[i] = iexTexture::Load( temp );
 
-			sprintf( temp, "%sN%s", workpath, d3dxMaterial[i].pTextureFilename );
+			sprintf( temp, "%s%sT", workpath, d3dxMaterial[i].pTextureFilename );
 			lpNormal[i] = iexTexture::Load( temp );
 
-			sprintf( temp, "%sS%s", workpath, d3dxMaterial[i].pTextureFilename );
+			sprintf( temp, "%s%sS", workpath, d3dxMaterial[i].pTextureFilename );
 			lpSpecular[i] = iexTexture::Load( temp );
 
-			sprintf( temp, "%sH%s", workpath, d3dxMaterial[i].pTextureFilename );
+			sprintf( temp, "%s%sH", workpath, d3dxMaterial[i].pTextureFilename );
 			lpHeight[i] = iexTexture::Load( temp, 1 );
 		}
 	}

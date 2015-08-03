@@ -2,6 +2,7 @@
 #define __BLEND_ANIMATION_MESH_H__
 
 #include "iextreme.h"
+#include <map>
 
 class BlendAnimationMesh : public iexMesh
 {
@@ -44,6 +45,7 @@ protected:
 	Vector3*		CurPos;
 
 public:
+
 	void	SetLoadFlag(BOOL bLoad){ this->bLoad = bLoad; }
 	BlendAnimationMesh(){
 		bLoad = FALSE;
@@ -83,6 +85,7 @@ public:
 	void Render();
 	void Render(DWORD flag, float alpha = -1);
 	void Render(iexShader* shader, char* name);
+    void Render(iexShader* shader, std::map<int, char*> tec);
 
 	inline int GetParam(int n){ return Param[n]; }
 	inline void SetParam(int n, int p){ Param[n] = p; }

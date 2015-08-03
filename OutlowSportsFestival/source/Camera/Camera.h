@@ -42,6 +42,9 @@ public:
 	//ビルボード計算用行列を得る
 	const Matrix& GetBillbordMatrix()const;
 
+    //ビュープロジェクション変換をする行列を得る
+    const Matrix& GetViewProjectionMatrix()const;
+
 	//カメラの各方向ベクトルを得る
 	CrVector3 GetRight()const;
 	CrVector3 GetUp()const;

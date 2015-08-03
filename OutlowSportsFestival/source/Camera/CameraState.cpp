@@ -2,6 +2,7 @@
 #include "../character/CharacterManager.h"
 #include "../character/CharacterFunction.h"
 #include "../character/CharacterBase.h"
+#include "../GameSystem/GameController.h"
 
 //試合時のカメラステート
 
@@ -77,6 +78,12 @@ void CameraStateGamePlay::Execute(Camera* c)
 	//補間する
 	c->m_Position += (moveTarget - c->m_Position)*0.04f;
 
+#ifdef _DEBUG
+    if (GetKeyState('Q') & 0x80)
+    {
+        c->SetNewState(new CameraStateFreeMove());
+    }
+#endif
 }
 
 void CameraStateGamePlay::Exit(Camera* c)
@@ -160,7 +167,78 @@ void CameraStateMovetoPoint::Execute(Camera* c)
 	}
 }
 
+
 void CameraStateMovetoPoint::Exit(Camera* c)
 {
 
+}
+
+
+//デバッグ用自由移動カメラ
+void CameraStateFreeMove::Enter(Camera* c)
+{
+
+}
+
+void CameraStateFreeMove::Execute(Camera* c)
+{
+    Vector3 front = Vector3Normalize(c->m_Target - c->m_Position);
+    Vector3 right;
+
+    Vector2 keyL = controller::GetStickValue(controller::stick::left,0);
+    Vector2 keyR = controller::GetStickValue(controller::stick::right,0);
+
+    Vector3Cross(right, Vector3AxisY, front);
+    right.Normalize();
+
+    c->m_Target += front*keyL.y + right*keyL.x;
+    c->m_Position += front*keyL.y + right*keyL.x;
+
+    if (fabsf(keyR.x) > 0.2f)
+    {
+        c->m_Target = c->m_Position + Vector3RotateAxis(Vector3AxisY, keyR.x*0.01f, front);
+    }
+    else if (fabsf(keyR.y) > 0.2f)
+    {
+        c->m_Target = c->m_Position + Vector3RotateAxis(right, keyR.y*0.01f, front);
+    }
+    
+    
+
+
+#ifdef _DEBUG
+    if (GetKeyState('E') & 0x80)
+    {
+        c->SetNewState(new CameraStateGamePlay());
+    }
+#endif
+}
+
+void CameraStateFreeMove::Exit(Camera* c)
+{
+
+}
+
+
+Vector2 CameraStateFreeMove::GetKeyWASD()const
+{
+    Vector2 ret;
+    
+    ret.x = (float)((GetKeyState('D') & 0x80) != 0) - (float)((GetKeyState('A') & 0x80) != 0);
+    ret.y = (float)((GetKeyState('W') & 0x80) != 0) - (float)((GetKeyState('S') & 0x80) != 0);
+
+    return ret;
+}
+
+Vector2 CameraStateFreeMove::GetRightStick()const
+{
+    Vector2 ret;
+
+    ret.x = KEY(KEY_AXISX2, 0)*0.001f;
+    ret.y = KEY(KEY_AXISY2, 0)*-0.001f;
+
+    ret.x = fabsf(ret.x) < 0.25f ? 0 : ret.x;
+    ret.y = fabsf(ret.y) < 0.25f ? 0 : ret.y;
+
+    return ret;
 }

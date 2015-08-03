@@ -195,7 +195,9 @@
     <ClCompile Include="source\Library\Effekseer\EffekseerEffectManager.cpp" />
     <ClCompile Include="source\Library\Effekseer\EffekseerSystem.cpp" />
     <ClCompile Include="source\Render\MeshRenderer.cpp" />
+    <ClCompile Include="source\Render\PointLightObject.cpp" />
     <ClCompile Include="source\Render\Renderer.cpp" />
+    <ClCompile Include="source\Render\ShaderManager.cpp" />
     <ClCompile Include="source\utillity\ColorUtility.cpp" />
     <ClCompile Include="source\utillity\PlayerGauge.cpp" />
   </ItemGroup>
@@ -271,7 +273,9 @@
     <ClInclude Include="source\Library\Effekseer\EffekseerSystem.h" />
     <ClInclude Include="source\Render\Header.h" />
     <ClInclude Include="source\Render\MeshRenderer.h" />
+    <ClInclude Include="source\Render\PointLightObject.h" />
     <ClInclude Include="source\Render\Renderer.h" />
+    <ClInclude Include="source\Render\ShaderManager.h" />
     <ClInclude Include="source\utillity\Collision.h" />
     <ClInclude Include="source\utillity\ColorUtility.h" />
     <ClInclude Include="source\utillity\NonCopyable.h" />

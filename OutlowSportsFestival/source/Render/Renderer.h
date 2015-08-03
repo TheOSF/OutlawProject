@@ -58,14 +58,18 @@ public:
 	bool AddForwardRenderer(LpForwardRenderer pFor);
 	bool EraceForwardRenderer(LpForwardRenderer pFor);
 
-	//ディファード描画
-	void DeferredRender();
-
-	//フォワード描画
-	void ForwardRender();
+    //描画
+    void Render();
 private:
+
 	RendererManager();
 	~RendererManager();
+
+    //ディファード描画
+    void DeferredRender();
+
+    //フォワード描画
+    void ForwardRender();
 
 	typedef std::map<LpDeferredRenderer, LpDeferredRenderer> DeferredRendererMap;
 	typedef std::map<LpForwardRenderer, LpForwardRenderer> ForwardRendererMap;
@@ -73,7 +77,18 @@ private:
 	static RendererManager* m_pInstance;
 
 	DeferredRendererMap m_DeferredRendererMap;
-	ForwardRendererMap m_ForwardRendererMap;
+	ForwardRendererMap  m_ForwardRendererMap;
+
+    enum TextureType
+    {
+        _ColorTexture,
+        _HDRTexture,
+        _DepthTexture,
+
+        __MaxTexture
+    };
+
+    iex2DObj* m_pTextures[__MaxTexture];
 };
 
 #define DefRendererMgr (RendererManager::GetInstance())

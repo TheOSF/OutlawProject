@@ -1,4 +1,5 @@
 #include "CharacterRenderer.h"
+#include "../IexSystem/System.h"
 
 //*************************************************
 //	キャラクタ用メッシュクラス
@@ -128,7 +129,25 @@ void CharacterRenderer::Update(float t)
 //描画
 void CharacterRenderer::Render()
 {
-	m_pAnimeMesh->Render();
+    typedef std::map<int, char*> Techniques;
+    Techniques tecs;
+
+    char FaceTechnique[] = { "Toon" };
+    char HairTechnique[] = { "Toon" };
+    char BodyTechnique[] = { "Toon" };
+
+    tecs.insert(Techniques::value_type(0, FaceTechnique));
+    tecs.insert(Techniques::value_type(1, FaceTechnique));
+    tecs.insert(Techniques::value_type(2, FaceTechnique));
+    tecs.insert(Techniques::value_type(3, FaceTechnique));
+    tecs.insert(Techniques::value_type(4, FaceTechnique));
+    tecs.insert(Techniques::value_type(5, FaceTechnique));
+    tecs.insert(Techniques::value_type(6, HairTechnique));
+    tecs.insert(Techniques::value_type(7, HairTechnique));
+    tecs.insert(Techniques::value_type(8, HairTechnique));
+    tecs.insert(Techniques::value_type(9, HairTechnique));
+    
+    (GetKeyState('R'))? m_pAnimeMesh->Render(shader, tecs) : m_pAnimeMesh->Render();
 }
 
 void CharacterRenderer::Initialize()

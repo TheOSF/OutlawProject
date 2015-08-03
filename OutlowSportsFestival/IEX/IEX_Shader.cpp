@@ -12,6 +12,7 @@
 //------------------------------------------------------
 //	コンストラクタ
 //------------------------------------------------------
+
 iexShader::iexShader( char* filename )
 {
 	LPDEVICE	lpDevice = iexSystem::GetDevice();
@@ -26,7 +27,6 @@ iexShader::iexShader( char* filename )
 	hr = D3DXCreateEffectFromFile( lpDevice, fname, NULL, NULL, 0 , NULL, &m_pShader, &pErr );
 	if( FAILED(hr) )
 	{
-		return;
 		char	szBuffer[2000];
 		sprintf(szBuffer,"\terrors: %s\n", (char*)pErr->GetBufferPointer() );
 		OutputDebugString(szBuffer);
@@ -34,8 +34,9 @@ iexShader::iexShader( char* filename )
 	}
 
 	//	基本変数の読み込み
-	m_hmWVP      = m_pShader->GetParameterByName( NULL, "Projection" );
+	m_hmWVP      = m_pShader->GetParameterByName( NULL, "g_VP_mat" );
 	m_htexDecale = m_pShader->GetParameterByName( NULL, "Texture" );
+
 }
 
 //------------------------------------------------------
@@ -68,12 +69,15 @@ void iexShader::SetValue( char* name, Matrix& mat ){ m_pShader->SetMatrix( name,
 void iexShader::SetValue( char* name, D3DXVECTOR4* v ){ m_pShader->SetVector( name, v ); }
 void iexShader::SetValue( char* name, D3DXVECTOR4& v ){ m_pShader->SetVector( name, &v ); }
 
+void iexShader::SetValue(char* name, Vector3* v, size_t size){ m_pShader->SetFloatArray(name, (float*)v, 3 * size); }
+
 void iexShader::SetValue( char* name, Vector3* v ){ m_pShader->SetFloatArray( name, (float*)v, 3 ); }
 void iexShader::SetValue( char* name, Vector3& v ){ m_pShader->SetFloatArray( name, (float*)&v, 3 ); }
 
 
 void iexShader::SetValue( char* name, float f ){ m_pShader->SetFloat( name, f ); }
 void iexShader::SetValue( char* name, int d ){ m_pShader->SetInt( name, d ); }
+void iexShader::SetValue(char* name,  float* f, UINT size){ m_pShader->SetFloatArray(name, f, size); }
 void iexShader::SetValue( char* name, DWORD d ){ m_pShader->SetValue( name, &d, 4 ); }
 
 

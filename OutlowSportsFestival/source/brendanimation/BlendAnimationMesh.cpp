@@ -222,6 +222,41 @@ void BlendAnimationMesh::Render(iexShader* shader, char* name)
 	iexMesh::Render(shader, name);
 }
 
+void BlendAnimationMesh::Render(iexShader* shader, std::map<int, char*> tec)
+{
+ 
+    shader->SetValue("g_W_mat", TransMatrix);
+
+    for (auto& it : tec)
+    {
+       // MyAssert(it.first < (int)MaterialCount,"存在しないマテリアル番号の描画が実行されました");
+        if (it.first >= (int)MaterialCount)
+        {
+            continue;
+        }
+        //	シェーダーの適用
+        u32 pass = shader->Begine(it.second);
+
+        for (u32 p = 0; p < pass; p++)
+        {
+            //	パスのレンダリング
+            shader->BeginePass(p);
+            //	テクスチャ指定
+            shader->SetTexture(lpTexture[it.first]);
+            shader->SetValue("ToonMap", lpNormal[it.first]);
+            shader->SetValue("SpecularMap", lpSpecular[it.first]);
+            //	shader->SetValue( "ToonSpMap", lpHeight[it.first] );
+            shader->CommitChanges();
+            //	材質グループ描画
+            lpMesh->DrawSubset(it.first);
+            
+            shader->EndPass();
+        }
+
+        shader->End();
+    }
+}
+
 //*****************************************************************************
 //
 //		オブジェクト作成
@@ -430,22 +465,39 @@ BOOL BlendAnimationMesh::CreateFromIEM(char* path, LPIEMFILE lpIem)
 	ZeroMemory(lpSpecular, sizeof(Texture2D*)*MaterialCount);
 	ZeroMemory(lpHeight, sizeof(Texture2D*)*MaterialCount);
 
-	for (i = 0; i<MaterialCount; i++){
-		if (lpIem->Texture[i][0] == '\0') continue;
-		//	テクスチャ読み込み
-		char	temp[256];
-		sprintf(temp, "%s%s", path, lpIem->Texture[i]);
-		lpTexture[i] = iexTexture::Load(temp);
+    char	    temp[256];
+    char        Name[FILENAME_MAX];
+    char        ext[64];
 
-		sprintf(temp, "%sN%s", path, lpIem->Texture[i]);
-		lpNormal[i] = iexTexture::Load(temp);
+    for (i = 0; i<MaterialCount; i++)
+    {
+        if (lpIem->Texture[i][0] == '\0') continue;
 
-		sprintf(temp, "%sS%s", path, lpIem->Texture[i]);
-		lpSpecular[i] = iexTexture::Load(temp);
+        //	テクスチャ読み込み
+        strcpy_s<FILENAME_MAX>(Name, lpIem->Texture[i]);
 
-		sprintf(temp, "%sH%s", path, lpIem->Texture[i]);
-		lpHeight[i] = iexTexture::Load(temp);
-	}
+        for (int j = 0; true; ++j)
+        {
+            if (Name[j] == '.')
+            {
+                Name[j] = '\0';
+                strcpy_s<64>(ext, Name + (j + 1));
+                break;
+            }
+        }
+
+        sprintf(temp, "%s%s", path, lpIem->Texture[i]);
+        lpTexture[i] = iexTexture::Load(temp);
+
+        sprintf(temp, "%s%s_T.%s", path, Name, ext);
+        lpNormal[i] = iexTexture::Load(temp);
+
+        sprintf(temp, "%s%s_S.%s", path, Name, ext);
+        lpSpecular[i] = iexTexture::Load(temp);
+
+        sprintf(temp, "%s%s_ST.%s", path, Name, ext);
+        lpHeight[i] = iexTexture::Load(temp);
+    }
 
 	//
 	//	ボーン情報

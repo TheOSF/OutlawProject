@@ -349,22 +349,40 @@ BOOL iex3DObj::CreateFromIEM( char* path, LPIEMFILE lpIem )
 	ZeroMemory( lpSpecular, sizeof(Texture2D*)*MaterialCount );
 	ZeroMemory( lpHeight,   sizeof(Texture2D*)*MaterialCount );
 
-	for( i=0 ; i<MaterialCount ; i++ ){
+    char	    temp[256];
+    char        Name[FILENAME_MAX];
+    char        ext[64];
+
+	for( i=0 ; i<MaterialCount ; i++ )
+    {
 		if( lpIem->Texture[i][0] == '\0' ) continue;
+
 		//	テクスチャ読み込み
-		char	temp[256];
+        strcpy_s<FILENAME_MAX>(Name, lpIem->Texture[i]);
+
+        for (int j = 0; true; ++j)
+        {
+            if (Name[j] == '.')
+            {
+                Name[j] = '\0';
+                strcpy_s<64>(ext, Name + (j + 1));
+                break;
+            }
+        }
+
 		sprintf( temp, "%s%s", path, lpIem->Texture[i] );
 		lpTexture[i] = iexTexture::Load( temp );
 
-		sprintf( temp, "%sN%s", path, lpIem->Texture[i] );
+        sprintf(temp, "%s%s_T.%s", path, Name,ext);
 		lpNormal[i] = iexTexture::Load( temp );
 
-		sprintf( temp, "%sS%s", path, lpIem->Texture[i] );
+        sprintf(temp, "%s%s_S.%s", path, Name, ext);
 		lpSpecular[i] = iexTexture::Load( temp );
 
-		sprintf( temp, "%sH%s", path, lpIem->Texture[i] );
+        sprintf(temp, "%s%s_ST.%s", path, Name, ext);
 		lpHeight[i] = iexTexture::Load( temp );
 	}
+
 
 	//
 	//	ボーン情報
@@ -389,7 +407,8 @@ BOOL iex3DObj::CreateFromIEM( char* path, LPIEMFILE lpIem )
 	//	アニメーション設定
 	lpAnime = new IEXANIME2[ NumBone ];
 
-	for( i=0 ; i<lpIem->NumBone ; i++ ){
+	for( i=0 ; i<lpIem->NumBone ; i++ )
+    {
 		BoneParent[i]     = lpIem->lpBone[i].parent;		//	親
 		lpOffsetMatrix[i] = lpIem->lpBone[i].BoneMatrix;	//	基準化行列
 		orgPos[i]         = lpIem->lpBone[i].orgPos;		//	標準位置
@@ -410,7 +429,8 @@ BOOL iex3DObj::CreateFromIEM( char* path, LPIEMFILE lpIem )
 			lpAnime[i].posFrame = new WORD[ lpAnime[i].posNum ];
 			lpAnime[i].pos      = new Vector3[ lpAnime[i].posNum ];
 		}
-		for( j=0 ; j<lpAnime[i].posNum ; j++ ){
+		for( j=0 ; j<lpAnime[i].posNum ; j++ )
+        {
 			lpAnime[i].posFrame[j] = lpIem->lpMotion[i].PositionFrame[j];
 			lpAnime[i].pos[j] = lpIem->lpMotion[i].Position[j];
 		}
@@ -597,7 +617,8 @@ BOOL iex3DObj::SaveObject( LPIEMFILE lpIem, LPSTR filename )
 	WriteFile( hfile, &lpIem->M_Offset,  sizeof(u16)*256, &dum, NULL );
 	WriteFile( hfile, &lpIem->FrameFlag, sizeof(u16)*lpIem->MaxFrame, &dum, NULL );
 
-	for( i=0 ; i<lpIem->NumBone ; i++ ){
+	for( i=0 ; i<lpIem->NumBone ; i++ )
+    {
 		WriteFile( hfile, &lpIem->lpMotion[i],   sizeof(IEMMOTION), &dum, NULL );
 		WriteFile( hfile, lpIem->lpMotion[i].Rotate,      sizeof(D3DXQUATERNION)*lpIem->lpMotion[i].NumRotate, &dum, NULL );
 		WriteFile( hfile, lpIem->lpMotion[i].RotateFrame, sizeof(WORD)          *lpIem->lpMotion[i].NumRotate, &dum, NULL );

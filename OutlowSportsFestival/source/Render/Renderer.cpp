@@ -117,9 +117,43 @@ bool RendererManager::EraceForwardRenderer(LpForwardRenderer pDef)
 }
 
 
+//描画
+void RendererManager::Render()
+{
+    DeferredRender();
+    ForwardRender();
+
+
+//    //スクリーンサーフェイスを保存
+//    Surface* pScreen;
+//    iexSystem::Device->GetRenderTarget(0, &pScreen);
+//
+//    //テクスチャをセット
+//    m_pTextures[_ColorTexture]->RenderTarget();
+//    m_pTextures[_HDRTexture]->RenderTarget();
+//    m_pTextures[_DepthTexture]->RenderTarget();
+//
+//    //MRT描画
+//    DeferredRender();
+//
+//    //HDR部分をブラー処理
+//
+//
+//
+//    //HDRと深度書き込みをしない設定に
+//    iexSystem::Device->SetRenderTarget(1, NULL);
+//
+//    //通常描画
+//    ForwardRender();
+//
+//    //ポストエフェクト
+//
+}
+
 //ディファード描画
 void RendererManager::DeferredRender()
 {
+
 	for (auto it = m_DeferredRendererMap.begin();
 		it != m_DeferredRendererMap.end();
 		++it)
@@ -187,10 +221,21 @@ void RendererManager::ForwardRender()
 
 RendererManager::RendererManager()
 {
-
+    for (int i = 0; i < (int)__MaxTexture; ++i)
+    {
+        m_pTextures[i] = new iex2DObj(
+            iexSystem::ScreenWidth,
+            iexSystem::ScreenHeight,
+            IEX2D_RENDERTARGET
+            );
+    }
 }
 
 RendererManager::~RendererManager()
 {
-
+    for (int i = 0; i < (int)__MaxTexture; ++i)
+    {
+        delete  m_pTextures[i];
+        m_pTextures[i] = nullptr;
+    }
 }
