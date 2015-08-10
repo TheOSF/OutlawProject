@@ -71,6 +71,24 @@ private:
     //フォワード描画
     void ForwardRender();
 
+    //カラーバッファの内容を引数のサーフェイスに移す
+    void RenderToBackBuffer(Surface* pSurface);
+
+    //Gバッファ描画
+    void CreateGbuf();
+
+    //ソフトパーティクル描画
+    void RenderSoftParticle();
+
+    //テクスチャをブラーさせる
+    void BlurTexture(iex2DObj* pTex);
+
+    //HDR部分をカラーカラーバッファに加算
+    void RenderAddHDR();
+
+    //ポストエフェクト描画
+    void RenderPostEffect();
+
 	typedef std::map<LpDeferredRenderer, LpDeferredRenderer> DeferredRendererMap;
 	typedef std::map<LpForwardRenderer, LpForwardRenderer> ForwardRendererMap;
 
@@ -82,13 +100,16 @@ private:
     enum TextureType
     {
         _ColorTexture,
-        _HDRTexture,
-        _DepthTexture,
+        _HdrDepthTexture,
+        _WorkTexture,
 
         __MaxTexture
     };
 
     iex2DObj* m_pTextures[__MaxTexture];
+
+    const int m_WorkTextureSizeX;
+    const int m_WorkTextureSizeY;
 };
 
 #define DefRendererMgr (RendererManager::GetInstance())

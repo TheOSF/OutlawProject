@@ -196,6 +196,7 @@
     <ClCompile Include="source\Library\Effekseer\EffekseerSystem.cpp" />
     <ClCompile Include="source\Render\MeshRenderer.cpp" />
     <ClCompile Include="source\Render\PointLightObject.cpp" />
+    <ClCompile Include="source\Render\PostEffectRenderer.cpp" />
     <ClCompile Include="source\Render\Renderer.cpp" />
     <ClCompile Include="source\Render\ShaderManager.cpp" />
     <ClCompile Include="source\utillity\ColorUtility.cpp" />
@@ -274,6 +275,7 @@
     <ClInclude Include="source\Render\Header.h" />
     <ClInclude Include="source\Render\MeshRenderer.h" />
     <ClInclude Include="source\Render\PointLightObject.h" />
+    <ClInclude Include="source\Render\PostEffectRenderer.h" />
     <ClInclude Include="source\Render\Renderer.h" />
     <ClInclude Include="source\Render\ShaderManager.h" />
     <ClInclude Include="source\utillity\Collision.h" />

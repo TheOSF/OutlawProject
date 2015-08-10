@@ -133,6 +133,7 @@
     <ClCompile Include="source\GameSystem\GameEventer.cpp" />
     <ClCompile Include="source\Render\ShaderManager.cpp" />
     <ClCompile Include="source\Render\PointLightObject.cpp" />
+    <ClCompile Include="source\Render\PostEffectRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -218,6 +219,7 @@
     <ClInclude Include="source\GameSystem\GameEventer.h" />
     <ClInclude Include="source\Render\ShaderManager.h" />
     <ClInclude Include="source\Render\PointLightObject.h" />
+    <ClInclude Include="source\Render\PostEffectRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

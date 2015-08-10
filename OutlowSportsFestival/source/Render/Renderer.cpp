@@ -120,34 +120,32 @@ bool RendererManager::EraceForwardRenderer(LpForwardRenderer pDef)
 //描画
 void RendererManager::Render()
 {
-    DeferredRender();
+
+    //スクリーンサーフェイスを保存
+    Surface* pScreen;
+    iexSystem::Device->GetRenderTarget(0, &pScreen);
+
+    //MRT描画
+    CreateGbuf();
+
+    //ソフトパーティクル描画
+    RenderSoftParticle();
+
+    //HDR部分をブラー処理
+    BlurTexture(m_pTextures[_HdrDepthTexture]);
+
+    //HDR部分をカラーカラーバッファに加算
+    RenderAddHDR();
+
+    //カラーカラーバッファに通常描画
     ForwardRender();
 
+    //カラーバッファからバックバッファに移す
+    RenderToBackBuffer(pScreen);
 
-//    //スクリーンサーフェイスを保存
-//    Surface* pScreen;
-//    iexSystem::Device->GetRenderTarget(0, &pScreen);
-//
-//    //テクスチャをセット
-//    m_pTextures[_ColorTexture]->RenderTarget();
-//    m_pTextures[_HDRTexture]->RenderTarget();
-//    m_pTextures[_DepthTexture]->RenderTarget();
-//
-//    //MRT描画
-//    DeferredRender();
-//
-//    //HDR部分をブラー処理
-//
-//
-//
-//    //HDRと深度書き込みをしない設定に
-//    iexSystem::Device->SetRenderTarget(1, NULL);
-//
-//    //通常描画
-//    ForwardRender();
-//
-//    //ポストエフェクト
-//
+    //カラーバッファを元にバックバッファにポストエフェクト描画
+    RenderPostEffect();
+
 }
 
 //ディファード描画
@@ -175,6 +173,9 @@ void RendererManager::ForwardRender()
 	{
 		return;
 	}
+
+    //レンダーターゲット設定
+    m_pTextures[_ColorTexture]->RenderTarget(0);
 
 	//ソート結果用配列を生成
 	LpForwardRenderer* SortData = new LpForwardRenderer[m_ForwardRendererMap.size()];
@@ -212,20 +213,86 @@ void RendererManager::ForwardRender()
 	catch (...)
 	{
 		delete[]SortData;
+        iexSystem::Device->SetRenderTarget(0, 0);
 		throw;
 	}
 
 	delete[]SortData;
+
+    iexSystem::Device->SetRenderTarget(0, 0);
+}
+
+//カラーバッファの内容を引数のサーフェイスに移す
+void RendererManager::RenderToBackBuffer(Surface* pSurface)
+{
+
+}
+
+void RendererManager::CreateGbuf()
+{
+    //テクスチャをRTにセット
+    m_pTextures[_ColorTexture]->RenderTarget(0);
+    m_pTextures[_HdrDepthTexture]->RenderTarget(1);
+    
+    //描画
+    DeferredRender();
+
+    //nullに
+    iexSystem::Device->SetRenderTarget(0, 0);
+    iexSystem::Device->SetRenderTarget(1, 0);
+}
+
+//ソフトパーティクル描画
+void RendererManager::RenderSoftParticle()
+{
+
+}
+
+//テクスチャをブラーさせる
+void RendererManager::BlurTexture(iex2DObj* pTex)
+{
+    
+
+
+}
+
+//HDR部分をカラーカラーバッファに加算
+void RendererManager::RenderAddHDR()
+{
+
+    m_pTextures[_ColorTexture]->RenderTarget(0);
+
+    m_pTextures[_WorkTexture]->Render(
+        0,
+        0,
+        (int)iexSystem::ScreenWidth,
+        (int)iexSystem::ScreenHeight,
+        0,
+        0,
+        (int)iexSystem::ScreenWidth,
+        (int)iexSystem::ScreenHeight,
+        RS_ADD
+        );
+
+    iexSystem::Device->SetRenderTarget(0, 0);
 }
 
 
-RendererManager::RendererManager()
+//ポストエフェクト描画
+void RendererManager::RenderPostEffect()
+{
+
+}
+
+RendererManager::RendererManager() :
+m_WorkTextureSizeX((int)(iexSystem::ScreenWidth / 2)),
+m_WorkTextureSizeY((int)(iexSystem::ScreenHeight / 2))
 {
     for (int i = 0; i < (int)__MaxTexture; ++i)
     {
         m_pTextures[i] = new iex2DObj(
-            iexSystem::ScreenWidth,
-            iexSystem::ScreenHeight,
+            (i != (int)_WorkTexture) ? (iexSystem::ScreenWidth) : (iexSystem::ScreenWidth / 2), 
+            (i != (int)_WorkTexture) ? (iexSystem::ScreenHeight) : (iexSystem::ScreenHeight / 2),
             IEX2D_RENDERTARGET
             );
     }
