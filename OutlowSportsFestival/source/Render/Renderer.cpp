@@ -1,5 +1,7 @@
 #include "Renderer.h"
 #include "../debug/DebugFunction.h"
+#include "../IexSystem/System.h"
+
 
 RendererManager* RendererManager::m_pInstance = nullptr;
 
@@ -40,6 +42,22 @@ ForwardRenderer::~ForwardRenderer()
 		"ForwardRendererの削除に失敗しました");
 }
 
+
+LightObject::LightObject()
+{
+
+    MyAssert(
+    DefRendererMgr.AddLightObject(this),
+        "LightObjectの追加に失敗しました");
+}
+
+LightObject::~LightObject()
+{
+
+    MyAssert(
+        DefRendererMgr.EraceLightObject(this),
+        "LightObjectの削除に失敗しました");
+}
 
 
 //*************************************************
@@ -117,47 +135,131 @@ bool RendererManager::EraceForwardRenderer(LpForwardRenderer pDef)
 }
 
 
+bool RendererManager::AddLightObject(LpLightObject pL)
+{
+    if (m_LightObjectMap.find(pL) != m_LightObjectMap.end())
+    {
+        return false;
+    }
+
+    m_LightObjectMap.insert(
+        LightObjectMap::value_type(pL, pL)
+        );
+
+    return true;
+}
+
+bool RendererManager::EraceLightObject(LpLightObject pL)
+{
+    auto it = m_LightObjectMap.find(pL);
+
+    if (it == m_LightObjectMap.end())
+    {
+        return false;
+    }
+
+    m_LightObjectMap.erase(it);
+    return true;
+}
+
+
 //描画
 void RendererManager::Render()
 {
+    Matrix VP;
+    VP = matView;
+    VP *= matProjection;
 
-    //スクリーンサーフェイスを保存
-    Surface* pScreen;
-    iexSystem::Device->GetRenderTarget(0, &pScreen);
+    shader->SetValue("g_VP_mat", VP);
 
-    //MRT描画
-    CreateGbuf();
+    m_DeferredLightManager.SetViewParam(matView, matProjection, Vector3Zero);
 
-    //ソフトパーティクル描画
-    RenderSoftParticle();
 
-    //HDR部分をブラー処理
-    BlurTexture(m_pTextures[_HdrDepthTexture]);
+    GbufRenderer Gr;
+    LightbufRenderer Lr;
+    MasterRenderer Mr;
+    ForwardRenderer Fr;
 
-    //HDR部分をカラーカラーバッファに加算
-    RenderAddHDR();
+    Gr.SetMgr(this);
+    Lr.SetMgr(this);
+    Mr.SetMgr(this);
+    Fr.SetMgr(this);
 
-    //カラーカラーバッファに通常描画
-    ForwardRender();
+    m_DeferredLightManager.Render(
+        &Gr,
+        &Lr,
+        &Mr,
+        &Fr,
+        &m_BlurEffectRenderer
+        );
 
-    //カラーバッファからバックバッファに移す
-    RenderToBackBuffer(pScreen);
-
-    //カラーバッファを元にバックバッファにポストエフェクト描画
-    RenderPostEffect();
-
+    if (GetKeyState('G'))
+    m_DeferredLightManager.TextureRender();
 }
 
-//ディファード描画
-void RendererManager::DeferredRender()
-{
 
-	for (auto it = m_DeferredRendererMap.begin();
-		it != m_DeferredRendererMap.end();
+
+//---------------------------------------------------------------------
+//   レンダラー
+//---------------------------------------------------------------------
+
+//共通クラス
+void RendererManager::IRenderer::SetMgr(RendererManager* pMgr)
+{
+    m_pMgr = pMgr;
+}
+
+
+//Gバッファ描画
+void RendererManager::GbufRenderer::Render(
+    iexShader*        pShader, //シェーダークラス
+    DeferredGbufRenderer::TechniqueSetter*  pSetter  //テクニック管理クラス
+    )
+{
+	for (auto it = m_pMgr->m_DeferredRendererMap.begin();
+        it != m_pMgr->m_DeferredRendererMap.end();
 		++it)
 	{
-		it->second->Render();
+        it->second->GbufRender(pShader, pSetter);
 	}
+}
+
+
+//ライトバッファ描画
+void RendererManager::LightbufRenderer::Render(
+    DeferredLightBufRenderer::LightRenderer* pLightRenderer //ライト描画クラス
+    )
+{
+    for (auto it = m_pMgr->m_LightObjectMap.begin();
+        it != m_pMgr->m_LightObjectMap.end();
+        ++it)
+    {
+        it->second->Render(pLightRenderer);
+    }
+}
+
+
+//マスター描画
+void RendererManager::MasterRenderer::Render(
+    iex2DObj* pInDiffuseTexture,   //ライティング処理後の拡散反射光テクスチャ
+    iex2DObj* pInSpecularTexture,  //ライティング処理後の鏡面反射光テクスチャ
+    iex2DObj* pOutColorTexture,    //色情報を出力するテクスチャ
+    iex2DObj* pOutHighRangeTexture //高輝度部分を出力するテクスチャ
+    )
+{
+    shader->SetValue("DiffuseLightMap", pInDiffuseTexture->GetTexture());
+    shader->SetValue("SpecuarLightMap", pInSpecularTexture->GetTexture());
+
+    pOutColorTexture->RenderTarget(0);
+    pOutHighRangeTexture->RenderTarget(1);
+
+    
+    for (auto it = m_pMgr->m_DeferredRendererMap.begin();
+        it != m_pMgr->m_DeferredRendererMap.end();
+        ++it)
+    {
+        it->second->MasterRender();
+    }
 }
 
 //Z値比較用関数
@@ -167,25 +269,22 @@ static int CompareFunc(const void*p1, const void* p2)
 }
 
 //フォワード描画
-void RendererManager::ForwardRender()
+void RendererManager::ForwardRenderer::Render()
 {
-	if (m_ForwardRendererMap.empty())
+	if (m_pMgr->m_ForwardRendererMap.empty())
 	{
 		return;
 	}
 
-    //レンダーターゲット設定
-    m_pTextures[_ColorTexture]->RenderTarget(0);
-
 	//ソート結果用配列を生成
-	LpForwardRenderer* SortData = new LpForwardRenderer[m_ForwardRendererMap.size()];
+    LpForwardRenderer* SortData = new LpForwardRenderer[m_pMgr->m_ForwardRendererMap.size()];
 
 	try
 	{
 		int count = 0;
 
-		for (auto it = m_ForwardRendererMap.begin();
-			it != m_ForwardRendererMap.end();
+        for (auto it = m_pMgr->m_ForwardRendererMap.begin();
+            it != m_pMgr->m_ForwardRendererMap.end();
 			++it)
 		{
 			SortData[count] = it->second;
@@ -213,96 +312,37 @@ void RendererManager::ForwardRender()
 	catch (...)
 	{
 		delete[]SortData;
-        iexSystem::Device->SetRenderTarget(0, 0);
 		throw;
 	}
 
 	delete[]SortData;
 
-    iexSystem::Device->SetRenderTarget(0, 0);
-}
-
-//カラーバッファの内容を引数のサーフェイスに移す
-void RendererManager::RenderToBackBuffer(Surface* pSurface)
-{
-
-}
-
-void RendererManager::CreateGbuf()
-{
-    //テクスチャをRTにセット
-    m_pTextures[_ColorTexture]->RenderTarget(0);
-    m_pTextures[_HdrDepthTexture]->RenderTarget(1);
-    
-    //描画
-    DeferredRender();
-
-    //nullに
-    iexSystem::Device->SetRenderTarget(0, 0);
-    iexSystem::Device->SetRenderTarget(1, 0);
-}
-
-//ソフトパーティクル描画
-void RendererManager::RenderSoftParticle()
-{
-
-}
-
-//テクスチャをブラーさせる
-void RendererManager::BlurTexture(iex2DObj* pTex)
-{
-    
-
-
-}
-
-//HDR部分をカラーカラーバッファに加算
-void RendererManager::RenderAddHDR()
-{
-
-    m_pTextures[_ColorTexture]->RenderTarget(0);
-
-    m_pTextures[_WorkTexture]->Render(
-        0,
-        0,
-        (int)iexSystem::ScreenWidth,
-        (int)iexSystem::ScreenHeight,
-        0,
-        0,
-        (int)iexSystem::ScreenWidth,
-        (int)iexSystem::ScreenHeight,
-        RS_ADD
-        );
-
-    iexSystem::Device->SetRenderTarget(0, 0);
 }
 
 
-//ポストエフェクト描画
-void RendererManager::RenderPostEffect()
+void RendererManager::DepthRenderer::Render(iexShader* pShader, const char* technique)
 {
-
-}
-
-RendererManager::RendererManager() :
-m_WorkTextureSizeX((int)(iexSystem::ScreenWidth / 2)),
-m_WorkTextureSizeY((int)(iexSystem::ScreenHeight / 2))
-{
-    for (int i = 0; i < (int)__MaxTexture; ++i)
+    for (auto it = m_pMgr->m_DeferredRendererMap.begin();
+        it != m_pMgr->m_DeferredRendererMap.end();
+        ++it)
     {
-        m_pTextures[i] = new iex2DObj(
-            (i != (int)_WorkTexture) ? (iexSystem::ScreenWidth) : (iexSystem::ScreenWidth / 2), 
-            (i != (int)_WorkTexture) ? (iexSystem::ScreenHeight) : (iexSystem::ScreenHeight / 2),
-            IEX2D_RENDERTARGET
-            );
+        it->second->DepthRender(pShader, technique);
     }
+}
+
+RendererManager::RendererManager():
+m_DeferredLightManager(iexSystem::ScreenWidth, iexSystem::ScreenHeight, "DATA\\Shader\\Shader"),
+m_BlurEffectRenderer("DATA\\Shader\\Shader")
+{
+    m_DepthRenderer.SetMgr(this);
 }
 
 RendererManager::~RendererManager()
 {
-    for (int i = 0; i < (int)__MaxTexture; ++i)
-    {
-        delete  m_pTextures[i];
-        m_pTextures[i] = nullptr;
-    }
+
+}
+
+DeferredLightBufRenderer::IDepthRenderer* RendererManager::GetDepthRenderer()
+{
+    return &m_DepthRenderer;
 }

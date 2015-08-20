@@ -43,8 +43,15 @@ public:
 	//モーション更新
 	void Update(float t);
 
-	//描画
-	void Render();
+
+    void GbufRender(
+        iexShader*        pShader,                       //シェーダークラス
+        DeferredGbufRenderer::TechniqueSetter*  pSetter  //テクニック管理クラス
+        );
+
+    void MasterRender();
+
+    void DepthRender(iexShader* pShader, const char* pTec);
 
 	//ワールド変換行列
 	Matrix& m_TransMatrix;

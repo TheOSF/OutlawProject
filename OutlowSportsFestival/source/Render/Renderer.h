@@ -5,6 +5,9 @@
 //	描画クラスベース
 //*************************************************
 #include <map>
+#include "System\DeferredLightManager.h"
+#include "System\BlurEffectRenderer.h"
+#include "../IexSystem/System.h"
 
 //ディファード描画用クラス
 class DeferredRenderer
@@ -14,8 +17,16 @@ public:
 	DeferredRenderer();
 	virtual ~DeferredRenderer();
 
-	//描画(自動的に呼ばれる)
-	virtual void Render() = 0;
+	//Gバッファ描画(自動的に呼ばれる)
+	virtual void GbufRender(
+        iexShader*        pShader,                       //シェーダークラス
+        DeferredGbufRenderer::TechniqueSetter*  pSetter  //テクニック管理クラス
+        ) = 0;
+
+    //本番描画(自動的に呼ばれる、RT０＝色　RT1＝高輝度)
+    virtual void MasterRender() = 0;
+
+    virtual void DepthRender(iexShader* pShader, const char* pTec) = 0;
 };
 
 typedef DeferredRenderer* LpDeferredRenderer;
@@ -40,6 +51,18 @@ public:
 typedef ForwardRenderer* LpForwardRenderer;
 
 
+//ライト描画クラス
+class LightObject
+{
+public:
+    typedef DeferredLightBufRenderer::LightRenderer LightRenderer;
+    
+    LightObject();
+    virtual~LightObject();
+    
+    virtual void Render(LightRenderer* pLightRenderer) = 0;
+};
+typedef LightObject* LpLightObject;
 
 //*************************************************
 //	描画マネージャ
@@ -58,58 +81,84 @@ public:
 	bool AddForwardRenderer(LpForwardRenderer pFor);
 	bool EraceForwardRenderer(LpForwardRenderer pFor);
 
+    //フォワード描画用クラスの追加・削除
+    bool AddLightObject(LpLightObject pL);
+    bool EraceLightObject(LpLightObject pL);
+
     //描画
     void Render();
+
+    //Z値描画オブジェクトへのポインタを得る
+    DeferredLightBufRenderer::IDepthRenderer* GetDepthRenderer();
 private:
 
 	RendererManager();
 	~RendererManager();
 
-    //ディファード描画
-    void DeferredRender();
-
-    //フォワード描画
-    void ForwardRender();
-
-    //カラーバッファの内容を引数のサーフェイスに移す
-    void RenderToBackBuffer(Surface* pSurface);
-
-    //Gバッファ描画
-    void CreateGbuf();
-
-    //ソフトパーティクル描画
-    void RenderSoftParticle();
-
-    //テクスチャをブラーさせる
-    void BlurTexture(iex2DObj* pTex);
-
-    //HDR部分をカラーカラーバッファに加算
-    void RenderAddHDR();
-
-    //ポストエフェクト描画
-    void RenderPostEffect();
-
 	typedef std::map<LpDeferredRenderer, LpDeferredRenderer> DeferredRendererMap;
 	typedef std::map<LpForwardRenderer, LpForwardRenderer> ForwardRendererMap;
+    typedef std::map<LpLightObject, LpLightObject> LightObjectMap;
+
 
 	static RendererManager* m_pInstance;
 
-	DeferredRendererMap m_DeferredRendererMap;
-	ForwardRendererMap  m_ForwardRendererMap;
-
-    enum TextureType
+    class IRenderer
     {
-        _ColorTexture,
-        _HdrDepthTexture,
-        _WorkTexture,
-
-        __MaxTexture
+    protected:
+        RendererManager* m_pMgr;
+    public:
+        void SetMgr(RendererManager* pMgr);
     };
 
-    iex2DObj* m_pTextures[__MaxTexture];
+    class GbufRenderer :public DeferredGbufRenderer::IRenderer, public IRenderer
+    {
+    public:
+        void Render(
+            iexShader*        pShader, //シェーダークラス
+            DeferredGbufRenderer::TechniqueSetter*  pSetter  //テクニック管理クラス
+            );
+    };
 
-    const int m_WorkTextureSizeX;
-    const int m_WorkTextureSizeY;
+    class LightbufRenderer :public DeferredLightBufRenderer::IRenderer, public IRenderer
+    {
+    public:
+        void Render(
+            DeferredLightBufRenderer::LightRenderer* pLightRenderer //ライト描画クラス
+            );
+    };
+
+    class MasterRenderer :public DeferredLightManager::IMasterRenderer, public IRenderer
+    {
+    public:
+        void Render(
+            iex2DObj* pInDiffuseTexture,   //ライティング処理後の拡散反射光テクスチャ
+            iex2DObj* pInSpecularTexture,  //ライティング処理後の鏡面反射光テクスチャ
+            iex2DObj* pOutColorTexture,    //色情報を出力するテクスチャ
+            iex2DObj* pOutHighRangeTexture //高輝度部分を出力するテクスチャ
+             );
+    };
+
+    class ForwardRenderer :public DeferredLightManager::IForwardRenderer, public IRenderer
+    {
+    public:
+        void Render();
+    };
+
+    class DepthRenderer :public DeferredLightBufRenderer::IDepthRenderer, public IRenderer
+    {
+    public:
+        void Render(iexShader* pShader, const char* technique);
+    };
+
+
+	DeferredRendererMap   m_DeferredRendererMap;
+	ForwardRendererMap    m_ForwardRendererMap;
+    LightObjectMap        m_LightObjectMap;
+
+    DeferredLightManager  m_DeferredLightManager;
+
+    BlurEffectRenderer    m_BlurEffectRenderer;
+    DepthRenderer         m_DepthRenderer;
 };
 
 #define DefRendererMgr (RendererManager::GetInstance())

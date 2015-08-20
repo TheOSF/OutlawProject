@@ -325,6 +325,17 @@ inline Vector3 Vector3MulMatrix(const Vector& v, const Matrix& m)
 		);
 }
 
+inline Vector3 Vector3MulMatrix3x3(const Vector& v, const Matrix& m)
+{
+    return Vector3(
+        v.x*m._11 + v.y*m._21 + v.z*m._31,
+        v.x*m._12 + v.y*m._22 + v.z*m._32,
+        v.x*m._13 + v.y*m._23 + v.z*m._33
+        );
+}
+
+
+
 //------------------------------------------------------
 //	ê≥ãKâª
 //------------------------------------------------------
@@ -701,6 +712,7 @@ typedef struct tagLNVERTEX {
 //------------------------------------------------------
 #define	IEX2D_RENDERTARGET	1
 #define	IEX2D_USEALPHA		2
+#define	IEX2D_USEALPHA2		3
 #define	IEX2D_SYSTEMMEM		100
 #define	IEX2D_FLOAT			111
 #define	IEX2D_FLOAT2		110
@@ -777,7 +789,9 @@ public:
 	static void Render2D( LPTLVERTEX lpVertex, int Num, LPIEX2DOBJ lpObj, iexShader* shader, char* name );
 	static void Rect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, u32 dwFlags, COLOR color, float z=.0f );
 	static void Rect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, iexShader* shader, char* name, COLOR color, float z=.0f );
+    static void RectPlus(s32 DstX, s32 DstY, s32 DstW, s32 DstH, iexShader* shader, char* name, COLOR color, float z = .0f);
 
+    
 };
 
 //*****************************************************************************************************************************

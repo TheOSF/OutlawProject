@@ -31,10 +31,13 @@ UsualBall::UsualBall(
 	//メッシュのレンダラー作成(最終的にメッシュを使いまわして描画するべき)
 	m_pMeshRenderer = new MeshRenderer(
 		pBallMesh,
-		true
+		true,
+        MeshRenderer::RenderType::UseColor
 		);
 
 	D3DXQuaternionIdentity(&m_Ballrot);
+
+    UpdateMesh();
 }
 
 UsualBall::~UsualBall()

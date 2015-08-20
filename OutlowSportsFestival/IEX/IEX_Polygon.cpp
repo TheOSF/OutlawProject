@@ -143,6 +143,28 @@ void	iexPolygon::Rect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, iexShader* shader
 	Render2D( v, 2, NULL, shader, name );
 }
 
+void	iexPolygon::RectPlus(s32 DstX, s32 DstY, s32 DstW, s32 DstH, iexShader* shader, char* name, COLOR color, float z)
+{
+    TLVERTEX	v[4];
+
+    v[0].sx = v[2].sx = (FLOAT)DstX;
+    v[1].sx = v[3].sx = (FLOAT)(DstX + DstW);
+
+    v[0].sy = v[1].sy = (FLOAT)DstY;
+    v[2].sy = v[3].sy = (FLOAT)(DstY + DstH);
+
+    v[0].sz = v[1].sz = v[2].sz = v[3].sz = z;
+    v[0].color = v[1].color = v[2].color = v[3].color = color;
+    v[0].rhw = v[1].rhw = v[2].rhw = v[3].rhw = 1.0f;
+
+    v[0].tu = v[2].tu = 0;
+    v[1].tu = v[3].tu = 1;
+
+    v[0].tv = v[1].tv = 0;
+    v[2].tv = v[3].tv = 1;
+
+    Render2D(v, 2, NULL, shader, name);
+}
 //**************************************************************************************************
 //
 //		‰ß‹Ž‚ÌIEX‚Æ‚ÌŒÝŠ·—p

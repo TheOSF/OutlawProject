@@ -180,6 +180,7 @@
     <ClCompile Include="source\GameScene\sceneMain.cpp" />
     <ClCompile Include="source\GameSystem\GameController.cpp" />
     <ClCompile Include="source\GameSystem\GameEventer.cpp" />
+    <ClCompile Include="source\GameSystem\GameInitilizer_DevelopMode.cpp" />
     <ClCompile Include="source\GameSystem\GameObject.cpp" />
     <ClCompile Include="source\GameSystem\GameState.cpp" />
     <ClCompile Include="source\GameSystem\ResourceManager.cpp" />
@@ -194,11 +195,15 @@
     <ClCompile Include="source\Library\Effekseer\EffekseerEffect.cpp" />
     <ClCompile Include="source\Library\Effekseer\EffekseerEffectManager.cpp" />
     <ClCompile Include="source\Library\Effekseer\EffekseerSystem.cpp" />
+    <ClCompile Include="source\Render\LightObject.cpp" />
     <ClCompile Include="source\Render\MeshRenderer.cpp" />
-    <ClCompile Include="source\Render\PointLightObject.cpp" />
     <ClCompile Include="source\Render\PostEffectRenderer.cpp" />
     <ClCompile Include="source\Render\Renderer.cpp" />
-    <ClCompile Include="source\Render\ShaderManager.cpp" />
+    <ClCompile Include="source\Render\System\BlurEffectRenderer.cpp" />
+    <ClCompile Include="source\Render\System\DeferredGbufRenderer.cpp" />
+    <ClCompile Include="source\Render\System\DeferredLightBufRenderer.cpp" />
+    <ClCompile Include="source\Render\System\DeferredLightManager.cpp" />
+    <ClCompile Include="source\Render\System\SmalBufBlurRenderer.cpp" />
     <ClCompile Include="source\utillity\ColorUtility.cpp" />
     <ClCompile Include="source\utillity\PlayerGauge.cpp" />
   </ItemGroup>
@@ -260,6 +265,8 @@
     <ClInclude Include="source\GameSystem\ForwardDecl.h" />
     <ClInclude Include="source\GameSystem\GameController.h" />
     <ClInclude Include="source\GameSystem\GameEventer.h" />
+    <ClInclude Include="source\GameSystem\GameInitializer.h" />
+    <ClInclude Include="source\GameSystem\GameInitilizer_DevelopMode.h" />
     <ClInclude Include="source\GameSystem\GameObject.h" />
     <ClInclude Include="source\GameSystem\GameState.h" />
     <ClInclude Include="source\GameSystem\GameSystem.h" />
@@ -273,18 +280,24 @@
     <ClInclude Include="source\Library\Effekseer\EffekseerEffectManager.h" />
     <ClInclude Include="source\Library\Effekseer\EffekseerSystem.h" />
     <ClInclude Include="source\Render\Header.h" />
+    <ClInclude Include="source\Render\LightObject.h" />
     <ClInclude Include="source\Render\MeshRenderer.h" />
-    <ClInclude Include="source\Render\PointLightObject.h" />
     <ClInclude Include="source\Render\PostEffectRenderer.h" />
     <ClInclude Include="source\Render\Renderer.h" />
-    <ClInclude Include="source\Render\ShaderManager.h" />
+    <ClInclude Include="source\Render\System\BlurEffectRenderer.h" />
+    <ClInclude Include="source\Render\System\DeferredGbufRenderer.h" />
+    <ClInclude Include="source\Render\System\DeferredLightBufRenderer.h" />
+    <ClInclude Include="source\Render\System\DeferredLightManager.h" />
+    <ClInclude Include="source\Render\System\SmalBufBlurRenderer.h" />
     <ClInclude Include="source\utillity\Collision.h" />
     <ClInclude Include="source\utillity\ColorUtility.h" />
+    <ClInclude Include="source\utillity\DebugControllGameObject.h" />
     <ClInclude Include="source\utillity\NonCopyable.h" />
     <ClInclude Include="source\utillity\PlayerGauge.h" />
     <ClInclude Include="source\utillity\SafeMethod.h" />
     <ClInclude Include="source\utillity\Singleton.h" />
     <ClInclude Include="source\utillity\StateTemplate.h" />
+    <ClInclude Include="source\utillity\StaticGameObjectTemplate.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx" />

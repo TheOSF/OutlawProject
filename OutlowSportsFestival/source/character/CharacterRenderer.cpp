@@ -127,14 +127,24 @@ void CharacterRenderer::Update(float t)
 }
 
 //描画
-void CharacterRenderer::Render()
+void CharacterRenderer::GbufRender(
+    iexShader*        pShader,                       //シェーダークラス
+    DeferredGbufRenderer::TechniqueSetter*  pSetter  //テクニック管理クラス
+    )
+{
+    char str[256];
+    pSetter->NoTexture(str, 256);
+    m_pAnimeMesh->Render(pShader, str);
+}
+
+void CharacterRenderer::MasterRender()
 {
     typedef std::map<int, char*> Techniques;
     Techniques tecs;
 
-    char FaceTechnique[] = { "Toon" };
-    char HairTechnique[] = { "Toon" };
-    char BodyTechnique[] = { "Toon" };
+    char FaceTechnique[] = { "DeffLightNoSp" };
+    char HairTechnique[] = { "DeffLightNoSp" };
+    char BodyTechnique[] = { "DeffLightNoSp" };
 
     tecs.insert(Techniques::value_type(0, FaceTechnique));
     tecs.insert(Techniques::value_type(1, FaceTechnique));
@@ -146,8 +156,16 @@ void CharacterRenderer::Render()
     tecs.insert(Techniques::value_type(7, HairTechnique));
     tecs.insert(Techniques::value_type(8, HairTechnique));
     tecs.insert(Techniques::value_type(9, HairTechnique));
-    
-    (GetKeyState('R'))? m_pAnimeMesh->Render(shader, tecs) : m_pAnimeMesh->Render();
+
+
+    m_pAnimeMesh->Render(shader, tecs);
+}
+
+void CharacterRenderer::DepthRender(iexShader* pShader, const char* pTec)
+{
+    char str[256];
+    strcpy_s<256>(str, pTec);
+    m_pAnimeMesh->Render(pShader, str);
 }
 
 void CharacterRenderer::Initialize()

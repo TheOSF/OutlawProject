@@ -131,9 +131,14 @@
     <ClCompile Include="source\Camera\CameraState.cpp" />
     <ClCompile Include="source\utillity\PlayerGauge.cpp" />
     <ClCompile Include="source\GameSystem\GameEventer.cpp" />
-    <ClCompile Include="source\Render\ShaderManager.cpp" />
-    <ClCompile Include="source\Render\PointLightObject.cpp" />
     <ClCompile Include="source\Render\PostEffectRenderer.cpp" />
+    <ClCompile Include="source\Render\System\BlurEffectRenderer.cpp" />
+    <ClCompile Include="source\Render\System\DeferredGbufRenderer.cpp" />
+    <ClCompile Include="source\Render\System\DeferredLightBufRenderer.cpp" />
+    <ClCompile Include="source\Render\System\DeferredLightManager.cpp" />
+    <ClCompile Include="source\Render\System\SmalBufBlurRenderer.cpp" />
+    <ClCompile Include="source\Render\LightObject.cpp" />
+    <ClCompile Include="source\GameSystem\GameInitilizer_DevelopMode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -217,9 +222,17 @@
     <ClInclude Include="source\Render\Header.h" />
     <ClInclude Include="source\utillity\PlayerGauge.h" />
     <ClInclude Include="source\GameSystem\GameEventer.h" />
-    <ClInclude Include="source\Render\ShaderManager.h" />
-    <ClInclude Include="source\Render\PointLightObject.h" />
     <ClInclude Include="source\Render\PostEffectRenderer.h" />
+    <ClInclude Include="source\Render\System\BlurEffectRenderer.h" />
+    <ClInclude Include="source\Render\System\DeferredGbufRenderer.h" />
+    <ClInclude Include="source\Render\System\DeferredLightBufRenderer.h" />
+    <ClInclude Include="source\Render\System\DeferredLightManager.h" />
+    <ClInclude Include="source\Render\System\SmalBufBlurRenderer.h" />
+    <ClInclude Include="source\Render\LightObject.h" />
+    <ClInclude Include="source\GameSystem\GameInitializer.h" />
+    <ClInclude Include="source\GameSystem\GameInitilizer_DevelopMode.h" />
+    <ClInclude Include="source\utillity\StaticGameObjectTemplate.h" />
+    <ClInclude Include="source\utillity\DebugControllGameObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

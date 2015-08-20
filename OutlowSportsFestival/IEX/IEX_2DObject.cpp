@@ -38,31 +38,37 @@ iex2DObj::iex2DObj( u32 width, u32 height, u8 flag )
 	u32			usage = 0;
 	D3DPOOL		pool = D3DPOOL_MANAGED;
 
-	switch( flag ){
-	case IEX2D_RENDERTARGET:	//	レンダー可能
-					usage = D3DUSAGE_RENDERTARGET;
-					fmt = iexSystem::ScreenFormat;
-					pool = D3DPOOL_DEFAULT;
-					break;
-	case IEX2D_FLOAT2:	//	レンダー可能
-					usage = D3DUSAGE_RENDERTARGET;
-					fmt = D3DFMT_G32R32F;
-					pool = D3DPOOL_DEFAULT;
-					break;
-	case IEX2D_FLOAT:	//	レンダー可能
-					usage = D3DUSAGE_RENDERTARGET;
-					fmt = D3DFMT_R32F;
-					pool = D3DPOOL_DEFAULT;
-					break;
+    switch (flag){
+    case IEX2D_RENDERTARGET:	//	レンダー可能
+        usage = D3DUSAGE_RENDERTARGET;
+        fmt = iexSystem::ScreenFormat;
+        pool = D3DPOOL_DEFAULT;
+        break;
+    case IEX2D_FLOAT2:	//	レンダー可能
+        usage = D3DUSAGE_RENDERTARGET;
+        fmt = D3DFMT_G32R32F;
+        pool = D3DPOOL_DEFAULT;
+        break;
+    case IEX2D_FLOAT:	//	レンダー可能
+        usage = D3DUSAGE_RENDERTARGET;
+        fmt = D3DFMT_R32F;
+        pool = D3DPOOL_DEFAULT;
+        break;
 
-	case IEX2D_USEALPHA:		//	透明度付
-					fmt = D3DFMT_A8R8G8B8;
-					break;
-	case IEX2D_SYSTEMMEM:
-					fmt = iexSystem::ScreenFormat;
-					pool = D3DPOOL_SYSTEMMEM;
-					break;
-	}
+    case IEX2D_USEALPHA:		//	透明度付
+        fmt = D3DFMT_A8R8G8B8;
+        break;
+    case IEX2D_USEALPHA2:		//	透明度付
+        usage = D3DUSAGE_RENDERTARGET;
+        fmt = D3DFMT_A32B32G32R32F;
+        pool = D3DPOOL_DEFAULT;
+        break;
+
+    case IEX2D_SYSTEMMEM:
+        fmt = iexSystem::ScreenFormat;
+        pool = D3DPOOL_SYSTEMMEM;
+        break;
+    }
 	dwFlags= 0;
 	//	テクスチャ作成
 	D3DXCreateTexture( iexSystem::Device, width, height, 0, usage, fmt, pool, &lpTexture );
