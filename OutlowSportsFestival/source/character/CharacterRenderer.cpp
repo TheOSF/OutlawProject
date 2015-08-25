@@ -10,7 +10,8 @@
 CharacterRenderer::CharacterRenderer(BlendAnimationMesh* pAnimeMesh) :
 m_pAnimeMesh(pAnimeMesh),
 m_TransMatrix(pAnimeMesh->TransMatrix),
-m_UsePartsMotion(false)
+m_UsePartsMotion(false),
+m_HDR(0,0,0)
 {
 	Initialize();
 }
@@ -157,6 +158,7 @@ void CharacterRenderer::MasterRender()
     tecs.insert(Techniques::value_type(8, HairTechnique));
     tecs.insert(Techniques::value_type(9, HairTechnique));
 
+    shader->SetValue("g_HDR_Color", m_HDR);
 
     m_pAnimeMesh->Render(shader, tecs);
 }

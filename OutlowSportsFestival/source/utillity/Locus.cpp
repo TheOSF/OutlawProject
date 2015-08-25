@@ -25,26 +25,37 @@ void Locus::AddPoint(
 	)
 {
 
-	//Å‘å‚Ìê‡‚Ğ‚Æ‚Â‘O‚É‚¸‚ç‚·
-	if (m_UseCount == m_NumPoint)
-	{
-		for (size_t i = 0; i < m_UseCount - 1; ++i)
-		{
-			m_pPointData[i] = m_pPointData[i + 1];
-		}
+	////Å‘å‚Ìê‡‚Ğ‚Æ‚Â‘O‚É‚¸‚ç‚·
+	//if (m_UseCount == m_NumPoint)
+	//{
+	//	for (size_t i = 0; i < m_UseCount - 1; ++i)
+	//	{
+	//		m_pPointData[i] = m_pPointData[i + 1];
+	//	}
 
-		//ƒf[ƒ^‚ÌÅŒã‚É’Ç‰Á
-		m_pPointData[m_UseCount - 1].pos = pos;
-		m_pPointData[m_UseCount - 1].vec = vec;
-	}
-	else
-	{
-		//ÅŒã”ö‚É’Ç‰Á
-		m_pPointData[m_UseCount].pos = pos;
-		m_pPointData[m_UseCount].vec = vec;
+	//	//ƒf[ƒ^‚ÌÅŒã‚É’Ç‰Á
+	//	m_pPointData[m_UseCount - 1].pos = pos;
+	//	m_pPointData[m_UseCount - 1].vec = vec;
+	//}
+	//else
+	//{
+	//	//ÅŒã”ö‚É’Ç‰Á
+	//	m_pPointData[m_UseCount].pos = pos;
+	//	m_pPointData[m_UseCount].vec = vec;
 
-		++m_UseCount;
-	}
+	//	++m_UseCount;
+ //   }
+
+    //‚Ğ‚Æ‚ÂŒã‚ë‚É‚¸‚ç‚·
+    for (int i = m_UseCount; i >= 0; --i)
+    {
+        m_pPointData[i] = m_pPointData[i - 1];
+    }
+
+    m_pPointData[0].pos = pos;
+    m_pPointData[0].vec = vec;
+
+    m_UseCount = min(m_UseCount + 1, m_NumPoint - 1);
 }
 
 //‘Ñ‚Ì’·‚³‚ğ‚O‚É
@@ -119,7 +130,7 @@ void Locus::RenderDivision()
 	
 
 	const float div = 1.0f / (float)m_Division;          //‚P / ƒZƒ‹‚Ì•ªŠ„”
-	const float PolygonT = 1.0f / ((float)m_NumPoint*(float)m_Division);  // 1 / lŠpŒ`‚Ì•`‰æ”
+    const float PolygonT = 1.0f / ((float)(m_UseCount-2)*(float)m_Division);  // 1 / lŠpŒ`‚Ì•`‰æ”
 
 	Point point[2]; // ‚O‚©‚ç‚P‚É•`‰æ
 	Param param[2]; // ‚O‚©‚ç‚P‚É•`‰æ
@@ -138,7 +149,7 @@ void Locus::RenderDivision()
 			t += PolygonT;
 
 			//ƒpƒ‰ƒ[ƒ^‚ğ•âŠÔ‚µAparam[1]‚ÉŠi”[
-			LeapParam(param[1], m_StartParam, m_EndParam, 1 - t);
+			LeapParam(param[1], m_StartParam, m_EndParam, t);
 
 			//•âŠÔ
 			D3DXVec3CatmullRom(
@@ -185,7 +196,7 @@ void Locus::RenderDivision()
 void Locus::RenderUsual()
 {
 	
-	const float tAdd = 1 / (float)m_NumPoint;
+    const float tAdd = 1 / (float)(m_UseCount - 1);
 
 	Param param[2];
 	float t = 0, pret = 0;;
@@ -198,13 +209,13 @@ void Locus::RenderUsual()
 		pret = t;
 		t += tAdd;
 
-		LeapParam(param[1], m_StartParam, m_EndParam, 1 - t);
+		LeapParam(param[1], m_StartParam, m_EndParam, t);
 
-		Render(
-			param[0],
-			param[1],
-			m_pPointData[i],
-			m_pPointData[i+1],
+        Render(
+            param[0],
+            param[1],
+            m_pPointData[i],
+            m_pPointData[i + 1], 
 			t,
 			pret
 			);
@@ -223,7 +234,7 @@ void Locus::Render(
 	)
 {
 	
-	LVERTEX v[4];
+	static LVERTEX v[4];
 
 	v[0].pos = point1.pos - point1.vec*param1.Width;
 	v[1].pos = point1.pos + point1.vec*param1.Width;

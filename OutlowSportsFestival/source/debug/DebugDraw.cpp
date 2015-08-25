@@ -68,5 +68,5 @@ void DebugDrawSphere::Render()
 
     shader->SetValue("g_Color", m_Color);
 
-    m_pMesh->Render(shader,"NoTexture");
+    m_pMesh->Render(shader,"ColorOnly");
 }

@@ -17,6 +17,14 @@ public:
         float   power;
     };
 
+    struct ConeBlur
+    {
+        Vector3 origin;
+        Vector3 target;
+        float   power;
+        float   width;
+    };
+
     BlurEffectRenderer(const char* pDataFile);
     ~BlurEffectRenderer();
 
@@ -26,10 +34,12 @@ public:
         )override;
 
     std::list<SphereBlur> m_BlurSphere;
+    std::list<ConeBlur>   m_BlurCone;
     
 private:
 
     iexMesh*    m_pSphereMesh;
+    iexMesh*    m_pConeMesh;
     iexShader*  m_pShader;
 };
 

@@ -9,6 +9,13 @@ BlurEffectRenderer::BlurEffectRenderer(const char* pDataFile)
     m_pSphereMesh = new iexMesh(path);
     D3DXMatrixIdentity(&m_pSphereMesh->TransMatrix);
 
+
+    //コーンメッシュ読み込み
+    sprintf(path, "%s%s", pDataFile, "\\spot.IMO");
+    m_pConeMesh = new iexMesh(path);
+    D3DXMatrixIdentity(&m_pConeMesh->TransMatrix);
+    
+
     //シェーダーファイル読み込み
     sprintf(path, "%s%s", pDataFile, "\\BlurEffect.fx");
     m_pShader = new iexShader(path);
@@ -21,6 +28,7 @@ BlurEffectRenderer::BlurEffectRenderer(const char* pDataFile)
 
 BlurEffectRenderer::~BlurEffectRenderer()
 {
+    delete m_pConeMesh;
     delete m_pSphereMesh;
     delete m_pShader;
 }
@@ -115,4 +123,9 @@ void BlurEffectRenderer::Render(
 
 
 
+
+    for (auto& it : m_BlurCone)
+    {
+
+    }
 }

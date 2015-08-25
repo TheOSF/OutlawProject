@@ -53,8 +53,6 @@ bool sceneGamePlay::Initialize()
 
 sceneGamePlay::~sceneGamePlay()
 {
-
-
 	{// Bullet
 		DefBulletSystem.ReleaseBulletPhysics();
 		DefBulletSystem.ShutDown(true);
@@ -89,7 +87,10 @@ void	sceneGamePlay::Update()
     
     DefGameObjMgr.Update();
 
-    DefDamageMgr.DebugDraw();
+    if (GetKeyState('K'))
+    {
+        DefDamageMgr.DebugDraw();
+    }
 }
 
 //*****************************************************************************************************************************

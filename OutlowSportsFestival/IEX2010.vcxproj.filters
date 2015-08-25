@@ -109,7 +109,6 @@
     <ClCompile Include="source\character\Tennis\TennisPlayerState_Attack.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_Counter.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_UsualMove.cpp" />
-    <ClCompile Include="source\GameSystem\GameState.cpp" />
     <ClCompile Include="source\character\CharacterDamageVanish.cpp" />
     <ClCompile Include="source\character\Baseball\Baseball_HitEvent.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballPlayerState_DamageMotionWeak.cpp" />
@@ -139,6 +138,11 @@
     <ClCompile Include="source\Render\System\SmalBufBlurRenderer.cpp" />
     <ClCompile Include="source\Render\LightObject.cpp" />
     <ClCompile Include="source\GameSystem\GameInitilizer_DevelopMode.cpp" />
+    <ClCompile Include="source\Effect\ParticleRenderer.cpp" />
+    <ClCompile Include="source\Effect\ParticleMoveObject.cpp" />
+    <ClCompile Include="source\Effect\ParticleBase.cpp" />
+    <ClCompile Include="source\Render\ForwardHDR_MeshRenderer.cpp" />
+    <ClCompile Include="source\utillity\Locus.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -202,7 +206,6 @@
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Attack.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Counter.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_UsualMove.h" />
-    <ClInclude Include="source\GameSystem\GameState.h" />
     <ClInclude Include="source\character\CharacterDamageVanish.h" />
     <ClInclude Include="source\character\Baseball\Baseball_HitEvent.h" />
     <ClInclude Include="source\character\Baseball\BaseballPlayerState_DamageMotionWeak.h" />
@@ -233,6 +236,11 @@
     <ClInclude Include="source\GameSystem\GameInitilizer_DevelopMode.h" />
     <ClInclude Include="source\utillity\StaticGameObjectTemplate.h" />
     <ClInclude Include="source\utillity\DebugControllGameObject.h" />
+    <ClInclude Include="source\Effect\ParticleRenderer.h" />
+    <ClInclude Include="source\Effect\ParticleMoveObject.h" />
+    <ClInclude Include="source\Effect\ParticleBase.h" />
+    <ClInclude Include="source\Render\ForwardHDR_MeshRenderer.h" />
+    <ClInclude Include="source\utillity\Locus.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

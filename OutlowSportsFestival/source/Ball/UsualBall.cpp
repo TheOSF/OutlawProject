@@ -1,17 +1,18 @@
 #include "UsualBall.h"
 #include "../character/CharacterBase.h"
 #include "../Render/MeshRenderer.h"
-
+#include "../Camera/Camera.h"
+#include "../GameSystem/ResourceManager.h"
 
 UsualBall::UsualBall(
-	BallBase::Params	params,			//ボールパラメータ
-	DamageBase::Type	damage_type,	//ダメージ判定のタイプ
-	float				damage_val		//ダメージ量
-	) :
-	m_FreezeCount(0),
-	m_FreezeDeleteFrame(60)
+    BallBase::Params	params,			//ボールパラメータ
+    DamageBase::Type	damage_type,	//ダメージ判定のタイプ
+    float				damage_val		//ダメージ量
+    ) :
+    m_FreezeCount(0),
+    m_FreezeDeleteFrame(60),
+    m_Locus(20)
 {
-
 	LPIEXMESH		pBallMesh;
 
 	//パラメータ代入
@@ -20,7 +21,7 @@ UsualBall::UsualBall(
 	//ダメージ判定のパラメータを代入
 	m_Damage.pBall = &m_BallBase;
 	m_Damage.pParent = params.pParent;
-	m_Damage.m_Param.size = 1;	//大きさはボールによって異なる可能性がある
+	m_Damage.m_Param.size = 1;	//大きさはボールによって異なる?
 	m_Damage.type = damage_type;
 	m_Damage.Value = damage_val;
 	UpdateDamageClass();
@@ -31,13 +32,22 @@ UsualBall::UsualBall(
 	//メッシュのレンダラー作成(最終的にメッシュを使いまわして描画するべき)
 	m_pMeshRenderer = new MeshRenderer(
 		pBallMesh,
-		true,
+		false,
         MeshRenderer::RenderType::UseColor
 		);
 
 	D3DXQuaternionIdentity(&m_Ballrot);
 
     UpdateMesh();
+
+    SetHDR();
+
+    //軌跡の設定
+    m_Locus.m_Division = 0;
+    m_Locus.m_StartParam.Width = 0.4f;
+    m_Locus.m_EndParam.Width = 0.1f;
+
+    UpdateLocusColor();
 }
 
 UsualBall::~UsualBall()
@@ -54,22 +64,22 @@ bool UsualBall::GetBallMesh(
 	switch (type)
 	{
 	case CharacterType::_Tennis:
-		*ppOut = new iexMesh("DATA\\CHR\\Tennis_ball\\Tennis_ball.imo");
+        *ppOut = DefResource.Get(Resource::MeshType::Tennis_ball);
 		break;
 	case CharacterType::_Baseball:
-		*ppOut = new iexMesh("DATA\\CHR\\golf_ball\\golf_ball.imo");
+        *ppOut = DefResource.Get(Resource::MeshType::BaseBall_ball);
 		break;
 	case CharacterType::_Americanfootball:
-		*ppOut = new iexMesh("DATA\\CHR\\Soccer_ball\\soccer_ball.imo");
+        *ppOut = DefResource.Get(Resource::MeshType::Amefoot_ball);
 		break;
 	case CharacterType::_Soccer:
-		*ppOut = new iexMesh("DATA\\CHR\\Soccer_ball\\soccer_ball.imo");
+        *ppOut = DefResource.Get(Resource::MeshType::Soccer_ball);
 		break;
 	case CharacterType::_Lacrosse:
-		*ppOut = new iexMesh("DATA\\CHR\\Tennis_ball\\Tennis_ball.imo");
+        *ppOut = DefResource.Get(Resource::MeshType::Lacrosse_ball);
 		break;
 	case CharacterType::_Volleyball:
-		*ppOut = new iexMesh("DATA\\CHR\\Soccer_ball\\soccer_ball.imo");
+        *ppOut = DefResource.Get(Resource::MeshType::Volley_ball);
 	default:
 		break;
 	}
@@ -77,6 +87,42 @@ bool UsualBall::GetBallMesh(
 	return (*ppOut != nullptr);
 }
 
+
+float UsualBall::GetBallScale(
+    CharacterType::Value	type    //ボールのキャラクタタイプ
+    )
+{
+    switch (type)
+    {
+    case CharacterType::_Americanfootball:
+        return 0.0045f;
+
+    case CharacterType::_Baseball:
+        return 0.0045f;
+
+    case CharacterType::_Lacrosse:
+        return 0.0045f;
+
+    case CharacterType::_Soccer:
+        return 0.0045f;
+
+
+    case CharacterType::_Tennis:
+        return 0.0045f;
+
+
+    case CharacterType::_Volleyball:
+        return 0.0045f;
+
+    default:
+        break;
+    }
+
+    MyAssert(false, "存在しないタイプのキャラクタタイプがUsualBall::GetBallScaleに渡されました　type= %d ", (int)type);
+
+
+    return 0;
+}
 
 bool UsualBall::Update()
 {
@@ -89,6 +135,12 @@ bool UsualBall::Update()
 
 	UpdateMesh();
 	UpdateDamageClass();
+
+    Vector3 v;
+    Vector3Cross(v, m_BallBase.m_Params.move, DefCamera.GetForward());
+    v.Normalize();
+
+    m_Locus.AddPoint(m_BallBase.m_Params.pos, v);
 
 	return m_FreezeCount < m_FreezeDeleteFrame;
 }
@@ -118,12 +170,38 @@ void UsualBall::UpdateMesh()
 	//メッシュのワールド変換行列を更新する
 
 	Matrix m;
+    const float s = GetBallScale(m_BallBase.m_Params.pParent->m_PlayerInfo.chr_type);
 
-	D3DXMatrixScaling(&m, 0.009f, 0.009f, 0.009f);	//大きさはボールによって変える必要がある
-
+    D3DXMatrixScaling(&m, s, s, s);	//大きさはボールによって変える必要がある
+    
 	m._41 = m_BallBase.m_Params.pos.x;
 	m._42 = m_BallBase.m_Params.pos.y;
 	m._43 = m_BallBase.m_Params.pos.z;
 
 	m_pMeshRenderer->SetMatrix(m);
+}
+
+void UsualBall::UpdateLocusColor()
+{
+    const DWORD Color = CharacterBase::GetPlayerColor(m_BallBase.m_Params.pParent->m_PlayerInfo.number);
+
+    m_Locus.m_StartParam.Color = Vector4(
+        float((Color >> 16) & 0xFF) / 255.f,
+        float((Color >> 8) & 0xFF) / 255.f,
+        float(Color & 0xFF) / 255.f,
+        0.5f
+        );
+
+    m_Locus.m_EndParam.Color = Vector4(1, 1, 1, 0);
+}
+
+void UsualBall::SetHDR()
+{
+    const DWORD Color = CharacterBase::GetPlayerColor(m_BallBase.m_Params.pParent->m_PlayerInfo.number);
+
+    m_pMeshRenderer->m_HDR = Vector3(
+        float((Color >> 16) & 0xFF) / 255.f,
+        float((Color >> 8) & 0xFF) / 255.f,
+        float(Color & 0xFF) / 255.f
+        );
 }

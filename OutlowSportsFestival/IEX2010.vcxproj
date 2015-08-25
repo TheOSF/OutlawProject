@@ -176,13 +176,15 @@
     <ClCompile Include="source\Collision\GameObjectCollisionMesh.cpp" />
     <ClCompile Include="source\Damage\Damage.cpp" />
     <ClCompile Include="source\debug\DebugDraw.cpp" />
+    <ClCompile Include="source\Effect\ParticleBase.cpp" />
+    <ClCompile Include="source\Effect\ParticleMoveObject.cpp" />
+    <ClCompile Include="source\Effect\ParticleRenderer.cpp" />
     <ClCompile Include="source\GameScene\sceneGamePlay.cpp" />
     <ClCompile Include="source\GameScene\sceneMain.cpp" />
     <ClCompile Include="source\GameSystem\GameController.cpp" />
     <ClCompile Include="source\GameSystem\GameEventer.cpp" />
     <ClCompile Include="source\GameSystem\GameInitilizer_DevelopMode.cpp" />
     <ClCompile Include="source\GameSystem\GameObject.cpp" />
-    <ClCompile Include="source\GameSystem\GameState.cpp" />
     <ClCompile Include="source\GameSystem\ResourceManager.cpp" />
     <ClCompile Include="source\IexSystem\Framework.cpp" />
     <ClCompile Include="source\IexSystem\System.cpp" />
@@ -195,6 +197,7 @@
     <ClCompile Include="source\Library\Effekseer\EffekseerEffect.cpp" />
     <ClCompile Include="source\Library\Effekseer\EffekseerEffectManager.cpp" />
     <ClCompile Include="source\Library\Effekseer\EffekseerSystem.cpp" />
+    <ClCompile Include="source\Render\ForwardHDR_MeshRenderer.cpp" />
     <ClCompile Include="source\Render\LightObject.cpp" />
     <ClCompile Include="source\Render\MeshRenderer.cpp" />
     <ClCompile Include="source\Render\PostEffectRenderer.cpp" />
@@ -205,6 +208,7 @@
     <ClCompile Include="source\Render\System\DeferredLightManager.cpp" />
     <ClCompile Include="source\Render\System\SmalBufBlurRenderer.cpp" />
     <ClCompile Include="source\utillity\ColorUtility.cpp" />
+    <ClCompile Include="source\utillity\Locus.cpp" />
     <ClCompile Include="source\utillity\PlayerGauge.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -260,6 +264,9 @@
     <ClInclude Include="source\Damage\Damage.h" />
     <ClInclude Include="source\debug\DebugDraw.h" />
     <ClInclude Include="source\debug\DebugFunction.h" />
+    <ClInclude Include="source\Effect\ParticleBase.h" />
+    <ClInclude Include="source\Effect\ParticleMoveObject.h" />
+    <ClInclude Include="source\Effect\ParticleRenderer.h" />
     <ClInclude Include="source\GameScene\SceneGamePlay.h" />
     <ClInclude Include="source\GameScene\sceneMain.h" />
     <ClInclude Include="source\GameSystem\ForwardDecl.h" />
@@ -268,7 +275,6 @@
     <ClInclude Include="source\GameSystem\GameInitializer.h" />
     <ClInclude Include="source\GameSystem\GameInitilizer_DevelopMode.h" />
     <ClInclude Include="source\GameSystem\GameObject.h" />
-    <ClInclude Include="source\GameSystem\GameState.h" />
     <ClInclude Include="source\GameSystem\GameSystem.h" />
     <ClInclude Include="source\GameSystem\ResourceManager.h" />
     <ClInclude Include="source\IexSystem\Framework.h" />
@@ -279,6 +285,7 @@
     <ClInclude Include="source\Library\Effekseer\EffekseerEffect.h" />
     <ClInclude Include="source\Library\Effekseer\EffekseerEffectManager.h" />
     <ClInclude Include="source\Library\Effekseer\EffekseerSystem.h" />
+    <ClInclude Include="source\Render\ForwardHDR_MeshRenderer.h" />
     <ClInclude Include="source\Render\Header.h" />
     <ClInclude Include="source\Render\LightObject.h" />
     <ClInclude Include="source\Render\MeshRenderer.h" />
@@ -292,6 +299,7 @@
     <ClInclude Include="source\utillity\Collision.h" />
     <ClInclude Include="source\utillity\ColorUtility.h" />
     <ClInclude Include="source\utillity\DebugControllGameObject.h" />
+    <ClInclude Include="source\utillity\Locus.h" />
     <ClInclude Include="source\utillity\NonCopyable.h" />
     <ClInclude Include="source\utillity\PlayerGauge.h" />
     <ClInclude Include="source\utillity\SafeMethod.h" />

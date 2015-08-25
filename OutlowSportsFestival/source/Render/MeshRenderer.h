@@ -41,7 +41,11 @@ public:
 	//ワールド変換行列のセッタ・ゲッタ
 	void SetMatrix(const Matrix& mat);
 	const Matrix& GetMatrix()const;
+
+    //故意に輝かせる際のパラメータ(xyz = rgb)
+    Vector3 m_HDR;
 private:
+    Matrix              m_TransMatrix;
 	iexMesh*	const	m_pMesh;
 	bool		const	m_MeshDelete;
     RenderType  const   m_RenderType;

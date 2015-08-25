@@ -3,7 +3,9 @@
 #include "../character/CharacterManager.h"
 #include "../character/CharacterBase.h"
 #include "../character/CharacterFunction.h"
-
+#include "../Effect/ParticleMoveObject.h"
+#include "../Effect/ParticleRenderer.h"
+#include "../GameSystem/ResourceManager.h"
 
 //----------------------------------------------------
 //  試合遷移メッセージを送信するクラス
@@ -162,20 +164,21 @@ void MatchState::MatchPlay::Execute(_Client_type_ptr p)
 {
 	const UINT liveCount = DefCharacterMgr.GetCharacterLiveCount();
 
-	if (++m_Frame > p->m_Param.time)
+    if (liveCount == 1)
+    {
+
+    }
+    else if (liveCount == 0)
+    {
+
+    }
+    else if (++m_Frame > p->m_Param.time)
 	{
 
 	}
 
-	if (liveCount == 1)
-	{
 
-	}
 
-	if (liveCount == 0)
-	{
-
-	}
 }
 
 void MatchState::MatchPlay::Exit(_Client_type_ptr p)

@@ -1,7 +1,9 @@
 #include "CharacterBase.h"
 #include "CharacterShotAttackClass.h"
 #include "CharacterFunction.h"
-
+#include "../Effect/ParticleRenderer.h"
+#include "../Effect/ParticleMoveObject.h"
+#include "../GameSystem/ResourceManager.h"
 
 //***************************************************
 //		ラクロス用 遠距離攻撃 (ボール打ち出し) クラス

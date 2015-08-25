@@ -50,6 +50,9 @@
 #include "../utillity/StaticGameObjectTemplate.h"
 #include "../utillity/DebugControllGameObject.h"
 
+#include "../Effect/ParticleRenderer.h"
+
+
 static void CreateCharacter(
     PlayerNum::Value      n,
     PlayerType::Value     pl,
@@ -145,120 +148,174 @@ void GameInitializer_DevelopMode::GameCreate()
         CreateCharacter((PlayerNum::Value)3, PlayerType::_Player, CharacterType::_Lacrosse);
     }
 
+    {
+        GameEventer::Param param;
+
+        param.round = 3;
+        param.time = 60;
+
+        new GameEventer(param, new MatchState::MatchPlay());
+    }
+
 
     {// Bullet
 
-    //iexMesh* pAF_Ball = new IEXMESH("DATA//ball//ball.IMO");
+        //iexMesh* pAF_Ball = new IEXMESH("DATA//ball//ball.IMO");
 
-    //pAF_Ball->SetPos(0, 20, 10);
-    //pAF_Ball->SetAngle(0.7f, 0.0f, 0.0f);
-    //pAF_Ball->SetScale(1.0f, 1.0f, 1.0f);
+        //pAF_Ball->SetPos(0, 20, 10);
+        //pAF_Ball->SetAngle(0.7f, 0.0f, 0.0f);
+        //pAF_Ball->SetScale(1.0f, 1.0f, 1.0f);
 
-    DefBulletSystem.StartUp();
-    DefBulletSystem.InitializeBulletPhysics(btVector3(0, -9.8f, 0), iexSystem::Device);
+        DefBulletSystem.StartUp();
+        DefBulletSystem.InitializeBulletPhysics(btVector3(0, -9.8f, 0), iexSystem::Device);
 
-    // テスト用
+        // テスト用
 
-    // Box
-    /*DefBulletSystem.AddRigidBox(
-    1.0f,
-    RigidBody::ct_dynamic,
-    Vector3(0, 30, 0),
-    Vector3(0.2f, 0, 0),
-    Vector3(1, 1, 1),
-    0.2f,
-    1.0f,
-    Vector3(0, 0, 0)
-    );*/
+        // Box
+        /*DefBulletSystem.AddRigidBox(
+        1.0f,
+        RigidBody::ct_dynamic,
+        Vector3(0, 30, 0),
+        Vector3(0.2f, 0, 0),
+        Vector3(1, 1, 1),
+        0.2f,
+        1.0f,
+        Vector3(0, 0, 0)
+        );*/
 
-    // Sphere
-    /*DefBulletSystem.AddRigidSphere(
-    1.0f,
-    RigidBody::ct_dynamic,
-    Vector3(10, 30, 0),
-    Vector3(0, 0, 0),
-    1.0f,
-    0.2f,
-    1.0f,
-    Vector3(0, -10, 0)
-    );*/
+        // Sphere
+        /*DefBulletSystem.AddRigidSphere(
+        1.0f,
+        RigidBody::ct_dynamic,
+        Vector3(10, 30, 0),
+        Vector3(0, 0, 0),
+        1.0f,
+        0.2f,
+        1.0f,
+        Vector3(0, -10, 0)
+        );*/
 
-    // Mesh
-   // DefBulletSystem.AddRigidMesh(
-   //     pAF_Ball,
-   //     1.0f,
-   //     RigidBody::ct_dynamic,
-   //     0.2f,
-   //     1.0f,
-   //     Vector3(5, 0, 0),
-   //     Vector3(5, 0, 0)
-   //     );
+        // Mesh
+        // DefBulletSystem.AddRigidMesh(
+        //     pAF_Ball,
+        //     1.0f,
+        //     RigidBody::ct_dynamic,
+        //     0.2f,
+        //     1.0f,
+        //     Vector3(5, 0, 0),
+        //     Vector3(5, 0, 0)
+        //     );
 
 
-    for (int i = 0; i < 17; i++)
-    {
-        // 床
-        DefBulletSystem.AddRigidBox(
-            0.0f,
-            RigidBody::ct_static,
-            Vector3(0, -10 * i, 0),
-            Vector3(0, 0, 0),
-            Vector3(100, 10, 100),
-            0.2f,
-            0.75f,
-            Vector3(0, 0, 0)
-            );
+        for (int i = 0; i < 17; i++)
+        {
+            // 床
+            DefBulletSystem.AddRigidBox(
+                0.0f,
+                RigidBody::ct_static,
+                Vector3(0, -10 * (float)i, 0),
+                Vector3(0, 0, 0),
+                Vector3(100, 10, 100),
+                0.2f,
+                0.75f,
+                Vector3(0, 0, 0)
+                );
+        }
+
     }
 
-};
 
-
+    //デバッグ描画用の球メッシュ
     DefResource.Regist(
         Resource::MeshType::Sphere,
         new iexMesh("DATA\\Mesh\\sphere.imo")
+        );
+
+    {
+        //ボール登録(最終的に登場するキャラクタのボールのみ読み込むようにしたほうが良い)
+        
+        DefResource.Regist(
+            Resource::MeshType::Amefoot_ball,
+            new iexMesh("DATA\\CHR\\Soccer_ball\\soccer_ball.imo")
+            );
+
+        DefResource.Regist(
+            Resource::MeshType::BaseBall_ball,
+            new iexMesh("DATA\\CHR\\golf_ball\\golf_ball.imo")
+            );
+
+        DefResource.Regist(
+            Resource::MeshType::Lacrosse_ball,
+            new iexMesh("DATA\\CHR\\Tennis_ball\\Tennis_ball.imo")
+            );
+
+        DefResource.Regist(
+            Resource::MeshType::Soccer_ball,
+            new iexMesh("DATA\\CHR\\Soccer_ball\\soccer_ball.imo")
+            );
+
+
+        DefResource.Regist(
+            Resource::MeshType::Tennis_ball,
+            new iexMesh("DATA\\CHR\\Tennis_ball\\Tennis_ball.imo")
+            );
+
+        DefResource.Regist(
+            Resource::MeshType::Volley_ball,
+            new iexMesh("DATA\\CHR\\Soccer_ball\\soccer_ball.imo")
+            );
+    }
+
+
+    DefResource.Regist(
+        Resource::TextureType::Particle,
+        new iex2DObj("DATA\\Texture\\particle.png")
         );
 
 
     new StaticGameObjectTemplate<MeshRenderer>(new MeshRenderer(new iexMesh("DATA\\STAGE\\Stage.IMO"), true, MeshRenderer::RenderType::UseColor));
 
 
-    //ライティング設定
-    if(0){
-
-        HemiLight* H = new HemiLight;
-        H->param.GroundColor = Vector3(200, 100, 0) / 255.0f / 4;
-        H->param.SkyColor = Vector3(204, 255, 255) / 255.0f / 4;
-        H->param.Up = Vector3(0, 1, 0);
-
-        new StaticGameObjectTemplate<HemiLight>(H);
-    }
-
-
-
+    if (1)
     {
-        DirLight* D = new DirLight;
+        //ライティング設定
+        if (0)
+        {
+            HemiLight* H = new HemiLight;
+            H->param.GroundColor = Vector3(0.2f, 0.25f, 0.25f)*0.2f;
+            H->param.SkyColor = Vector3(0.2f, 0.25f, 0.25f);
+            H->param.Up = Vector3(0, 1, 0);
 
-        D->param.color = Vector3(0.2f, 0.25f, 0.25f);
-        D->param.vec = Vector3Normalize(Vector3(0.2f, -2, 0.5f));
-        D->param.Shadow.visible = true;
-        D->param.Shadow.Near = 5;
-        D->param.Shadow.Far = 150;
-        D->param.Shadow.origin = DefCamera.m_Position + Vector3(0, 20, 20);
-        D->param.Shadow.Size = 120;
-        
+            new StaticGameObjectTemplate<HemiLight>(H);
+        }
 
-        new StaticGameObjectTemplate<DirLight>(D);
+        {
+            DirLight* D = new DirLight;
+
+            D->param.color = Vector3(0.2f, 0.25f, 0.25f);
+            D->param.vec = Vector3Normalize(Vector3(0.2f, -2, 0.5f));
+            D->param.Shadow.visible = true;
+            D->param.Shadow.Near = 5;
+            D->param.Shadow.Far = 150;
+            D->param.Shadow.origin = DefCamera.m_Position + Vector3(0, 20, 20);
+            D->param.Shadow.Size = 120;
+
+            new DebugControllGameObject(&D->param.color, 0, 0.01f, "DirColor", 'D');
+            new StaticGameObjectTemplate<DirLight>(D);
+        }
+
+        {
+            AmbientLight* A = new AmbientLight;
+
+            A->param.color = Vector3(0.38f, 0.24f, 0.24f);
+            A->param.Occlusion.SamplingSize = 0.07f;
+            A->param.Occlusion.Enable = false;
+
+            new DebugControllGameObject(&A->param.color, 0, 0.01f, "AmbColor", 'A');
+            new StaticGameObjectTemplate<AmbientLight>(A);
+        }
     }
-
-    {
-        AmbientLight* A = new AmbientLight;
-
-        A->param.color = Vector3(0.38f, 0.24f, 0.24f);
-        A->param.Occlusion.SamplingSize = 0.25f;
-        A->param.Occlusion.Enable = false;
-
-        new StaticGameObjectTemplate<AmbientLight>(A);
-    }
+    
 
 }
 

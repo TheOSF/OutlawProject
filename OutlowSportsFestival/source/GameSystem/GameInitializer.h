@@ -10,8 +10,8 @@ class IGameInitializer
 public:
     virtual ~IGameInitializer(){}
 
-    virtual void GameCreate() = 0;
-    virtual void GameRoundReset() = 0;
+    virtual void GameCreate() = 0;     //ゲーム開始時に呼ばれる
+    virtual void GameRoundReset() = 0; //ラウンドリセット時に呼ばれる
 };
 
 

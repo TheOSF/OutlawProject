@@ -55,6 +55,9 @@ public:
 
 	//ワールド変換行列
 	Matrix& m_TransMatrix;
+
+    //故意に輝かせる際のパラメータ(xyz = rgb)
+    Vector3 m_HDR;
 private:
 	typedef std::vector<int> BoneNumArray;
 

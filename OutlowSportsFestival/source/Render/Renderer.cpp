@@ -43,7 +43,8 @@ ForwardRenderer::~ForwardRenderer()
 }
 
 
-LightObject::LightObject()
+LightObject::LightObject() :
+Visible(true)
 {
 
     MyAssert(
@@ -59,6 +60,21 @@ LightObject::~LightObject()
         "LightObjectの削除に失敗しました");
 }
 
+
+ForwardHDRRenderer::ForwardHDRRenderer()
+{
+    MyAssert(
+        DefRendererMgr.AddForwardHDRRenderer(this),
+        "ForwardHDRRendererの追加に失敗しました");
+}
+
+ForwardHDRRenderer::~ForwardHDRRenderer()
+{
+
+    MyAssert(
+        DefRendererMgr.EraceForwardHDRRenderer(this),
+        "ForwardHDRRendererの削除に失敗しました");
+}
 
 //*************************************************
 //	描画マネージャ
@@ -79,6 +95,8 @@ void RendererManager::Release()
 	m_pInstance = nullptr;
 }
 
+
+//ディファード描画用クラスの追加・削除
 bool RendererManager::AddDeferredRenderer(LpDeferredRenderer pDef)
 {
 	if (m_DeferredRendererMap.find(pDef) != m_DeferredRendererMap.end())
@@ -107,6 +125,7 @@ bool RendererManager::EraceDeferredRenderer(LpDeferredRenderer pDef)
 }
 
 
+//フォワード描画用クラスの追加・削除
 bool RendererManager::AddForwardRenderer(LpForwardRenderer pDef)
 {
 	if (m_ForwardRendererMap.find(pDef) != m_ForwardRendererMap.end())
@@ -135,6 +154,7 @@ bool RendererManager::EraceForwardRenderer(LpForwardRenderer pDef)
 }
 
 
+//ライト描画用クラスの追加・削除
 bool RendererManager::AddLightObject(LpLightObject pL)
 {
     if (m_LightObjectMap.find(pL) != m_LightObjectMap.end())
@@ -159,6 +179,35 @@ bool RendererManager::EraceLightObject(LpLightObject pL)
     }
 
     m_LightObjectMap.erase(it);
+    return true;
+}
+
+
+//フォワードHDR描画用クラスの追加・削除
+bool RendererManager::AddForwardHDRRenderer(LpForwardHDRRenderer pForHDR)
+{
+    if (m_ForwardHDRRendererMap.find(pForHDR) != m_ForwardHDRRendererMap.end())
+    {
+        return false;
+    }
+
+    m_ForwardHDRRendererMap.insert(
+        ForwardHDRRendererMap::value_type(pForHDR, pForHDR)
+        );
+
+    return true;
+}
+
+bool RendererManager::EraceForwardHDRRenderer(LpForwardHDRRenderer pForHDR)
+{
+    auto it = m_ForwardHDRRendererMap.find(pForHDR);
+
+    if (it == m_ForwardHDRRendererMap.end())
+    {
+        return false;
+    }
+
+    m_ForwardHDRRendererMap.erase(it);
     return true;
 }
 
@@ -234,8 +283,18 @@ void RendererManager::LightbufRenderer::Render(
         it != m_pMgr->m_LightObjectMap.end();
         ++it)
     {
-        it->second->Render(pLightRenderer);
+        if (it->second->Visible)
+        {
+            it->second->Render(pLightRenderer);
+        }
     }
+}
+
+
+//Z値比較用関数
+static int CompareForwardHDRRendererFunc(const void*p1, const void* p2)
+{
+    return ((**(LpForwardRenderer*)p1).m_SortZ > (**(LpForwardRenderer*)p2).m_SortZ) ? (-1) : (1);
 }
 
 
@@ -260,10 +319,60 @@ void RendererManager::MasterRenderer::Render(
     {
         it->second->MasterRender();
     }
+
+
+    
+    if (m_pMgr->m_ForwardHDRRendererMap.empty())
+    {
+        return;
+    }
+
+    //フォワードHDR描画を実行する
+
+    LpForwardHDRRenderer* SortData = new LpForwardHDRRenderer[m_pMgr->m_ForwardHDRRendererMap.size()];
+
+    try
+    {
+        int count = 0;
+
+        for (auto it = m_pMgr->m_ForwardHDRRendererMap.begin();
+            it != m_pMgr->m_ForwardHDRRendererMap.end();
+            ++it)
+        {
+            SortData[count] = it->second;
+            ++count;
+
+            //Z値を計算する
+            it->second->CalcZ();
+        }
+
+        //遠い順番にソート
+        std::qsort(
+            &SortData[0],
+            count,
+            sizeof(LpForwardHDRRenderer),
+            CompareForwardHDRRendererFunc
+            );
+
+        //描画
+        for (int i = 0; i < count; ++i)
+        {
+            SortData[i]->Render();
+        }
+
+    }
+    catch (...)
+    {
+        delete[]SortData;
+        throw;
+    }
+
+    delete[]SortData;
+
 }
 
 //Z値比較用関数
-static int CompareFunc(const void*p1, const void* p2)
+static int CompareForwardRendererFunc(const void*p1, const void* p2)
 {
 	return ((**(LpForwardRenderer*)p1).m_SortZ > (**(LpForwardRenderer*)p2).m_SortZ) ? (-1) : (1);
 }
@@ -299,7 +408,7 @@ void RendererManager::ForwardRenderer::Render()
 			&SortData[0],
 			count,
 			sizeof(LpForwardRenderer),
-			CompareFunc
+            CompareForwardRendererFunc
 			);
 
 		//描画

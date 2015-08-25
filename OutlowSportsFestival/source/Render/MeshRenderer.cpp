@@ -11,9 +11,10 @@ MeshRenderer::MeshRenderer(
 	) :
 	m_pMesh(pMesh),
 	m_MeshDelete(MeshDelete),
-    m_RenderType(type)
+    m_RenderType(type),
+    m_HDR(0,0,0)
 {
-
+    D3DXMatrixIdentity(&m_TransMatrix);
 }
 
 MeshRenderer::~MeshRenderer()
@@ -31,11 +32,16 @@ void MeshRenderer::GbufRender(
 {
     char str[256];
     pSetter->NoTexture(str,256);
+    m_pMesh->TransMatrix = m_TransMatrix;
     m_pMesh->Render(pShader, str);
 }
 
 void MeshRenderer::MasterRender()
 {
+    shader->SetValue("g_HDR_Color", m_HDR);
+
+    m_pMesh->TransMatrix = m_TransMatrix;
+
     switch (m_RenderType)
     {
     case RenderType::NoTexture:
@@ -57,17 +63,18 @@ void MeshRenderer::DepthRender(iexShader* pShader, const char* pTec)
 {
     char str[256];
     strcpy_s<256>(str, pTec);
+    m_pMesh->TransMatrix = m_TransMatrix;
     m_pMesh->Render(pShader, str);
 }
 
 
 void MeshRenderer::SetMatrix(const Matrix& mat)
 {
-	m_pMesh->TransMatrix = mat;
+    m_TransMatrix = mat;
 }
 
 
 const Matrix& MeshRenderer::GetMatrix()const
 {
-	return m_pMesh->TransMatrix;
+    return m_TransMatrix;
 }

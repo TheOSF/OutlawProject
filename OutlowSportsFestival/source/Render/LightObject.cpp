@@ -121,6 +121,8 @@ AmbientLight::AmbientLight()
 void AmbientLight::Render(LightRenderer* pLightRenderer)
 {
     DeferredLightBufRenderer::AmbientParam temp = param;
+    //temp.Occlusion.Enable = GetKeyState('A') != 0;
+
     pLightRenderer->AmbientLight(temp);
 }
 

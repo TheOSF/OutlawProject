@@ -12,12 +12,20 @@ public:
     {
         Sphere,
 
+        Amefoot_ball,
+        BaseBall_ball,
+        Lacrosse_ball,
+        Soccer_ball,
+        Tennis_ball,
+        Volley_ball,
+
         _MaxType
     };
 
     enum class TextureType
     {
         White,
+        Particle,
 
         _MaxType
     };
@@ -37,7 +45,7 @@ private:
 
     static Resource* m_pInstance;
 
-    LPIEXMESH m_pMeshArray[(int)MeshType::_MaxType];
+    LPIEXMESH  m_pMeshArray[(int)MeshType::_MaxType];
     LPIEX2DOBJ m_pTextureArray[(int)TextureType::_MaxType];
     
     Resource();

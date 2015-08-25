@@ -334,8 +334,6 @@ inline Vector3 Vector3MulMatrix3x3(const Vector& v, const Matrix& m)
         );
 }
 
-
-
 //------------------------------------------------------
 //	正規化
 //------------------------------------------------------
@@ -366,6 +364,29 @@ inline Vector3 Vector3RotateAxis(const Vector& axis,float angle,const Vector& ro
 	D3DXQUATERNION q;
 	D3DXQuaternionRotationAxis(&q, &D3DXVECTOR3(axis.x, axis.y, axis.z), angle);
 	return Vector3RotateQuaternion(q, rotate_vector);
+}
+
+
+//------------------------------------------------------
+//	ランダム
+//------------------------------------------------------
+
+inline Vector3 Vector3Rand()
+{
+    return Vector3(
+        (float)rand() / RAND_MAX *2.0f - 1.0f,
+        (float)rand() / RAND_MAX *2.0f - 1.0f,
+        (float)rand() / RAND_MAX *2.0f - 1.0f
+        );
+}
+
+inline Vector3 Vector3RandNormalize()
+{
+    return Vector3Normalize(Vector3(
+        (float)rand() / RAND_MAX - 0.5f,
+        (float)rand() / RAND_MAX - 0.5f,
+        (float)rand() / RAND_MAX - 0.5f
+        ));
 }
 
 //------------------------------------------------------
@@ -678,7 +699,12 @@ typedef struct tagVERTEX {
 //	３Ｄ用頂点(ライティング済み）
 #define D3DFVF_LVERTEX		( D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1 )
 typedef struct tagLVERTEX {
-	float	x, y, z;
+    union{
+        struct{
+            float	x, y, z;
+        };
+        Vector pos;
+    };
 	COLOR	color;
 	float	tu, tv;
 } LVERTEX, *LPLVERTEX;
