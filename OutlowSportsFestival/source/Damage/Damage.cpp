@@ -84,6 +84,19 @@ void DamageManager::HitCheckSphere(
 	HitEventBase&		HitEvent
 	)
 {
+
+    if (m_DebugDrawVisible)
+    {
+
+        //デバッグ用球描画(黒)
+        new DebugDrawSphere(
+            sp.pos,
+            sp.size,
+            COLORf(0.4f, 0, 0, 0)
+            );
+    }
+
+
 	for (auto it = m_DamageBaseMap.begin();
 		it != m_DamageBaseMap.end();
 		++it
@@ -102,6 +115,11 @@ void DamageManager::HitCheckSphere(
 //あたり判定をデバッグ描画
 void DamageManager::DebugDraw()
 {
+    if (!m_DebugDrawVisible)
+    {
+        return;
+    }
+
     for (auto it = m_DamageBaseMap.begin();
          it != m_DamageBaseMap.end();
          ++it
@@ -111,7 +129,8 @@ void DamageManager::DebugDraw()
     }
 }
 
-DamageManager::DamageManager()
+DamageManager::DamageManager() :
+m_DebugDrawVisible(false)
 {
 
 }

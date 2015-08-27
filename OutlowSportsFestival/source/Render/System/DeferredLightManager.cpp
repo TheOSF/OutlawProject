@@ -130,12 +130,14 @@ void DeferredLightManager::Render(
         iexSystem::Device->SetRenderTarget(1, 0);
     }
 
+    //高輝度部分をブラー処理し、カラーテクスチャに出力
+    m_pSmalBufBlurRenderer->Render();
+
     //フォワードレンダリングを実行
     pForwardRenderer->Render();
 
 
-    //高輝度部分をブラー処理し、カラーテクスチャに出力
-    m_pSmalBufBlurRenderer->Render();
+
 
     //ポストエフェクト処理し、バックバッファに出力
     pPostEffectRenderer->Render(m_pColorTexture, pScreen);

@@ -1,5 +1,7 @@
 #include "CharacterBase.h"
 #include "CharacterManager.h"
+#include "CharacterFunction.h"
+
 
 //***************************************************
 //		キャラクタクラス
@@ -20,6 +22,7 @@ m_PlayerInfo(info)
 	m_Params.hitScale = 1.5f;
 	m_Params.angle = 0;
 	m_Params.HP = 100;
+    m_Params.maxHP = 100;
 	m_Params.SP = 0;
 	
 
@@ -46,4 +49,13 @@ COLOR CharacterBase::GetPlayerColor(PlayerNum::Value number)
     };
 
     return player_colors[number];
+}
+
+//ラウンドリセット時のパラメターにセットする
+void CharacterBase::ResetRound()
+{
+    m_Params.HP = m_Params.maxHP;
+    m_Params.pos = DefCharacterMgr.GetRoundStartPos(m_PlayerInfo.number);
+    m_Params.move = Vector3Zero;
+    chr_func::AngleControll(this, Vector3(0, m_Params.pos.y, 0));
 }

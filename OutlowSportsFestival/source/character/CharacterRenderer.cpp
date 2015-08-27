@@ -163,7 +163,7 @@ void CharacterRenderer::MasterRender()
     m_pAnimeMesh->Render(shader, tecs);
 }
 
-void CharacterRenderer::DepthRender(iexShader* pShader, const char* pTec)
+void CharacterRenderer::DepthRender(iexShader* pShader, const char* pTec, DepthRenderType type)
 {
     char str[256];
     strcpy_s<256>(str, pTec);

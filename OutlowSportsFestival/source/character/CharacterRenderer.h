@@ -51,7 +51,7 @@ public:
 
     void MasterRender();
 
-    void DepthRender(iexShader* pShader, const char* pTec);
+    void DepthRender(iexShader* pShader, const char* pTec, DepthRenderType type);
 
 	//ƒ[ƒ‹ƒh•ÏŠ·s—ñ
 	Matrix& m_TransMatrix;

@@ -6,6 +6,18 @@
 
 //試合時のカメラステート
 
+CameraStateGamePlay::CameraStateGamePlay(bool pos_reset)
+{
+
+    m_PosSpeed = 0.04f;
+    m_TargetSpeed = 0.02f;
+
+    if (pos_reset)
+    {
+        m_PosSpeed = 1;
+        m_TargetSpeed = 1;
+    }
+}
 
 void CameraStateGamePlay::Enter(Camera* c)
 {
@@ -46,7 +58,7 @@ void CameraStateGamePlay::Execute(Camera* c)
 	center.z -= 4;	//若干手前に
 
 	//カメラのターゲットを補間
-	c->m_Target += (center - c->m_Target)*0.02f;
+    c->m_Target += (center - c->m_Target)*m_TargetSpeed;
 
 
 
@@ -76,7 +88,7 @@ void CameraStateGamePlay::Execute(Camera* c)
 	moveTarget = center + mVec*b;
 
 	//補間する
-	c->m_Position += (moveTarget - c->m_Position)*0.04f;
+    c->m_Position += (moveTarget - c->m_Position)*m_PosSpeed;
 
 #ifdef _DEBUG
     if (GetKeyState('Q') & 0x80)
@@ -84,6 +96,9 @@ void CameraStateGamePlay::Execute(Camera* c)
         c->SetNewState(new CameraStateFreeMove());
     }
 #endif
+
+    m_PosSpeed = 0.04f;
+    m_TargetSpeed = 0.02f;
 }
 
 void CameraStateGamePlay::Exit(Camera* c)
@@ -242,3 +257,41 @@ Vector2 CameraStateFreeMove::GetRightStick()const
 
     return ret;
 }
+
+
+
+
+
+
+//キャラクタにズームするカメラ
+CameraStateCharacterZoom::CameraStateCharacterZoom(
+    LpCharacterBase  pZoomCharacter,
+    RATIO            speed
+    ) :
+    m_pZoomCharacter(pZoomCharacter),
+    m_Speed(speed)
+{
+
+}
+
+void CameraStateCharacterZoom::Enter(Camera* c)
+{
+
+}
+
+void CameraStateCharacterZoom::Execute(Camera* c)
+{
+    const Vector3 target = m_pZoomCharacter->m_Params.pos + Vector3(0, 3, 0);
+    const Vector3 pos = target + Vector3(0, 0, -10);
+
+
+    c->m_Position += (pos - c->m_Position)*m_Speed;
+    c->m_Target  += (target - c->m_Target)*m_Speed;
+
+}
+
+void CameraStateCharacterZoom::Exit(Camera* c)
+{
+
+}
+

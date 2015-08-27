@@ -5,6 +5,7 @@
 #include "DeferredLightManager.h"
 #include <list>
 
+//
 
 class BlurEffectRenderer :public DeferredLightManager::IPostEffectRenderer
 {
@@ -37,6 +38,9 @@ public:
     std::list<ConeBlur>   m_BlurCone;
     
 private:
+
+    void RenderSphereBlur(const Matrix& VP_mat);
+    void RenderConeBlur(const Matrix& VP_mat);
 
     iexMesh*    m_pSphereMesh;
     iexMesh*    m_pConeMesh;

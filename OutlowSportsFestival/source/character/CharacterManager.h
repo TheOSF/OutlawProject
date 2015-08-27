@@ -2,6 +2,7 @@
 #define __CHARACTER_MANAGER_H__
 
 #include "../GameSystem/ForwardDecl.h"
+#include "../GameSystem/GameSystem.h"
 #include <map>
 
 //****************************************************************
@@ -21,6 +22,9 @@ public:
 
 	//キャラクタの生存人数を取得
 	UINT GetCharacterLiveCount()const;
+
+    //ラウンド初期位置を得る
+    Vector3 GetRoundStartPos(PlayerNum::Value num)const;
 
 private:
 	friend class CharacterBase;

@@ -59,7 +59,9 @@ public:
 	bool Msg(MsgType mt);
 
 private:
+
 	TennisStateMachine*		m_pStateMachine;
+
 };
 
 

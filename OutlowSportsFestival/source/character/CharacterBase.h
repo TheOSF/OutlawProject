@@ -54,6 +54,9 @@ public:
 
     static COLOR GetPlayerColor(PlayerNum::Value number);
 
+    //ラウンドリセット時のパラメターにセットする
+    void ResetRound();
+
 	virtual bool Update() = 0;	//この関数がfalseを返すとdeleteされる
 	virtual bool Msg(MsgType mt) = 0;	//受信できたメッセージはtrueを
 };

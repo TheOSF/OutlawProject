@@ -76,6 +76,22 @@ ForwardHDRRenderer::~ForwardHDRRenderer()
         "ForwardHDRRendererの削除に失敗しました");
 }
 
+
+PostEffectRenderer::PostEffectRenderer()
+{
+    MyAssert(
+        DefRendererMgr.AddPostEffectRenderer(this),
+        "PostEffectRendererの追加に失敗しました");
+}
+
+PostEffectRenderer::~PostEffectRenderer()
+{
+
+    MyAssert(
+        DefRendererMgr.EracePostEffectRenderer(this),
+        "PostEffectRendererの削除に失敗しました");
+}
+
 //*************************************************
 //	描画マネージャ
 //*************************************************
@@ -212,6 +228,36 @@ bool RendererManager::EraceForwardHDRRenderer(LpForwardHDRRenderer pForHDR)
 }
 
 
+
+//ブラーポストエフェクト描画クラスの追加・削除
+bool RendererManager::AddPostEffectRenderer(LpPostEffectRenderer p)
+{
+    if (m_BlurObjectMap.find(p) != m_BlurObjectMap.end())
+    {
+        return false;
+    }
+
+    m_BlurObjectMap.insert(
+        BlurObjectMap::value_type(p,p)
+        );
+
+    return true;
+}
+
+bool RendererManager::EracePostEffectRenderer(LpPostEffectRenderer p)
+{
+    auto it = m_BlurObjectMap.find(p);
+
+    if (it == m_BlurObjectMap.end())
+    {
+        return false;
+    }
+
+    m_BlurObjectMap.erase(it);
+    return true;
+}
+
+
 //描画
 void RendererManager::Render()
 {
@@ -233,6 +279,9 @@ void RendererManager::Render()
     Lr.SetMgr(this);
     Mr.SetMgr(this);
     Fr.SetMgr(this);
+
+    //ブラーパラメータの更新
+    SetBlurParameters();
 
     m_DeferredLightManager.Render(
         &Gr,
@@ -428,6 +477,11 @@ void RendererManager::ForwardRenderer::Render()
 
 }
 
+RendererManager::DepthRenderer::DepthRenderer() :
+m_Type(DeferredRenderer::DepthRenderType::DirLight)
+{
+
+}
 
 void RendererManager::DepthRenderer::Render(iexShader* pShader, const char* technique)
 {
@@ -435,7 +489,7 @@ void RendererManager::DepthRenderer::Render(iexShader* pShader, const char* tech
         it != m_pMgr->m_DeferredRendererMap.end();
         ++it)
     {
-        it->second->DepthRender(pShader, technique);
+        it->second->DepthRender(pShader, technique, m_Type);
     }
 }
 
@@ -451,7 +505,22 @@ RendererManager::~RendererManager()
 
 }
 
-DeferredLightBufRenderer::IDepthRenderer* RendererManager::GetDepthRenderer()
+void RendererManager::SetBlurParameters()
+{
+    //ブラーリストの更新
+    m_BlurEffectRenderer.m_BlurSphere.clear();
+    m_BlurEffectRenderer.m_BlurCone.clear();
+
+    for (auto& it : m_BlurObjectMap)
+    {
+        it.first->Render(
+            m_BlurEffectRenderer.m_BlurSphere,
+            m_BlurEffectRenderer.m_BlurCone
+            );
+    }
+}
+
+RendererManager::DepthRenderer* RendererManager::GetDepthRenderer()
 {
     return &m_DepthRenderer;
 }

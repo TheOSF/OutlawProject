@@ -1,7 +1,7 @@
 #include "CharacterFunction.h"
 #include "CharacterBase.h"
 #include "../Ball/Ball.h"
-
+#include "../Collision/Collision.h"
 
 //座標に移動量を更新する
 void chr_func::PositionUpdate(CharacterBase* p)
@@ -176,4 +176,83 @@ void chr_func::CheckGround(CharacterBase* p)
         p->m_Params.pos.y = CharacterBase::m_CommonParams.GroundY;
         p->m_Params.move.y = 0;
     }
+}
+
+
+//XZ方向の壁との接触判定を行う(戻り値＝壁とあたっているかどうか)
+bool chr_func::CheckWall(CharacterBase* p)
+{
+    //戻り値
+    bool isHit = false;
+
+    //レイを飛ばす基準ベクトル
+    Vector3 CheckVec;
+
+    //移動している場合はその方向をチェック、違う場合は前方向をチェック
+    if (p->m_Params.move.Length() > 0)
+    {
+        CheckVec = Vector3Normalize(Vector3(p->m_Params.move.x, 0, p->m_Params.move.z));
+    }
+    else
+    {
+        GetFront(p, &CheckVec);
+    }
+
+    //基準からの回転角度
+    float RotateCheckVec[]=
+    {
+        PI / 4,
+        -PI / 4,
+    };
+
+    //計算用パラメータ
+    Vector3 out, pos, vec;
+    float dist;
+    int material;
+
+    const float Character_size = 2.0f;
+
+    for (int i = 0; i < (int)ARRAYSIZE(RotateCheckVec); ++i)
+    {
+        pos = p->m_Params.pos;
+        pos.y += 1.0f;
+        vec = Vector3RotateAxis(Vector3AxisY, RotateCheckVec[i], CheckVec);
+        dist = 100;
+
+        if (DefCollisionMgr.RayPick(
+            &out,
+            &pos,
+            &vec,
+            &dist,
+            &material,
+            CollisionManager::RayType::_Usual
+            ))
+        {
+            vec.y = 0;
+            vec.Normalize();
+
+            pos = p->m_Params.pos - out;
+            pos.y = 0;
+
+            pos = p->m_Params.pos - vec * Vector3Dot(vec, pos);
+            pos -= p->m_Params.pos;
+
+            dist = pos.Length();
+
+            if (dist < Character_size)
+            {
+                p->m_Params.pos += vec * (Character_size - dist);
+                isHit = true;
+            }
+        }
+    }
+
+    return isHit;
+}
+
+
+//現在の体力の割合を得る（０～１）
+RATIO chr_func::GetLifeRatio(CharacterBase* p)
+{
+    return p->m_Params.HP / p->m_Params.maxHP;
 }

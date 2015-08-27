@@ -90,5 +90,5 @@ void TennisState_DamageVanish::Execute(TennisPlayer* t)
 
 void TennisState_DamageVanish::Exit(TennisPlayer* t)
 {
-
+    delete m_pDamageVanishClass;
 }

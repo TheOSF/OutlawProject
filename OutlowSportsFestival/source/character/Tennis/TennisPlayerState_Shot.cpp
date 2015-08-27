@@ -56,7 +56,7 @@ void TennisState_PlayerControll_Shot::Enter(TennisPlayer* t)
 			param.type = BallBase::Type::_Usual;
 
 			//ê∂ê¨
-			new UsualBall(param, DamageBase::Type::_WeekDamage, 1);
+			new UsualBall(param, DamageBase::Type::_WeekDamage, 50);
 		}
 
 		void AttackStart()

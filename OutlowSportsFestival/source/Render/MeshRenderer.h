@@ -36,7 +36,7 @@ public:
 
     void MasterRender();
 
-    void DepthRender(iexShader* pShader, const char* pTec);
+    void DepthRender(iexShader* pShader, const char* pTec, DepthRenderType type);
     
 	//ワールド変換行列のセッタ・ゲッタ
 	void SetMatrix(const Matrix& mat);

@@ -13,6 +13,12 @@
 class DeferredRenderer
 {
 public:
+    enum class DepthRenderType
+    {
+        DirLight,
+        SpotLight,
+    };
+
 	//コンストラクタ・デストラクタで自動的に描画をするための登録をする
 	DeferredRenderer();
 	virtual ~DeferredRenderer();
@@ -26,7 +32,7 @@ public:
     //本番描画(自動的に呼ばれる、RT０＝色　RT1＝高輝度)
     virtual void MasterRender() = 0;
 
-    virtual void DepthRender(iexShader* pShader, const char* pTec) = 0;
+    virtual void DepthRender(iexShader* pShader, const char* pTec, DepthRenderType type) = 0;
 };
 
 typedef DeferredRenderer* LpDeferredRenderer;
@@ -85,12 +91,49 @@ public:
 };
 typedef ForwardHDRRenderer* LpForwardHDRRenderer;
 
+
+//ブラーポストエフェクト描画クラス
+class PostEffectRenderer
+{
+public:
+    typedef std::list<BlurEffectRenderer::SphereBlur> SphereBlurList;
+    typedef std::list<BlurEffectRenderer::ConeBlur> ConeBlurList;
+
+    PostEffectRenderer();
+    virtual ~PostEffectRenderer();
+
+    virtual void Render(
+        SphereBlurList& SphereList,
+        ConeBlurList&   ConeList
+        ) = 0;
+};
+typedef PostEffectRenderer* LpPostEffectRenderer;
+
 //*************************************************
 //	描画マネージャ
 //*************************************************
 class RendererManager
 {
 public:
+    class IRenderer
+    {
+    protected:
+        RendererManager* m_pMgr;
+    public:
+        void SetMgr(RendererManager* pMgr);
+    };
+
+    //深度描画クラス
+    class DepthRenderer :public DeferredLightBufRenderer::IDepthRenderer, public IRenderer
+    {
+    public:
+        DeferredRenderer::DepthRenderType m_Type;
+
+        DepthRenderer();
+
+        void Render(iexShader* pShader, const char* technique);
+    };
+
 	static RendererManager& GetInstance();
 	static void Release();
 
@@ -110,32 +153,34 @@ public:
     bool AddForwardHDRRenderer(LpForwardHDRRenderer pForHDR);
     bool EraceForwardHDRRenderer(LpForwardHDRRenderer pForHDR);
 
+    //ブラーポストエフェクト描画クラスの追加・削除
+    bool AddPostEffectRenderer(LpPostEffectRenderer p);
+    bool EracePostEffectRenderer(LpPostEffectRenderer p);
+
+
     //描画
     void Render();
 
     //Z値描画オブジェクトへのポインタを得る
-    DeferredLightBufRenderer::IDepthRenderer* GetDepthRenderer();
+    DepthRenderer* GetDepthRenderer();
+
+
 private:
 
 	RendererManager();
 	~RendererManager();
 
+    void SetBlurParameters();
+
 	typedef std::map<LpDeferredRenderer, LpDeferredRenderer> DeferredRendererMap;
     typedef std::map<LpForwardHDRRenderer, LpForwardHDRRenderer> ForwardHDRRendererMap;
     typedef std::map<LpForwardRenderer, LpForwardRenderer> ForwardRendererMap;
     typedef std::map<LpLightObject, LpLightObject> LightObjectMap;
-
+    typedef std::map<LpPostEffectRenderer, LpPostEffectRenderer> BlurObjectMap;
 
 	static RendererManager* m_pInstance;
 
-    class IRenderer
-    {
-    protected:
-        RendererManager* m_pMgr;
-    public:
-        void SetMgr(RendererManager* pMgr);
-    };
-
+    
     class GbufRenderer :public DeferredGbufRenderer::IRenderer, public IRenderer
     {
     public:
@@ -170,17 +215,11 @@ private:
         void Render();
     };
 
-    class DepthRenderer :public DeferredLightBufRenderer::IDepthRenderer, public IRenderer
-    {
-    public:
-        void Render(iexShader* pShader, const char* technique);
-    };
-
-
 	DeferredRendererMap      m_DeferredRendererMap;
     ForwardHDRRendererMap    m_ForwardHDRRendererMap;
 	ForwardRendererMap       m_ForwardRendererMap;
     LightObjectMap           m_LightObjectMap;
+    BlurObjectMap            m_BlurObjectMap;
 
     DeferredLightManager  m_DeferredLightManager;
 

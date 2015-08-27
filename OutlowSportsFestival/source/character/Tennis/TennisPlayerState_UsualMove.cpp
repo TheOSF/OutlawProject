@@ -29,9 +29,9 @@ TennisState* TennisState_PlayerControll_Move::GetPlayerControllMove(
 		case StrongType::_Weak:
 			//return new 弱い通常移動
 		case StrongType::_Usual:
-			//return new 弱い通常移動
+			//return new 普通の通常移動
 		case StrongType::_Strong:
-			//return new 弱い通常移動
+			//return new 強い通常移動
 		default:break;
 		}
 	default:break;
@@ -111,6 +111,8 @@ void TennisState_PlayerControll_Move::Execute(TennisPlayer* t)
 	{// [R1] で [カウンター]
 		t->SetState(new TennisState_PlayerControll_Counter());
 	}
+
+
 }
 
 void TennisState_PlayerControll_Move::Exit(TennisPlayer* t)

@@ -46,6 +46,22 @@ UINT CharacterManager::GetCharacterLiveCount()const
 	return ret;
 }
 
+//ラウンド初期位置を得る
+Vector3 CharacterManager::GetRoundStartPos(PlayerNum::Value num)const
+{
+    const Vector3 pos[4] =
+    {
+        Vector3(-20, 0, 20),
+        Vector3(20, 0, 20),
+        Vector3(-20, 0, -20),
+        Vector3(20, 0, -20),
+    };
+
+    MyAssert(num >= 0 && num < 4, "不正なプレイヤー番号がCharacterManager::GetRoundStartPosに送られました num = %d ", (int)num);
+
+    return pos[(int)num];
+}
+
 CharacterManager::CharacterManager()
 {
 

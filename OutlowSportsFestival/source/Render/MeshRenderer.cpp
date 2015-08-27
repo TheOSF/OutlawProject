@@ -59,8 +59,13 @@ void MeshRenderer::MasterRender()
 
 }
 
-void MeshRenderer::DepthRender(iexShader* pShader, const char* pTec)
+void MeshRenderer::DepthRender(iexShader* pShader, const char* pTec, DepthRenderType type)
 {
+    if (type != DepthRenderType::DirLight)
+    {
+        return;
+    }
+
     char str[256];
     strcpy_s<256>(str, pTec);
     m_pMesh->TransMatrix = m_TransMatrix;

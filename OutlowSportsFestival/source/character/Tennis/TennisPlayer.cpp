@@ -1,6 +1,8 @@
 #include "TennisPlayer.h"
 #include "../../Damage/Damage.h"
-
+#include "../CharacterManager.h"
+#include "../CharacterFunction.h"
+#include "TennisPlayerState_UsualMove.h"
 
 //*************************************************************
 //		テニスプレイヤークラス
@@ -36,7 +38,13 @@ bool TennisPlayer::Update()
 
 bool TennisPlayer::Msg(MsgType mt)
 {
+    if (mt == MsgType::_RoundReset)
+    {
+        SetState(TennisState_PlayerControll_Move::GetPlayerControllMove(this));
+        m_Renderer.SetMotion(_mt_Stand);
+        m_Renderer.Update(0);
+        ResetRound();
+    }
+
 	return m_pStateMachine->Msg(mt);
 }
-
-

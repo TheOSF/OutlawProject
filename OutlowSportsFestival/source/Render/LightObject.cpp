@@ -44,7 +44,9 @@ void SpotLight::Render(LightRenderer* pLightRenderer)
 
     if (temp.Shadow.visible)
     {
-        temp.Shadow.pDepthRenderer = DefRendererMgr.GetDepthRenderer();
+        RendererManager::DepthRenderer* p=DefRendererMgr.GetDepthRenderer();
+        p->m_Type = DeferredRenderer::DepthRenderType::SpotLight;
+        temp.Shadow.pDepthRenderer = p;
     }
 
     pLightRenderer->SpotLight(temp);
@@ -78,6 +80,9 @@ void DirLight::Render(LightRenderer* pLightRenderer)
     DeferredLightBufRenderer::DirLightParam temp = param;
     if (temp.Shadow.visible)
     {
+        RendererManager::DepthRenderer* p = DefRendererMgr.GetDepthRenderer();
+        p->m_Type = DeferredRenderer::DepthRenderType::DirLight;
+        temp.Shadow.pDepthRenderer = p;
         temp.Shadow.pDepthRenderer = DefRendererMgr.GetDepthRenderer();
     }
     pLightRenderer->DirLight(temp);
@@ -121,7 +126,7 @@ AmbientLight::AmbientLight()
 void AmbientLight::Render(LightRenderer* pLightRenderer)
 {
     DeferredLightBufRenderer::AmbientParam temp = param;
-    //temp.Occlusion.Enable = GetKeyState('A') != 0;
+    temp.Occlusion.Enable = GetKeyState('A') != 0;
 
     pLightRenderer->AmbientLight(temp);
 }

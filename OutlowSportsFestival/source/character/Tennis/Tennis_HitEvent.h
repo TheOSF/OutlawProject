@@ -14,8 +14,13 @@ public:
 	TennisHitEvent(TennisPlayer* pt);
 	
 	bool Hit(DamageBase* pDmg);//当たった時に呼ばれる関数(戻り値：当たったかどうか)
+
 private:
+
 	TennisPlayer* m_pTennis;
+
+    //ダメージ計算
+    void CalcDamage(DamageBase* pDmg);
 };
 
 #endif

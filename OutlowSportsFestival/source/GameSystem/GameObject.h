@@ -2,6 +2,7 @@
 #define __GAMEOBJECT_H__
 
 #include <map>
+#include <list>
 #include "debug\DebugFunction.h"
 
 class GameObjectManager;
@@ -16,8 +17,10 @@ class GameObjectBase
 public:
 	enum MsgType
 	{
-		_PlayStart,	//プレイ開始時(ラウンドごとの)に送られるメッセージ
-		_RoundEnd,	//ラウンド終了時に送られるメッセージ
+		_PlayStart,	    //プレイ開始時(ラウンドごとの)に送られるメッセージ
+		_RoundReset,	//ラウンド終了時に送られるメッセージ
+        _TimeUp,        //タイムアップ時に送られるメッセージ
+        _WinPose,       //勝利ポーズ実行時に呼ばれるメッセージ
 	};
 
 	GameObjectBase();
@@ -26,7 +29,14 @@ public:
 	virtual bool Msg(MsgType mt) = 0;
 protected:
 	friend class GameObjectManager;
-	virtual ~GameObjectBase();
+
+    virtual ~GameObjectBase();
+
+#ifdef _DEBUG
+private:
+    bool    m_ManagerDelete;
+#endif
+
 };
 
 typedef GameObjectBase* LpGameObjectBase;
@@ -44,18 +54,34 @@ public:
 	
 	void Update();	//全オブジェクト更新
 
-	void SendMsg(GameObjectBase::MsgType mt);	//全オブジェクトにメッセージを送信
+    //全オブジェクトにメッセージを送信(戻り値：メッセージにtrueを返したオブジェクトの数)
+	UINT SendMsg(
+        GameObjectBase::MsgType mt  //送信するメッセージ
+        );	
+    
+    //引数以外のオブジェクトの更新を引数のフレーム間行わない
+    void FreezeOtherObjectUpdate(
+        std::list<LpGameObjectBase> UpdateObjList,  //更新を行うオブジェクトリスト
+        UINT OtherFreeze_frame                      //フリーズさせるフレーム
+        );
 
 private:
+
 	typedef std::map<LpGameObjectBase, LpGameObjectBase> GameObjectMap;
+    typedef std::list<LpGameObjectBase> GameObjectList;
 
 	friend class GameObjectBase;
-private:
+
 	static GameObjectManager*	m_pInstance;
 	GameObjectMap				m_GameObjectMap;
-private:
+    UINT                        m_FreezeFrame;
+    GameObjectList              m_FreezeUpdateList;
+
 	GameObjectManager();
 	~GameObjectManager();
+
+    void FreezeUpdate();
+    void UsualUpdate();
 
 	bool Add(LpGameObjectBase pObj);
 	bool Erace(LpGameObjectBase pObj);

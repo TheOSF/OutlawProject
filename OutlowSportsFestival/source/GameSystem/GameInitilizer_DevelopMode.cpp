@@ -32,6 +32,8 @@
 
 #include    "../Render/LightObject.h"
 
+#include    "../Effect/EffectResourceLoad.h"
+
 // Effekseer
 #include "../Library/Effekseer/EffekseerSystem.h"
 #include "../Library/Effekseer/EffekseerEffectManager.h"
@@ -50,7 +52,11 @@
 #include "../utillity/StaticGameObjectTemplate.h"
 #include "../utillity/DebugControllGameObject.h"
 
+#include "../Stage/HitStageObject.h"
+
 #include "../Effect/ParticleRenderer.h"
+#include "../Render/BlurObject.h"
+
 
 
 static void CreateCharacter(
@@ -58,13 +64,7 @@ static void CreateCharacter(
     PlayerType::Value     pl,
     CharacterType::Value  chr)
 {
-    const Vector3 pos[4] =
-    {
-        Vector3(-20, 0, 20),
-        Vector3(20, 0, 20),
-        Vector3(-20, 0, -20),
-        Vector3(20, 0, -20),
-    };
+    
 
     CharacterBase* pChr = nullptr;
 
@@ -108,7 +108,7 @@ static void CreateCharacter(
         break;
     }
 
-    pChr->m_Params.pos = pos[(int)n];
+    pChr->m_Params.pos = DefCharacterMgr.GetRoundStartPos(n);
     chr_func::AngleControll(pChr, Vector3Zero);
 
 }
@@ -137,22 +137,25 @@ void GameInitializer_DevelopMode::GameCreate()
     DefCamera.m_Position = Vector3(0, 40, -55);
     DefCamera.m_Target = Vector3(0, 4, 0);
 
+    //当たり判定のデバッグ描画を有効に
+    DefDamageMgr.m_DebugDrawVisible = true;
 
     //キャラクタ作成
     {
 
-        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Baseball);
+        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
         CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Tennis);
 
-        CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Soccer);
-        CreateCharacter((PlayerNum::Value)3, PlayerType::_Player, CharacterType::_Lacrosse);
+        CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)3, PlayerType::_Player, CharacterType::_Tennis);
     }
+
 
     {
         GameEventer::Param param;
 
         param.round = 3;
-        param.time = 60;
+        param.time = 60 * 60 * 3; //３分
 
         new GameEventer(param, new MatchState::MatchPlay());
     }
@@ -173,27 +176,27 @@ void GameInitializer_DevelopMode::GameCreate()
 
         // Box
         /*DefBulletSystem.AddRigidBox(
-        1.0f,
-        RigidBody::ct_dynamic,
-        Vector3(0, 30, 0),
-        Vector3(0.2f, 0, 0),
-        Vector3(1, 1, 1),
-        0.2f,
-        1.0f,
-        Vector3(0, 0, 0)
-        );*/
+    1.0f,
+    RigidBody::ct_dynamic,
+    Vector3(0, 30, 0),
+    Vector3(0.2f, 0, 0),
+    Vector3(1, 1, 1),
+    0.2f,
+    1.0f,
+    Vector3(0, 0, 0)
+    );*/
 
         // Sphere
         /*DefBulletSystem.AddRigidSphere(
-        1.0f,
-        RigidBody::ct_dynamic,
-        Vector3(10, 30, 0),
-        Vector3(0, 0, 0),
-        1.0f,
-        0.2f,
-        1.0f,
-        Vector3(0, -10, 0)
-        );*/
+    1.0f,
+    RigidBody::ct_dynamic,
+    Vector3(10, 30, 0),
+    Vector3(0, 0, 0),
+    1.0f,
+    0.2f,
+    1.0f,
+    Vector3(0, -10, 0)
+    );*/
 
         // Mesh
         // DefBulletSystem.AddRigidMesh(
@@ -224,6 +227,18 @@ void GameInitializer_DevelopMode::GameCreate()
 
     }
 
+    {
+        //ブラーエフェクト
+        BlurObjectSphere* p = new BlurObjectSphere();
+        p->m_Power = 100;
+        
+        new StaticGameObjectTemplate<BlurObjectSphere>(p);
+    }
+
+    {
+        //エフェクト読み込み
+        EffectResource::Load();
+    }
 
     //デバッグ描画用の球メッシュ
     DefResource.Regist(
@@ -273,8 +288,29 @@ void GameInitializer_DevelopMode::GameCreate()
         );
 
 
-    new StaticGameObjectTemplate<MeshRenderer>(new MeshRenderer(new iexMesh("DATA\\STAGE\\Stage.IMO"), true, MeshRenderer::RenderType::UseColor));
+    {
+        //ステージ作成
+        iexMesh* pMesh = new iexMesh("DATA\\STAGE\\Stage.IMO");
 
+        new HitStageObject(
+            new MeshRenderer(pMesh, true, MeshRenderer::RenderType::UseColor),
+            new MeshCollider(pMesh, new MeshCollider::HitEvent)
+            );
+
+    }
+
+    {
+        //デバッグ用ダメージクラス
+
+        DamageShpere* d = new DamageShpere();
+
+        d->type = DamageBase::Type::_VanishDamage;
+        d->m_Param.pos.y = 2.5f;
+        d->vec.x = 0.25f;
+        d->Value = 35;
+
+        new StaticGameObjectTemplate<DamageShpere>(d);
+    }
 
     if (1)
     {
@@ -309,17 +345,11 @@ void GameInitializer_DevelopMode::GameCreate()
 
             A->param.color = Vector3(0.38f, 0.24f, 0.24f);
             A->param.Occlusion.SamplingSize = 0.07f;
-            A->param.Occlusion.Enable = false;
+            A->param.Occlusion.Enable = true;
 
             new DebugControllGameObject(&A->param.color, 0, 0.01f, "AmbColor", 'A');
             new StaticGameObjectTemplate<AmbientLight>(A);
         }
     }
-    
-
-}
-
-void GameInitializer_DevelopMode::GameRoundReset()
-{
-
+   
 }

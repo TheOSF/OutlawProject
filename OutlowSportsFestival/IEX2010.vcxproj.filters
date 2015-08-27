@@ -130,7 +130,6 @@
     <ClCompile Include="source\Camera\CameraState.cpp" />
     <ClCompile Include="source\utillity\PlayerGauge.cpp" />
     <ClCompile Include="source\GameSystem\GameEventer.cpp" />
-    <ClCompile Include="source\Render\PostEffectRenderer.cpp" />
     <ClCompile Include="source\Render\System\BlurEffectRenderer.cpp" />
     <ClCompile Include="source\Render\System\DeferredGbufRenderer.cpp" />
     <ClCompile Include="source\Render\System\DeferredLightBufRenderer.cpp" />
@@ -143,6 +142,11 @@
     <ClCompile Include="source\Effect\ParticleBase.cpp" />
     <ClCompile Include="source\Render\ForwardHDR_MeshRenderer.cpp" />
     <ClCompile Include="source\utillity\Locus.cpp" />
+    <ClCompile Include="source\Effect\EffectResourceLoad.cpp" />
+    <ClCompile Include="source\Stage\HitStageObject.cpp" />
+    <ClCompile Include="source\Effect\FadeGameObject.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisPlayerState_DamageMotionDie.cpp" />
+    <ClCompile Include="source\Render\BlurObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -225,7 +229,6 @@
     <ClInclude Include="source\Render\Header.h" />
     <ClInclude Include="source\utillity\PlayerGauge.h" />
     <ClInclude Include="source\GameSystem\GameEventer.h" />
-    <ClInclude Include="source\Render\PostEffectRenderer.h" />
     <ClInclude Include="source\Render\System\BlurEffectRenderer.h" />
     <ClInclude Include="source\Render\System\DeferredGbufRenderer.h" />
     <ClInclude Include="source\Render\System\DeferredLightBufRenderer.h" />
@@ -241,6 +244,11 @@
     <ClInclude Include="source\Effect\ParticleBase.h" />
     <ClInclude Include="source\Render\ForwardHDR_MeshRenderer.h" />
     <ClInclude Include="source\utillity\Locus.h" />
+    <ClInclude Include="source\Effect\EffectResourceLoad.h" />
+    <ClInclude Include="source\Stage\HitStageObject.h" />
+    <ClInclude Include="source\Effect\FadeGameObject.h" />
+    <ClInclude Include="source\character\Tennis\TennisPlayerState_DamageMotionDie.h" />
+    <ClInclude Include="source\Render\BlurObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

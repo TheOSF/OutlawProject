@@ -13,5 +13,4 @@ public:
     ~GameInitializer_DevelopMode();
 
     void GameCreate();
-    void GameRoundReset();
 };

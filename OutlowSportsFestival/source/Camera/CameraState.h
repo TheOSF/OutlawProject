@@ -2,6 +2,8 @@
 #define __CAMERA_STATE_H__
 
 #include "Camera.h"
+#include "../GameSystem/ForwardDecl.h"
+
 
 //*********************************************************
 //	カメラの動きクラスヘッダ
@@ -11,12 +13,16 @@
 class CameraStateGamePlay :public CameraState
 {
 public:
+    CameraStateGamePlay(bool pos_reset = false);
+
 	void Enter(Camera* c);
 	void Execute(Camera* c);
 	void Exit(Camera* c);
 
 private:
 
+    float m_PosSpeed;
+    float m_TargetSpeed;
 };
 
 
@@ -69,6 +75,24 @@ private:
     Vector2 GetRightStick()const;
 };
 
+
+//キャラクタにズームするカメラ
+class CameraStateCharacterZoom :public CameraState
+{
+public:
+    CameraStateCharacterZoom(
+        LpCharacterBase  pZoomCharacter,
+        RATIO            speed
+        );
+
+    void Enter(Camera* c);
+    void Execute(Camera* c);
+    void Exit(Camera* c);
+
+private:
+    LpCharacterBase  m_pZoomCharacter;
+    RATIO            m_Speed;
+};
 
 
 #endif

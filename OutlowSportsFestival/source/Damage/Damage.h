@@ -87,6 +87,8 @@ public:
     //あたり判定をデバッグ描画
     void DebugDraw();
 
+    //デバッグ描画を実行するかどうか
+    bool m_DebugDrawVisible;
 private:
 	friend class DamageBase;
 	typedef std::map<DamageBase*, DamageBase*> DamageBaseMap;

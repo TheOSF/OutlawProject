@@ -87,10 +87,9 @@ void	sceneGamePlay::Update()
     
     DefGameObjMgr.Update();
 
-    if (GetKeyState('K'))
-    {
-        DefDamageMgr.DebugDraw();
-    }
+    DefDamageMgr.DebugDraw();
+
+    DefDamageMgr.m_DebugDrawVisible = GetKeyState('P') != 0;
 }
 
 //*****************************************************************************************************************************

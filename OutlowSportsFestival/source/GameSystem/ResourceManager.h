@@ -27,6 +27,8 @@ public:
         White,
         Particle,
 
+        Anime_Circle,
+
         _MaxType
     };
 

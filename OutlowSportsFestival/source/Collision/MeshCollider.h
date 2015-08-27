@@ -13,10 +13,10 @@ public:
 	class HitEvent
 	{
 	public:
-		virtual void Hit(
+        virtual void Hit(
             RayType     hit_Raytype,
-			CrVector3	hit_pos,
-			int			hit_material) = 0;
+            CrVector3	hit_pos,
+            int			hit_material){}
 	};
 
 	MeshCollider(

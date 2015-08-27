@@ -40,8 +40,6 @@ UsualBall::UsualBall(
 
     UpdateMesh();
 
-    SetHDR();
-
     //ãOê’ÇÃê›íË
     m_Locus.m_Division = 0;
     m_Locus.m_StartParam.Width = 0.4f;

@@ -55,6 +55,12 @@ namespace chr_func
 
     //Y軸方向の地面判定を行う
     void CheckGround(CharacterBase* p);
+
+    //XZ方向の壁との接触判定を行う(戻り値＝壁とあたっているかどうか)
+    bool CheckWall(CharacterBase* p);
+
+    //現在の体力の割合を得る（０～１）
+    RATIO GetLifeRatio(CharacterBase* p);
 }
 
 #endif

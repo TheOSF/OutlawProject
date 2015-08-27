@@ -26,6 +26,8 @@ public:
 	typedef _Client*_Client_type_ptr;
 	typedef _ret_type _Return_value_type;
 public:
+    virtual ~State(){}
+
 	virtual _Return_value_type Enter(_Client_type_ptr)
 	{
 		return 0;
@@ -49,6 +51,8 @@ class State
 public:
 	typedef _Client*_Client_type_ptr;
 public:
+    virtual ~State(){}
+
 	virtual void Enter(_Client_type_ptr){}
 	virtual void Execute(_Client_type_ptr){}
 	virtual void Exit(_Client_type_ptr){}

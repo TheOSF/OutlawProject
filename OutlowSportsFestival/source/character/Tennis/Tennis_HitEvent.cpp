@@ -1,6 +1,10 @@
 #include "Tennis_HitEvent.h"
 #include "TennisPlayerState_DamageMotionWeak.h"
 #include "TennisPlayerState_Vanish.h"
+#include "TennisPlayerState_DamageMotionDie.h"
+#include "../CharacterFunction.h"
+
+
 
 TennisHitEvent::TennisHitEvent(TennisPlayer* pt) :
 m_pTennis(pt)
@@ -12,10 +16,23 @@ bool TennisHitEvent::Hit(DamageBase* pDmg)
 {
 
 	//自分の作っているダメージだった場合は何もしない
-	if (pDmg->pParent->m_PlayerInfo.number == m_pTennis->m_PlayerInfo.number)
+    if (pDmg->pParent != nullptr &&
+        pDmg->pParent->m_PlayerInfo.number == m_pTennis->m_PlayerInfo.number)
 	{
 		return false;
 	}
+
+    //ダメージ計算
+    CalcDamage(pDmg);
+
+
+    //もし体力がなかったら、どんな攻撃であろうと死亡ステートへ
+    if (chr_func::isDie(m_pTennis))
+    {
+        m_pTennis->SetState(new TennisState_DamageMotion_Die(m_pTennis, pDmg->vec));
+        return true;
+    }
+
 
 	//当たった時にそのダメージの種類から、それぞれのステートに派生させる
 	switch (pDmg->type)
@@ -41,4 +58,12 @@ bool TennisHitEvent::Hit(DamageBase* pDmg)
 	}
 
 	return false;
+}
+
+
+//ダメージ計算
+void TennisHitEvent::CalcDamage(DamageBase* pDmg)
+{
+    m_pTennis->m_Params.HP -= pDmg->Value;
+    m_pTennis->m_Params.HP = max(m_pTennis->m_Params.HP, 0);
 }

@@ -6,6 +6,9 @@
 #include "../Effect/ParticleMoveObject.h"
 #include "../Effect/ParticleRenderer.h"
 #include "../GameSystem/ResourceManager.h"
+#include "../Collision/Collision.h"
+#include "../Effect/FadeGameObject.h"
+
 
 //----------------------------------------------------
 //  試合遷移メッセージを送信するクラス
@@ -35,7 +38,6 @@ void GameEventer::SetState(State* pState)
 bool GameEventer::Update()
 {
 	m_pStateMachine->state_execute();
-	
 	return true;
 }
 
@@ -141,6 +143,42 @@ void MatchState::StartCountdown::Exit(_Client_type_ptr p)
 }
 
 //--------------------------------------------------
+//         ２ラウンド目以降の開始ステート
+//--------------------------------------------------
+
+MatchState::RoundResetCountdown::RoundResetCountdown()
+{
+    m_Frame = 0;
+}
+
+MatchState::RoundResetCountdown::~RoundResetCountdown()
+{
+
+}
+
+void MatchState::RoundResetCountdown::Enter(_Client_type_ptr p)
+{
+
+}
+
+void MatchState::RoundResetCountdown::Execute(_Client_type_ptr p)
+{
+    if (++m_Frame > 120)
+    {
+        DefCamera.SetNewState(new CameraStateGamePlay());
+        p->SetState(new MatchPlay());
+    }
+}
+
+void MatchState::RoundResetCountdown::Exit(_Client_type_ptr p)
+{
+
+}
+
+
+
+
+//--------------------------------------------------
 //              試合中のステート
 //--------------------------------------------------
 
@@ -155,6 +193,23 @@ MatchState::MatchPlay::~MatchPlay()
 
 }
 
+
+void MatchState::MatchPlay::GetLiveCharacterMap(CharacterManager::CharacterMap& Out)
+{
+    Out = DefCharacterMgr.GetCharacterMap();
+    CharacterManager::CharacterMap::iterator it = Out.begin();
+
+    while (it != Out.end())
+    {
+        if (chr_func::isDie(it->first))
+        {
+            it = Out.erase(it);
+            continue;
+        }
+        ++it;
+    }
+}
+
 void MatchState::MatchPlay::Enter(_Client_type_ptr p)
 {
 
@@ -162,26 +217,156 @@ void MatchState::MatchPlay::Enter(_Client_type_ptr p)
 
 void MatchState::MatchPlay::Execute(_Client_type_ptr p)
 {
-	const UINT liveCount = DefCharacterMgr.GetCharacterLiveCount();
-
+    const UINT liveCount = DefCharacterMgr.GetCharacterLiveCount();
+    
     if (liveCount == 1)
     {
+        //一人がちパターンの場合
 
+        CharacterManager::CharacterMap NowLiveCharacterMap;
+        GetLiveCharacterMap(NowLiveCharacterMap);
+
+        //勝利したキャラクタを検索
+        LpCharacterBase  WinCharacter = NowLiveCharacterMap.begin()->first;
+        LpCharacterBase  LastDieCharacter = nullptr;
+        
+        //最後に倒されたキャラクタを検索
+        for (auto& it : m_CharacterMap)
+        {
+            if (WinCharacter != it.first)
+            {
+                LastDieCharacter = it.first;
+                break;
+            }
+        }
+
+        MyAssert(LastDieCharacter != nullptr, "最後に倒されたキャラクタが見つかりませんでした　（プレイ人数が１の可能性あり）");
+
+        //一人がちステートをセット
+        p->SetState(new WinPose(LastDieCharacter, WinCharacter));
+
+        return;
     }
     else if (liveCount == 0)
     {
+        //引き分けの場合
 
+        int a = 0;
     }
     else if (++m_Frame > p->m_Param.time)
 	{
+        //タイムアップの場合
+        LpCharacterBase  WinCharacter = nullptr;
+        RATIO            MostManyLife = 0.0f;
+        RATIO            Temp;
 
+        m_CharacterMap = DefCharacterMgr.GetCharacterMap();
+
+        for (auto& it : m_CharacterMap)
+        {
+            Temp = chr_func::GetLifeRatio(it.first);
+
+            if (Temp > MostManyLife)
+            {
+                MostManyLife = Temp;
+                WinCharacter = it.first;
+            }
+        }
+
+        MyAssert(WinCharacter != nullptr, "タイムアップ時にキャラクタがいませんでした(ありえない!)");
+
+        //タイムアップ勝ちステートをセット
+     //   p->SetState(new WinPose(LastDieCharacter, WinCharacter));
+
+        return;
 	}
 
-
-
+    //生存しているキャラクタデータを更新する
+    GetLiveCharacterMap(m_CharacterMap);
 }
 
 void MatchState::MatchPlay::Exit(_Client_type_ptr p)
 {
 
 }
+
+
+//--------------------------------------------------
+//              一人勝ちステート
+//--------------------------------------------------
+
+MatchState::WinPose::WinPose(
+    LpCharacterBase pLastDieCharacter,
+    LpCharacterBase pWinCharacter
+    ) :
+m_Frame(0),
+m_pLastDieCharacter(pLastDieCharacter),
+m_pWinCharacter(pWinCharacter)
+{
+
+}
+
+MatchState::WinPose::~WinPose()
+{
+
+}
+
+void MatchState::WinPose::Enter(_Client_type_ptr p)
+{
+    DefCamera.SetNewState(new CameraStateCharacterZoom(m_pLastDieCharacter, 0.05f));
+}
+
+void MatchState::WinPose::Execute(_Client_type_ptr p)
+{
+    ++m_Frame;
+
+    if (m_Frame == 120)
+    {
+        DefCamera.SetNewState(new CameraStateCharacterZoom(m_pWinCharacter, 0.05f));
+    }
+
+    if (m_Frame == 300)
+    {
+        p->SetState(new ResetRound());
+    }
+}
+
+void MatchState::WinPose::Exit(_Client_type_ptr p)
+{
+
+}
+
+
+//--------------------------------------------------
+//            ラウンドリセットステート
+//--------------------------------------------------
+
+void MatchState::ResetRound::Enter(_Client_type_ptr p)
+{
+    m_Frame = 0;
+
+    //ブラックアウトさせる
+    new FadeGameObject(
+        COLORf(1, 0, 0, 0),
+        40,
+        0,
+        30
+        );
+}
+
+void MatchState::ResetRound::Execute(_Client_type_ptr p)
+{
+    if (++m_Frame == 40)
+    {
+        DefGameObjMgr.SendMsg(GameObjectBase::MsgType::_RoundReset);
+        DefCamera.SetNewState(new CameraStateGamePlay(true));
+
+        p->SetState(new RoundResetCountdown());
+    }
+}
+
+void MatchState::ResetRound::Exit(_Client_type_ptr p)
+{
+
+}
+

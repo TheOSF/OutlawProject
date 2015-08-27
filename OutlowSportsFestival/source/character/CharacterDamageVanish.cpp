@@ -67,6 +67,7 @@ void CharacterDamageVanish::Flying()
         chr_func::UpdateMoveY(m_pCharacter);
         chr_func::PositionUpdate(m_pCharacter);
         chr_func::CheckGround(m_pCharacter);
+        chr_func::CheckWall(m_pCharacter);
     }
 
 
@@ -84,9 +85,15 @@ void CharacterDamageVanish::Flying()
 void CharacterDamageVanish::StandUp()
 {
     //フレームカウント
-    ++m_Count;
+    m_Count = min(m_Count + 1, 1000);
 
     chr_func::XZMoveDown(m_pCharacter, 0.2f);
+
+    if (m_End == false)
+    {
+        m_pEvent->StandUping();
+    }
+    
 
     //終了判定
     if (m_End == false &&
