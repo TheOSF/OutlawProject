@@ -34,29 +34,30 @@ CharacterEvasion::~CharacterEvasion()
 // 更新
 bool CharacterEvasion::Update()
 {
-	// 移動
-	chr_func::AddMoveFront(
-		m_pCharacterBase,
-		m_EvasionParams.MoveSpeed,
-		m_EvasionParams.MoveSpeed);
 
 	if (m_Timer == 0)
 	{// 回避開始
-		m_pEvent->EvasionStart();
+        m_pEvent->EvasionStart();
 
-		// 移動方向補正
-		chr_func::AddXZMove(
-			m_pCharacterBase,
-			m_StickValue.x,
-			m_StickValue.y,
-			m_EvasionParams.MoveSpeed);
+        {
+            Vector3 ViewPos;
 
-		// 向き補正
-		chr_func::AngleControll(
-			m_pCharacterBase,
-			m_pCharacterBase->m_Params.pos + m_pCharacterBase->m_Params.move,
-			m_EvasionParams.MaxTurnRadian
-			);
+            ViewPos = m_pCharacterBase->m_Params.pos;
+            ViewPos += Vector3(m_StickValue.x, 0, m_StickValue.y);
+
+            // 向き補正
+            chr_func::AngleControll(
+                m_pCharacterBase,
+                ViewPos,
+                cosf(m_EvasionParams.MaxTurnRadian)
+                );
+        }
+
+        // 移動
+        chr_func::AddMoveFront(
+            m_pCharacterBase,
+            m_EvasionParams.MoveSpeed,
+            m_EvasionParams.MoveSpeed);
 	}
 
 	// 座標更新

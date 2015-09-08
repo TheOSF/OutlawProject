@@ -1,6 +1,6 @@
 #include "CharacterManager.h"
 #include "CharacterFunction.h"
-
+#include "CharacterBase.h"
 
 CharacterManager* CharacterManager::m_pInstance = nullptr;
 
@@ -80,4 +80,39 @@ void CharacterManager::Add(LpCharacterBase c)
 void CharacterManager::Erace(LpCharacterBase c)
 {
 	m_CharacterMap.erase(c);
+}
+
+//‘¼‚ÌƒLƒƒƒ‰ƒNƒ^‚ð‰Ÿ‚µ‚Ì‚¯‚é
+void CharacterManager::CheckCharacterSpace()
+{
+    Vector3 vec;
+    float   len;
+
+    for (auto& it1 : m_CharacterMap)
+    {
+        for (auto& it2 : m_CharacterMap)
+        {
+            if (it1 == it2)
+            {
+                continue;
+            }
+
+            vec = it1.first->m_Params.pos - it2.first->m_Params.pos;
+            vec.y = 0;
+
+            len = Vector3XZLength(vec);
+            len -= it1.first->m_Params.size + it2.first->m_Params.size;
+
+            if (len > 0)
+            {
+                continue;
+            }
+
+            vec.Normalize();
+            vec *= len * 0.5f;
+
+            it1.first->m_Params.pos -= vec;
+            it2.first->m_Params.pos += vec;
+        }
+    }
 }

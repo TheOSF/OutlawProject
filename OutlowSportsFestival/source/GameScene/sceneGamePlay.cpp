@@ -53,12 +53,9 @@ bool sceneGamePlay::Initialize()
 
 sceneGamePlay::~sceneGamePlay()
 {
-	{// Bullet
-		DefBulletSystem.ReleaseBulletPhysics();
-		DefBulletSystem.ShutDown(true);
-	};
 
-	DefGameObjMgr.Release();
+	DefGameObjMgr.Release(); //ゲームオブジェクト削除は一番初めに
+
 	DefCharacterMgr.Release();
 	DefRendererMgr.Release();
 	DefDamageMgr.Release();
@@ -66,6 +63,11 @@ sceneGamePlay::~sceneGamePlay()
 	DefCamera.Release();
 	DefCollisionMgr.Release();
     DefResource.Release();
+
+    {// Bullet
+        DefBulletSystem.ReleaseBulletPhysics();
+        DefBulletSystem.ShutDown(true);
+    };
 }
 
 //*****************************************************************************************************************************
@@ -86,6 +88,7 @@ void	sceneGamePlay::Update()
 	DefCamera.Update();
     
     DefGameObjMgr.Update();
+    DefCharacterMgr.CheckCharacterSpace();
 
     DefDamageMgr.DebugDraw();
 

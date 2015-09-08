@@ -3,7 +3,8 @@
 
 Locus::Locus(size_t SavePointNum) :
 m_NumPoint(SavePointNum),
-m_UseCount(0)
+m_UseCount(0),
+m_dwFlags(RS_COPY)
 {
 	//ポイントデータ生成
 	m_pPointData = new Point[SavePointNum];
@@ -24,28 +25,6 @@ void Locus::AddPoint(
 	CrVector3 vec   //帯の伸びる方向(正規化していなければならない)
 	)
 {
-
-	////最大の場合ひとつ前にずらす
-	//if (m_UseCount == m_NumPoint)
-	//{
-	//	for (size_t i = 0; i < m_UseCount - 1; ++i)
-	//	{
-	//		m_pPointData[i] = m_pPointData[i + 1];
-	//	}
-
-	//	//データの最後に追加
-	//	m_pPointData[m_UseCount - 1].pos = pos;
-	//	m_pPointData[m_UseCount - 1].vec = vec;
-	//}
-	//else
-	//{
-	//	//最後尾に追加
-	//	m_pPointData[m_UseCount].pos = pos;
-	//	m_pPointData[m_UseCount].vec = vec;
-
-	//	++m_UseCount;
- //   }
-
     //ひとつ後ろにずらす
     for (int i = m_UseCount; i >= 0; --i)
     {
@@ -272,7 +251,7 @@ void Locus::Render(
 		);
 
 	iexPolygon::Render3D(
-		v, 2, m_pTexture, RS_COPY
+        v, 2, m_pTexture, m_dwFlags
 		);
 
 }

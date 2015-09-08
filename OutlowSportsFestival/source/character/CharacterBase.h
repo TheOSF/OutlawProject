@@ -34,6 +34,7 @@ public:
 		float				maxHP;		//最大体力０～
 		float				HP;			//０～
 		float				SP;			//０～１００
+        float               size;       //他のキャラクタを押しのける大きさ
 	};
 
     //キャラクタ共通パラメータ

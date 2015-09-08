@@ -126,6 +126,8 @@ GameInitializer_DevelopMode::~GameInitializer_DevelopMode()
 
 void GameInitializer_DevelopMode::GameCreate()
 {
+    iexMesh* pStageMesh;
+
     //	環境設定
     iexLight::SetAmbient(0x404040);
     iexLight::SetFog(800, 1000, 0);
@@ -160,6 +162,17 @@ void GameInitializer_DevelopMode::GameCreate()
         new GameEventer(param, new MatchState::MatchPlay());
     }
 
+
+    {
+        //ステージ作成
+        pStageMesh = new iexMesh("DATA\\STAGE\\Stage.IMO");
+
+        new HitStageObject(
+            new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColor),
+            new MeshCollider(pStageMesh, new MeshCollider::HitEvent)
+            );
+
+    }
 
     {// Bullet
 
@@ -210,29 +223,78 @@ void GameInitializer_DevelopMode::GameCreate()
         //     );
 
 
-        for (int i = 0; i < 17; i++)
-        {
-            // 床
-            DefBulletSystem.AddRigidBox(
-                0.0f,
-                RigidBody::ct_static,
-                Vector3(0, -10 * (float)i, 0),
-                Vector3(0, 0, 0),
-                Vector3(100, 10, 100),
-                0.2f,
-                0.75f,
-                Vector3(0, 0, 0)
-                );
-        }
+        //for (int i = 0; i < 17; i++)
+        //{
+        //    // 床
+        //    DefBulletSystem.AddRigidBox(
+        //        0.0f,
+        //        RigidBody::ct_static,
+        //        Vector3(0, -10 * (float)i, 0),
+        //        Vector3(0, 0, 0),
+        //        Vector3(100, 10, 100),
+        //        0.2f,
+        //        0.75f,
+        //        Vector3(0, 0, 0)
+        //        );
+        //}
 
+
+        // 床
+        //DefBulletSystem.AddRigidBox(
+        //    0.0f,
+        //    RigidBody::ct_static,
+        //    Vector3(0, -10, 0),
+        //    Vector3(0, 0, 0),
+        //    Vector3(200, 10, 200),
+        //    0.2f,
+        //    0.75f,
+        //    Vector3(0, 0, 0)
+        //    );
+
+
+        //DefBulletSystem.AddRigidBox(
+        //    0.0f,
+        //    RigidBody::ct_static,
+        //    Vector3(0, 0, 100),
+        //    Vector3(PI / 2, 0, 0),
+        //    Vector3(10, 200, 200), 
+        //    0.2f,
+        //    0.75f,
+        //    Vector3(0, 0, 0)
+        //    );
+
+        DefBulletSystem.AddRigidMesh(
+            pStageMesh,
+            10000.0f,
+            RigidBody::ct_kinematic,
+            0.5f,
+            0.5f,
+            Vector3(0, 0, 0),
+            Vector3(0, 0, 0)
+            );
     }
 
+    if(0)
     {
-        //ブラーエフェクト
-        BlurObjectSphere* p = new BlurObjectSphere();
-        p->m_Power = 100;
-        
-        new StaticGameObjectTemplate<BlurObjectSphere>(p);
+        {
+            //球ブラーエフェクト
+            BlurObjectSphere* p = new BlurObjectSphere();
+            p->m_Power = 100;
+
+            new StaticGameObjectTemplate<BlurObjectSphere>(p);
+        }
+
+        {
+        //コーンブラーエフェクト
+        BlurObjectCone* p = new BlurObjectCone();
+
+        p->m_Power = 50;
+        p->m_Origin = Vector3(0, 0, 20);
+        p->m_Target = p->m_Origin + Vector3(15, 0, 0);
+        p->m_Size = 10;
+
+        new StaticGameObjectTemplate<BlurObjectCone>(p);
+        }
     }
 
     {
@@ -288,26 +350,17 @@ void GameInitializer_DevelopMode::GameCreate()
         );
 
 
-    {
-        //ステージ作成
-        iexMesh* pMesh = new iexMesh("DATA\\STAGE\\Stage.IMO");
-
-        new HitStageObject(
-            new MeshRenderer(pMesh, true, MeshRenderer::RenderType::UseColor),
-            new MeshCollider(pMesh, new MeshCollider::HitEvent)
-            );
-
-    }
+    
 
     {
         //デバッグ用ダメージクラス
 
         DamageShpere* d = new DamageShpere();
 
-        d->type = DamageBase::Type::_VanishDamage;
+        d->type = DamageBase::Type::_WeekDamage;
         d->m_Param.pos.y = 2.5f;
         d->vec.x = 0.25f;
-        d->Value = 35;
+        d->Value = 25;
 
         new StaticGameObjectTemplate<DamageShpere>(d);
     }

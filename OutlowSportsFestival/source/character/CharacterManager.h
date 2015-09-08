@@ -26,6 +26,8 @@ public:
     //ラウンド初期位置を得る
     Vector3 GetRoundStartPos(PlayerNum::Value num)const;
 
+    //キャラクタ同士の押し出しを計算する
+    void CheckCharacterSpace();
 private:
 	friend class CharacterBase;
 	
@@ -38,6 +40,8 @@ private:
 
 	void Add(LpCharacterBase c);
 	void Erace(LpCharacterBase c);
+
+    
 };
 
 #define DefCharacterMgr (CharacterManager::GetInstance())

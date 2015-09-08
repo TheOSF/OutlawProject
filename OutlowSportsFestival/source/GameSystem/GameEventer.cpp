@@ -9,6 +9,10 @@
 #include "../Collision/Collision.h"
 #include "../Effect/FadeGameObject.h"
 
+#include "../Effect/BlurImpact.h"
+
+#include "../Stage/PhysicsMeshObject.h"
+
 
 //----------------------------------------------------
 //  試合遷移メッセージを送信するクラス
@@ -217,6 +221,7 @@ void MatchState::MatchPlay::Enter(_Client_type_ptr p)
 
 void MatchState::MatchPlay::Execute(_Client_type_ptr p)
 {
+
     const UINT liveCount = DefCharacterMgr.GetCharacterLiveCount();
     
     if (liveCount == 1)
@@ -313,6 +318,10 @@ MatchState::WinPose::~WinPose()
 
 void MatchState::WinPose::Enter(_Client_type_ptr p)
 {
+    std::list<LpGameObjectBase> UpdateList;
+
+    DefGameObjMgr.FreezeOtherObjectUpdate(UpdateList, 120);
+
     DefCamera.SetNewState(new CameraStateCharacterZoom(m_pLastDieCharacter, 0.05f));
 }
 

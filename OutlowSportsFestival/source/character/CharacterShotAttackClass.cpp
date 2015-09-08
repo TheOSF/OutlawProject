@@ -5,6 +5,9 @@
 #include "../Effect/ParticleMoveObject.h"
 #include "../GameSystem/ResourceManager.h"
 
+#include "../Ball/Ball.h"
+#include "../Effect/HitEffectObject.h"
+
 //***************************************************
 //		ラクロス用 遠距離攻撃 (ボール打ち出し) クラス
 //***************************************************

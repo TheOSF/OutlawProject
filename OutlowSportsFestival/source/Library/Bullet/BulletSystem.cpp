@@ -312,6 +312,7 @@ RigidBody* BulletSystem::AddRigidMesh(
 	Vector3 pos = pMesh->GetPos();
 	transform.setOrigin(
 		btVector3(pos.x, pos.y, pos.z)
+        
 		);
 
 	// ‰ñ“]İ’è

@@ -1,6 +1,9 @@
 #include "TennisPlayerState_DamageMotionDie.h"
 #include "Tennis_HitEvent.h"
 #include "../CharacterFunction.h"
+#include "../../Effect/BlurImpact.h"
+
+#include "../../Ball/Ball.h"
 
 TennisState_DamageMotion_Die::TennisState_DamageMotion_Die(
     TennisPlayer* pTennis,
@@ -78,6 +81,13 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
         new TennisEvent(t)
         );
 
+    //ブラーエフェクト
+    new BlurImpactSphere(
+        m_pTennis->m_Params.pos + Vector3(0, BallBase::UsualBallShotY, 0),
+        20,
+        50,
+        15
+        );
 }
 
 void TennisState_DamageMotion_Die::Execute(TennisPlayer* t)

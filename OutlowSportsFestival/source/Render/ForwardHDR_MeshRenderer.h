@@ -1,7 +1,10 @@
 #ifndef __FORWARD_HDR_MESH_RENDERER_H__
 #define __FORWARD_HDR_MESH_RENDERER_H__
 
+
 #include "Renderer.h"
+#include "../utillity/ColorUtility.h"
+
 
 //------------------------------------------------
 //  HDRメッシュレンダラー
@@ -22,9 +25,11 @@ public:
     void SetMatrix(const Matrix& mat);
     const Matrix& GetMatrix()const;
 
+    COLORf  m_Color;
     Vector3 m_HDR_Color;
 
 private:
+    Matrix              m_TransMatrix;
     iexMesh*	const	m_pMesh;
     bool		const	m_MeshDelete;
 

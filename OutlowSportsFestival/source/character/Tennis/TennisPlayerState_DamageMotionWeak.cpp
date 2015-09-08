@@ -2,9 +2,11 @@
 #include "TennisPlayerState_UsualMove.h"
 #include "Tennis_HitEvent.h"
 #include "../CharacterFunction.h"
+#include "../../Effect/HitEffectObject.h"
+
 
 TennisState_DamageMotion_Weak::TennisState_DamageMotion_Weak(
-	TennisPlayer* pTennis,
+	TennisPlayer*  pTennis,
 	const Vector3& Damage_vec  //ダメージを受けた方向
 	):
 	m_pTennis(pTennis),
@@ -59,6 +61,15 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
 		new TennisHitEvent(m_pTennis),
 		Param
 		);
+
+    //ヒットエフェクト作成
+    new HitEffectObject(
+        m_pTennis->m_Params.pos + Vector3(0, 3, 0),
+        m_Damage_vec,
+        0.05f,
+        0.15f,
+        Vector3(1.0f, 1.0f, 1.0f)
+        );
 
 }
 

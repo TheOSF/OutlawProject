@@ -147,6 +147,12 @@
     <ClCompile Include="source\Effect\FadeGameObject.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_DamageMotionDie.cpp" />
     <ClCompile Include="source\Render\BlurObject.cpp" />
+    <ClCompile Include="source\Effect\BlurImpact.cpp" />
+    <ClCompile Include="source\Effect\HitEffectObject.cpp" />
+    <ClCompile Include="source\character\CharacterDefaultCounterClass.cpp" />
+    <ClCompile Include="source\UI\PlayerGauge.cpp" />
+    <ClCompile Include="source\Stage\PhysicsMeshObject.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisPlayerState_Rolling.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -249,6 +255,12 @@
     <ClInclude Include="source\Effect\FadeGameObject.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_DamageMotionDie.h" />
     <ClInclude Include="source\Render\BlurObject.h" />
+    <ClInclude Include="source\Effect\BlurImpact.h" />
+    <ClInclude Include="source\Effect\HitEffectObject.h" />
+    <ClInclude Include="source\character\CharacterDefaultCounterClass.h" />
+    <ClInclude Include="source\UI\PlayerGauge.h" />
+    <ClInclude Include="source\Stage\PhysicsMeshObject.h" />
+    <ClInclude Include="source\character\Tennis\TennisPlayerState_Rolling.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

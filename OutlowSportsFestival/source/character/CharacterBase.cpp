@@ -16,6 +16,7 @@ const CharacterBase::CommonParams CharacterBase::m_CommonParams =
 CharacterBase::CharacterBase(const PlayerInfo& info):
 m_PlayerInfo(info)
 {
+
 	m_Params.win = 0;
 	m_Params.pos = Vector3Zero;
 	m_Params.move = Vector3Zero;
@@ -24,7 +25,7 @@ m_PlayerInfo(info)
 	m_Params.HP = 100;
     m_Params.maxHP = 100;
 	m_Params.SP = 0;
-	
+    m_Params.size = 1.2f;
 
 	//É}ÉlÅ[ÉWÉÉÇ…ìoò^
 	DefCharacterMgr.Add(this);
@@ -43,7 +44,7 @@ COLOR CharacterBase::GetPlayerColor(PlayerNum::Value number)
     static const COLOR player_colors[]=
     {
         0xFFFF0000,
-        0xFF0000FF,
+        0xFF00FFFF,
         0xFFFFFF00,
         0xFF00FF00
     };

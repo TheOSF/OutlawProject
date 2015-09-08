@@ -41,6 +41,9 @@ public:
 	BallBase();
 	virtual ~BallBase();
 
+    //カウンターを行ったときに自動的に呼ばれる関数
+    virtual void Counter(){}
+
 	//引数のボールがカウンター可能かどうか
 	static bool isCanCounter(const BallBase* pBall);
 };

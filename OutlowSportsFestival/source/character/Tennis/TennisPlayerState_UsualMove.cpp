@@ -9,6 +9,7 @@
 #include "../CharacterMoveClass.h"
 #include "../CharacterShotAttackClass.h"
 #include "Tennis_HitEvent.h"
+#include "TennisPlayerState_Attack.h"
 
 
 //****************************************************
@@ -101,18 +102,26 @@ void TennisState_PlayerControll_Move::Execute(TennisPlayer* t)
 	//モデルのワールド変換行列を更新
 	chr_func::CreateTransMatrix(t, t->m_ModelSize, &t->m_Renderer.m_TransMatrix);
 
+   // if (t->m_PlayerInfo.number == 0)
+    {
 
-	if (controller::GetTRG(controller::button::sankaku, t->m_PlayerInfo.number))
-	{// [△] でボール発射
-		t->SetState(new TennisState_PlayerControll_Shot());
-	}
+        if (controller::GetTRG(controller::button::sankaku, t->m_PlayerInfo.number))
+        {// [△] でボール発射
+            t->SetState(new TennisState_PlayerControll_Shot());
+        }
+
+    }
+
 
 	if (controller::GetTRG(controller::button::_R1, t->m_PlayerInfo.number))
 	{// [R1] で [カウンター]
 		t->SetState(new TennisState_PlayerControll_Counter());
 	}
 
-
+    if (controller::GetTRG(controller::button::shikaku, t->m_PlayerInfo.number))
+    {// [□] で [近距離攻撃]
+        t->SetState(new TennisState_PlayerControll_Attack());
+    }
 }
 
 void TennisState_PlayerControll_Move::Exit(TennisPlayer* t)

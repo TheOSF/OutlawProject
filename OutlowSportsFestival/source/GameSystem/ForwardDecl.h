@@ -30,4 +30,7 @@ typedef CharacterCounter* LpCharacterCounter;
 class CharacterShotAttack;
 typedef CharacterShotAttack* LpCharacterShotAttack;
 
+class CharacterDefaultCounter;
+typedef CharacterDefaultCounter* LpCharacterDefaultCounter;
+
 #endif

@@ -152,6 +152,7 @@ void SoccerState_PlayerControll_Attack::Enter(SoccerPlayer* s)
 
 	m_pMoveClass = new CharacterNearAttack(s, p, new SoccerAttackEvent(s), DamageBase::Type::_WeekDamage, 1);
 }
+
 void SoccerState_PlayerControll_Attack::Execute(SoccerPlayer* s)
 {
 	Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);

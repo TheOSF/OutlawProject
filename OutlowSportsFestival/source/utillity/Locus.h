@@ -26,6 +26,7 @@ public:
 
 	UINT              m_Division;        //補間の分割数
 
+    DWORD             m_dwFlags;         //描画ステート
 
 	Locus(
 		size_t SavePointNum  //保存する点の数
