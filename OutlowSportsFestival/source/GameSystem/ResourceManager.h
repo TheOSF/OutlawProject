@@ -27,8 +27,12 @@ public:
     {
         White,
         Particle,
+        Locus1,
+        Locus2,
 
         Anime_Circle,
+        Anime_Smoke,
+        Anime_Counter,
 
         _MaxType
     };

@@ -3,6 +3,27 @@
 #include "../Ball/Ball.h"
 #include "../Collision/Collision.h"
 
+//基本的な更新(座標更新、壁との判定など)をすべて行う
+void chr_func::UpdateAll(
+    CharacterBase* p,
+    DamageManager::HitEventBase*	pHitEvent)
+{
+    //重力加算
+    UpdateMoveY(p);
+
+    //位置を更新
+    PositionUpdate(p);
+
+    //壁との接触判定
+    CheckWall(p);
+
+    //床との接触判定
+    CheckGround(p);
+
+    //あたり判定を取る
+    DamageCheck(p, pHitEvent);
+}
+
 //座標に移動量を更新する
 void chr_func::PositionUpdate(CharacterBase* p)
 {
@@ -133,6 +154,15 @@ void chr_func::GetFront(CharacterBase* p, Vector3* pOut)
 	pOut->z = cosf(p->m_Params.angle);
 }
 
+//右方向ベクトルを得る
+void chr_func::GetRight(CharacterBase* p, Vector3* pOut)
+{
+    const float angle = p->m_Params.angle + PI*0.5f;
+    pOut->x = sinf(angle);
+    pOut->y = 0;
+    pOut->z = cosf(angle);
+}
+
 bool chr_func::isDie(CharacterBase* p)
 {
 	return p->m_Params.HP <= 0;
@@ -255,4 +285,30 @@ bool chr_func::CheckWall(CharacterBase* p)
 RATIO chr_func::GetLifeRatio(CharacterBase* p)
 {
     return p->m_Params.HP / p->m_Params.maxHP;
+}
+
+
+//移動量をゼロにする
+void chr_func::ResetMove(CharacterBase* p)
+{
+    p->m_Params.move = Vector3Zero;
+}
+
+//引数の場所が引数のキャラクタからみて右かどうか
+bool chr_func::isRight(CharacterBase* p, CrVector3 pos)
+{
+    Vector3 v1 = pos - p->m_Params.pos, v2;
+    GetRight(p, &v2);
+
+    return Vector3Dot(v1, v2) > 0.0f;
+}
+
+
+//引数の場所が引数のキャラクタからみて前かどうか
+bool chr_func::isFront(CharacterBase* p, CrVector3 pos)
+{
+    Vector3 v1 = pos - p->m_Params.pos, v2;
+    GetFront(p, &v2);
+
+    return Vector3Dot(v1, v2) > 0.0f;
 }

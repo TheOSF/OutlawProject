@@ -1,6 +1,9 @@
 #include "CharacterDamageMotion.h"
 #include "CharacterFunction.h"
 #include "CharacterBase.h"
+#include "../Camera/Camera.h"
+
+
 
 CharacterDamageMotion::CharacterDamageMotion(
 	CharacterBase* pCharacter,
@@ -16,10 +19,22 @@ CharacterDamageMotion::CharacterDamageMotion(
 	m_pHitEvent(pHitEvent)
 {
 	m_Params = params;
+    m_Pos = m_pCharacter->m_Params.pos;
+
+
+    //ひるむ方向がない場合今向いている方向のまま
+    if (m_Params.damage_vec.x == 0 && m_Params.damage_vec.z)
+    {
+        chr_func::GetFront(m_pCharacter, &m_Params.damage_vec);
+        m_Params.damage_vec = -m_Params.damage_vec;
+    }
 }
 
 CharacterDamageMotion::~CharacterDamageMotion()
 {
+    //ライトをoffにする
+    m_pEvent->SetLight(0);
+
 	delete m_pEvent;
 	delete m_pHitEvent;
 }
@@ -41,6 +56,9 @@ void CharacterDamageMotion::Update()
 			m_pCharacter->m_Params.pos - m_Params.damage_vec
 			);
 
+        //カメラのゆれ
+        DefCamera.SetShock(Vector2(0.05f, 0.05f), 15);
+
 		//スタートイベント呼び出し
 		m_pEvent->Start();
 	}
@@ -52,14 +70,58 @@ void CharacterDamageMotion::Update()
 		chr_func::DamageCheck(m_pCharacter, m_pHitEvent);
 	}
 
-	//イベントクラス更新
-	m_pEvent->Update((m_Timer < m_Params.hitStopFrame) ? (0.2f) : (1.0f));
+    //ヒットバック処理
+    if (m_Params.hitStopFrame == m_Timer)
+    {
+        chr_func::AddMoveFront(m_pCharacter, -m_Params.hitBack, m_Params.hitBack);
+    }
 
-	//終了判定
-	if (m_End == false &&
-		m_Params.AllFrame <= m_Timer)
-	{
-		m_End = true;
-		m_pEvent->End();
-	}
+    //前回のフレームで揺れて動いた分を元に戻す
+    m_pCharacter->m_Params.pos = m_Pos;
+
+
+    //キャラクタ更新
+    {
+        //ヒットバック減衰
+        chr_func::XZMoveDown(m_pCharacter, 0.1f);
+
+        //重力加算
+        chr_func::UpdateMoveY(m_pCharacter);
+
+        //位置を更新
+        chr_func::PositionUpdate(m_pCharacter);
+
+        //壁との接触判定
+        chr_func::CheckWall(m_pCharacter);
+
+        //床との接触判定
+        chr_func::CheckGround(m_pCharacter);
+
+    }
+
+    //若干キャラクタ座標を揺らす(食らっているのを強調するため)
+    {
+        m_Pos = m_pCharacter->m_Params.pos;
+
+        if (m_Timer < 15)
+        {
+            m_pCharacter->m_Params.pos += Vector3Rand()*0.25f;
+        }
+    }
+
+    //キャラクタを若干光らせるパラメータを送る
+    {
+        m_pEvent->SetLight(pow(1 - min(((float)m_Timer / 15.0f), 1), 2)*0.25f);
+    }
+
+    //イベントクラス更新
+    m_pEvent->Update((m_Timer < m_Params.hitStopFrame) ? (0.2f) : (1.0f));
+
+    //終了判定
+    if (m_End == false &&
+        m_Params.AllFrame <= m_Timer)
+    {
+        m_End = true;
+        m_pEvent->End();
+    }
 }

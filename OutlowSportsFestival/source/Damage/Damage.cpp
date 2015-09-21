@@ -42,6 +42,11 @@ void DamageShpere::DebugDraw()
 {
     COLORf color(0.4f, 1, 1, 1);
 
+    if (!m_Enable)
+    {
+        return;
+    }
+
     if (pParent)
     {
         color.SetColor(CharacterBase::GetPlayerColor(pParent->m_PlayerInfo.number));
@@ -87,7 +92,6 @@ void DamageManager::HitCheckSphere(
 
     if (m_DebugDrawVisible)
     {
-
         //デバッグ用球描画(黒)
         new DebugDrawSphere(
             sp.pos,

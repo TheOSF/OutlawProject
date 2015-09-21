@@ -57,6 +57,12 @@ void Camera::SetNewState(CameraState* pNewState)
 //ƒJƒƒ‰‚ÌU“®‚ð—^‚¦‚é
 void Camera::SetShock(Vector2 power, float frame)
 {
+    //Œ»Ý‚Ì’l‚Ì‚Ù‚¤‚ª‘å‚«‚©‚Á‚½ê‡‚Íˆ—‚µ‚È‚¢
+    if ((ShockParam.time / ShockParam.max_time) * Vector2Length(ShockParam.power) > Vector2Length(power))
+    {
+        return;
+    }
+
 	ShockParam.power = power;
 	ShockParam.time  = frame;
 	ShockParam.max_time = frame;

@@ -61,7 +61,7 @@ CollisionBase* CollisionManager::RayPick(
     CollisionBase* ret = nullptr;
 
 	const Vector3 fpos(*pPos), fvec(*pVec);
-	const float fdist(1000000);	//スケール変換を無視したい
+	const float fdist(10000000);	//スケール変換を無視したい
 
 	Vector3 tout, tpos, tvec;
 	float tdist;

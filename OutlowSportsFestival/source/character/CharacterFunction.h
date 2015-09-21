@@ -11,6 +11,9 @@ class CharacterBase;
 
 namespace chr_func
 {
+    //基本的な更新(座標更新、壁との判定など)をすべて行う
+    void UpdateAll(CharacterBase* p, DamageManager::HitEventBase*	pHitEvent);
+
 	//座標に移動量を更新する
 	void PositionUpdate(CharacterBase* p);
 			
@@ -38,6 +41,9 @@ namespace chr_func
 	//前方向ベクトルを得る
 	void GetFront(CharacterBase* p, Vector3* pOut);
 
+    //右方向ベクトルを得る
+    void GetRight(CharacterBase* p, Vector3* pOut);
+
 	//キャラクタが死んでいるかどうか
 	bool isDie(CharacterBase* p);
 
@@ -61,6 +67,15 @@ namespace chr_func
 
     //現在の体力の割合を得る（０～１）
     RATIO GetLifeRatio(CharacterBase* p);
+
+    //移動量をゼロにする
+    void ResetMove(CharacterBase* p);
+
+    //引数の場所が引数のキャラクタからみて右かどうか
+    bool isRight(CharacterBase* p, CrVector3 pos);
+
+    //引数の場所が引数のキャラクタからみて前かどうか
+    bool isFront(CharacterBase* p, CrVector3 pos);
 }
 
 #endif

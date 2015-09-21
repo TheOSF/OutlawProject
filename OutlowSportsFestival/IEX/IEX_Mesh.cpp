@@ -461,8 +461,8 @@ void MulVec3MatCoord(
 	work.y = vec.x*mat._12 + vec.y*mat._22 + vec.z*mat._32 + mat._42;
 	work.z = vec.x*mat._13 + vec.y*mat._23 + vec.z*mat._33 + mat._43;
 
-	float w = vec.x*mat._14 + vec.y*mat._24 + vec.z*mat._34 + mat._44;
-	out = work / w;
+	//float w = vec.x*mat._14 + vec.y*mat._24 + vec.z*mat._34 + mat._44;
+    out = work;// / w;
 }
 
 
@@ -487,7 +487,7 @@ int iexMesh::RayPickPlus(Vector3* out, Vector3* pos, Vector3* vec, float *dist)
 	//レイピックを行う
 	ret = RayPick(out, pos, vec, dist);
 
-	//レイピックの戻り値(?)をワールド変換をかけてローカルに変換
+	//レイピックの戻り値をワールド変換をかけてローカルに変換
 	MulVec3MatCoord(*out, *out, TransMatrix);
 	MulVec3Mat(*vec, *vec, TransMatrix);
 

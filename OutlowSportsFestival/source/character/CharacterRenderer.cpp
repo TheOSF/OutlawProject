@@ -9,7 +9,6 @@
 //通常コンストラクタ
 CharacterRenderer::CharacterRenderer(BlendAnimationMesh* pAnimeMesh) :
 m_pAnimeMesh(pAnimeMesh),
-m_TransMatrix(pAnimeMesh->TransMatrix),
 m_UsePartsMotion(false),
 m_HDR(0,0,0)
 {
@@ -125,6 +124,22 @@ void CharacterRenderer::Update(float t)
 {
 	m_pAnimeMesh->Animation(t);
 	m_pAnimeMesh->Update();
+
+    m_pAnimeMesh->TransMatrix = m_TransMatrix;
+}
+
+//ワールド空間上でのボーン行列を得る
+void CharacterRenderer::GetWorldBoneMatirx(Matrix& Out, int BoneNum)
+{
+    GetLocalBoneMatrix(Out, BoneNum);
+
+    Out *= m_TransMatrix;
+}
+
+//ローカル空間(キャラクタ空間)上でのボーン行列を得る
+void CharacterRenderer::GetLocalBoneMatrix(Matrix& Out, int BoneNum)
+{
+    Out = *m_pAnimeMesh->GetBone(BoneNum);
 }
 
 //描画
@@ -135,6 +150,7 @@ void CharacterRenderer::GbufRender(
 {
     char str[256];
     pSetter->NoTexture(str, 256);
+
     m_pAnimeMesh->Render(pShader, str);
 }
 
@@ -167,6 +183,7 @@ void CharacterRenderer::DepthRender(iexShader* pShader, const char* pTec, DepthR
 {
     char str[256];
     strcpy_s<256>(str, pTec);
+
     m_pAnimeMesh->Render(pShader, str);
 }
 

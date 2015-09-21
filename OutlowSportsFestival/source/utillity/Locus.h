@@ -14,7 +14,7 @@ public:
 	struct Param
 	{
 		float   Width;   //‘Ñ‚Ì•
-		Vector4 Color;   //F
+		Vector4 Color;   //F(r,g,b,a‚Ì‡”Ô‚È‚Ì‚Å’ˆÓI)
 	};
 
 	bool              m_Visible;         //•`‰æ‚·‚é‚©‚Ç‚¤‚©

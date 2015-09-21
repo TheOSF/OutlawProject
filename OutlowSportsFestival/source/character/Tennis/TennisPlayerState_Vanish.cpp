@@ -3,6 +3,9 @@
 #include "Tennis_HitEvent.h"
 #include "../CharacterFunction.h"
 
+#include "../../Effect/HitEffectObject.h"
+#include "../../Effect/BlurImpact.h"
+
 TennisState_DamageVanish::TennisState_DamageVanish(
     TennisPlayer* pTennis,
     const Vector3& Damage_vec  //ダメージを受けた方向
@@ -19,7 +22,7 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
     class TennisEvent :public CharacterDamageVanish::Event
     {
     public:
-        TennisEvent(TennisPlayer* pTennis) :m_pTennis(pTennis), m_Timer(0){}
+        TennisEvent(TennisPlayer* pTennis) :m_pTennis(pTennis){}
 
         void Flying(const Matrix& Rotate)
         {
@@ -63,14 +66,13 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
         }
     private:
         TennisPlayer*  m_pTennis;
-        int            m_Timer;
     };
 
     //ダメージモーションパラメーターを作成する
     CharacterDamageVanish::Param Param;
 
     Param.rotate_speed = Vector3(0.0f, 0.0f, 0.0);
-    Param.move = m_Damage_vec * 0.9f;
+    Param.move = Vector3Normalize(m_Damage_vec)*0.6f;
     Param.move.y = 0.2f;
     Param.standup_frame = 30;
 
@@ -81,6 +83,22 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
         new TennisEvent(t)
         );
 
+    //ヒットエフェクト作成
+    new HitEffectObject(
+        m_pTennis->m_Params.pos + Vector3(0, 3, 0),
+        m_Damage_vec,
+        0.05f,
+        0.15f,
+        Vector3(1.0f, 1.0f, 1.0f)
+        );
+
+    //ブラーエフェクト
+    new BlurImpactSphere(
+        m_pTennis->m_Params.pos + Vector3(0, 3, 0),
+        25,
+        10,
+        30
+        );
 }
 
 void TennisState_DamageVanish::Execute(TennisPlayer* t)

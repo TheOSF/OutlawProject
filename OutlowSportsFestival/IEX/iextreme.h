@@ -231,8 +231,8 @@ public:
 	inline Vector3( CONST Vector& v ){ this->x=v.x, this->y=v.y, this->z=v.z; } 
 
 	//	ãóó£åvéZ
-	inline float Length(){ return sqrtf(x*x + y*y + z*z); }
-	inline float LengthSq(){ return x*x + y*y + z*z; }
+    inline float Length()const{ return sqrtf(x*x + y*y + z*z); }
+	inline float LengthSq()const{ return x*x + y*y + z*z; }
 
 	//	ê≥ãKâª
 	void Normalize()
@@ -310,7 +310,16 @@ inline float Vector3YZLength(const Vector& v)
 
 inline float Vector3Distance(const Vector3& p1, const Vector3& p2)
 {
-	return Vector3(p1.x - p2.x, p1.y - p2.y, p1.z - p1.z).Length();
+	return Vector3(p1.x - p2.x, p1.y - p2.y, p1.z - p2.z).Length();
+}
+
+//------------------------------------------------------
+//	äpìx
+//------------------------------------------------------
+
+inline RADIAN Vector3Radian(const Vector3& p1, const Vector3& p2)
+{
+    return acosf(Vector3Dot(p1, p2) / (p1.Length()*p2.Length()));
 }
 
 //------------------------------------------------------
@@ -807,6 +816,19 @@ typedef iex2DObj IEX2DOBJ, *LPIEX2DOBJ;
 //
 //*****************************************************************************************************************************
 
+typedef struct tagHdrLVERTEX {
+    union{
+        struct{
+            float	x, y, z;
+        };
+        Vector pos;
+    };
+    COLOR	color;
+    COLOR	HdrColor;
+    float	tu, tv;
+} HdrLVERTEX, *LpHdrLVERTEX;
+
+
 class iexPolygon {
 public:
 	static void Render3D( LPLVERTEX lpVertex, int Num, LPIEX2DOBJ lpObj, u32 dwFlags );
@@ -817,7 +839,7 @@ public:
 	static void Rect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, iexShader* shader, char* name, COLOR color, float z=.0f );
     static void RectPlus(s32 DstX, s32 DstY, s32 DstW, s32 DstH, iexShader* shader, char* name, COLOR color, float z = .0f);
 
-    
+    static void PolygonRender3DHDR(LpHdrLVERTEX lpVertex, int Num, LPIEX2DOBJ lpObj, iexShader* shader, char* name);
 };
 
 //*****************************************************************************************************************************

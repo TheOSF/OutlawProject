@@ -5,7 +5,7 @@
 //	球ベースクラス
 //*****************************************************
 
-const float BallBase::UsualBallShotY = 2.5f;
+const float BallBase::UsualBallShotY = 2.9f;
 
 BallBase::BallBase()
 {

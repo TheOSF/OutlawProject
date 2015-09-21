@@ -98,7 +98,7 @@ public:
 	inline Quaternion*	GetPose(int n){ return &CurPose[n]; }
 	inline Vector3*		GetBonePos(int n){ return &CurPos[n]; }
 	inline int	GetNumBone(){ return NumBone; }
-	inline Matrix*	GetBone(int n){ return &lpBoneMatrix[n]; }
+    Matrix*	GetBone(int n);
 	
 	void UpdateSkinMeshFrame();
 	void UpdateBoneMatrix();

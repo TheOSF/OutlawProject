@@ -100,6 +100,29 @@ void	iexPolygon::Render2D( LPTLVERTEX v, int Num, LPIEX2DOBJ lpObj, iexShader* s
 	shader->End();
 }
 
+
+
+
+void	iexPolygon::PolygonRender3DHDR(LpHdrLVERTEX lpVertex, int Num, LPIEX2DOBJ lpObj, iexShader* shader, char* name)
+{
+    LPDEVICE	lpDevice = iexSystem::Device;
+    //	シェーダーの適用
+    u32 pass = shader->Begine(name);
+
+    lpDevice->SetFVF((D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_SPECULAR | D3DFVF_TEX1));
+    if (lpObj) shader->SetTexture(lpObj->GetTexture());
+
+    for (u32 p = 0; p<pass; p++)
+    {
+        shader->BeginePass(p);
+        shader->CommitChanges();
+        //	レンダリング
+        lpDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, Num, lpVertex, sizeof(HdrLVERTEX));
+        shader->EndPass();
+    }
+    shader->End();
+}
+
 //*****************************************************************************
 //	矩形描画
 //*****************************************************************************

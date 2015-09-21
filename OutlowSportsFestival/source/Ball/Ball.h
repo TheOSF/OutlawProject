@@ -33,6 +33,7 @@ public:
 		Type			type;		//玉のタイプ
 		Vector3			pos;		//場所
 		Vector3			move;		//移動量
+        float           scale;      //ボールスケール(他のボールとの判定に使われる)
 	};
 
 	Params m_Params;
@@ -42,7 +43,10 @@ public:
 	virtual ~BallBase();
 
     //カウンターを行ったときに自動的に呼ばれる関数
-    virtual void Counter(){}
+    virtual void Counter(CharacterBase* pCounterCharacter){}
+
+    //ボールが相打ちに行ったときに自動的に呼ばれる関数(戻り値：相打ちが成功したかどうか)
+    virtual bool HitBall(BallBase* pBall){ return true; }
 
 	//引数のボールがカウンター可能かどうか
 	static bool isCanCounter(const BallBase* pBall);
@@ -75,6 +79,7 @@ public:
 		float		catch_area_size,//キャッチ可能な範囲
 		int			move_frame		//キャッチまでの移動フレーム
 		);
+
 private:
 	static BallManager*		m_pInstance;
 	BallMap					m_BallMap;

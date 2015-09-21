@@ -43,21 +43,18 @@ public:
 	//モーション更新
 	void Update(float t);
 
+    //ワールド空間上でのボーン行列を得る
+    void GetWorldBoneMatirx(Matrix& Out, int BoneNum);
 
-    void GbufRender(
-        iexShader*        pShader,                       //シェーダークラス
-        DeferredGbufRenderer::TechniqueSetter*  pSetter  //テクニック管理クラス
-        );
-
-    void MasterRender();
-
-    void DepthRender(iexShader* pShader, const char* pTec, DepthRenderType type);
+    //ローカル空間(キャラクタ空間)上でのボーン行列を得る
+    void GetLocalBoneMatrix(Matrix& Out, int BoneNum);
 
 	//ワールド変換行列
-	Matrix& m_TransMatrix;
+	Matrix  m_TransMatrix;
 
     //故意に輝かせる際のパラメータ(xyz = rgb)
     Vector3 m_HDR;
+
 private:
 	typedef std::vector<int> BoneNumArray;
 
@@ -74,6 +71,16 @@ private:
 	float m_BodyDownMotionSpeed;
 
 	void Initialize();
+
+    void GbufRender(
+        iexShader*        pShader,                       //シェーダークラス
+        DeferredGbufRenderer::TechniqueSetter*  pSetter  //テクニック管理クラス
+        );
+
+    void MasterRender();
+
+    void DepthRender(iexShader* pShader, const char* pTec, DepthRenderType type);
+
 };
 
 #endif

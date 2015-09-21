@@ -1,32 +1,110 @@
 #include "TennisPlayerState_Attack.h"
-
 #include "TennisPlayerState_UsualMove.h"
-#include "../Attack/CharacterAttack.h"
 #include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
+#include "../CharacterManager.h"
+#include "TennisAttackInfo_UsualAtk.h"
 
 
-struct TennisComboParam
-{
-    CharacterNearAttack::Params AttackParams;
-    int     Motion;
-};
+//------------プレイヤー操作の攻撃操作クラス--------------
 
-static const TennisComboParam TennisAttackParams[] =
-{
-    { { 12, 35, 0.1f, 0, 0.1f, 25, 35, 3, 1 }, TennisPlayer::_mt_Attack1 }, 
-    { { 12, 20, 0.1f, 0, 0.1f, 12, 20, 3, 1 }, TennisPlayer::_mt_Attack2 },
-    { { 12, 35, 0.1f, 0, 0.1f, 15, 35, 3, 1 }, TennisPlayer::_mt_Attack3 },
-};
-
-TennisState_PlayerControll_Attack::TennisState_PlayerControll_Attack() :
-m_ComboNum((UINT)ARRAYSIZE(TennisAttackParams)), 
-m_ComboCount(0),
-m_pAttack(nullptr),
-m_DoNextAttack(false)
+TennisState_PlayerControll_Attack::PlayerControllEvent::PlayerControllEvent(TennisPlayer*const pTennis):
+m_pTennis(pTennis)
 {
 
 }
+
+bool TennisState_PlayerControll_Attack::PlayerControllEvent::isDoCombo()
+{
+    return controller::GetTRG(controller::button::shikaku, m_pTennis->m_PlayerInfo.number);
+}
+
+void TennisState_PlayerControll_Attack::PlayerControllEvent::AngleControll(RADIAN angle)
+{
+    const CharacterBase* const pTargetCharacter = GetFrontTargetEnemy();
+
+    if (pTargetCharacter != nullptr)
+    {
+        //自動回転
+        chr_func::AngleControll(m_pTennis, pTargetCharacter->m_Params.pos, angle);
+    }
+    else
+    {
+        const Vector2 Stick = controller::GetStickValue(controller::stick::left, m_pTennis->m_PlayerInfo.number);
+
+        //スティックが一定以上倒されているかどうか
+        if (Vector2Length(Stick) > 0.25f)
+        {
+            Vector3 Vec(Stick.x, 0, Stick.y);
+
+            //スティック値をカメラ空間に
+            Vec = Vector3MulMatrix3x3(Vec, matView);
+
+            //キャラクタ回転
+            chr_func::AngleControll(m_pTennis, m_pTennis->m_Params.pos + Vec, angle);
+        }
+    } 
+}
+
+const CharacterBase* TennisState_PlayerControll_Attack::PlayerControllEvent::GetFrontTargetEnemy()
+{
+    CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
+
+    const float  AutoDistance = 10.0f;               //自動ができる最大距離
+    const RADIAN AutoMaxAngle = D3DXToRadian(90);   //自動ができる最大角度
+
+    const CharacterBase* pTargetEnemy = nullptr;    //ターゲット保持のポインタ
+    RADIAN MostMinAngle = PI;                       //もっとも狭い角度
+    RADIAN TempAngle;
+
+    Vector3 MyFront;      //自身の前方ベクトル
+    chr_func::GetFront(m_pTennis, &MyFront);
+
+    auto it = ChrMap.begin();
+
+    while (it != ChrMap.end())
+    {
+        //自身を除外
+        if (m_pTennis->m_PlayerInfo.number == it->first->m_PlayerInfo.number||
+            chr_func::isDie(it->first)
+            )
+        {
+            ++it;
+            continue;
+        }
+
+        //距離が一定以上のキャラクタを除外する
+        if (Vector3Distance(it->first->m_Params.pos, m_pTennis->m_Params.pos) > AutoDistance)
+        {
+            it = ChrMap.erase(it);
+            continue;
+        }
+
+        //前ベクトルと敵へのベクトルの角度を計算する
+        TempAngle = Vector3Radian(MyFront, (it->first->m_Params.pos - m_pTennis->m_Params.pos));
+
+        //角度が一番狭かったら更新
+        if (TempAngle < MostMinAngle)
+        {
+            pTargetEnemy = it->first;
+            MostMinAngle = TempAngle;
+        }
+
+        ++it;
+    }
+    
+    return pTargetEnemy;
+
+}
+
+//-------------近距離攻撃ステートクラス-------------
+
+TennisState_PlayerControll_Attack::TennisState_PlayerControll_Attack(TennisPlayer* t) :
+m_Attack(t, new PlayerControllEvent(t))
+{
+
+}
+
 
 TennisState_PlayerControll_Attack::~TennisState_PlayerControll_Attack()
 {
@@ -36,106 +114,40 @@ TennisState_PlayerControll_Attack::~TennisState_PlayerControll_Attack()
 // ステート開始
 void TennisState_PlayerControll_Attack::Enter(TennisPlayer* t)
 {
-    //攻撃クラスを設定
-    SetNextAttack(t);
+    //攻撃クラス作成
+    TennisAttackInfo_UsualAtk* pAtk;
 
+    TennisAttackInfo_UsualAtk::Param AtkParam[] = 
+    {
+        { 6, 1.0f, 1.5f, DamageBase::Type::_WeekDamage,   15, 22, 0.07f , 5,10, TennisPlayer::_mt_Attack1, 35, 20, 22, 35, 0, 15, D3DXToRadian(8), 8 },
+      //  { 2, 1.0f, 1.5f, DamageBase::Type::_WeekDamage,   5,   8, 0.02f, 1, 5, TennisPlayer::_mt_Attack2, 20,  5, 15, 20, 0, 5,  D3DXToRadian(8), 8 }, 
+        { 8, 1.0f, 1.5f, DamageBase::Type::_VanishDamage, 8,  16, 0.05f, 1, 6, TennisPlayer::_mt_Attack3, 40, -1, -1, -1, 0, 8,  D3DXToRadian(8), 8 }, 
+    };
+
+    for (int i = 0; i < (int)ARRAYSIZE(AtkParam); ++i)
+    {
+        pAtk = new TennisAttackInfo_UsualAtk(t);
+
+        pAtk->m_Param = AtkParam[i];
+
+        m_Attack.m_AttackInfoArray.push_back(pAtk);
+    }
 }
 
-// ステート実行中
+
+// ステート実行
 void TennisState_PlayerControll_Attack::Execute(TennisPlayer* t)
 {
-    //スティック値を更新
-    m_pAttack->SetStickValue(controller::GetStickValue(controller::stick::left, t->m_PlayerInfo.number));
+    m_Attack.Update();
 
-    //コンボ移行フラグの更新
-    if (m_pAttack->CanDoCombo() && controller::GetPush(controller::button::shikaku, t->m_PlayerInfo.number))
-    {
-        m_DoNextAttack = true;
-    }
-
-    //次のコンボに移行
-    if (m_pAttack->CanGoNextCombo() && m_DoNextAttack)
-    {
-        SetNextAttack(t);
-        m_DoNextAttack = false;
-    }
-
-    //更新が失敗（攻撃が終了）
-    if (m_pAttack->Update() == false)
+    if (m_Attack.isEnd())
     {
         t->SetState(TennisState_PlayerControll_Move::GetPlayerControllMove(t));
     }
-
-    //ワールド変換行列
-    chr_func::CreateTransMatrix(t, 0.05f, &t->m_Renderer.m_TransMatrix);
 }
 
 // ステート終了
 void TennisState_PlayerControll_Attack::Exit(TennisPlayer* t)
 {
-    delete m_pAttack;
-}
 
-
-//次の攻撃クラスをセット
-bool TennisState_PlayerControll_Attack::SetNextAttack(TennisPlayer* t)
-{
-
-    class TennisAttackEvent :public CharacterNearAttack::AttackEvent
-    {
-        TennisPlayer* m_pTennis;
-        const int m_AttackMotion;
-    public:
-        TennisAttackEvent(TennisPlayer* pTennis, int AttackMotion) :
-            m_pTennis(pTennis),
-            m_AttackMotion(AttackMotion)
-        {
-
-        }
-
-        void Update()
-        {
-            m_pTennis->m_Renderer.Update(1);
-        }
-
-        void AttackStart()
-        {
-            m_pTennis->m_Renderer.SetMotion(m_AttackMotion);
-        }
-
-        void AttackEnd()
-        {
-            m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Stand);
-        }
-
-        void Assault()
-        {
-            
-        }
-    };
-
-    //最終コンボの場合は処理せずに終了
-    if (m_ComboCount >= m_ComboNum)
-    {
-        return false;
-    }
-
-    const TennisComboParam& param = TennisAttackParams[m_ComboCount];
-
-    //今までの攻撃クラスを削除
-    delete m_pAttack;
-    
-    //攻撃クラスの作成
-    m_pAttack = new CharacterNearAttack(
-        t,
-        param.AttackParams,
-        new TennisAttackEvent(t, param.Motion),
-        (m_ComboCount + 1 == m_ComboNum) ? (DamageBase::Type::_VanishDamage) : (DamageBase::Type::_WeekDamage),
-        1
-       );
-
-    //コンボカウントを加算
-    ++m_ComboCount;
-
-    return true;
 }

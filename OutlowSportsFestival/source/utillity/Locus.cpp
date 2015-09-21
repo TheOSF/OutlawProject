@@ -106,82 +106,122 @@ void Locus::Render()
 
 void Locus::RenderDivision()
 {
-	
-
 	const float div = 1.0f / (float)m_Division;          //１ / セルの分割数
-    const float PolygonT = 1.0f / ((float)(m_UseCount-2)*(float)m_Division);  // 1 / 四角形の描画数
+    const float PolygonT = 1.0f / ((float)(m_UseCount - 1)*(float)m_Division);  // 分割部分のＴＵ値の増える量
+    const float fEp = 1 + FLT_EPSILON; // 1+誤差
+    const float PointT = 1.0f / (float)(m_UseCount - 1);
 
 	Point point[2]; // ０から１に描画
 	Param param[2]; // ０から１に描画
 
-	float d, t = 0, pret = 0;;
+	float d, t = 0, pret = 0;
 
-	param[0] = m_StartParam;
 
-	for (size_t i = 0; i < m_UseCount - 4; ++i)
-	{
-		point[0] = m_pPointData[i + 1];
+    param[0] = m_StartParam; //パラメータをスタート位置に初期化
 
-		for (d = 0; d <= 1 + FLT_EPSILON; d += div)
-		{
-			pret = t;
-			t += PolygonT;
+    //ステップ１　スタートから次の位置までのポリゴン(補間計算できない)
+    {
+        //1地点分のパラメータを補間し、param[1]に格納
+        LeapParam(param[1], m_StartParam, m_EndParam, PointT);
 
-			//パラメータを補間し、param[1]に格納
-			LeapParam(param[1], m_StartParam, m_EndParam, t);
+        //描画
+        Render(
+            param[0],
+            param[1],
+            m_pPointData[0],
+            m_pPointData[1],
+            0,
+            PointT
+            );
+    }
 
-			//補間
-			D3DXVec3CatmullRom(
-				(D3DXVECTOR3*)&point[1].pos, //out
 
-				(D3DXVECTOR3*)&m_pPointData[i    ].pos,
-				(D3DXVECTOR3*)&m_pPointData[i + 1].pos,
-				(D3DXVECTOR3*)&m_pPointData[i + 2].pos,
-				(D3DXVECTOR3*)&m_pPointData[i + 3].pos, 
+    //ステップ２　２つめから最終のひとつ前までのポリゴンを補間しながら描画
+    {
+        //１地点分進める
+        t = PointT;
+        LeapParam(param[0], m_StartParam, m_EndParam, PointT);
 
-				d
-				);
+        for (size_t i = 0; i < m_UseCount - 3; ++i)
+        {
+            point[0] = m_pPointData[i + 1];
 
-			//補間
-			D3DXVec3CatmullRom(
-				(D3DXVECTOR3*)&point[1].vec, //out
+            for (d = div; d <= fEp; d += div)
+            {
+                pret = t;
+                t += PolygonT;
 
-				(D3DXVECTOR3*)&m_pPointData[i    ].vec,
-				(D3DXVECTOR3*)&m_pPointData[i + 1].vec,
-				(D3DXVECTOR3*)&m_pPointData[i + 2].vec,
-				(D3DXVECTOR3*)&m_pPointData[i + 3].vec,
+                //パラメータを補間し、param[1]に格納
+                LeapParam(param[1], m_StartParam, m_EndParam, t);
 
-				d
-				);
+                //補間
+                D3DXVec3CatmullRom(
+                    (D3DXVECTOR3*)&point[1].pos, //out
 
-			point[1].vec.Normalize();
+                    (D3DXVECTOR3*)&m_pPointData[i].pos,
+                    (D3DXVECTOR3*)&m_pPointData[i + 1].pos,
+                    (D3DXVECTOR3*)&m_pPointData[i + 2].pos,
+                    (D3DXVECTOR3*)&m_pPointData[i + 3].pos,
 
-			Render(
-				param[0],
-				param[1],
-				point[0],
-				point[1],
-				t,
-				pret
-				);
+                    d
+                    );
 
-			point[0] = point[1];
-			param[0] = param[1];
-		}
-	}
+                //補間
+                D3DXVec3CatmullRom(
+                    (D3DXVECTOR3*)&point[1].vec, //out
+
+                    (D3DXVECTOR3*)&m_pPointData[i].vec,
+                    (D3DXVECTOR3*)&m_pPointData[i + 1].vec,
+                    (D3DXVECTOR3*)&m_pPointData[i + 2].vec,
+                    (D3DXVECTOR3*)&m_pPointData[i + 3].vec,
+
+                    d
+                    );
+
+                point[1].vec.Normalize();
+
+                Render(
+                    param[0],
+                    param[1],
+                    point[0],
+                    point[1],
+                    t,
+                    pret
+                    );
+
+                point[0] = point[1];
+                param[0] = param[1];
+            }
+        }
+    }
+
+    //ステップ３　最後の一つ前から最後の場所に向けてのポリゴン(補間計算できない)
+    {
+        //最後のひとつ前のパラメータを算出し、param[0]に格納
+        LeapParam(param[0], m_StartParam, m_EndParam, 1 - PointT);
+
+        //描画
+        Render(
+            param[0],
+            m_EndParam,
+            m_pPointData[m_UseCount-2],
+            m_pPointData[m_UseCount-1],
+            1 - PointT,
+            1
+            );
+    }
+
 }
 
 
 void Locus::RenderUsual()
 {
-	
     const float tAdd = 1 / (float)(m_UseCount - 1);
 
 	Param param[2];
 	float t = 0, pret = 0;;
 
 	param[0] = m_StartParam;
-
 
 	for (size_t i = 0; i < m_UseCount - 1; ++i)
 	{

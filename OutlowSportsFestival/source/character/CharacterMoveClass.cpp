@@ -71,14 +71,8 @@ void CharacterUsualMove::Update()
 	}
 
 
-	//位置の更新
-	chr_func::PositionUpdate(m_pParent);
+    chr_func::UpdateAll(m_pParent, m_pHitEventBase);
 
-    //壁との判定
-    chr_func::CheckWall(m_pParent);
-
-	//ダメージ判定をとる
-	chr_func::DamageCheck(m_pParent, m_pHitEventBase);
 }
 
 void CharacterUsualMove::SetStickValue(CrVector2 StickValue)

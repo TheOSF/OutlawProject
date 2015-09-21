@@ -54,7 +54,7 @@ private:
 
 	LpMeshRenderer		m_pMeshRenderer;
 	DamageShpere		m_Damage;
-    bool                m_Delete;
+    UINT                m_DeleteFrame;
 	D3DXQUATERNION		m_Ballrot;
     Locus               m_Locus;
     Matrix              m_BaseMatrix;
@@ -68,7 +68,9 @@ private:
     void SetHDR();
     void UpdateWallCheck();
 
-    void Counter()override;
+    void Counter(CharacterBase* pCounterCharacter)override;
+
+    void ToNoWork();
 };
 
 #endif

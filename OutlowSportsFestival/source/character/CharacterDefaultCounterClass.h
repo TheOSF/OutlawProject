@@ -2,6 +2,7 @@
 
 #include "CharacterBase.h"
 #include "../Damage/Damage.h"
+#include "../Ball/Ball.h"
 
 //-------------------------------------------------------//
 //  　　　キャラクタの通常カウンタークラス
@@ -18,9 +19,9 @@ public:
         virtual ~Event(){}
 
         virtual void Pose() = 0;      //構え開始(ステートの開始)
-        virtual void Move() = 0;      //カウンターするボールに向かって移動開始
+        virtual void Move(BallBase* pCounterBall) = 0;      //カウンターするボールに向かって移動開始
  
-        virtual void Shot() = 0;      //打ち返し時
+        virtual void Shot(BallBase* pCounterBall) = 0;      //打ち返し時
         virtual void ShotFaild() = 0; //移動時にボールが打ち返せない状態になった時
 
         virtual void End() = 0;       //クラス終了
@@ -58,6 +59,16 @@ public:
 
 private:
 
+    //ボールのダメージをカットするクラス(デコレートパターン？)
+    class HitEventClass_NoBallDamageFileter :public DamageManager::HitEventBase
+    {
+        DamageManager::HitEventBase*const m_pInHitEvent;
+    public:
+        HitEventClass_NoBallDamageFileter(DamageManager::HitEventBase* pInHitEvent);
+        
+        bool Hit(DamageBase* pDmg)override;
+    };
+
     void Pose();  //構え中
     void Move();  //移動中
     void Shot();  //打ち返し中
@@ -68,7 +79,7 @@ private:
     void SetState(void(CharacterDefaultCounter::*pNewState)());
 
     //スティックによる角度調整
-    void SetStickAngle(CrVector3 OriginVec);
+    void SetStickAngle(CrVector3 OriginVec,RADIAN controllRad);
 
     CharacterBase* const                m_pOwner;       //オーナーキャラクタ
     Param  const                        m_Param;        //カウンターパラメタ

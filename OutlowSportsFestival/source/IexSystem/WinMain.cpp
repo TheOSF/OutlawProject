@@ -9,7 +9,7 @@
 //
 //*****************************************************************************************************************************
 
-char*	AppTitle = "IEX2010";
+char*	AppTitle = "Outlaw Sports Festival";
 
 BOOL	bFullScreen = FALSE;
 DWORD	ScreenMode  = SCREEN720p;
@@ -76,17 +76,17 @@ HWND InitWindow( HINSTANCE hInstance, int nCmdShow )
 	wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH )GetStockObject(BLACK_BRUSH);
 	wc.lpszMenuName  = NULL;
-	wc.lpszClassName = "IEX2010";
+	wc.lpszClassName = "Outlaw Sports Festival";
 	RegisterClass(&wc);
 
 	//	ウィンドウ作成
 	if( !bFullScreen ){
 		AdjustWindowRect( &WindowSize, WS_OVERLAPPEDWINDOW, FALSE );
-		hWnd = CreateWindow( "IEX2010", AppTitle, WS_OVERLAPPEDWINDOW, 
+		hWnd = CreateWindow( "Outlaw Sports Festival", AppTitle, WS_OVERLAPPEDWINDOW, 
 								0, 0, WindowSize.right-WindowSize.left, WindowSize.bottom-WindowSize.top,
 								NULL, NULL, hInstance, NULL);
 	} else {
-		hWnd = CreateWindow( "IEX2010", AppTitle, WS_POPUP, 0, 0, WindowSize.right,WindowSize.bottom, NULL, NULL, hInstance, NULL);
+		hWnd = CreateWindow( "Outlaw Sports Festival", AppTitle, WS_POPUP, 0, 0, WindowSize.right,WindowSize.bottom, NULL, NULL, hInstance, NULL);
 		ShowCursor(FALSE);
 	}
 	if( !hWnd ) return NULL;

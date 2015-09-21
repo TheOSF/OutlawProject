@@ -4,6 +4,7 @@
 #include "../GameSystem/GameObject.h"
 #include "../GameSystem/GameSystem.h"
 #include "iextreme.h"
+#include "../utillity/ColorUtility.h"
 
 //***************************************************
 //		キャラクタクラス
@@ -53,7 +54,9 @@ public:
 	CharacterBase(const PlayerInfo& info);
 	virtual ~CharacterBase();
 
-    static COLOR GetPlayerColor(PlayerNum::Value number);
+    static COLOR  GetPlayerColor (PlayerNum::Value number);
+    static COLORf GetPlayerColorF(PlayerNum::Value number);
+
 
     //ラウンドリセット時のパラメターにセットする
     void ResetRound();

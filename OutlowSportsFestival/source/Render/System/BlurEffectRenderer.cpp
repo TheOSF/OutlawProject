@@ -47,12 +47,12 @@ void BlurEffectRenderer::Render(
     }
 
     //Œ³‰æ‘œ‚ð•`‰æ
-    pIn->Render();
+    m_pShader->SetValue("SourceTexture", pIn->GetTexture());
+    iexPolygon::RectPlus(0, 0, iexSystem::ScreenWidth, iexSystem::ScreenHeight, m_pShader, "LinearSp", 0xFFFFFFFF);
 
     Matrix VP_mat = matView*matProjection;
 
     //•`‰æƒpƒ‰ƒ[ƒ^Ý’è
-    m_pShader->SetValue("SourceTexture", pIn->GetTexture());
     m_pShader->SetValue("g_VP_mat", VP_mat);
 
     RenderConeBlur(VP_mat);

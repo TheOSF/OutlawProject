@@ -105,7 +105,6 @@
     <ClCompile Include="source\character\CharacterDamageMotion.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_DamageMotionWeak.cpp" />
     <ClCompile Include="source\character\Tennis\Tennis_HitEvent.cpp" />
-    <ClCompile Include="source\character\Tennis\TennisPlayerState_Shot.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_Attack.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_Counter.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_UsualMove.cpp" />
@@ -152,7 +151,21 @@
     <ClCompile Include="source\character\CharacterDefaultCounterClass.cpp" />
     <ClCompile Include="source\UI\PlayerGauge.cpp" />
     <ClCompile Include="source\Stage\PhysicsMeshObject.cpp" />
-    <ClCompile Include="source\character\Tennis\TennisPlayerState_Rolling.cpp" />
+    <ClCompile Include="source\Ball\BallFadeOutRenderer.cpp" />
+    <ClCompile Include="source\character\Attack\CharacterDefaultNearAtk.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisAttackClass.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisAttackInfo_UsualAtk.cpp" />
+    <ClCompile Include="source\character\Tennis\Computer\TennisPlayerState_ComMove.cpp" />
+    <ClCompile Include="source\utillity\LocusHDR.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisState_Rolling.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisState_BoundBallAtk.cpp" />
+    <ClCompile Include="source\Effect\AnimationBordRenderer.cpp" />
+    <ClCompile Include="source\Effect\EffectFactory.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisState_Shot.cpp" />
+    <ClCompile Include="source\Ball\PhysicallyMoveBall.cpp" />
+    <ClCompile Include="source\Effect\ParticleHDRRenderer.cpp" />
+    <ClCompile Include="source\Effect\ImpactLightObject.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisSpecialAtk.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -212,7 +225,6 @@
     <ClInclude Include="source\character\CharacterDamageMotion.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_DamageMotionWeak.h" />
     <ClInclude Include="source\character\Tennis\Tennis_HitEvent.h" />
-    <ClInclude Include="source\character\Tennis\TennisPlayerState_Shot.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Attack.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Counter.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_UsualMove.h" />
@@ -260,7 +272,21 @@
     <ClInclude Include="source\character\CharacterDefaultCounterClass.h" />
     <ClInclude Include="source\UI\PlayerGauge.h" />
     <ClInclude Include="source\Stage\PhysicsMeshObject.h" />
-    <ClInclude Include="source\character\Tennis\TennisPlayerState_Rolling.h" />
+    <ClInclude Include="source\Ball\BallFadeOutRenderer.h" />
+    <ClInclude Include="source\character\Attack\CharacterDefaultNearAtk.h" />
+    <ClInclude Include="source\character\Tennis\TennisAttackClass.h" />
+    <ClInclude Include="source\character\Tennis\TennisAttackInfo_UsualAtk.h" />
+    <ClInclude Include="source\character\Tennis\Computer\TennisPlayerState_ComMove.h" />
+    <ClInclude Include="source\utillity\LocusHDR.h" />
+    <ClInclude Include="source\character\Tennis\TennisState_Rolling.h" />
+    <ClInclude Include="source\character\Tennis\TennisState_BoundBallAtk.h" />
+    <ClInclude Include="source\Effect\AnimationBordRenderer.h" />
+    <ClInclude Include="source\Effect\EffectFactory.h" />
+    <ClInclude Include="source\character\Tennis\TennisState_Shot.h" />
+    <ClInclude Include="source\Ball\PhysicallyMoveBall.h" />
+    <ClInclude Include="source\Effect\ParticleHDRRenderer.h" />
+    <ClInclude Include="source\Effect\ImpactLightObject.h" />
+    <ClInclude Include="source\character\Tennis\TennisSpecialAtk.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

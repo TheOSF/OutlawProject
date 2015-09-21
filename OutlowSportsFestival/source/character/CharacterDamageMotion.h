@@ -28,6 +28,7 @@ public:
 		virtual void Update(float speed) = 0;       // 更新(引数はモーションスピード)
 		virtual void Start() = 0;     // ひるみ開始
 		virtual void End() = 0;      // ひるみ終了
+        virtual void SetLight(float power){}
 	};
 
 	// コンストラクタ
@@ -52,5 +53,6 @@ private:
 	int                            m_Timer;       // タイマー
 	Event*                         m_pEvent;      // イベント
 	DamageManager::HitEventBase*   m_pHitEvent;   //　ヒットイベント
+    Vector3                        m_Pos;
 };
 

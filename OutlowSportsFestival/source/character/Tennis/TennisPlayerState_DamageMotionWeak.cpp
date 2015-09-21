@@ -3,6 +3,7 @@
 #include "Tennis_HitEvent.h"
 #include "../CharacterFunction.h"
 #include "../../Effect/HitEffectObject.h"
+#include "../../Effect/BlurImpact.h"
 
 
 TennisState_DamageMotion_Weak::TennisState_DamageMotion_Weak(
@@ -26,7 +27,7 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
 		void Update(float speed)
 		{
 			//モデルの更新のみ
-			m_pTennis->m_Renderer.Update(speed);
+			m_pTennis->m_Renderer.Update(1);
 			chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
 		}
 		void Start()
@@ -40,7 +41,14 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
 			m_pTennis->SetState(
 				TennisState_PlayerControll_Move::GetPlayerControllMove(m_pTennis)
 				);
+
+            m_pTennis->m_Renderer.m_HDR = Vector3Zero;
 		}
+
+        void SetLight(float power)
+        {
+            m_pTennis->m_Renderer.m_HDR = Vector3(1, 1, 1) * power;
+        }
 	private:
 		TennisPlayer*  m_pTennis;
 	};
@@ -50,8 +58,8 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
 
 	Param.AllFrame = 35;
 	Param.damage_vec = m_Damage_vec;
-	Param.hitBack = 0.5f;
-	Param.hitStopFrame = 0;
+	Param.hitBack = 0.2f;
+	Param.hitStopFrame = 5;
 	Param.NoDamageFrame = 10;
 
 	//ひるみクラスを作成
@@ -71,6 +79,13 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
         Vector3(1.0f, 1.0f, 1.0f)
         );
 
+    //ブラーエフェクト
+    new BlurImpactSphere(
+        m_pTennis->m_Params.pos + Vector3(0, 3, 0),
+        10,
+        15,
+        30
+        );
 }
 
 void TennisState_DamageMotion_Weak::Execute(TennisPlayer* t)

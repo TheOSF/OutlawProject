@@ -98,6 +98,8 @@ void HitEffectObject::SetParticle(
     COLORf Colorf(1, color.x, color.y, color.z);
     LPIEX2DOBJ pTexture = DefResource.Get(Resource::TextureType::Particle);
 
+    Vector3 moveVec = Vector3Normalize(vec)*0.6f;
+
     for (int i = 0; i < numParticle; ++i)
     {
         Renderer = new ParticleRenderer();
@@ -112,7 +114,7 @@ void HitEffectObject::SetParticle(
 
         MoveObj = new ParticleMoveObject(
             Renderer,
-            vec + Vector3Rand()*0.5f,
+            moveVec + Vector3Rand()*0.4f,
             Vector3Zero,
             25,
             false,

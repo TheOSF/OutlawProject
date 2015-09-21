@@ -14,9 +14,9 @@
 
 // コンストラクタ
 CharacterCounter::CharacterCounter(
-	CharacterBase*                             pParent,                          // 動かしたいキャラクター
+	CharacterBase*                        pParent,                          // 動かしたいキャラクター
 	const CounterParams&                  counterParams,               // カウンターパラメータ
-	CounterEvent*                               pCounterEvent                // カウンターイベント
+	CounterEvent*                         pCounterEvent                // カウンターイベント
 	) :
 	m_CounterParams(counterParams),
 	m_StickValue(0, 0),

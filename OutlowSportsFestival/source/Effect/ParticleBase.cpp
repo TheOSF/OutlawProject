@@ -35,7 +35,7 @@ void ParticleBase::SetCellUV(
     const Vector2 CellSize(1 / (float)num_cell_X, 1 / (float)num_cell_Y);
     const UINT MaxCell = num_cell_X*num_cell_Y - 1;
 
-    set_cell_number = min(set_cell_number, MaxCell);
+    set_cell_number = min(set_cell_number, (int)MaxCell);
 
     m_Param.TU[0] = (float)(set_cell_number%num_cell_X)*CellSize.x;
     m_Param.TV[0] = (float)(set_cell_number / num_cell_X)*CellSize.y;

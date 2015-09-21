@@ -5,13 +5,15 @@
 #include "../GameSystem/ResourceManager.h"
 #include "../Stage/PhysicsMeshObject.h"
 #include "../Collision/Collision.h"
+#include "BallFadeOutRenderer.h"
+
 
 UsualBall::UsualBall(
     BallBase::Params	params,			//ボールパラメータ
     DamageBase::Type	damage_type,	//ダメージ判定のタイプ
     float				damage_val		//ダメージ量
     ) :
-    m_Delete(false),
+    m_DeleteFrame(180),
     m_Locus(20),
     m_pRigitBody(nullptr)
 {
@@ -26,6 +28,7 @@ UsualBall::UsualBall(
 	m_Damage.m_Param.size = 1;	//大きさはボールによって異なる?
 	m_Damage.type = damage_type;
 	m_Damage.Value = damage_val;
+    m_Damage.m_Enable = true;
 	UpdateDamageClass();
 
 	//ボールのメッシュを作成
@@ -144,19 +147,13 @@ bool UsualBall::Update()
         UpdateWallCheck();
     }
     
-
     Vector3 v;
     Vector3Cross(v, m_Params.move, DefCamera.GetForward());
     v.Normalize();
 
     m_Locus.AddPoint(m_Params.pos, v);
 
-    if (isOutofField())
-    {
-        m_Delete = true;
-    }
-
-    return !m_Delete;
+    return !isOutofField() && m_DeleteFrame > 0;
 }
 
 
@@ -218,7 +215,7 @@ void UsualBall::UpdateMove()
 
         m_pRigitBody->Get_TransMatrix(M);
 
-        M = m_BaseMatrix*M;
+        M = m_BaseMatrix * M;
 
         m_pMeshRenderer->SetMatrix(M);
 
@@ -232,10 +229,36 @@ void UsualBall::UpdateMove()
         {
             m_Locus.m_Visible = false;
         }
+
+        //消滅タイマー
+        m_DeleteFrame--;
+
+        if (m_DeleteFrame == 0)
+        {
+            iexMesh* pMesh;
+
+            GetBallMesh(m_Params.pParent->m_PlayerInfo.chr_type, &pMesh);
+
+            new BallFadeOutRenderer(
+                pMesh,
+                m_BaseMatrix,
+                m_pRigitBody,
+                60
+                );
+
+            m_pRigitBody = nullptr;
+        }
     }
     else
     {
         m_Params.pos += m_Params.move;
+
+        //敵に当たっていたら攻撃判定をなくす
+        if (m_Damage.HitCount > 0)
+        {
+            //攻撃判定のない状態にする
+            ToNoWork();
+        }
     }
 }
 
@@ -253,7 +276,7 @@ void UsualBall::SetHDR()
 void UsualBall::UpdateWallCheck()
 {
     Vector3 Out, Pos(m_Params.pos), Vec(m_Params.move);
-    float Dist = m_Params.move.Length()*4.0f;
+    float Dist = m_Params.move.Length()*2.0f;
     int Material;
 
     Vec.Normalize();
@@ -265,32 +288,43 @@ void UsualBall::UpdateWallCheck()
         &Dist,
         &Material,
         CollisionManager::RayType::_Usual
-        ))
+        )
+        )
     {
-        m_Params.type = BallBase::Type::_DontWork;
-        m_Damage.m_Enable = false;
-
-        m_BaseMatrix = m_pMeshRenderer->GetMatrix();
-
-        m_BaseMatrix._41 = 0;
-        m_BaseMatrix._42 = 0;
-        m_BaseMatrix._43 = 0;
-
-        m_pRigitBody = DefBulletSystem.AddRigidSphere(
-            PhysicsParam.Mass,
-            RigidBody::ct_dynamic,
-            m_Params.pos, 
-            Vector3Zero,
-            0.5f, 
-            0.8f,
-            0.25f,
-            m_Params.move * 60.0f
-            );
+        //攻撃判定のない状態にする
+        ToNoWork();
     }
 
 }
 
-void UsualBall::Counter()
+void UsualBall::Counter(CharacterBase* pCounterCharacter)
 {
+    m_Damage.pParent = m_Params.pParent = pCounterCharacter;
+
     UpdateLocusColor();
+}
+
+void UsualBall::ToNoWork()
+{
+    //攻撃判定のない状態にする
+
+    m_Params.type = BallBase::Type::_DontWork;
+    m_Damage.m_Enable = false;
+
+    m_BaseMatrix = m_pMeshRenderer->GetMatrix();
+
+    m_BaseMatrix._41 = 0;
+    m_BaseMatrix._42 = 0;
+    m_BaseMatrix._43 = 0;
+
+    m_pRigitBody = DefBulletSystem.AddRigidSphere(
+        PhysicsParam.Mass,
+        RigidBody::ct_dynamic,
+        m_Params.pos,
+        Vector3Zero,
+        0.5f,
+        0.8f,
+        0.25f,
+        m_Params.move * 45.0f
+        );
 }

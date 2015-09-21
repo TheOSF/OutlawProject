@@ -52,6 +52,26 @@ COLOR CharacterBase::GetPlayerColor(PlayerNum::Value number)
     return player_colors[number];
 }
 
+COLORf CharacterBase::GetPlayerColorF(PlayerNum::Value number)
+{
+    
+    COLORf ret(1, 1, 1, 1);
+
+    switch ((int)number)
+    {
+    case 0: ret = COLORf(1,1,0,0); break;
+    case 1: ret = COLORf(1,0,1,1); break;
+    case 2: ret = COLORf(1,1,1,0); break;
+    case 3: ret = COLORf(1,0,1,0); break;
+
+    default:
+        MyAssert(false, "色が存在しないプレイヤー番号が引数に送られました num= %d ", (int)number);
+        break;
+    }
+
+    return ret;
+}
+
 //ラウンドリセット時のパラメターにセットする
 void CharacterBase::ResetRound()
 {

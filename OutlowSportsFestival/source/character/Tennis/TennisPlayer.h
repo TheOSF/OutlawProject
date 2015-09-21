@@ -19,33 +19,35 @@ typedef ChrState<TennisPlayer, CharacterBase::MsgType>TennisState;
 class TennisPlayer:public CharacterBase
 {
 public:
-	enum MotionType
-	{
-		_mt_Stand,
-		_mt_Run,
+    enum MotionType
+    {
+        _mt_Stand = 0,
+        _mt_Run = 1,
 
-		_mt_Attack1,
-		_mt_Shot,
-		_mt_Counter,
-		_mt_Smash,
-		_mt_Guard,
-		_mt_Rolling,
-		_mt_Damage_Weak = 20, 
+        _mt_Attack1 = 2,
+        _mt_Shot = 5,
+        _mt_CounterRight = 3,
+        _mt_CounterLeft = 4,
+        _mt_Smash = 5,
+        _mt_Guard = 6,
+        _mt_Rolling = 7,
+        _mt_BoundSmash = 3, 
+        _mt_Damage_Weak = 20,
 
-		_mt_Damage_Vanish_Fly=9,
-		_mt_Damage_Vanish_Down,
-		_mt_Damage_Vanish_StandUp,
+        _mt_Damage_Vanish_Fly = 9,
+        _mt_Damage_Vanish_Down = 10,
+        _mt_Damage_Vanish_StandUp = 11,
 
-		_mt_WinPose = 13,
-		_mt_LosePose,
+        _mt_WinPose = 13,
+        _mt_LosePose = 14,
 
-		_mt_Attack2 = 16,
-		_mt_Attack3 = 17,
+        _mt_Attack2 = 16,
+        _mt_Attack3 = 17,
 
-		_mt_CounterPose = 18, 
-		_mt_Hakushu=21,
+        _mt_CounterPose = 18,
+        _mt_Hakushu = 21,
 
-	};
+    };
 
 	TennisPlayer(const CharacterBase::PlayerInfo& info);
 	~TennisPlayer();

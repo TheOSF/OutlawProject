@@ -758,6 +758,12 @@ BOOL BlendAnimationMesh::SaveObject(LPIEMFILE lpIem, LPSTR filename)
 //
 //**************************************************************************************************
 
+Matrix*	BlendAnimationMesh::GetBone(int n)
+{
+    assert(n >= 0 && n < (int)NumBone && "存在しないボーン番号が BlendAnimationMesh::GetBoneで指定されました");
+    return &lpBoneMatrix[n];
+}
+
 //*****************************************************************************
 //	フレーム更新
 //*****************************************************************************
