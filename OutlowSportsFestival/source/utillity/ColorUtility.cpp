@@ -98,3 +98,8 @@ DWORD	COLORf::toDWORD()
 	ClampValue();
 	return D3DCOLOR_COLORVALUE(r, g, b, a);
 }
+
+Vector4 COLORf::toVector4()
+{
+    return Vector4(r, g, b, a);
+}

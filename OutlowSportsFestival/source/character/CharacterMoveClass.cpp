@@ -19,7 +19,8 @@ CharacterUsualMove::CharacterUsualMove(
 	m_pParent(pParent),
 	m_isRun(false),
 	m_pMoveEvent(pMoveEvent),
-	m_pHitEventBase(pHitEventBase)
+	m_pHitEventBase(pHitEventBase),
+    m_Init(false)
 {
 	m_Params = param;
 }
@@ -35,6 +36,14 @@ void CharacterUsualMove::Update()
 	//走っているかどうか
 	bool now = Vector2Length(m_StickValue) > 0.1f;
 
+
+    //初期化
+    if (m_Init == false)
+    {
+        m_Init = true;
+        m_pMoveEvent->StandStart();
+    }
+
 	//イベントクラスの更新
 	m_pMoveEvent->Update(now, (m_Params.MaxSpeed > 0.0f) ? (Vector3XZLength(m_pParent->m_Params.move) / m_Params.MaxSpeed) : (0));
 
@@ -46,7 +55,7 @@ void CharacterUsualMove::Update()
 		
 		chr_func::AngleControll(
 			m_pParent,
-			m_pParent->m_Params.pos + DefCamera.GetRight()*m_StickValue.x + DefCamera.GetForward()*m_StickValue.y, 
+            m_pParent->m_Params.pos + Vector3(m_StickValue.x, 0, m_StickValue.y),//DefCamera.GetRight()*m_StickValue.x + DefCamera.GetForward()*m_StickValue.y,
 			m_Params.TurnSpeed
 			);
 	}

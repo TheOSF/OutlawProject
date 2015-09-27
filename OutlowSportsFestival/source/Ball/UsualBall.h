@@ -29,10 +29,11 @@ public:
 
 
 	//コンストラクタ
-	UsualBall(
-		BallBase::Params	params,			//ボールパラメータ
-		DamageBase::Type	damage_type,	//ダメージ判定のタイプ
-		float				damage_val		//ダメージ量
+    UsualBall(
+        BallBase::Params	params,			//ボールパラメータ
+        DamageBase::Type	damage_type,	//ダメージ判定のタイプ
+        float				damage_val,		//ダメージ量
+        UINT                hit_num = 1   //ヒット数
 		);
 	~UsualBall();
 
@@ -59,6 +60,9 @@ private:
     Locus               m_Locus;
     Matrix              m_BaseMatrix;
     RigidBody*          m_pRigitBody;
+    const UINT          m_HitNum;
+    UINT                m_HitCountSave;
+    UINT                m_HitStopFrame;
 
 	bool isOutofField()const;
 	void UpdateDamageClass();

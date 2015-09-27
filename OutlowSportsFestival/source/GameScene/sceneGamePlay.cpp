@@ -17,6 +17,8 @@
 #include "../GameSystem/GameInitializer.h"
 #include "../GameSystem/GameInitilizer_DevelopMode.h"
 
+#include "../Effect/ParticleManager.h"
+
 
 //*****************************************************************************************************************************
 //
@@ -39,6 +41,12 @@ bool sceneGamePlay::Initialize()
     IGameInitializer* Initializer = new GameInitializer_DevelopMode();
 
     Initializer->GameCreate();
+
+    //法線・深度バッファを登録
+    {
+        shader->SetValue("NormalDepthMap",
+            DefRendererMgr.GetNormalDepthTexture()->GetTexture());
+    }
 
     delete Initializer;
 
@@ -77,13 +85,10 @@ sceneGamePlay::~sceneGamePlay()
 //*****************************************************************************************************************************
 void	sceneGamePlay::Update()
 {
-	
-
 	{// Bullet Physics
 
 		DefBulletSystem.StepSimulation(1.0f / 60.0f);
 	};
-
 
 	DefCamera.Update();
     

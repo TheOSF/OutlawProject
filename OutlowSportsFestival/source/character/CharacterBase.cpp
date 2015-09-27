@@ -9,8 +9,8 @@
 
 const CharacterBase::CommonParams CharacterBase::m_CommonParams =
 {
-    0.0f,          //地面の高さ    
-    -0.01f,        //重力加速度
+    0.0f,          //地面の高さ
+    -0.02f,        //重力加速度
 };
 
 CharacterBase::CharacterBase(const PlayerInfo& info):

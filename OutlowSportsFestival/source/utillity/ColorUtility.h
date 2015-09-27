@@ -58,6 +58,7 @@ public:
 	void	SetColor(RATIO a, RATIO r, RATIO g, RATIO b);
 	void	ClampValue();
 	DWORD	toDWORD();
+    Vector4 toVector4();//Å@íçà”Å@rgbaÇÃèáî‘
 };
 
 COLOR	ColorLerp(COLOR col1, COLOR col2, float v);

@@ -78,6 +78,7 @@ DirLight::DirLight()
 void DirLight::Render(LightRenderer* pLightRenderer)
 {
     DeferredLightBufRenderer::DirLightParam temp = param;
+    
     if (temp.Shadow.visible)
     {
         RendererManager::DepthRenderer* p = DefRendererMgr.GetDepthRenderer();
@@ -85,7 +86,11 @@ void DirLight::Render(LightRenderer* pLightRenderer)
         temp.Shadow.pDepthRenderer = p;
         temp.Shadow.pDepthRenderer = DefRendererMgr.GetDepthRenderer();
     }
+
     pLightRenderer->DirLight(temp);
+
+    shader->SetValue("FR_DirLightColor", param.color);
+    shader->SetValue("FR_DirLightVec", param.vec);
 }
 
 //---------------------------------------------------------------
@@ -105,6 +110,9 @@ void HemiLight::Render(LightRenderer* pLightRenderer)
 {
     DeferredLightBufRenderer::HemiLightParam temp = param;
     pLightRenderer->HemiLight(temp);
+
+    shader->SetValue("FR_SkyColor", param.SkyColor);
+    shader->SetValue("FR_GroundColor", param.GroundColor);
 }
 
 
@@ -126,8 +134,11 @@ AmbientLight::AmbientLight()
 void AmbientLight::Render(LightRenderer* pLightRenderer)
 {
     DeferredLightBufRenderer::AmbientParam temp = param;
-   // temp.Occlusion.Enable = GetKeyState('A') != 0;
+    temp.Occlusion.Enable = GetKeyState('A') != 0;
 
     pLightRenderer->AmbientLight(temp);
+
+    shader->SetValue("FR_AmbientColor", param.color);
+    
 }
 

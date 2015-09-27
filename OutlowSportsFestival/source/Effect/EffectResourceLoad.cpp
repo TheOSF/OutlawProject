@@ -40,7 +40,7 @@ void EffectResource::Load()
     //煙アニメーションエフェクト
     DefResource.Regist(
         Resource::TextureType::Anime_Smoke,
-        new iex2DObj("DATA\\Effect\\Smoke.png")
+        new iex2DObj("DATA\\Effect\\SmokeReal.png")
         );
 
     //カウンターアニメーションエフェクト

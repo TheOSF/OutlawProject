@@ -27,11 +27,6 @@ DeferredLightManager::DeferredLightManager(
         IEX2D_RENDERTARGET
         );
 
-
-    //パーティクルテクスチャ読み込み
-    sprintf_s<MAX_PATH>(work_path, "%s%s", pData_FilePath, "\\particle.png");
-    m_pParticleTexture = new iex2DObj(work_path);
-
     //ジオメトリバッファ管理クラス生成
     sprintf_s<MAX_PATH>(work_path, "%s%s", pData_FilePath, "\\DeferredGbuf.fx");
    
@@ -71,7 +66,6 @@ DeferredLightManager::~DeferredLightManager()
     delete m_pGbufRenderer;
     delete m_pColorTexture;
     delete m_pHRTexture;
-    delete m_pParticleTexture;
     delete m_pSmalBufBlurRenderer;
 }
 
@@ -188,6 +182,11 @@ void DeferredLightManager::TextureRender()
     }
 }
 
+
+iex2DObj* DeferredLightManager::GetNormalDepthTexture()
+{
+    return &m_pGbufRenderer->NormalDepth;
+}
 
 //テクスチャクリア
 void DeferredLightManager::ClearTexture()

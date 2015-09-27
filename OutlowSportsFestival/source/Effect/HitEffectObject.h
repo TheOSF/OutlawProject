@@ -19,7 +19,8 @@ public:
         CrVector3 vec,
         float     length,
         float     width,
-        Vector3   color
+        Vector3   color,
+        UINT      particle_level = 0
         );
 
     ~HitEffectObject();
@@ -30,6 +31,7 @@ private:
     float                   m_T;
     Vector3                 m_Color;
     PointLight              m_Light;
+    const UINT              m_Particle_level;
 
     void InitMatrix(
         CrVector3 pos,

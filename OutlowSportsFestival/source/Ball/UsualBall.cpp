@@ -11,11 +11,15 @@
 UsualBall::UsualBall(
     BallBase::Params	params,			//ボールパラメータ
     DamageBase::Type	damage_type,	//ダメージ判定のタイプ
-    float				damage_val		//ダメージ量
+    float				damage_val,		//ダメージ量
+    UINT                hit_num         //ヒット数
     ) :
     m_DeleteFrame(180),
     m_Locus(20),
-    m_pRigitBody(nullptr)
+    m_pRigitBody(nullptr),
+    m_HitNum(hit_num),
+    m_HitCountSave(0),
+    m_HitStopFrame(0)
 {
 	LPIEXMESH		pBallMesh;
 
@@ -251,10 +255,23 @@ void UsualBall::UpdateMove()
     }
     else
     {
-        m_Params.pos += m_Params.move;
+        if (m_HitStopFrame == 0)
+        {
+            m_Params.pos += m_Params.move;
+        }
+        else
+        {
+            --m_HitStopFrame;
+        }
+        
+        if (m_Damage.HitCount != m_HitCountSave)
+        {
+            m_HitCountSave = m_Damage.HitCount;
+            m_HitStopFrame = 5;
+        }
 
         //敵に当たっていたら攻撃判定をなくす
-        if (m_Damage.HitCount > 0)
+        if (m_Damage.HitCount >= m_HitNum)
         {
             //攻撃判定のない状態にする
             ToNoWork();

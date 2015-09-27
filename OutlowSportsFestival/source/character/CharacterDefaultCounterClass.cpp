@@ -9,10 +9,10 @@
 
 
 CharacterDefaultCounter::CharacterDefaultCounter(
-    CharacterBase*               pOwner,       //オーナーキャラクタ
-    const Param&                 param,        //カウンターパラメタ
-    Event*                       pEventClass,  //イベントクラスへのポインタ(中でdeleteする)
-    DamageManager::HitEventBase* pHitEventClass//ヒットイベント(中でdeleteする)
+    CharacterBase*               pOwner,        //オーナーキャラクタ
+    const Param&                 param,         //カウンターパラメタ
+    Event*                       pEventClass,   //イベントクラスへのポインタ(中でdeleteする)
+    DamageManager::HitEventBase* pHitEventClass //ヒットイベント(中でdeleteする)
     ):
     m_pOwner(pOwner),
     m_Param(param),

@@ -101,6 +101,7 @@ public:
         void HemiLight(HemiLightParam& param);   //半球ライト描画
         void AmbientLight(AmbientParam& param);  //環境光描画
     private:
+        void DirLightUseVarianceShadow(DirLightParam& param);
         void DirLightUseShadow(DirLightParam& param);
         void SpotLightUseShadow(SpotLightParam& param);
 
@@ -147,7 +148,8 @@ public:
 
     iex2DObj*   m_pDiffuseTexture;           //ディフューズテクスチャ
     iex2DObj*   m_pSpecularTexture;          //スペキュラテクスチャ
-    iex2DObj*   m_pShadowDepthTexture; //影用Z値テクスチャ
+    iex2DObj*   m_pShadowDepthTexture;       //影用Z値テクスチャ
+    iex2DObj*   m_pShadowDepthTexture2;       //影用Z値テクスチャ(float2)
 private:
 
     const UINT     m_X, m_Y;              //スクリーンサイズXY

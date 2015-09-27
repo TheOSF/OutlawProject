@@ -318,16 +318,19 @@ MatchState::WinPose::~WinPose()
 
 void MatchState::WinPose::Enter(_Client_type_ptr p)
 {
-    std::list<LpGameObjectBase> UpdateList;
-
-    DefGameObjMgr.FreezeOtherObjectUpdate(UpdateList, 120);
-
     DefCamera.SetNewState(new CameraStateCharacterZoom(m_pLastDieCharacter, 0.05f));
 }
 
 void MatchState::WinPose::Execute(_Client_type_ptr p)
 {
     ++m_Frame;
+
+    if (m_Frame == 6)
+    {
+        std::list<LpGameObjectBase> UpdateList;
+
+        DefGameObjMgr.FreezeOtherObjectUpdate(UpdateList, 120);
+    }
 
     if (m_Frame == 120)
     {

@@ -38,7 +38,7 @@ PhysicallyMoveBall::PhysicallyMoveBall(
     //ボールのメッシュを作成
     UsualBall::GetBallMesh(params.pParent->m_PlayerInfo.chr_type, &pBallMesh);
 
-    //メッシュのレンダラー作成(最終的にメッシュを使いまわして描画するべき)
+    //メッシュのレンダラー作成
     m_pMeshRenderer = new MeshRenderer(
         pBallMesh,
         false,

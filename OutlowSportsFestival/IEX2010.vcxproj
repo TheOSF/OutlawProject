@@ -196,8 +196,11 @@
     <ClCompile Include="source\Effect\ImpactLightObject.cpp" />
     <ClCompile Include="source\Effect\ParticleBase.cpp" />
     <ClCompile Include="source\Effect\ParticleHDRRenderer.cpp" />
+    <ClCompile Include="source\Effect\ParticleManager.cpp" />
+    <ClCompile Include="source\Effect\ParticleManagerUpdater.cpp" />
     <ClCompile Include="source\Effect\ParticleMoveObject.cpp" />
     <ClCompile Include="source\Effect\ParticleRenderer.cpp" />
+    <ClCompile Include="source\Effect\StageSmokeEmitter.cpp" />
     <ClCompile Include="source\GameScene\sceneGamePlay.cpp" />
     <ClCompile Include="source\GameScene\sceneMain.cpp" />
     <ClCompile Include="source\GameSystem\GameController.cpp" />
@@ -229,6 +232,7 @@
     <ClCompile Include="source\Stage\HitStageObject.cpp" />
     <ClCompile Include="source\Stage\PhysicsMeshObject.cpp" />
     <ClCompile Include="source\UI\PlayerGauge.cpp" />
+    <ClCompile Include="source\UI\RoundUI.cpp" />
     <ClCompile Include="source\utillity\ColorUtility.cpp" />
     <ClCompile Include="source\utillity\Locus.cpp" />
     <ClCompile Include="source\utillity\LocusHDR.cpp" />
@@ -307,8 +311,11 @@
     <ClInclude Include="source\Effect\ImpactLightObject.h" />
     <ClInclude Include="source\Effect\ParticleBase.h" />
     <ClInclude Include="source\Effect\ParticleHDRRenderer.h" />
+    <ClInclude Include="source\Effect\ParticleManager.h" />
+    <ClInclude Include="source\Effect\ParticleManagerUpdater.h" />
     <ClInclude Include="source\Effect\ParticleMoveObject.h" />
     <ClInclude Include="source\Effect\ParticleRenderer.h" />
+    <ClInclude Include="source\Effect\StageSmokeEmitter.h" />
     <ClInclude Include="source\GameScene\SceneGamePlay.h" />
     <ClInclude Include="source\GameScene\sceneMain.h" />
     <ClInclude Include="source\GameSystem\ForwardDecl.h" />
@@ -341,6 +348,7 @@
     <ClInclude Include="source\Stage\HitStageObject.h" />
     <ClInclude Include="source\Stage\PhysicsMeshObject.h" />
     <ClInclude Include="source\UI\PlayerGauge.h" />
+    <ClInclude Include="source\UI\RoundUI.h" />
     <ClInclude Include="source\utillity\Collision.h" />
     <ClInclude Include="source\utillity\ColorUtility.h" />
     <ClInclude Include="source\utillity\DebugControllGameObject.h" />

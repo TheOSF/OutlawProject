@@ -75,7 +75,7 @@ void TennisState_PlayerControll_Counter::Enter(TennisPlayer* t)
 
     param.AfterShotFrame = 15;
     param.CanCounterFrame = 30;
-    param.CatchAriaSize = 12;
+    param.CatchAriaSize = 8;
     param.ControllRadian = D3DXToRadian(33);
     param.FailedFrame = 20;
     param.PoseFrame = 60;

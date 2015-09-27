@@ -14,6 +14,7 @@ TennisState_BoundBallAtk::TennisState_BoundBallAtk(
     ):
     m_pControllClass(pControllClass),
     m_Timer(0)
+
 {
 
 }
@@ -254,6 +255,14 @@ void TennisBoundBall::State_Flying()
             }
         }
     }
+
+    //ステージ外にいった場合の処理
+    {
+        if (m_Params.pos.Length() > 500)
+        {
+            m_pStateFunc = &TennisBoundBall::State_Finish;
+        }
+    }
 }
 
 void TennisBoundBall::State_Failed()
@@ -333,7 +342,7 @@ void TennisBoundBall::State_AtkStart()
         param.type = BallBase::Type::_Usual;
 
         //生成
-        new UsualBall(param, DamageBase::Type::_WeekDamage, 1);
+        new UsualBall(param, DamageBase::Type::_WeekDamage, 1, 2);
     }
 
     m_pStateFunc = &TennisBoundBall::State_Finish;

@@ -52,6 +52,7 @@ private:
 	Params			m_Params;
 	Vector2			m_StickValue;
 	bool			m_isRun;
+    bool            m_Init;
 };
 
 #endif

@@ -72,6 +72,8 @@ public:
     //デバッグ用テクスチャ描画
     void TextureRender();
 
+    iex2DObj* GetNormalDepthTexture();
+
 private:
 
     DeferredLightManager(const DeferredLightManager&);
@@ -85,7 +87,6 @@ private:
 
     iex2DObj*                   m_pColorTexture;
     iex2DObj*                   m_pHRTexture;
-    iex2DObj*                   m_pParticleTexture;
  
 
     //テクスチャクリア

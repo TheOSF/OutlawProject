@@ -164,6 +164,7 @@ public:
     //Z値描画オブジェクトへのポインタを得る
     DepthRenderer* GetDepthRenderer();
 
+    iex2DObj* GetNormalDepthTexture();
 
 private:
 

@@ -56,7 +56,9 @@
 
 #include "../Effect/ParticleRenderer.h"
 #include "../Render/BlurObject.h"
+#include "../Effect/StageSmokeEmitter.h"
 
+#include "../Effect/ParticleManagerUpdater.h"
 
 
 static void CreateCharacter(
@@ -73,7 +75,7 @@ static void CreateCharacter(
     info.chr_type = chr;
     info.number = n;
     info.player_type = pl;
-    info.strong_type = (pl == PlayerType::_Player) ? (StrongType::__ErrorType) : (StrongType::_Usual);
+    info.strong_type = (pl == PlayerType::_Player) ? (StrongType::__ErrorType) : (StrongType::__ErrorType);
 
     switch (chr)
     {
@@ -142,6 +144,7 @@ void GameInitializer_DevelopMode::GameCreate()
     //当たり判定のデバッグ描画を有効に
     DefDamageMgr.m_DebugDrawVisible = true;
 
+
     //キャラクタ作成
     {
 
@@ -172,6 +175,15 @@ void GameInitializer_DevelopMode::GameCreate()
             new MeshCollider(pStageMesh, new MeshCollider::HitEvent)
             );
 
+        //ステージの煙の演出
+        new StageSmokeEmitter(
+            Vector3(-50,0,-50),
+            Vector3(50, 5, 50),
+            0xFFFFA080,
+            30,
+            10
+            );
+
     }
 
     {// Bullet
@@ -191,39 +203,31 @@ void GameInitializer_DevelopMode::GameCreate()
             );
     }
 
-    if(0)
-    {
-        {
-            //球ブラーエフェクト
-            BlurObjectSphere* p = new BlurObjectSphere();
-            p->m_Power = 100;
-
-            new StaticGameObjectTemplate<BlurObjectSphere>(p);
-        }
-
-        {
-        //コーンブラーエフェクト
-        BlurObjectCone* p = new BlurObjectCone();
-
-        p->m_Power = 50;
-        p->m_Origin = Vector3(0, 0, 20);
-        p->m_Target = p->m_Origin + Vector3(15, 0, 0);
-        p->m_Size = 10;
-
-        new StaticGameObjectTemplate<BlurObjectCone>(p);
-        }
-    }
-
     {
         //エフェクト読み込み
         EffectResource::Load();
     }
 
-    //デバッグ描画用の球メッシュ
-    DefResource.Regist(
-        Resource::MeshType::Sphere,
-        new iexMesh("DATA\\Mesh\\sphere.imo")
-        );
+    {
+        //パーティクルアップデーター生成
+        new ParticleManagerUpdater();
+    }
+
+    {
+        //ＵＩ用文字列画像
+        DefResource.Regist(
+            Resource::TextureType::UI_strings,
+            new iex2DObj("DATA\\Texture\\title_raund_nowlording.png")
+            );
+    }
+
+    {
+        //デバッグ描画用の球メッシュ
+        DefResource.Regist(
+            Resource::MeshType::Sphere,
+            new iexMesh("DATA\\Mesh\\sphere.imo")
+            );
+    }
 
     {
         //ボール登録(最終的に登場するキャラクタのボールのみ読み込むようにしたほうが良い)
@@ -275,23 +279,18 @@ void GameInitializer_DevelopMode::GameCreate()
         new StaticGameObjectTemplate<DamageShpere>(d);
     }
 
-    if (1)
+
     {
         const Vector3 DirLifhtVec(Vector3Normalize(Vector3(0.2f, -2, 0.5f)));
         const Vector3 DirLifhtColor(0.2f, 0.25f, 0.25f);
 
-        shader->SetValue("FR_DirLightVec", Vector3(DirLifhtVec));
-        shader->SetValue("FR_DirLightColor", Vector3(DirLifhtColor));
-
-        shader->SetValue("FR_AmbientColor", Vector3(0.38f, 0.24f, 0.24f));
-
-
         //ライティング設定
-        if (0)
+        
         {
             HemiLight* H = new HemiLight;
-            H->param.GroundColor = Vector3(0.2f, 0.25f, 0.25f)*0.2f;
-            H->param.SkyColor = Vector3(0.2f, 0.25f, 0.25f);
+
+            H->param.GroundColor = Vector3(0, 0, 0);
+            H->param.SkyColor = Vector3(0, 0, 0);
             H->param.Up = Vector3(0, 1, 0);
 
             new StaticGameObjectTemplate<HemiLight>(H);
@@ -316,9 +315,10 @@ void GameInitializer_DevelopMode::GameCreate()
             AmbientLight* A = new AmbientLight;
 
             A->param.color = Vector3(0.38f, 0.24f, 0.24f);
-            A->param.Occlusion.SamplingSize = 0.07f;
+            A->param.Occlusion.SamplingSize = 0.025f;
             A->param.Occlusion.Enable = true;
 
+            new DebugControllGameObject(nullptr, &A->param.Occlusion.SamplingSize, 0.01f, "AmbSize", 'S');
             new DebugControllGameObject(&A->param.color, 0, 0.01f, "AmbColor", 'A');
             new StaticGameObjectTemplate<AmbientLight>(A);
         }

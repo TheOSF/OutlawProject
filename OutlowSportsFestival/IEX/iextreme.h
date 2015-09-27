@@ -145,6 +145,14 @@ extern	Matrix	matProjection;	//	投影変換行列
 
 #define PI_x2	((FLOAT)  PI*2)	//360度
 
+
+
+//０～１の乱数(精度は気にしないver)
+inline float frand()
+{
+    return (float)rand() / RAND_MAX;
+}
+
 //------------------------------------------
 //	２次元ベクトルクラス
 //------------------------------------------

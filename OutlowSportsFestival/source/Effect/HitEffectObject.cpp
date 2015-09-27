@@ -9,11 +9,13 @@ HitEffectObject::HitEffectObject(
     CrVector3 vec,
     float     length,
     float     width,
-    Vector3   color
+    Vector3   color,
+    UINT      level
     ) :
     m_Renderer(DefResource.Get(Resource::MeshType::HitEffect), false),
     m_Color(color),
-    m_T(0)
+    m_T(0),
+    m_Particle_level(level)
 {
     InitMatrix(pos, vec, length, width);
 
@@ -93,7 +95,7 @@ void HitEffectObject::SetParticle(
     ParticleRenderer* Renderer;
     ParticleMoveObject* MoveObj;
 
-    const int numParticle = 10;
+    const int numParticle = 10 * (int)(1 + m_Particle_level);
     
     COLORf Colorf(1, color.x, color.y, color.z);
     LPIEX2DOBJ pTexture = DefResource.Get(Resource::TextureType::Particle);

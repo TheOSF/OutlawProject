@@ -3,7 +3,10 @@
 #include "../CharacterFunction.h"
 #include "../../Effect/BlurImpact.h"
 
+#include "../../Effect/HitEffectObject.h"
 #include "../../Ball/Ball.h"
+
+#include "../../Camera/Camera.h"
 
 TennisState_DamageMotion_Die::TennisState_DamageMotion_Die(
     TennisPlayer* pTennis,
@@ -21,7 +24,13 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
     class TennisEvent :public CharacterDamageVanish::Event
     {
     public:
-        TennisEvent(TennisPlayer* pTennis) :m_pTennis(pTennis), m_Timer(0){}
+        TennisEvent(TennisPlayer* pTennis) :m_pTennis(pTennis){}
+
+        void FlyStart()
+        {
+            //吹き飛びモーションをセット
+            m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Damage_Vanish_Fly);
+        }
 
         void Flying(const Matrix& Rotate)
         {
@@ -35,10 +44,23 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
             m_pTennis->m_Renderer.m_TransMatrix = Rotate*m_pTennis->m_Renderer.m_TransMatrix;
         }
 
+        void DownStart()
+        {
+            //ダウンモーションをセット
+            m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Damage_Vanish_Down);
+        }
+
+        void Downing()
+        {
+            m_pTennis->m_Renderer.Update(1);
+
+            //ワールド変換行列を計算
+            chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
+        }
+
         void StandUpStart()
         {
-            //吹き飛びモーションをセット
-            m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Damage_Vanish_Down);
+            //何もしない
         }
 
         void StandUping()
@@ -50,20 +72,13 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
             chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
         }
 
-        void Start()
-        {
-            //吹き飛びモーションをセット
-            m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Damage_Vanish_Fly);
-
-        }
-
         void End()
         {
-
+            //何もしない
         }
+
     private:
         TennisPlayer*  m_pTennis;
-        int            m_Timer;
     };
 
     //ダメージモーションパラメーターを作成する
@@ -72,13 +87,29 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
     Param.rotate_speed = Vector3(0.0f, 0.0f, 0.0);
     Param.move = Vector3Normalize(m_Damage_vec) * 0.7f;
     Param.move.y = 0.2f;
-    Param.standup_frame = 30;
+
+    Param.down_frame = 15;
+    Param.down_muteki_frame = 15;
+    Param.standup_frame = 50;
+    Param.standup_muteki_frame = 10;
+
 
     //ひるみクラスを作成
     m_pDamageVanishClass = new CharacterDamageVanish(
         m_pTennis,
         Param,
-        new TennisEvent(t)
+        new TennisEvent(t),
+        new DamageManager::HitEventBase()
+        );
+
+    //ヒットエフェクト作成
+    new HitEffectObject(
+        m_pTennis->m_Params.pos + Vector3(0, 3, 0),
+        m_Damage_vec,
+        0.05f,
+        0.15f,
+        Vector3(1.0f, 1.0f, 1.0f),
+        5
         );
 
     //ブラーエフェクト
@@ -87,6 +118,12 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
         20,
         50,
         15
+        );
+
+    //カメラショック
+    DefCamera.SetShock(
+        Vector2(1, 1)*0.22f, 
+        20
         );
 }
 

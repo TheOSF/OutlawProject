@@ -30,9 +30,12 @@ public:
         Locus1,
         Locus2,
 
+        UI_strings,
+
         Anime_Circle,
         Anime_Smoke,
         Anime_Counter,
+
 
         _MaxType
     };

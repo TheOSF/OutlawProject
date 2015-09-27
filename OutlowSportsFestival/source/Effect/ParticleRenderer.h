@@ -11,6 +11,9 @@
 class ParticleRenderer : public ForwardRenderer, public ParticleBase
 {
 public:
+    bool  m_SoftEnable;
+    float m_SoftDepth;
+
     ParticleRenderer();
     ~ParticleRenderer();
 

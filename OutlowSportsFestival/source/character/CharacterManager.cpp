@@ -90,9 +90,15 @@ void CharacterManager::CheckCharacterSpace()
 
     for (auto& it1 : m_CharacterMap)
     {
+        if (chr_func::isDie(it1.first))
+        {
+            continue;
+        }
+
         for (auto& it2 : m_CharacterMap)
         {
-            if (it1 == it2)
+            if (it1 == it2 || 
+                chr_func::isDie(it2.first))
             {
                 continue;
             }

@@ -15,24 +15,31 @@ public:
 		Vector3 move;         //移動速度
 		Vector3 rotate_speed; //各軸の回転速度
 
-        UINT    standup_frame;//着地してから操作可能になるまでの時間
+        int     down_frame;
+        int     down_muteki_frame;
+
+        int     standup_frame;
+        int     standup_muteki_frame;
 	};
 
     class Event
     {
     public:
         virtual ~Event() {}
-        virtual void Flying(const Matrix& Rotate) = 0;//飛んでいる最中に呼ばれる関数
-        virtual void StandUpStart() = 0;              //立ち上がりスタート時に呼ばれる関数
-        virtual void StandUping() = 0;                //立ち上がっている最中に呼ばれる関数
-        virtual void Start() = 0;                     //吹き飛びスタート時に呼ばれる関数
-        virtual void End() = 0;                       //立ち上がり終了時に呼ばれる関数
+        virtual void FlyStart() = 0;                     //吹き飛びスタート
+        virtual void Flying(const Matrix& Rotate) = 0;   //吹き飛んでいる最中
+        virtual void DownStart() = 0;                         //着地時
+        virtual void Downing() = 0;                      //根っころがっている最中
+        virtual void StandUpStart() = 0;                 //起き上がりスタート
+        virtual void StandUping() = 0;                  //起き上がり最中
+        virtual void End() = 0;                          //ステート終了
     };
 
     CharacterDamageVanish(
         CharacterBase*    pCharacter,//吹き飛ぶキャラクタ
         const Param&      param, //吹きとびパラメーター
-        Event*            pEvent //イベントクラスへのポインタ(デストラクタでdeleteする)
+        Event*            pEvent, //イベントクラスへのポインタ(デストラクタでdeleteする)
+        DamageManager::HitEventBase* pHitEvent //ヒットイベントクラスへのポインタ(デストラクタでdeleteする)
         );
 
     ~CharacterDamageVanish();
@@ -41,18 +48,19 @@ public:
     void Update();
 
 private:
-
+    DamageManager::HitEventBase* m_pHitEvent;
     CharacterBase*  m_pCharacter;
     Param           m_Param;
     Vector3         m_Rotate;
-    bool            m_Start;
-    bool            m_End;
     Event*          m_pEvent;      // イベント
-    UINT            m_Count;
+    int             m_Count;
+
     void(CharacterDamageVanish::*m_pStateFunc)();
 
-
+    void Initialize();
     void Flying();
-    void StandUp();
+    void Dowing();
+    void StandUping();
+    void End();
 };
 

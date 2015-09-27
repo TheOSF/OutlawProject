@@ -20,7 +20,7 @@ void DeferredLightBufRenderer::LightRenderer::DirLight(DirLightParam& param)
 
     if (param.Shadow.visible)
     {
-        DirLightUseShadow(param);
+        DirLightUseVarianceShadow(param);
         return;
     }
 
@@ -161,6 +161,132 @@ void DeferredLightBufRenderer::LightRenderer::DirLightUseShadow(DirLightParam& p
         );
 }
 
+void DeferredLightBufRenderer::LightRenderer::DirLightUseVarianceShadow(DirLightParam& param)
+{
+    Matrix View;
+    Matrix Proj;
+
+    //行列計算
+    switch (param.Shadow.type)
+    {
+    case DirLightParam::Type::Ortho:
+
+        //ビュー行列計算
+        D3DXMatrixLookAtLH(
+            &View,
+            (D3DXVECTOR3*)&param.Shadow.origin,
+            (D3DXVECTOR3*)&(param.Shadow.origin + param.vec),
+            &D3DXVECTOR3(0, 1, 0)
+            );
+
+        //プロジェクション行列計算
+        D3DXMatrixOrthoLH(&Proj, param.Shadow.Size, param.Shadow.Size, param.Shadow.Near, param.Shadow.Far);
+        View *= Proj;
+        break;
+
+    case DirLightParam::Type::Perspective:
+        Proj = matView * matProjection;
+        D3DXMatrixInverse(&View, 0, &matView);
+        Proj *= View;
+
+        //ビュー行列計算
+        D3DXMatrixLookAtLH(
+            &View,
+            (D3DXVECTOR3*)&param.Shadow.origin,
+            (D3DXVECTOR3*)&(param.Shadow.origin + param.vec),
+            &D3DXVECTOR3(0, 1, 0)
+            );
+
+        Proj *= View;
+
+        D3DXMatrixPerspectiveFovLH(&View, param.Shadow.Size, 1, param.Shadow.Near, param.Shadow.Far);
+        //  D3DXMatrixOrthoLH(&Proj, param.Shadow.Size, param.Shadow.Size, param.Shadow.Near, param.Shadow.Far);
+        Proj *= View;
+        break;
+
+    default:
+        assert(0 && "平行光の影タイプが設定されていません");
+        return;
+    }
+
+    //ビュープロジェクション行列を算出し、エフェクトにセット
+
+    m_pMgr->m_pShader->SetValue("g_Shadow_VP_mat", View);
+
+
+    //現在のビューポートを保存し、影用のビューポートをセット
+    D3DVIEWPORT9 SaveViewport;
+    iexSystem::Device->GetViewport(&SaveViewport);
+
+    iexSystem::Device->SetViewport(&m_pMgr->m_ShadowViewport);
+
+    //現在のRTを保存し、影用テクスチャをRTに
+    Surface* pDiffuseTex, *pSpecularTex;
+    iexSystem::Device->GetRenderTarget(0, &pDiffuseTex);
+    iexSystem::Device->GetRenderTarget(1, &pSpecularTex);
+
+    m_pMgr->m_pShadowDepthTexture2->RenderTarget(0);
+    iexSystem::Device->SetRenderTarget(1, 0);
+
+    //現在のデプスステンシルバッファを保存し影用のものに
+    Surface* pSaveDepthStencil;
+    iexSystem::Device->GetDepthStencilSurface(&pSaveDepthStencil);
+
+    iexSystem::Device->SetDepthStencilSurface(m_pMgr->m_pDepthStencil);
+
+    //クリア
+    iexPolygon::RectPlus(
+        0,
+        0,
+        m_pMgr->m_ShadowViewport.Width,
+        m_pMgr->m_ShadowViewport.Height,
+        m_pMgr->m_pShader,
+        "ClearZ",
+        0xFFFFFFFF);
+
+    iexSystem::Device->Clear(
+        0,
+        0,
+        D3DCLEAR_ZBUFFER,
+        0,
+        1,
+        0
+        );
+
+    //Z値を描画
+    param.Shadow.pDepthRenderer->Render(
+        m_pMgr->m_pShader,
+        "WriteZf2"
+        );
+
+    //ビューポートを元に戻す
+    iexSystem::Device->SetViewport(&SaveViewport);
+
+    //RTをもとに戻す
+    iexSystem::Device->SetRenderTarget(0, pDiffuseTex);
+    iexSystem::Device->SetRenderTarget(1, pSpecularTex);
+
+    pDiffuseTex->Release();
+    pSpecularTex->Release();
+
+    //デプスステンシルバッファをもとに戻す
+    iexSystem::Device->SetDepthStencilSurface(pSaveDepthStencil);
+    pSaveDepthStencil->Release();
+
+    m_pMgr->m_pShader->SetValue("g_TexOffsetX", 1.f / (float)m_pMgr->m_ShadowViewport.Width);
+    m_pMgr->m_pShader->SetValue("g_TexOffsetY", 1.f / (float)m_pMgr->m_ShadowViewport.Height);
+
+    //平行光描画
+    iexPolygon::RectPlus(
+        0,
+        0,
+        (int)m_pMgr->m_X,
+        (int)m_pMgr->m_Y,
+        m_pMgr->m_pShader,
+        "DirLightShadowVariance",
+        0xFFFFFFFF
+        );
+}
 
 void DeferredLightBufRenderer::LightRenderer::SpotLightUseShadow(SpotLightParam& param)
 {
@@ -452,8 +578,15 @@ DeferredLightBufRenderer::DeferredLightBufRenderer(
         IEX2D_FLOAT
         );
 
+    m_pShadowDepthTexture2 = new iex2DObj(
+        (ULONG)m_ShadowViewport.Width,
+        (ULONG)m_ShadowViewport.Height,
+        IEX2D_FLOAT2
+        );
+
     m_pShader->SetValue("ShadowDepthTex", m_pShadowDepthTexture->GetTexture());
-    
+    m_pShader->SetValue("ShadowDepthTex2", m_pShadowDepthTexture2->GetTexture());
+
 }
 
 
@@ -465,6 +598,7 @@ DeferredLightBufRenderer::~DeferredLightBufRenderer()
     delete m_pDiffuseTexture;
     delete m_pSpecularTexture;
     delete m_pShadowDepthTexture;
+    delete m_pShadowDepthTexture2;
 }
 
 //ライトバッファクリア

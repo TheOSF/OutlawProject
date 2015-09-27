@@ -14,6 +14,7 @@
 #include "TennisState_BoundBallAtk.h"
 
 #include "Computer\TennisPlayerState_ComMove.h"
+#include "../../Camera/Camera.h"
 
 
 //ローリングの高校制御クラス
@@ -224,12 +225,20 @@ void TennisState_PlayerControll_Move::Enter(TennisPlayer* t)
 
 void TennisState_PlayerControll_Move::Execute(TennisPlayer* t)
 {
-	//スティックの値を取得
-	Vector2 st = controller::GetStickValue(controller::stick::left, t->m_PlayerInfo.number);
+    {
+        //スティックの値をセット
+        Vector2 st = controller::GetStickValue(controller::stick::left, t->m_PlayerInfo.number);
+        Vector3 st_vec3;
 
-	//スティックの値セット
-	m_pMoveClass->SetStickValue(st);
+        //ビュー空間に変換
+        st_vec3 = DefCamera.GetRight()*st.x + DefCamera.GetForward()*st.y;
+        st.x = st_vec3.x;
+        st.y = st_vec3.z;
 
+        //スティックの値セット
+        m_pMoveClass->SetStickValue(st);
+
+    }
 	//更新
 	m_pMoveClass->Update();
 

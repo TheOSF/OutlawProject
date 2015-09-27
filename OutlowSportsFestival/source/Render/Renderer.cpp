@@ -524,3 +524,8 @@ RendererManager::DepthRenderer* RendererManager::GetDepthRenderer()
 {
     return &m_DepthRenderer;
 }
+
+iex2DObj* RendererManager::GetNormalDepthTexture()
+{
+    return m_DeferredLightManager.GetNormalDepthTexture();
+}

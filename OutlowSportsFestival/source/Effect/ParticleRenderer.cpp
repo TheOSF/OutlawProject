@@ -5,7 +5,9 @@
 //   通常パーティクルのレンダラークラス
 //----------------------------------------------------------
 
-ParticleRenderer::ParticleRenderer()
+ParticleRenderer::ParticleRenderer():
+m_SoftEnable(false),
+m_SoftDepth(0.001f)
 {
 
 }
@@ -26,5 +28,15 @@ void ParticleRenderer::Render()
 
     CalcParticleVertex(v);
 
-    iexPolygon::Render3D(v, 2, m_pTexture, m_Param.dw_Flag);
+    if (m_SoftEnable)
+    {
+        shader->SetValue("g_SoftDepth", m_SoftDepth);
+        shader->SetValue("g_Color", m_Param.color.toVector4());
+        iexPolygon::Render3D(v, 2, m_pTexture, shader, "SoftParticle");
+    }
+    else
+    {
+        iexPolygon::Render3D(v, 2, m_pTexture, m_Param.dw_Flag);
+    }
+    
 }
