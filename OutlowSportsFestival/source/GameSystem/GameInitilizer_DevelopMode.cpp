@@ -162,7 +162,7 @@ void GameInitializer_DevelopMode::GameCreate()
         param.round = 3;
         param.time = 60 * 60 * 3; //３分
 
-        new GameEventer(param, new MatchState::MatchPlay());
+        new GameEventer(param, new MatchState::RoundResetCountdown());
     }
 
 
@@ -175,6 +175,7 @@ void GameInitializer_DevelopMode::GameCreate()
             new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColor),
             new MeshCollider(pStageMesh, new MeshCollider::HitEvent)
             );
+
 
         //ステージの煙の演出
         new StageSmokeEmitter(

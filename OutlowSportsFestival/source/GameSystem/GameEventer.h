@@ -20,9 +20,11 @@ public:
 	{
 		UINT  round;
 		UINT  time;
+
+        UINT  round_count;
 	};
 
-	const Param m_Param;
+	Param m_Param;
 
 	GameEventer(const Param& p, State* pInitState);
 	~GameEventer();

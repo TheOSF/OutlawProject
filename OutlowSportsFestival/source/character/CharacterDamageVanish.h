@@ -28,10 +28,10 @@ public:
         virtual ~Event() {}
         virtual void FlyStart() = 0;                     //吹き飛びスタート
         virtual void Flying(const Matrix& Rotate) = 0;   //吹き飛んでいる最中
-        virtual void DownStart() = 0;                         //着地時
+        virtual void DownStart() = 0;                    //着地時
         virtual void Downing() = 0;                      //根っころがっている最中
         virtual void StandUpStart() = 0;                 //起き上がりスタート
-        virtual void StandUping() = 0;                  //起き上がり最中
+        virtual void StandUping() = 0;                   //起き上がり最中
         virtual void End() = 0;                          //ステート終了
     };
 

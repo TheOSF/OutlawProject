@@ -44,6 +44,7 @@ void MeshRenderer::MasterRender()
 
     switch (m_RenderType)
     {
+
     case RenderType::NoTexture:
         m_pMesh->Render(shader, "DeffLightNoTex");
         break;
@@ -55,6 +56,7 @@ void MeshRenderer::MasterRender()
     case RenderType::UseColorSpecular:
         m_pMesh->Render(shader, "DeffLight");
         break;
+
     }
 
 }

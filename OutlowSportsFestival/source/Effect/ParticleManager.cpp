@@ -159,13 +159,13 @@ void ParticleManager::Render()
             //F‚Ì•âŠÔ
             if (it->count < it->md_frame)
             {
-                t = it->count / it->md_frame;
+                t = (float)it->count / (float)it->md_frame;
 
                 v[0].color = ColorLerp(it->start_color, it->md_color, t);
             }
             else
             {
-                t = (it->count - it->md_frame) / (it->end_frame - it->md_frame);
+                t = (float)(it->count - it->md_frame) / (float)(it->end_frame - it->md_frame);
 
                 v[0].color = ColorLerp(it->md_color, it->end_color, t);
             }

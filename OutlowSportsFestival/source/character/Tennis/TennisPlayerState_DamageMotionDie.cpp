@@ -101,16 +101,23 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
         new TennisEvent(t),
         new DamageManager::HitEventBase()
         );
+    
+    {
+        Vector3 move_vec;
 
-    //ヒットエフェクト作成
-    new HitEffectObject(
-        m_pTennis->m_Params.pos + Vector3(0, 3, 0),
-        m_Damage_vec,
-        0.05f,
-        0.15f,
-        Vector3(1.0f, 1.0f, 1.0f),
-        5
-        );
+        chr_func::GetFront(m_pTennis, &move_vec);
+        move_vec = -move_vec;
+
+        //ヒットエフェクト作成
+        new HitEffectObject(
+            m_pTennis->m_Params.pos + Vector3(0, 3, 0) + move_vec*3.5f,
+            m_Damage_vec,
+            0.05f,
+            0.15f,
+            Vector3(1.0f, 1.0f, 1.0f),
+            5
+            );
+    }
 
     //ブラーエフェクト
     new BlurImpactSphere(

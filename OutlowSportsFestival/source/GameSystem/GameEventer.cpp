@@ -13,6 +13,8 @@
 
 #include "../Stage/PhysicsMeshObject.h"
 
+#include "../UI/RoundUI.h"
+#include "../UI/FightUI.h"
 
 //----------------------------------------------------
 //  試合遷移メッセージを送信するクラス
@@ -21,6 +23,8 @@
 GameEventer::GameEventer(const Param& p, State* pInitState) :
 m_Param(p)
 {
+    m_Param.round_count = 1;
+
 	m_pStateMachine = new StateMachine(this);
 
 	if (pInitState != nullptr)
@@ -162,13 +166,15 @@ MatchState::RoundResetCountdown::~RoundResetCountdown()
 
 void MatchState::RoundResetCountdown::Enter(_Client_type_ptr p)
 {
-
+    new RoundUI(p->m_Param.round_count++, 0);
 }
 
 void MatchState::RoundResetCountdown::Execute(_Client_type_ptr p)
 {
-    if (++m_Frame > 120)
+    if (++m_Frame > 140)
     {
+        new FightUI(0);
+
         DefCamera.SetNewState(new CameraStateGamePlay());
         p->SetState(new MatchPlay());
     }
@@ -277,6 +283,7 @@ void MatchState::MatchPlay::Execute(_Client_type_ptr p)
                 WinCharacter = it.first;
             }
         }
+        
 
         MyAssert(WinCharacter != nullptr, "タイムアップ時にキャラクタがいませんでした(ありえない!)");
 
@@ -361,14 +368,14 @@ void MatchState::ResetRound::Enter(_Client_type_ptr p)
     new FadeGameObject(
         COLORf(1, 0, 0, 0),
         40,
-        0,
+        5,
         30
         );
 }
 
 void MatchState::ResetRound::Execute(_Client_type_ptr p)
 {
-    if (++m_Frame == 40)
+    if (++m_Frame == 41)
     {
         DefGameObjMgr.SendMsg(GameObjectBase::MsgType::_RoundReset);
         DefCamera.SetNewState(new CameraStateGamePlay(true));

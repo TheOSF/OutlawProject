@@ -231,6 +231,7 @@
     <ClCompile Include="source\Render\System\SmalBufBlurRenderer.cpp" />
     <ClCompile Include="source\Stage\HitStageObject.cpp" />
     <ClCompile Include="source\Stage\PhysicsMeshObject.cpp" />
+    <ClCompile Include="source\UI\FightUI.cpp" />
     <ClCompile Include="source\UI\PlayerGauge.cpp" />
     <ClCompile Include="source\UI\RoundUI.cpp" />
     <ClCompile Include="source\utillity\ColorUtility.cpp" />
@@ -347,6 +348,7 @@
     <ClInclude Include="source\Render\System\SmalBufBlurRenderer.h" />
     <ClInclude Include="source\Stage\HitStageObject.h" />
     <ClInclude Include="source\Stage\PhysicsMeshObject.h" />
+    <ClInclude Include="source\UI\FightUI.h" />
     <ClInclude Include="source\UI\PlayerGauge.h" />
     <ClInclude Include="source\UI\RoundUI.h" />
     <ClInclude Include="source\utillity\Collision.h" />
