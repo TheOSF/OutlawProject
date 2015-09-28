@@ -189,13 +189,20 @@ void ComMoveControllClass::GetParams(Param& out, StrongType::Value st)
 
 void ComMoveControllClass::StateMove(Vector2& out)
 {
-    //目標に向かって移動
+    const float GoalOKlen = 2.0f; //ゴールとみなす距離(誤差の対処)
 
     //目標に到達していたらとまる
+    if (Vector3Distance(m_MoveTargetPos, m_pTennis->m_Params.pos) < GoalOKlen)
+    {
+        m_Count = (int)(m_Param.RunStop * 100.0f);
+        m_pStateFunc = &ComMoveControllClass::StateStop;
+    }
+    
 
     //目標に到達できない or 新目標があればそこに変更する
 
-    //
+
+    //目標に向かって移動
 }
 
 
@@ -203,4 +210,47 @@ void ComMoveControllClass::StateMove(Vector2& out)
 void ComMoveControllClass::StateStop(Vector2& out)
 {
 
+}
+
+
+Vector3 ComMoveControllClass::GetMoveTargetPos()
+{
+    Vector3 ret;
+
+    //テニス　＝　遠距離が有利なので、
+    //全キャラクタからもっとも遠い場所を算出するのがBest
+
+    //弱い場合、近い距離もたまに出しちゃう
+    
+    struct TargetInfo
+    {
+        bool      ok;
+        Vector3   pos;
+    };
+
+    TargetInfo targets[8];
+
+    const CharacterManager::CharacterMap& ChrMap = DefCharacterMgr.GetCharacterMap();
+
+    for (int i = 0; i < (int)ARRAYSIZE(targets); ++i)
+    {
+        //ランダムに座標を作成
+        targets[i].pos = Vector3(frand() - 0.5f, 0, frand() - 0.5f) * 50.f;
+        targets[i].pos += Vector3Normalize(targets[i].pos) * 5.0f;
+
+
+        //その点が良いかどうか
+        for (auto& it : ChrMap)
+        {
+            if (it.first == m_pTennis||
+                chr_func::isDie(it.first) )
+            {
+                continue;
+            }
+
+
+        }
+    }
+
+    return Vector3Zero;
 }

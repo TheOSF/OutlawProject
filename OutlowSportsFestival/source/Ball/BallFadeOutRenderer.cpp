@@ -51,7 +51,7 @@ void BallFadeOutRenderer::Render()
 
     m_pBallMesh->TransMatrix = m;
 
-    shader->SetValue("g_Color", Vector4(1, 1, 1, (float)m_Counter / (float)m_Delete_frame));
+    shader->SetValue("g_Color", Vector4(1, 1, 1, (float)(m_Counter) / (float)m_Delete_frame));
     m_pBallMesh->Render(shader, "forward");
 }
 

@@ -57,9 +57,12 @@ private:
     Param m_Param;
     void(ComMoveControllClass::*m_pStateFunc)(Vector2&);
 
-    int   m_Count;
+    int       m_Count;
+    Vector3   m_MoveTargetPos;
+
     TennisPlayer* const m_pTennis;
-public:
+
+    public:
 
     ComMoveControllClass(TennisPlayer* t);
     ~ComMoveControllClass();
@@ -72,4 +75,6 @@ public:
     void StateStop(Vector2& out);
 
     void SwitchAction();
+
+    Vector3 GetMoveTargetPos();
 };

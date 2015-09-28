@@ -170,6 +170,7 @@ void GameInitializer_DevelopMode::GameCreate()
         //ステージ作成
         pStageMesh = new iexMesh("DATA\\STAGE\\Stage.IMO");
 
+        //当たり判定のあるステージにする
         new HitStageObject(
             new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColor),
             new MeshCollider(pStageMesh, new MeshCollider::HitEvent)
@@ -179,9 +180,9 @@ void GameInitializer_DevelopMode::GameCreate()
         new StageSmokeEmitter(
             Vector3(-50,0,-50),
             Vector3(50, 5, 50),
-            0xFFFFA080,
-            30,
-            10
+            0x80FFA080,
+            120,
+            50
             );
 
     }
@@ -281,9 +282,6 @@ void GameInitializer_DevelopMode::GameCreate()
 
 
     {
-        const Vector3 DirLifhtVec(Vector3Normalize(Vector3(0.2f, -2, 0.5f)));
-        const Vector3 DirLifhtColor(0.2f, 0.25f, 0.25f);
-
         //ライティング設定
         
         {
@@ -300,7 +298,7 @@ void GameInitializer_DevelopMode::GameCreate()
             DirLight* D = new DirLight;
 
             D->param.color = Vector3(0.2f, 0.25f, 0.25f);
-            D->param.vec = DirLifhtVec;
+            D->param.vec = Vector3Normalize(Vector3(0.2f, -2, 0.5f));
             D->param.Shadow.visible = true;
             D->param.Shadow.Near = 5;
             D->param.Shadow.Far = 150;
