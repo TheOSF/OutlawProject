@@ -16,6 +16,8 @@
 #include "../UI/RoundUI.h"
 #include "../UI/FightUI.h"
 
+#include "../Sound/Sound.h"
+
 //----------------------------------------------------
 //  試合遷移メッセージを送信するクラス
 //----------------------------------------------------
@@ -222,7 +224,7 @@ void MatchState::MatchPlay::GetLiveCharacterMap(CharacterManager::CharacterMap& 
 
 void MatchState::MatchPlay::Enter(_Client_type_ptr p)
 {
-
+    Sound::Play(Sound::BGM_Battle, 1, true);
 }
 
 void MatchState::MatchPlay::Execute(_Client_type_ptr p)

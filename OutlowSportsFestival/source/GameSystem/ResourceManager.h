@@ -11,6 +11,8 @@ public:
     enum class MeshType
     {
         Sphere,
+        Pole,
+
         HitEffect,
 
         Amefoot_ball,

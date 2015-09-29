@@ -229,6 +229,7 @@
     <ClCompile Include="source\Render\System\DeferredLightBufRenderer.cpp" />
     <ClCompile Include="source\Render\System\DeferredLightManager.cpp" />
     <ClCompile Include="source\Render\System\SmalBufBlurRenderer.cpp" />
+    <ClCompile Include="source\Sound\Sound.cpp" />
     <ClCompile Include="source\Stage\HitStageObject.cpp" />
     <ClCompile Include="source\Stage\PhysicsMeshObject.cpp" />
     <ClCompile Include="source\UI\FightUI.cpp" />
@@ -346,6 +347,7 @@
     <ClInclude Include="source\Render\System\DeferredLightBufRenderer.h" />
     <ClInclude Include="source\Render\System\DeferredLightManager.h" />
     <ClInclude Include="source\Render\System\SmalBufBlurRenderer.h" />
+    <ClInclude Include="source\Sound\Sound.h" />
     <ClInclude Include="source\Stage\HitStageObject.h" />
     <ClInclude Include="source\Stage\PhysicsMeshObject.h" />
     <ClInclude Include="source\UI\FightUI.h" />

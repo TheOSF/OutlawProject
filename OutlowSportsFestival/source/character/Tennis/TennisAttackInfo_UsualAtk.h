@@ -80,4 +80,7 @@ private:
 
     //–ˆƒtƒŒ[ƒ€ŒÄ‚Î‚ê‚é
     void Update(int Frame, LocusHDR* pLocus);
+
+    //UŒ‚‚ª‚ ‚½‚Á‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
+    void HitAttack(DamageShpere* pDmg);
 };

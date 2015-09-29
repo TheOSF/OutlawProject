@@ -60,6 +60,66 @@ void DamageShpere::DebugDraw()
         );
 }
 
+DamageCapsure::DamageCapsure():
+m_Enable(true)
+{
+    m_Param.pos1 = Vector3Zero;
+    m_Param.pos2 = Vector3(0, 10, 0);
+}
+
+//ダメージクラス(カプセル)
+bool DamageCapsure::HitCheckSphere(const ShpereParam* sp)
+{
+    if (!m_Enable)
+    {
+        return false;
+    }
+
+    Vector3 v1 = sp->pos - m_Param.pos1;
+    Vector3 v2 = m_Param.pos2 - m_Param.pos1;
+
+    float v2l = v2.Length();
+
+    v2 /= v2l;
+
+    float l = Vector3Dot(v1, v2);
+
+    if (l < 0)
+    {
+        l = 0;
+    } 
+    else if (l > v2l)
+    {
+        l = v2l;
+    }
+
+    return Vector3Distance(sp->pos, m_Param.pos1 + v2*l) < sp->size;
+}
+
+void DamageCapsure::DebugDraw()
+{
+    COLORf color(0.4f, 1, 1, 1);
+
+    if (!m_Enable)
+    {
+        return;
+    }
+
+    if (pParent)
+    {
+        color.SetColor(CharacterBase::GetPlayerColor(pParent->m_PlayerInfo.number));
+        color.a = 0.4f;
+    }
+
+    new DebugDrawPole(
+        m_Param.pos1,
+        m_Param.pos2,
+        m_Param.width,
+        color
+        );
+}
+
+
 //*************************************************************
 //		ダメージ判定マネージャ
 //*************************************************************

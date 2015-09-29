@@ -2,7 +2,7 @@
 #include "CharacterFunction.h"
 #include "CharacterBase.h"
 #include "../Camera/Camera.h"
-
+#include "../Sound/Sound.h"
 
 
 CharacterDamageMotion::CharacterDamageMotion(
@@ -61,6 +61,9 @@ void CharacterDamageMotion::Update()
 
 		//スタートイベント呼び出し
 		m_pEvent->Start();
+
+        //サウンド
+        Sound::Play(Sound::Damage3);
 	}
 
 	//無敵フレーム判定

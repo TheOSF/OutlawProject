@@ -61,6 +61,7 @@
 #include "../Effect/ParticleManagerUpdater.h"
 
 
+
 static void CreateCharacter(
     PlayerNum::Value      n,
     PlayerType::Value     pl,
@@ -149,7 +150,7 @@ void GameInitializer_DevelopMode::GameCreate()
     {
 
         CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Tennis);
 
         CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Tennis);
         CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Tennis);
@@ -183,7 +184,7 @@ void GameInitializer_DevelopMode::GameCreate()
             D3DXMatrixRotationY(&m, PI);
             {
                 Matrix k;
-                D3DXMatrixScaling(&k, 0.32, 0.32, 0.32);
+                D3DXMatrixScaling(&k, 0.32f, 0.32f, 0.32f);
 
                 m *= k;
             }
@@ -252,6 +253,12 @@ void GameInitializer_DevelopMode::GameCreate()
         DefResource.Regist(
             Resource::MeshType::Sphere,
             new iexMesh("DATA\\Mesh\\sphere.imo")
+            );
+
+        //デバッグ描画用のカプセルメッシュ
+        DefResource.Regist(
+            Resource::MeshType::Pole,
+            new iexMesh("DATA\\Mesh\\Capsure.imo")
             );
     }
 

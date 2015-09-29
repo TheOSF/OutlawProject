@@ -17,6 +17,14 @@ struct ShpereParam
 	float		size;
 };
 
+//カプセルの構造体
+struct CapsureParam
+{
+    float       width;
+    Vector3		pos1;
+    Vector3		pos2;
+};
+
 //**************************************************************************
 //	ダメージクラス(コンストラクタ・デストラクタで自動的に登録・削除をする)
 //**************************************************************************
@@ -60,6 +68,28 @@ private:
 };
 
 //*************************************************************
+//	ダメージクラス(カプセル)
+//*************************************************************
+class DamageCapsure :public DamageBase
+{
+public:
+    bool			m_Enable;	//このダメージが有効かどうか
+    CapsureParam	m_Param;	//このダメージの球の構造体
+
+    DamageCapsure();
+private:
+    bool HitCheckSphere(const ShpereParam* sp);
+    void DebugDraw();
+};
+
+
+
+
+
+
+
+
+//*************************************************************
 //		ダメージ判定マネージャ
 //*************************************************************
 
@@ -89,6 +119,10 @@ public:
 
     //デバッグ描画を実行するかどうか
     bool m_DebugDrawVisible;
+
+
+
+
 private:
 	friend class DamageBase;
 	typedef std::map<DamageBase*, DamageBase*> DamageBaseMap;

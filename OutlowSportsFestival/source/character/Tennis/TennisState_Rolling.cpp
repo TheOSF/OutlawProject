@@ -3,7 +3,7 @@
 #include "TennisPlayerState_UsualMove.h"
 #include "Tennis_HitEvent.h"
 #include "../../Effect/EffectFactory.h"
-
+#include "../../Sound/Sound.h"
 
 TennisState_Rolling::TennisState_Rolling(CallBackClass* pCallBackClass) :
 m_pCallBackClass(pCallBackClass)
@@ -124,6 +124,13 @@ void TennisState_Rolling::Execute(TennisPlayer* t)
             }
         }
 
+    }
+
+    //サウンド
+    if (m_Timer == EndFrame - 25)
+    {
+        //ズザー音
+        Sound::Play(Sound::Sand1);
     }
 
     //基本的な更新

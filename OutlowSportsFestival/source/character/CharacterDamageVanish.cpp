@@ -3,7 +3,7 @@
 #include "CharacterBase.h"
 
 #include "../Effect/EffectFactory.h"
-
+#include "../Sound/Sound.h"
 
 CharacterDamageVanish::CharacterDamageVanish(
     CharacterBase*    pCharacter,//吹き飛ぶキャラクタ
@@ -56,6 +56,8 @@ void CharacterDamageVanish::Initialize()
     //移動更新
     chr_func::UpdateAll(m_pCharacter, &DamageManager::HitEventBase());
 
+    //サウンド
+    Sound::Play(Sound::Damage2);
 }
 
 void CharacterDamageVanish::Flying()
@@ -100,6 +102,9 @@ void CharacterDamageVanish::Flying()
         m_pEvent->DownStart();
         m_pStateFunc = &CharacterDamageVanish::Dowing;
         m_Count = 0;
+
+        //ズザー音
+        Sound::Play(Sound::Sand2);
     }
 }
 

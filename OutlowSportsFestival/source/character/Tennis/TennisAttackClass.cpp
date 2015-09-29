@@ -14,7 +14,8 @@ TennisAttackClass::TennisAttackClass(
     m_Timer(0),
     m_ComboCount(-1),
     m_pStateFunc(&TennisAttackClass::State_NextAtk),
-    m_Locus(7)
+    m_Locus(7),
+    m_DamageHitCount(0)
 {
     m_Damage.m_Enable = false;
 
@@ -76,6 +77,13 @@ void TennisAttackClass::State_Attack()
         pNowAtk->DamagePosSet(&m_Damage, m_pOwner);
     }
 
+    //攻撃ヒット関数の呼び出し
+    if (m_DamageHitCount != m_Damage.HitCount)
+    {
+        m_DamageHitCount = m_Damage.HitCount;
+        pNowAtk->HitAttack(&m_Damage);
+    }
+
     //角度更新
     RADIAN ControllRadian = 0;
 
@@ -132,6 +140,7 @@ void TennisAttackClass::State_NextAtk()
 
     m_Timer = 0;
     m_DoCombo = false;
+    m_DamageHitCount = 0;
 
     m_pStateFunc = &TennisAttackClass::State_Attack;
 }

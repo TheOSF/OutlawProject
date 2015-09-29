@@ -171,6 +171,7 @@
     <ClCompile Include="source\Effect\ParticleManager.cpp" />
     <ClCompile Include="source\Effect\ParticleManagerUpdater.cpp" />
     <ClCompile Include="source\UI\FightUI.cpp" />
+    <ClCompile Include="source\Sound\Sound.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -297,6 +298,7 @@
     <ClInclude Include="source\Effect\ParticleManager.h" />
     <ClInclude Include="source\Effect\ParticleManagerUpdater.h" />
     <ClInclude Include="source\UI\FightUI.h" />
+    <ClInclude Include="source\Sound\Sound.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

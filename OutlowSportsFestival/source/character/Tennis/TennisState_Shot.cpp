@@ -12,6 +12,7 @@
 #include "TennisPlayerState_UsualMove.h"
 
 #include "../../Effect/HitEffectObject.h"
+#include "../../Sound/Sound.h"
 
 
 TennisState_Shot::TennisState_Shot(
@@ -80,7 +81,7 @@ void TennisState_Shot::Execute(TennisPlayer* t)
     ++m_Timer;
 
     //打ちキャンセル
-    if (m_Timer > CancelStart && m_Timer < ShotFrame)
+    if (m_Timer > CancelStart && m_Timer < ShotFrame - 3)
     {        
         if (m_pControllClass->DoOtherAction())
         {
@@ -120,6 +121,13 @@ void TennisState_Shot::Execute(TennisPlayer* t)
         m_pUpBall->m_Damage.m_Enable = true;
         m_pUpBall->m_Params.type = BallBase::Type::_CantCounter;
     }
+    
+    //サウンド
+    if (m_Timer == ShotFrame - 3)
+    {
+        Sound::Play(Sound::Tennis_BallAtk);
+    }
+    
 
     //打つ！
     if (m_Timer == ShotFrame)
@@ -171,6 +179,9 @@ void TennisState_Shot::Execute(TennisPlayer* t)
             //上に上げたボールを消去
             m_pUpBall->m_DeleteFlag = true;
             m_pUpBall = nullptr;
+
+
+            
         }
     }
 

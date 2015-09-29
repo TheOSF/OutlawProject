@@ -18,7 +18,7 @@
 #include "../GameSystem/GameInitilizer_DevelopMode.h"
 
 #include "../Effect/ParticleManager.h"
-
+#include "../Sound/Sound.h"
 
 //*****************************************************************************************************************************
 //
@@ -42,13 +42,19 @@ bool sceneGamePlay::Initialize()
 
     Initializer->GameCreate();
 
+    delete Initializer;
+
     //法線・深度バッファを登録
     {
         shader->SetValue("NormalDepthMap",
             DefRendererMgr.GetNormalDepthTexture()->GetTexture());
     }
 
-    delete Initializer;
+    //サウンド初期化
+    {
+        Sound::Initialize();
+    }
+    
 
 	return true;
 }

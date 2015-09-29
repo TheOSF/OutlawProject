@@ -1,6 +1,6 @@
 #include "TennisAttackInfo_UsualAtk.h"
 #include "../CharacterFunction.h"
-
+#include "../../Sound/Sound.h"
 
 TennisAttackInfo_UsualAtk::TennisAttackInfo_UsualAtk(
     TennisPlayer* pOwner
@@ -98,6 +98,11 @@ bool TennisAttackInfo_UsualAtk::isCanAngleControll(int Frame, RADIAN& OutControl
 //引数のフレームが、ダメージ判定有効フレームかどうか
 bool TennisAttackInfo_UsualAtk::isDamageEnable(int Frame)
 {
+    if (Frame == m_Param.DamageEnableStart)
+    {
+        Sound::Play(Sound::Swing2);
+    }
+
     return 
         Frame >= m_Param.DamageEnableStart&&
         Frame <= m_Param.DamageEnableEnd;
@@ -116,4 +121,10 @@ void TennisAttackInfo_UsualAtk::Update(int Frame, LocusHDR* pLocus)
     {
         chr_func::AddMoveFront(m_pOwner, m_Param.MoveSpeed, 1000);
     }
+}
+
+//攻撃があたったときに呼ばれる
+void TennisAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
+{
+    
 }
