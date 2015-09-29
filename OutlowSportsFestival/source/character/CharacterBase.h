@@ -28,6 +28,7 @@ public:
 	struct Params
 	{
 		UINT                win;        //勝ったラウンド数
+        bool                camera_draw;//カメラに写すかどうか
 		Vector3				pos;		//座標
 		Vector3				move;		//移動量
 		float				hitScale;	//あたり判定の円の大きさ

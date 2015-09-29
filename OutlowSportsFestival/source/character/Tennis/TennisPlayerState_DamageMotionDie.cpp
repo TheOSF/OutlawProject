@@ -30,6 +30,7 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
         {
             //吹き飛びモーションをセット
             m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Damage_Vanish_Fly);
+            m_pTennis->m_Params.camera_draw = false;
         }
 
         void Flying(const Matrix& Rotate)
@@ -74,7 +75,8 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
 
         void End()
         {
-            //何もしない
+            //カメラ写すフラグをfalseに
+            m_pTennis->m_Params.camera_draw = false;
         }
 
     private:
@@ -84,7 +86,7 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
     //ダメージモーションパラメーターを作成する
     CharacterDamageVanish::Param Param;
 
-    Param.rotate_speed = Vector3(0.0f, 0.0f, 0.0);
+    Param.rotate_speed = Vector3(0.0f, 0.0f, 0.0f);
     Param.move = Vector3Normalize(m_Damage_vec) * 0.7f;
     Param.move.y = 0.2f;
 

@@ -149,7 +149,7 @@ void GameInitializer_DevelopMode::GameCreate()
     {
 
         CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Tennis);
 
         CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Tennis);
         CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Tennis);
@@ -176,6 +176,30 @@ void GameInitializer_DevelopMode::GameCreate()
             new MeshCollider(pStageMesh, new MeshCollider::HitEvent)
             );
 
+
+        {
+            iexMesh* pStageMesh = new IEXMESH("DATA\\tennis\\tennie.imo");
+            Matrix m;
+            D3DXMatrixRotationY(&m, PI);
+            {
+                Matrix k;
+                D3DXMatrixScaling(&k, 0.32, 0.32, 0.32);
+
+                m *= k;
+            }
+            
+
+            MeshRenderer* R =
+                new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColorSpecular);
+
+            R->SetMatrix(m);
+
+            //当たり判定のあるステージにする
+            new HitStageObject(
+                R,
+                new MeshCollider(pStageMesh, new MeshCollider::HitEvent)
+                );
+        }
 
         //ステージの煙の演出
         new StageSmokeEmitter(

@@ -141,10 +141,15 @@ void CharacterDefaultCounter::Pose()
 
 
     //基本的な更新
+    if (m_Count < m_Param.CanCounterFrame)
     {
         HitEventClass_NoBallDamageFileter BallDmgFilter(m_pHitEventClass);
 
         chr_func::UpdateAll(m_pOwner, &BallDmgFilter);
+    }
+    else
+    {
+        chr_func::UpdateAll(m_pOwner, m_pHitEventClass);
     }
 }
 

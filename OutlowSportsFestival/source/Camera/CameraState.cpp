@@ -61,13 +61,12 @@ void CameraStateGamePlay::Execute(Camera* c)
     c->m_Target += (center - c->m_Target)*m_TargetSpeed;
 
 
-
 	//どれだけカメラを引くかを算出する
 	for (auto it = chr_map.begin();
 		it != chr_map.end();
 		++it)
 	{
-		if (chr_func::isDie(it->first))continue;
+        if (it->first->m_Params.camera_draw == false)continue;
 		CrVector3 chrpos = it->first->m_Params.pos;
 
 		//カメラ注視点からの距離を求める
@@ -282,7 +281,7 @@ void CameraStateCharacterZoom::Enter(Camera* c)
 void CameraStateCharacterZoom::Execute(Camera* c)
 {
     const Vector3 target = m_pZoomCharacter->m_Params.pos + Vector3(0, 3, 0);
-    const Vector3 pos = target + Vector3(0, 0, -10);
+    const Vector3 pos = target + Vector3(0, 3, -10);
 
 
     c->m_Position += (pos - c->m_Position)*m_Speed;

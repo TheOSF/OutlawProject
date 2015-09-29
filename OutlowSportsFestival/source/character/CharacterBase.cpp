@@ -18,6 +18,7 @@ m_PlayerInfo(info)
 {
 
 	m_Params.win = 0;
+    m_Params.camera_draw = true;
 	m_Params.pos = Vector3Zero;
 	m_Params.move = Vector3Zero;
 	m_Params.hitScale = 1.5f;
@@ -78,5 +79,6 @@ void CharacterBase::ResetRound()
     m_Params.HP = m_Params.maxHP;
     m_Params.pos = DefCharacterMgr.GetRoundStartPos(m_PlayerInfo.number);
     m_Params.move = Vector3Zero;
+    m_Params.camera_draw = true;
     chr_func::AngleControll(this, Vector3(0, m_Params.pos.y, 0));
 }
