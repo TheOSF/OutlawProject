@@ -84,7 +84,7 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
     };
 
     //ダメージモーションパラメーターを作成する
-    CharacterDamageVanish::Param Param;
+    CharacterDamageVanish::Param  Param;
 
     Param.rotate_speed = Vector3(0.0f, 0.0f, 0.0f);
     Param.move = Vector3Normalize(m_Damage_vec) * 0.7f;
@@ -105,19 +105,17 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
         );
     
     {
-        Vector3 move_vec;
-
-        chr_func::GetFront(m_pTennis, &move_vec);
-        move_vec = -move_vec;
+        COLORf EffectColor(CharacterBase::GetPlayerColor(t->m_PlayerInfo.number));
 
         //ヒットエフェクト作成
         new HitEffectObject(
-            m_pTennis->m_Params.pos + Vector3(0, 3, 0) + move_vec*3.5f,
+            m_pTennis->m_Params.pos + Vector3(0, 3, 0) + Vector3Normalize(m_Damage_vec)*3.5f,
             m_Damage_vec,
             0.05f,
             0.15f,
-            Vector3(1.0f, 1.0f, 1.0f),
-            5
+            Vector3(EffectColor.r, EffectColor.g, EffectColor.b),
+            5,
+            50
             );
     }
 

@@ -78,6 +78,8 @@ class iexShader;
 #define	SCREEN720p	11
 #define	SCREEN800p	12
 
+#define SCREEN1900  3
+
 class iexSystem {
 private:
 	static LPDIRECT3D9				lpD3D;
@@ -383,6 +385,17 @@ inline Vector3 Vector3RotateAxis(const Vector& axis,float angle,const Vector& ro
 	return Vector3RotateQuaternion(q, rotate_vector);
 }
 
+//------------------------------------------------------
+//	”½ŽË
+//------------------------------------------------------
+
+inline Vector3 Vector3Refrect(const Vector& inVector, const Vector& Normal)
+{
+    const Vector3 nn = Vector3Normalize(Normal);
+    const float l = Vector3Dot(nn, inVector);
+
+    return nn * (l * -2.0f) + inVector;
+}
 
 //------------------------------------------------------
 //	ƒ‰ƒ“ƒ_ƒ€
@@ -425,6 +438,36 @@ inline to Vector3Trans(const from& v)
 	ret.y = v.y;
 	ret.z = v.z;
 	return ret;
+}
+
+
+
+//------------------------------------------------------
+//	‹…‚Ì‚ ‚½‚è”»’è
+//------------------------------------------------------
+inline bool isHitSphereCapsure(
+    CrVector3 sphere_pos,   float sphere_size, 
+    CrVector3 capsure_pos1, CrVector3 capsure_pos2, float capsure_width)
+{
+    Vector3 v1 = sphere_pos - capsure_pos1;
+    Vector3 v2 = capsure_pos2 - capsure_pos1;
+
+    float v2l = v2.Length();
+
+    v2 /= v2l;
+
+    float l = Vector3Dot(v1, v2);
+
+    if (l < 0)
+    {
+        l = 0;
+    }
+    else if (l > v2l)
+    {
+        l = v2l;
+    }
+
+    return Vector3Distance(sphere_pos, capsure_pos1 + v2*l) < sphere_size + capsure_width;
 }
 
 static const Vector3
@@ -836,6 +879,15 @@ typedef struct tagHdrLVERTEX {
     float	tu, tv;
 } HdrLVERTEX, *LpHdrLVERTEX;
 
+typedef struct tagVectorBlurVERTEX {
+    
+    Vector3 pos;
+    Vector3 to_pre_vec;
+    float	tu, tv;    //tu = tu * power
+
+} VectorBlurVERTEX, *LpVectorBlurVERTEX;
+
+
 
 class iexPolygon {
 public:
@@ -848,6 +900,9 @@ public:
     static void RectPlus(s32 DstX, s32 DstY, s32 DstW, s32 DstH, iexShader* shader, char* name, COLOR color, float z = .0f);
 
     static void PolygonRender3DHDR(LpHdrLVERTEX lpVertex, int Num, LPIEX2DOBJ lpObj, iexShader* shader, char* name);
+    static void PolygonRenderBlurVertex(LpVectorBlurVERTEX lpVertex, int Num, LPIEX2DOBJ lpObj, iexShader* shader, char* name);
+
+    
 };
 
 //*****************************************************************************************************************************

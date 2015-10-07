@@ -48,7 +48,7 @@ Texture2D* iexTexture::Load( char* filename, int flag )
 		//	ファイル名保存
 		CopyMemory( TexInfo[no].filename, filename, strlen(filename)+1 );
 		//	テクスチャ読み込み
-		hr = D3DXCreateTextureFromFileEx( iexSystem::GetDevice(), filename, D3DX_DEFAULT, D3DX_DEFAULT, 1, 0,
+		hr = D3DXCreateTextureFromFileEx( iexSystem::GetDevice(), filename, D3DX_DEFAULT, D3DX_DEFAULT, 3, 0,
 										fmt, D3DPOOL_DEFAULT,
 										D3DX_FILTER_POINT, D3DX_FILTER_POINT,
 										0x00000000, NULL, NULL, &TexInfo[no].lpTexture );

@@ -1,8 +1,69 @@
 #include "SoccerPlayerState.h"
+#include "SoccerCommonState.h"
+#include "SoccerHitEvent.h"
+#include "SoccerRolling.h"
+#include "Snakeshot.h"
+
+#include "../CharacterDefaultCounterClass.h"
 #include "../../GameSystem/GameController.h"
+#include "../../Ball/MilderHoming.h"
+#include "../CharacterManager.h"
 #include "../CharacterFunction.h"
 #include "../CharacterBase.h"
 
+
+//ローリングの方向制御クラス
+class PlayerRollingControll :public SoccerState_Rolling::CallBackClass
+{
+public:
+	SoccerPlayer*const ps;
+
+	PlayerRollingControll(SoccerPlayer* ps) :ps(ps){}
+
+
+	Vector3 GetVec()override
+	{
+		Vector2 stick = controller::GetStickValue(controller::stick::left, ps->m_PlayerInfo.number);
+		Vector3 vec(stick.x, 0, stick.y);
+
+		if (vec.Length() < 0.25f)
+		{
+			return Vector3Zero;
+		}
+
+		vec = Vector3MulMatrix3x3(vec, matView);
+		vec.Normalize();
+
+		return vec;
+	}
+};
+
+SoccerState* SoccerState_PlayerControll_Move::GetPlayerControllMove(
+	SoccerPlayer* ps)
+{
+	switch (ps->m_PlayerInfo.player_type)
+	{
+	case PlayerType::_Player:
+		return new SoccerState_PlayerControll_Move();
+
+	case PlayerType::_Computer:
+		switch (ps->m_PlayerInfo.strong_type)
+		{
+		case StrongType::_Weak:
+			//return new 弱い通常移動
+		case StrongType::_Usual:
+			//return new 弱い通常移動
+		case StrongType::_Strong:
+			//return new 弱い通常移動
+		default:break;
+		}
+	default:break;
+	}
+
+	assert("通常ステートが作成できないキャラクタタイプです TennisState_PlayerControll_Move::GetPlayerControllMove" && 0);
+	return nullptr;
+}
+//-------------移動ステートクラス-------------
 void SoccerState_PlayerControll_Move::Enter(SoccerPlayer* s)
 {
 	class SoccerMoveEvent :public CharacterUsualMove::MoveEvent
@@ -12,16 +73,17 @@ void SoccerState_PlayerControll_Move::Enter(SoccerPlayer* s)
 		SoccerMoveEvent(SoccerPlayer* pSoccer) :
 			m_pSoccer(pSoccer){}
 
+		//アニメーションの更新
 		void Update(bool isRun, RATIO speed_ratio)
 		{
 			m_pSoccer->m_Renderer.Update(1);
 		}
-
+		//走り始めにモーションをセット
 		void RunStart()
 		{
 			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Run);
 		}
-
+		//立ちはじめにモーションをセット
 		void StandStart()
 		{
 			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Stand);
@@ -35,30 +97,45 @@ void SoccerState_PlayerControll_Move::Enter(SoccerPlayer* s)
 	p.TurnSpeed = 0.3f;
 	p.DownSpeed = 0.2f;
 
-	m_pMoveClass = new CharacterUsualMove(s, p, new SoccerMoveEvent(s),new DamageManager::HitEventBase());
+	m_pMoveClass = new CharacterUsualMove(
+		s, 
+		p, 
+		new SoccerMoveEvent(s),
+		new SoccerHitEvent(s));
 }
 void SoccerState_PlayerControll_Move::Execute(SoccerPlayer* s)
 {
 	Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
-	// [×] で スライディング
+	
+
+	m_pMoveClass->SetStickValue(st);
+	m_pMoveClass->Update();
+
+
+	// [×] で ローリング
 	if (controller::GetTRG(controller::button::batu, s->m_PlayerInfo.number))
 	{
-		s->SetState(new SoccerState_PlayerControll_Sliding);
+		s->SetState(new SoccerState_Rolling(new PlayerRollingControll(s),false));
 	}
 	// [□] で 格闘
 	if (controller::GetTRG(controller::button::shikaku, s->m_PlayerInfo.number))
 	{
-		s->SetState(new SoccerState_PlayerControll_Attack);
+		s->SetState(new SoccerState_PlayerControll_Attack(s));
 	}
 	// [△] で ショット
 	if (controller::GetTRG(controller::button::sankaku, s->m_PlayerInfo.number))
 	{
 		s->SetState(new SoccerState_PlayerControll_Shot);
 	}
+	// [〇] で 必殺技
+	if (controller::GetTRG(controller::button::maru, s->m_PlayerInfo.number))
+	{
+		s->SetState(new SoccerState_PlayerControll_Finisher);
+	}
 	// [R1] で カウンター
 	if (controller::GetTRG(controller::button::_R1, s->m_PlayerInfo.number))
 	{
-		//s->SetState(new SoccerState_PlayerControll_Counter());
+		s->SetState(new SoccerState_PlayerControll_Counter());
 	}
 	// [L1] で 固有技(ダッシュ)
 	if (controller::GetTRG(controller::button::_L1, s->m_PlayerInfo.number))
@@ -66,8 +143,6 @@ void SoccerState_PlayerControll_Move::Execute(SoccerPlayer* s)
 		s->SetState(new SoccerState_PlayerControll_Dash());
 	}
 
-	m_pMoveClass->SetStickValue(st);
-	m_pMoveClass->Update();
 
 	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
 }
@@ -75,226 +150,275 @@ void SoccerState_PlayerControll_Move::Exit(SoccerPlayer* s)
 {
 	delete m_pMoveClass;
 }
-void SoccerState_PlayerControll_Sliding::Enter(SoccerPlayer* s)
+
+//-------------スライディングステートクラス-------------
+SoccerState_PlayerControll_Sliding::PlayerControllEvent::PlayerControllEvent(SoccerPlayer*const pSoccer) :
+m_pSoccer(pSoccer)
 {
 
-	SoccerSliding::Params p;
-	p.speed = 0.5f;
-	p.damage = 1;
+}
+bool SoccerState_PlayerControll_Sliding::PlayerControllEvent::isDoCombo()
+{
+	return controller::GetTRG(controller::button::shikaku, m_pSoccer->m_PlayerInfo.number);
+}
+void SoccerState_PlayerControll_Sliding::PlayerControllEvent::AngleControll(RADIAN angle)
+{
+	const CharacterBase* const pTargetCharacter = GetFrontTargetEnemy();
 
-	m_pSlidingClass = new SoccerSliding(p,s);
-	m_pSlidingClass->Start();
+	if (pTargetCharacter != nullptr)
+	{
+		//自動回転
+		chr_func::AngleControll(m_pSoccer, pTargetCharacter->m_Params.pos, angle);
+	}
+	else
+	{
+		const Vector2 Stick = controller::GetStickValue(controller::stick::left, m_pSoccer->m_PlayerInfo.number);
+
+		//スティックが一定以上倒されているかどうか
+		if (Vector2Length(Stick) > 0.25f)
+		{
+			Vector3 Vec(Stick.x, 0, Stick.y);
+
+			//スティック値をカメラ空間に
+			Vec = Vector3MulMatrix3x3(Vec, matView);
+
+			//キャラクタ回転
+			chr_func::AngleControll(m_pSoccer, m_pSoccer->m_Params.pos + Vec, angle);
+		}
+	}
+}
+
+const CharacterBase* SoccerState_PlayerControll_Sliding::PlayerControllEvent::GetFrontTargetEnemy()
+{
+	CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
+
+	const float  AutoDistance = 10.0f;               //自動ができる最大距離
+	const RADIAN AutoMaxAngle = D3DXToRadian(90);   //自動ができる最大角度
+
+	const CharacterBase* pTargetEnemy = nullptr;    //ターゲット保持のポインタ
+	RADIAN MostMinAngle = PI;                       //もっとも狭い角度
+	RADIAN TempAngle;
+
+	Vector3 MyFront;      //自身の前方ベクトル
+	chr_func::GetFront(m_pSoccer, &MyFront);
+
+	auto it = ChrMap.begin();
+
+	while (it != ChrMap.end())
+	{
+		//自身を除外
+		if (m_pSoccer->m_PlayerInfo.number == it->first->m_PlayerInfo.number ||
+			chr_func::isDie(it->first)
+			)
+		{
+			++it;
+			continue;
+		}
+
+		//距離が一定以上のキャラクタを除外する
+		if (Vector3Distance(it->first->m_Params.pos, m_pSoccer->m_Params.pos) > AutoDistance)
+		{
+			it = ChrMap.erase(it);
+			continue;
+		}
+
+		//前ベクトルと敵へのベクトルの角度を計算する
+		TempAngle = Vector3Radian(MyFront, (it->first->m_Params.pos - m_pSoccer->m_Params.pos));
+
+		//角度が一番狭かったら更新
+		if (TempAngle < MostMinAngle)
+		{
+			pTargetEnemy = it->first;
+			MostMinAngle = TempAngle;
+		}
+
+		++it;
+	}
+
+	return pTargetEnemy;
+
+}
+//-------------スライディング攻撃ステートクラス-------------
+SoccerState_PlayerControll_Sliding::SoccerState_PlayerControll_Sliding(SoccerPlayer* s) :
+m_Attack(s, new PlayerControllEvent(s))
+{
+
+}
+
+
+SoccerState_PlayerControll_Sliding::~SoccerState_PlayerControll_Sliding()
+{
+
+}
+void SoccerState_PlayerControll_Sliding::Enter(SoccerPlayer* s)
+{
+	//攻撃クラス作成
+	SoccerAttackInfo_UsualAtk* pAtk;
+
+	SoccerAttackInfo_UsualAtk::Param AtkParam[] =
+	{
+		{ 6, 1.0f, 1.5f, DamageBase::Type::_VanishDamage, 5, 22, 0.17f, 5, 10, SoccerPlayer::_ms_Rolling, 35, 20, 27, 35, 0, 2, D3DXToRadian(0), 12 },
+	};
+
+	for (int i = 0; i < (int)ARRAYSIZE(AtkParam); ++i)
+	{
+		pAtk = new SoccerAttackInfo_UsualAtk(s);
+
+		pAtk->m_Param = AtkParam[i];
+
+		m_Attack.m_AttackInfoArray.push_back(pAtk);
+	}
 }
 void SoccerState_PlayerControll_Sliding::Execute(SoccerPlayer* s)
 {
-	m_pSlidingClass->Update();
-	if (m_pSlidingClass->is_End())
+	m_Attack.Update();
+
+	if (m_Attack.isEnd())
 	{
-		s->SetState(new SoccerState_PlayerControll_Move);
+		s->SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(s));
 	}
-	
-	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
 }
 void SoccerState_PlayerControll_Sliding::Exit(SoccerPlayer* s)
 {
 
-	delete m_pSlidingClass;
+}
+
+//------------プレイヤー操作の攻撃操作クラス--------------
+
+SoccerState_PlayerControll_Attack::PlayerControllEvent::PlayerControllEvent(SoccerPlayer*const pSoccer) :
+m_pSoccer(pSoccer)
+{
+
+}
+
+bool SoccerState_PlayerControll_Attack::PlayerControllEvent::isDoCombo()
+{
+	return controller::GetTRG(controller::button::shikaku, m_pSoccer->m_PlayerInfo.number);
+}
+
+void SoccerState_PlayerControll_Attack::PlayerControllEvent::AngleControll(RADIAN angle)
+{
+	const CharacterBase* const pTargetCharacter = GetFrontTargetEnemy();
+
+	if (pTargetCharacter != nullptr)
+	{
+		//自動回転
+		chr_func::AngleControll(m_pSoccer, pTargetCharacter->m_Params.pos, angle);
+	}
+	else
+	{
+		const Vector2 Stick = controller::GetStickValue(controller::stick::left, m_pSoccer->m_PlayerInfo.number);
+
+		//スティックが一定以上倒されているかどうか
+		if (Vector2Length(Stick) > 0.25f)
+		{
+			Vector3 Vec(Stick.x, 0, Stick.y);
+
+			//スティック値をカメラ空間に
+			Vec = Vector3MulMatrix3x3(Vec, matView);
+
+			//キャラクタ回転
+			chr_func::AngleControll(m_pSoccer, m_pSoccer->m_Params.pos + Vec, angle);
+		}
+	}
+}
+
+const CharacterBase* SoccerState_PlayerControll_Attack::PlayerControllEvent::GetFrontTargetEnemy()
+{
+	CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
+
+	const float  AutoDistance = 10.0f;               //自動ができる最大距離
+	const RADIAN AutoMaxAngle = D3DXToRadian(90);   //自動ができる最大角度
+
+	const CharacterBase* pTargetEnemy = nullptr;    //ターゲット保持のポインタ
+	RADIAN MostMinAngle = PI;                       //もっとも狭い角度
+	RADIAN TempAngle;
+
+	Vector3 MyFront;      //自身の前方ベクトル
+	chr_func::GetFront(m_pSoccer, &MyFront);
+
+	auto it = ChrMap.begin();
+
+	while (it != ChrMap.end())
+	{
+		//自身を除外
+		if (m_pSoccer->m_PlayerInfo.number == it->first->m_PlayerInfo.number ||
+			chr_func::isDie(it->first)
+			)
+		{
+			++it;
+			continue;
+		}
+
+		//距離が一定以上のキャラクタを除外する
+		if (Vector3Distance(it->first->m_Params.pos, m_pSoccer->m_Params.pos) > AutoDistance)
+		{
+			it = ChrMap.erase(it);
+			continue;
+		}
+
+		//前ベクトルと敵へのベクトルの角度を計算する
+		TempAngle = Vector3Radian(MyFront, (it->first->m_Params.pos - m_pSoccer->m_Params.pos));
+
+		//角度が一番狭かったら更新
+		if (TempAngle < MostMinAngle)
+		{
+			pTargetEnemy = it->first;
+			MostMinAngle = TempAngle;
+		}
+
+		++it;
+	}
+
+	return pTargetEnemy;
+
+}
+
+//-------------近距離攻撃ステートクラス-------------
+SoccerState_PlayerControll_Attack::SoccerState_PlayerControll_Attack(SoccerPlayer* s) :
+m_Attack(s, new PlayerControllEvent(s))
+{
+
+}
+
+
+SoccerState_PlayerControll_Attack::~SoccerState_PlayerControll_Attack()
+{
+
 }
 void SoccerState_PlayerControll_Attack::Enter(SoccerPlayer* s)
 {
-	
-	class SoccerAttackEvent :public CharacterNearAttack::AttackEvent
+	//攻撃クラス作成
+	SoccerAttackInfo_UsualAtk* pAtk;
+
+	SoccerAttackInfo_UsualAtk::Param AtkParam[] =
 	{
-		SoccerPlayer* m_pSoccer;
-		DamageShpere m_damage;
-	public:
-		SoccerAttackEvent(SoccerPlayer* pSoccer) :
-			m_pSoccer(pSoccer){
-
-			m_damage.pParent = m_pSoccer;
-			m_damage.pBall = NULL;
-			m_damage.type = DamageBase::_WeekDamage;
-			m_damage.Value = 20.0f;
-			m_damage.m_Enable = false;
-		}
-
-		void Update()
-		{
-			m_pSoccer->m_Renderer.Update(1);
-		}
-
-		void AttackStart()
-		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Atk1);
-		}
-
-		void AttackEnd()
-		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Stand);
-		}
-		void Assault()
-		{
-			m_damage.m_Enable = true;
-		}
+		{ 6, 1.0f, 1.5f, DamageBase::Type::_WeekDamage, 15, 22, 0.07f, 5, 10, SoccerPlayer::_ms_Atk1, 35, 20, 27, 35, 0, 15, D3DXToRadian(5), 12 },
+		{ 2, 1.0f, 1.5f, DamageBase::Type::_WeekDamage, 5, 8, 0.02f, 1, 5, SoccerPlayer::_ms_Atk2, 20, 5, 15, 20, 0, 5, D3DXToRadian(5), 12 },
+		{ 8, 1.0f, 1.5f, DamageBase::Type::_VanishDamage, 8, 16, 0.05f, 1, 6, SoccerPlayer::_ms_Atk3, 40, -1, -1, -1, 0, 8, D3DXToRadian(5), 12 },
 	};
-	
 
+	for (int i = 0; i < (int)ARRAYSIZE(AtkParam); ++i)
+	{
+		pAtk = new SoccerAttackInfo_UsualAtk(s);
 
-	p.TurnSpeed = 0.1f;
-	p.AttackFrame = 15;
-	p.EndFrame = 35;
-	p.damage = 20;
-	p.speed = 0.2f;
-	p.CanHitNum = 1;
-	p.HitCenter = 0.5f;
+		pAtk->m_Param = AtkParam[i];
 
-	timer = 0;
-
-	m_pMoveClass = new CharacterNearAttack(s, p, new SoccerAttackEvent(s), DamageBase::Type::_WeekDamage, 1);
+		m_Attack.m_AttackInfoArray.push_back(pAtk);
+	}
 }
-
 void SoccerState_PlayerControll_Attack::Execute(SoccerPlayer* s)
 {
-	Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
-	timer++;
+	m_Attack.Update();
 
-	m_pMoveClass->SetStickValue(st);
-	
-	if (!m_pMoveClass->Update())
+	if (m_Attack.isEnd())
 	{
-		s->SetState(new SoccerState_PlayerControll_Move);
+		s->SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(s));
 	}
-	if (timer>p.AttackFrame && timer < p.EndFrame && controller::GetTRG(controller::button::shikaku, s->m_PlayerInfo.number))
-	{
-		s->SetState(new SoccerState_PlayerControll_AttackCombo);
-	}
-	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
-	
 }
 void SoccerState_PlayerControll_Attack::Exit(SoccerPlayer* s)
 {
-	delete m_pMoveClass;
-}
-void SoccerState_PlayerControll_AttackCombo::Enter(SoccerPlayer* s)
-{
-	class SoccerAttackEvent :public CharacterNearAttack::AttackEvent
-	{
-		SoccerPlayer* m_pSoccer;
-	public:
-		SoccerAttackEvent(SoccerPlayer* pSoccer) :
-			m_pSoccer(pSoccer){}
-
-		void Update()
-		{
-			m_pSoccer->m_Renderer.Update(1);
-		}
-
-		void AttackStart()
-		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Atk2);
-		}
-
-		void AttackEnd()
-		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Stand);
-		}
-		void Assault()
-		{
-
-		}
-	};
-
-	p.TurnSpeed = 0.1f;
-	p.AttackFrame = 15;
-	p.EndFrame = 35;
-	p.damage = 20;
-	p.speed = 0.2f;
-
-	timer = 0;
-
-	m_pMoveClass = new CharacterNearAttack(s, p, new SoccerAttackEvent(s), DamageBase::Type::_WeekDamage, 1);
-}
-void SoccerState_PlayerControll_AttackCombo::Execute(SoccerPlayer* s)
-{
-	Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
-	timer++;
-
-	m_pMoveClass->SetStickValue(st);
-	if (!m_pMoveClass->Update())
-	{
-		s->SetState(new SoccerState_PlayerControll_Move);
-	}
-	if (timer>p.AttackFrame && timer < p.EndFrame && controller::GetTRG(controller::button::shikaku, s->m_PlayerInfo.number))
-	{
-		s->SetState(new SoccerState_PlayerControll_AttackFinish);
-	}
-
-	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
 	
-}
-void SoccerState_PlayerControll_AttackCombo::Exit(SoccerPlayer* s)
-{
-	delete m_pMoveClass;
-}
-void SoccerState_PlayerControll_AttackFinish::Enter(SoccerPlayer* s)
-{
-	class SoccerAttackEvent :public CharacterNearAttack::AttackEvent
-	{
-		SoccerPlayer* m_pSoccer;
-	public:
-		SoccerAttackEvent(SoccerPlayer* pSoccer) :
-			m_pSoccer(pSoccer){}
-
-		void Update()
-		{
-			m_pSoccer->m_Renderer.Update(1);
-		}
-
-		void AttackStart()
-		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Atk3);
-		}
-
-		void AttackEnd()
-		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Stand);
-		}
-		void Assault()
-		{
-
-		}
-	};
-
-	p.TurnSpeed = 0.1f;
-	p.AttackFrame = 15;
-	p.EndFrame = 35;
-	p.damage = 20;
-	p.speed = 0.2f;
-
-	timer = 0;
-
-	p.TurnSpeed = 0.1f;
-
-	m_pMoveClass = new CharacterNearAttack(s, p, new SoccerAttackEvent(s), DamageBase::Type::_WeekDamage, 1);
-}
-void SoccerState_PlayerControll_AttackFinish::Execute(SoccerPlayer* s)
-{
-	
-	Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
-	timer++;
-
-	m_pMoveClass->SetStickValue(st);
-	if (!m_pMoveClass->Update())
-	{
-		s->SetState(new SoccerState_PlayerControll_Move);
-	}
-
-	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
-
-}
-void SoccerState_PlayerControll_AttackFinish::Exit(SoccerPlayer* s)
-{
-	delete m_pMoveClass;
 }
 void SoccerState_PlayerControll_Shot::Enter(SoccerPlayer* s)
 {
@@ -401,97 +525,95 @@ void SoccerState_PlayerControll_Shot::Exit(SoccerPlayer* s)
 }
 void SoccerState_PlayerControll_Counter::Enter(SoccerPlayer* s)
 {
+	//カウンターイベントクラス
+	class CounterEvent :public CharacterDefaultCounter::Event
+	{
+		SoccerPlayer* const m_pSoccer;
+	public:
+		CounterEvent(SoccerPlayer* pTennis) :
+			m_pSoccer(pTennis)
+		{
+
+		}
+
+		//構え開始
+		void Pose()
+		{
+			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Counter);
+		}
+
+		//ボールへ移動開始
+		void Move(BallBase* pCounterBall)
+		{
+			//ボールの位置によってモーション分岐
+			if (chr_func::isRight(m_pSoccer, pCounterBall->m_Params.pos))
+			{
+				m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Shot);
+			}
+			else
+			{
+				m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Shot);
+			}
+		}
+
+		//打つ
+		void Shot(BallBase* pCounterBall)
+		{
+			chr_func::ResetMove(m_pSoccer);
+			chr_func::AddMoveFront(m_pSoccer, -0.15f, 1000);
+		}
+
+		//打ち失敗
+		void ShotFaild()
+		{
+			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Crap);
+		}
+
+		//終了
+		void End()
+		{
+			//通常移動クラスへ
+			m_pSoccer->SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(m_pSoccer));
+		}
+	};
+
+	//カウンターパラメータ設定
+	CharacterDefaultCounter::Param param;
+
+	param.AfterShotFrame = 15;
+	param.CanCounterFrame = 30;
+	param.CatchAriaSize = 8;
+	param.ControllRadian = D3DXToRadian(33);
+	param.FailedFrame = 20;
+	param.PoseFrame = 60;
+	param.ShotFrame = 6;
+	param.BallSpeed = 0.85f;
+
 	// カウンタークラス作成
-	m_pCounterClass = CreateCounterClass(s);
+	m_pCounter = new CharacterDefaultCounter(
+		s,
+		param,
+		new CounterEvent(s),
+		new SoccerHitEvent(s)
+		);
 }
 void SoccerState_PlayerControll_Counter::Execute(SoccerPlayer* s)
 {
-	
+	m_pCounter->SetStickValue(controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number));
+	//更新
+	m_pCounter->Update();
+
+	//モデルのワールド変換行列を更新
+	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
+
+	//モデル更新
+	s->m_Renderer.Update(1);
 }
 void SoccerState_PlayerControll_Counter::Exit(SoccerPlayer* s)
 {
-	delete m_pCounterClass;
+	delete m_pCounter;
 }
-CharacterCounter* SoccerState_PlayerControll_Counter::CreateCounterClass(SoccerPlayer* s)
-{
-	class SoccerCounterEvent :public CharacterCounter::CounterEvent
-	{
-		SoccerPlayer* m_pSoccer;
-		int m_CounterLevel;
-	public:
-		SoccerCounterEvent(SoccerPlayer* pSoccer) :
-			m_pSoccer(pSoccer),
-			m_CounterLevel(0){};
 
-		// 更新
-		void Update()override
-		{
-			// モデル更新
-			m_pSoccer->m_Renderer.Update(1);
-
-			// 転送行列更新
-			chr_func::CreateTransMatrix(
-				m_pSoccer,
-				0.05f,
-				&m_pSoccer->m_Renderer.m_TransMatrix);
-		}
-
-		// 構え開始
-		void PoseStart()override
-		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Counter);
-		}
-
-		// 構え終了
-		void PoseEnd()override
-		{// カウンター
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Shot2);
-		}
-
-		// カウンターできるボールが現れた
-		void BallEnter()override
-		{
-
-		}
-
-		// レベルアップ
-		void LevelUp(int level)override
-		{
-			m_CounterLevel = level;
-		}
-
-		// カウンター開始
-		void SwingStart()override
-		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Counter);
-		}
-
-		// カウンター終了
-		void SwingEnd()override
-		{// 通常移動へ
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Stand);
-			m_pSoccer->SetState(new SoccerState_PlayerControll_Move());
-		}
-
-		// 打ち返したとき
-		void HitBall(bool is_just)override
-		{
-			//MyDebugString("Hit Ball.\n");
-		}
-	};
-	// パラメータ設定
-	CharacterCounter::CounterParams p;
-
-	p.MaxPoseFrame = 60;
-	p.LevelUpFrame = 45;
-	p.MoveDownSpeed = 0.2f;
-
-	return new CharacterCounter(
-		s,
-		p,
-		new SoccerCounterEvent(s)
-		);
-}
 void SoccerState_PlayerControll_Dash::Enter(SoccerPlayer* s)
 {
 	class SoccerDashEvent :public SoccerDash::MoveEvent
@@ -503,7 +625,7 @@ void SoccerState_PlayerControll_Dash::Enter(SoccerPlayer* s)
 
 		void Update(bool isRun, RATIO speed_ratio)
 		{
-			m_pSoccer->m_Renderer.Update(1);
+			m_pSoccer->m_Renderer.Update(1.5f);
 		}
 
 		void RunStart()
@@ -520,9 +642,11 @@ void SoccerState_PlayerControll_Dash::Enter(SoccerPlayer* s)
 	SoccerDash::Params p;
 
 	p.Acceleration = 0.2f;
-	p.MaxSpeed = 0.7f;
-	p.TurnSpeed = 0.03f;
+	p.MaxSpeed = 0.5f;
+	p.TurnSpeed = 0.02f;
 	p.DownSpeed = 0.2f;
+
+
 
 	m_pMoveClass = new SoccerDash(s, p, new SoccerDashEvent(s), new DamageManager::HitEventBase());
 }
@@ -539,6 +663,21 @@ void SoccerState_PlayerControll_Dash::Execute(SoccerPlayer* s)
 	{
 		m_pMoveClass->SetStickValue(st);
 	}
+	// [△] で ショット
+	if (controller::GetTRG(controller::button::sankaku, s->m_PlayerInfo.number))
+	{
+		s->SetState(new SoccerState_PlayerControll_Shot);
+	}
+	// [×] で ローリング
+	if (controller::GetTRG(controller::button::batu, s->m_PlayerInfo.number))
+	{
+		s->SetState(new SoccerState_Rolling(new PlayerRollingControll(s),true));
+	}
+	// [□] で スライディング
+	if (controller::GetTRG(controller::button::shikaku, s->m_PlayerInfo.number))
+	{
+		s->SetState(new SoccerState_PlayerControll_Sliding(s));
+	}
 
 	
 	m_pMoveClass->Update();
@@ -547,5 +686,111 @@ void SoccerState_PlayerControll_Dash::Execute(SoccerPlayer* s)
 }
 void SoccerState_PlayerControll_Dash::Exit(SoccerPlayer* s)
 {
+	
 	delete m_pMoveClass;
 }
+
+void SoccerState_SmallDamage(SoccerPlayer* s)
+{
+
+}
+SoccerState_PlayerControll_Finisher::SoccerState_PlayerControll_Finisher() :
+m_pSnakeShotClass(nullptr)
+{
+
+}
+void SoccerState_PlayerControll_Finisher::Enter(SoccerPlayer* s)
+{
+	m_pSnakeShotClass = this->SnakeShotClass(s);
+}
+void SoccerState_PlayerControll_Finisher::Execute(SoccerPlayer* s)
+{
+	m_pSnakeShotClass->SetStickValue(
+		controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number));
+
+	// 更新
+	if (m_pSnakeShotClass->Update() == false)
+	{
+		return;
+	}
+
+}
+void SoccerState_PlayerControll_Finisher::Exit(SoccerPlayer* s)
+{
+	delete m_pSnakeShotClass;
+}
+//　遠距離クラス
+CharacterShotAttack* SoccerState_PlayerControll_Finisher::SnakeShotClass(SoccerPlayer* s){
+	class ShotAttackEvent :public CharacterShotAttack::Event{
+		SoccerPlayer* m_pSoccer;//　野球
+		Snakeshot* snake;
+	public:
+		//　ボール
+		BallBase::Params param;
+		//　ターゲット
+		Vector3 target;
+	public:
+		//　コンストラクタ
+		ShotAttackEvent(SoccerPlayer* pSoccer) :target(0, 0, 0),
+			m_pSoccer(pSoccer){}
+		//　更新
+		void Update()override{
+			//　モデル更新
+			m_pSoccer->m_Renderer.Update(1.0f);
+
+			// 転送行列更新
+			chr_func::CreateTransMatrix(
+				m_pSoccer,
+				0.05f,
+				&m_pSoccer->m_Renderer.m_TransMatrix);
+		}
+	public:
+		// ダメージ判定開始 & ボール発射
+		void Shot()
+		{
+			//　遠距離攻撃(param計算)
+			BallBase::Params param;
+
+			chr_func::GetFront(m_pSoccer, &param.move);
+			
+			param.pos = m_pSoccer->m_Params.pos;
+			param.pos.y = UsualBall::UsualBallShotY;
+
+			param.pParent = m_pSoccer;
+			param.scale = 1.0f;
+			param.type = BallBase::Type::_Usual;
+
+			//生成
+			new Snakeshot(param, 1);
+		}
+
+		//　遠距離攻撃開始
+		void AttackStart()override{
+			//　☆モーション
+			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Shot);
+		}
+
+		void AttackEnd()
+		{
+			//攻撃終了時に通常移動モードに戻る
+			m_pSoccer->SetState(new SoccerState_PlayerControll_Move());
+		}
+	};
+
+	CharacterShotAttack::AttackParams atk;
+
+	atk.AllFrame = 40;
+	atk.AttackPower = 8;
+	atk.MaxTurnRadian = PI / 4;
+	atk.MoveDownSpeed = 0.8f;
+	atk.ShotFrame = 15;
+
+	return m_pSnakeShotClass = new CharacterShotAttack(
+		s,
+		new ShotAttackEvent(s),
+		atk,
+		new  SoccerHitEvent(s)
+		);
+}
+
+

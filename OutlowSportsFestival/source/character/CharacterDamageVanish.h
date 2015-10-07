@@ -54,6 +54,7 @@ private:
     Vector3         m_Rotate;
     Event*          m_pEvent;      // ƒCƒxƒ“ƒg
     int             m_Count;
+    bool            m_WallHit;
 
     void(CharacterDamageVanish::*m_pStateFunc)();
 

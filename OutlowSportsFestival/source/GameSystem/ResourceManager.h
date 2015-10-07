@@ -19,8 +19,12 @@ public:
         BaseBall_ball,
         Lacrosse_ball,
         Soccer_ball,
+        Soccer_Special_Hit,
+
         Tennis_ball,
         Volley_ball,
+
+
 
         _MaxType
     };

@@ -11,9 +11,12 @@
 TennisPlayer::TennisPlayer(const CharacterBase::PlayerInfo& info) :
 CharacterBase(info),
 m_Renderer(new BlendAnimationMesh("DATA\\CHR\\Tennis_player\\Player_T.iem")),
-m_ModelSize(0.05f)
+m_ModelSize(0.05f),
+m_DontBoundBallAtkTimer(0)
 {
 	m_pStateMachine = new TennisStateMachine(this);
+
+    m_Params.maxHP = m_Params.HP = 30;
 }
 
 TennisPlayer::~TennisPlayer()
@@ -33,6 +36,10 @@ bool TennisPlayer::Update()
 	//ステート実行
 	m_pStateMachine->state_execute();
 
+    if (m_DontBoundBallAtkTimer > 0)
+    {
+        --m_DontBoundBallAtkTimer;
+    }
 	return true;	//常にtrueを返すと消去されない
 }
 
@@ -47,4 +54,14 @@ bool TennisPlayer::Msg(MsgType mt)
     }
 
 	return m_pStateMachine->Msg(mt);
+}
+
+bool TennisPlayer::isCanBoundBallAtk()
+{
+    return m_DontBoundBallAtkTimer == 0;
+}
+
+void TennisPlayer::SetDontBoundBallAtkTimer()
+{
+    m_DontBoundBallAtkTimer = 5;
 }

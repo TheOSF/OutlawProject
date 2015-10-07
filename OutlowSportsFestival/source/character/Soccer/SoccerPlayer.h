@@ -3,7 +3,8 @@
 
 #include "../CharacterBase.h"
 #include "../CharacterRenderer.h"
-#include "../CharacterStateTemplate.h"	
+#include "../CharacterStateTemplate.h"
+#include "../../Ball/UsualBall.h"
 
 class SoccerPlayer;
 
@@ -11,7 +12,8 @@ class SoccerPlayer;
 
 typedef ChrStateMachine<SoccerPlayer, CharacterBase::MsgType> SoccerStateMachine;
 typedef ChrState<SoccerPlayer, CharacterBase::MsgType>SoccerState;
-
+//　最大加速度
+#define MaxAcceleration 0.8f
 //*************************************************************
 //		サッカープレイヤークラス
 //*************************************************************
@@ -40,18 +42,23 @@ public:
 		_ms_Counter,
 		_ms_Crap
 	};
+protected:
+	
+	SoccerStateMachine* m_pStateMachine;
 
+	
+public:
 	SoccerPlayer(const CharacterBase::PlayerInfo& info);
 	~SoccerPlayer();
 
 	CharacterRenderer	m_Renderer;
+	const float m_ModelSize;
 
 	void SetState(SoccerState* state);
 	bool Update();
 	bool Msg(MsgType mt);
 
-private:
-	SoccerStateMachine*		m_pStateMachine;
+
 };
 
 

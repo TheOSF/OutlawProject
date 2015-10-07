@@ -7,54 +7,77 @@
 #include "../GameSystem/GameSystem.h"
 #include "../Damage/Damage.h"
 
+#include "../utillity/LocusHDR.h"
+#include "../Render/LightObject.h"
+#include "../Library/Bullet/BulletSystem.h"
+
 #include "../character/Baseball/BaseballPlayer.h"
 
 //*****************************************************
-//		通常玉クラス
+//		追尾玉クラス
 //*****************************************************
 
-class MilderHoming :public GameObjectBase
+class BallBase;
+
+class MilderHoming :public BallBase, public GameObjectBase
 {
 private:
-	int homingtime;//　ホーミング時間
-	int num;//　ターゲット番号
+    float acc;//　加速度
+    int homingcounter;//　追尾時間
 public:
-	BaseballPlayer* pBaseball;
-	Vector3 target;
+    //物理パラメータ
+    struct
+    {
+        float Mass;
+        float Friction;
+        float Restitution;
+    }
+    PhysicsParam;
 public:
-	//コンストラクタ
-	MilderHoming(
-		BaseballPlayer*		b,
-		BallBase::Params	params,			//ボールパラメータ
-		Vector3		        t,				//ボールターゲット
-		DamageBase::Type	damage_type,	//ダメージ判定のタイプ
-		float				damage_val,   	//ダメージ量
-		int number							//　ターゲットのナンバー
-		);
-	~MilderHoming();
+    //コンストラクタ
+    MilderHoming(
+        BallBase::Params	params,			//ボールパラメータ
+        float				damage_val   	//ダメージ量
+        );
+    ~MilderHoming();
 
-	//ボールのメッシュを返すファクトリー関数
-	static bool GetBallMesh(
-		CharacterType::Value	type,	//ボールのキャラクタタイプ
-		LPIEXMESH*				ppOut	//戻り値
-		);
+    bool Update();
+    bool Msg(MsgType mt);
 
-	bool Update();
-	bool Msg(MsgType mt);
-	//　セッター
-	void setBallParamPos(BallBase::Params p){ m_BallBase.m_Params = p; }
-private:
-	BallBase			m_BallBase;
-	LpMeshRenderer		m_pMeshRenderer;
-	DamageShpere		m_Damage;
-	const int			m_FreezeDeleteFrame;
-	int					m_FreezeCount;
-	D3DXQUATERNION		m_Ballrot;
+    LpMeshRenderer		m_pMeshRenderer;
+    DamageShpere		m_Damage;
+    UINT                m_DeleteFrame;
+    Matrix              m_BaseMatrix;
+    RigidBody*          m_pRigitBody;
+    Locus            m_Locus;
 
-	bool isOutofField()const;
-	void UpdateDamageClass();
-	void UpdateMesh();
+    BallBase			m_BallBase;
+    CharacterBase*      m_pTarget;
+
+    void(MilderHoming::*m_pStatefunc)();
+
+    void State_TargetDecision();
+    void State_ToTagetMove();
+    void State_NoWork();
+    void State_Delete();
+
+
+    bool isOutofField()const;
+    void UpdateDamageClass();
+    void UpdateMesh();
+    void UpdateLocusColor();
+    void SetHDR();
+    bool isHitWall();
+
+
+    void Counter(CharacterBase* pCounterCharacter)override;
+
+    void ToNoWork();
+public:
+    //　遠距離ターゲット選定(もしなかったらnullptrを返す)
+    CharacterBase* CalcTarget()const;
+    //　ホーミング計算
+    void Homing(Vector3 TargetPos);
 
 };
-
 #endif

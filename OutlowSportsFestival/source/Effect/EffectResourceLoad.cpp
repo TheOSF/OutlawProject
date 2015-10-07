@@ -50,6 +50,10 @@ void EffectResource::Load()
         );
 
     
-
+    //サッカー必殺技、ヒットエフェクト
+    DefResource.Regist(
+        Resource::MeshType::Soccer_Special_Hit,
+        new IEXMESH("DATA\\Effect\\SoccerGoal.imo")
+        );
 
 }

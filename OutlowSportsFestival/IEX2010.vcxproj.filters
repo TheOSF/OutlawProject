@@ -61,7 +61,6 @@
     <ClCompile Include="IEX\IEX_View.cpp">
       <Filter>IEX</Filter>
     </ClCompile>
-    <ClCompile Include="source\Ball\Ball.cpp" />
     <ClCompile Include="source\Ball\UsualBall.cpp" />
     <ClCompile Include="source\brendanimation\BlendAnimationMesh.cpp" />
     <ClCompile Include="source\character\Lacrosse\LacrosseAttackClose.cpp" />
@@ -172,6 +171,25 @@
     <ClCompile Include="source\Effect\ParticleManagerUpdater.cpp" />
     <ClCompile Include="source\UI\FightUI.cpp" />
     <ClCompile Include="source\Sound\Sound.cpp" />
+    <ClCompile Include="source\Stage\StagePhysicMoveObject.cpp" />
+    <ClCompile Include="source\utillity\LocusBlur.cpp" />
+    <ClCompile Include="source\Ball\Ball.cpp" />
+    <ClCompile Include="source\GameSystem\LightEventExecuter.cpp" />
+    <ClCompile Include="source\Effect\SoccerSpecialHitEffect.cpp" />
+    <ClCompile Include="source\character\Soccer\Snakeshot.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerAttack.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerAttackInfo_UsualAttack.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerCommonState.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerHitEvent.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerRolling.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballAttackClass.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballAttackInfo_UsualAtk.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballPlayerState_Attack_B.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballPlayerState_Attack_P.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballPlayerState_Counter.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Die.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Vanish.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballState_SPAttack_P.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -299,6 +317,28 @@
     <ClInclude Include="source\Effect\ParticleManagerUpdater.h" />
     <ClInclude Include="source\UI\FightUI.h" />
     <ClInclude Include="source\Sound\Sound.h" />
+    <ClInclude Include="source\Stage\StagePhysicMoveObject.h" />
+    <ClInclude Include="source\utillity\LocusBlur.h" />
+    <ClInclude Include="source\GameSystem\LightEventExecuter.h" />
+    <ClInclude Include="source\Effect\SoccerSpecialHitEffect.h" />
+    <ClInclude Include="source\Library\Bullet\BulletUpdateGameobject.h" />
+    <ClInclude Include="source\character\Soccer\Snakeshot.h" />
+    <ClInclude Include="source\character\Soccer\SoccerAttackClass.h" />
+    <ClInclude Include="source\character\Soccer\SoccerAttackInfo_UsualAttack.h" />
+    <ClInclude Include="source\character\Soccer\SoccerCommonState.h" />
+    <ClInclude Include="source\character\Soccer\SoccerHitEvent.h" />
+    <ClInclude Include="source\character\Soccer\SoccerRolling.h" />
+    <ClInclude Include="source\character\Baseball\BaseballState_PlayerControll_Evasion.h" />
+    <ClInclude Include="source\character\Baseball\BaseballState_PlayerControll_ShotAttack_B.h" />
+    <ClInclude Include="source\character\Baseball\BaseballState_PlayerControll_ShotAttack_P.h" />
+    <ClInclude Include="source\character\Baseball\BaseballAttackClass.h" />
+    <ClInclude Include="source\character\Baseball\BaseballAttackInfo_UsualAtk.h" />
+    <ClInclude Include="source\character\Baseball\BaseballPlayerState_Attack_B.h" />
+    <ClInclude Include="source\character\Baseball\BaseballPlayerState_Attack_P.h" />
+    <ClInclude Include="source\character\Baseball\BaseballPlayerState_Counter.h" />
+    <ClInclude Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Die.h" />
+    <ClInclude Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Vanish.h" />
+    <ClInclude Include="source\character\Baseball\BaseballState_SPAttack_P.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

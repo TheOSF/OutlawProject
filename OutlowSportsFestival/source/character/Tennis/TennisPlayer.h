@@ -57,13 +57,18 @@ public:
 	const float m_ModelSize;
 
 	void SetState(TennisState* state);
+
 	bool Update();
 	bool Msg(MsgType mt);
+    
+
+    bool isCanBoundBallAtk();
+    void SetDontBoundBallAtkTimer();
 
 private:
 
 	TennisStateMachine*		m_pStateMachine;
-
+    UINT                    m_DontBoundBallAtkTimer;
 };
 
 

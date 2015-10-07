@@ -25,7 +25,7 @@ BaseballState_PlayerControll_ShotAttack_P::BaseballState_PlayerControll_ShotAtta
 
 //　ステート開始
 void BaseballState_PlayerControll_ShotAttack_P::Enter(BaseballPlayer* b){
-	// 回避クラス作成
+	// 遠距離(ピッチャー)クラス作成
 	m_pShotAttackClass_P = this->CreateShotAttackClass_P(b);
 }
 
@@ -53,6 +53,7 @@ void BaseballState_PlayerControll_ShotAttack_P::Exit(BaseballPlayer* b){
 CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttackClass_P(BaseballPlayer* b){
 	class ShotAttackEvent_P :public CharacterShotAttack::Event{
 		BaseballPlayer* m_pBaseball;//　野球
+		MilderHoming* mild;
 	public:
 		//　ボール
 		BallBase::Params param;
@@ -64,6 +65,7 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 			m_pBaseball(pBaseball){}
 		//　更新
 		void Update()override{
+
 			//　モデル更新
 			m_pBaseball->m_Renderer.Update(1.0f);
 
@@ -78,18 +80,25 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 		void Shot()
 		{
 			//　遠距離攻撃(param計算)
-			param = m_pBaseball->BaseballShot(m_pBaseball, param,0.45f);
-			//　ターゲット決定
-			param = m_pBaseball->TargetDecision(param, target);
+			BallBase::Params param;
+
+			chr_func::GetFront(m_pBaseball, &param.move);
+
+			param.pos = m_pBaseball->m_Params.pos;
+			param.pos.y = UsualBall::UsualBallShotY;
+
+			param.pParent = m_pBaseball;
+			param.scale = 1.0f;
+			param.type = BallBase::Type::_Milder;
 
 			//生成
-			new MilderHoming(m_pBaseball, param, target, DamageBase::Type::_WeekDamage, 1,m_pBaseball->getNum());
+			new MilderHoming(param, 1);
 		}
 
 		//　遠距離攻撃開始
 		void AttackStart()override{
 			//　☆モーション
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mt_Shot);
+			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Shot);
 		}
 
 		void AttackEnd()

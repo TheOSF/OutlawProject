@@ -47,7 +47,10 @@ public:
 
 	DamageBase();
 	virtual ~DamageBase();
-	virtual bool HitCheckSphere(const ShpereParam* sp) = 0;
+
+    virtual bool HitCheckSphere(const ShpereParam* sp) = 0; 
+    virtual bool HitCheckCapsure(const CapsureParam* cp) = 0;
+
     virtual void DebugDraw() = 0;
 };
 
@@ -64,6 +67,8 @@ public:
 	DamageShpere();
 private:
 	bool HitCheckSphere(const ShpereParam* sp);
+    bool HitCheckCapsure(const CapsureParam* cp);
+
     void DebugDraw();
 };
 
@@ -79,6 +84,7 @@ public:
     DamageCapsure();
 private:
     bool HitCheckSphere(const ShpereParam* sp);
+    bool HitCheckCapsure(const CapsureParam* cp);
     void DebugDraw();
 };
 
@@ -114,14 +120,16 @@ public:
 		HitEventBase&		HitEvent
 		);
 
+    //カプセルでダメージ判定を取得する
+    void HitCheckCapsure(
+        const CapsureParam&	cp,
+        HitEventBase&		HitEvent);
+
     //あたり判定をデバッグ描画
     void DebugDraw();
 
     //デバッグ描画を実行するかどうか
     bool m_DebugDrawVisible;
-
-
-
 
 private:
 	friend class DamageBase;

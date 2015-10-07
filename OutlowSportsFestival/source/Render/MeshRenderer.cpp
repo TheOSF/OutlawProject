@@ -7,14 +7,21 @@
 MeshRenderer::MeshRenderer(
 	LPIEXMESH	pMesh,
 	bool		MeshDelete,
-    RenderType  type
+    RenderType  type,
+    PreRenderCallBack* pCallBack
 	) :
 	m_pMesh(pMesh),
 	m_MeshDelete(MeshDelete),
     m_RenderType(type),
-    m_HDR(0,0,0)
+    m_HDR(0,0,0),
+    m_pCallBack(pCallBack)
 {
     D3DXMatrixIdentity(&m_TransMatrix);
+
+    if (m_pCallBack == nullptr)
+    {
+        m_pCallBack = new PreRenderCallBack();
+    }
 }
 
 MeshRenderer::~MeshRenderer()
@@ -23,6 +30,8 @@ MeshRenderer::~MeshRenderer()
 	{
 		delete m_pMesh;
 	}
+
+    delete m_pCallBack;
 }
 
 void MeshRenderer::GbufRender(
@@ -32,6 +41,9 @@ void MeshRenderer::GbufRender(
 {
     char str[256];
     pSetter->NoTexture(str,256);
+
+    m_pCallBack->Execute(this, PreRenderCallBack::GbufRender);
+
     m_pMesh->TransMatrix = m_TransMatrix;
     m_pMesh->Render(pShader, str);
 }
@@ -39,6 +51,8 @@ void MeshRenderer::GbufRender(
 void MeshRenderer::MasterRender()
 {
     shader->SetValue("g_HDR_Color", m_HDR);
+
+    m_pCallBack->Execute(this, PreRenderCallBack::MasterRender);
 
     m_pMesh->TransMatrix = m_TransMatrix;
 
@@ -67,6 +81,8 @@ void MeshRenderer::DepthRender(iexShader* pShader, const char* pTec, DepthRender
     {
         return;
     }
+
+    m_pCallBack->Execute(this, PreRenderCallBack::DepthRender);
 
     char str[256];
     strcpy_s<256>(str, pTec);

@@ -38,6 +38,35 @@ bool DamageShpere::HitCheckSphere(const ShpereParam* sp)
 	return L < (sp->size + this->m_Param.size);
 }
 
+
+bool DamageShpere::HitCheckCapsure(const CapsureParam* cp)
+{
+    if (!m_Enable)
+    {
+        return false;
+    }
+
+    Vector3 v1 = m_Param.pos - cp->pos1;
+    Vector3 v2 = cp->pos2 - cp->pos1;
+
+    float v2l = v2.Length();
+
+    v2 /= v2l;
+
+    float l = Vector3Dot(v1, v2);
+
+    if (l < 0)
+    {
+        l = 0;
+    }
+    else if (l > v2l)
+    {
+        l = v2l;
+    }
+
+    return Vector3Distance(m_Param.pos, cp->pos1 + v2*l) < m_Param.size + cp->width;
+}
+
 void DamageShpere::DebugDraw()
 {
     COLORf color(0.4f, 1, 1, 1);
@@ -94,6 +123,16 @@ bool DamageCapsure::HitCheckSphere(const ShpereParam* sp)
     }
 
     return Vector3Distance(sp->pos, m_Param.pos1 + v2*l) < sp->size;
+}
+
+bool DamageCapsure::HitCheckCapsure(const CapsureParam* cp)
+{
+    if (!m_Enable)
+    {
+        return false;
+    }
+
+    return false;
 }
 
 void DamageCapsure::DebugDraw()
@@ -174,6 +213,39 @@ void DamageManager::HitCheckSphere(
 			++it->second->HitCount;
 		}
 	}
+}
+
+//カプセルでダメージ判定を取得する
+void DamageManager::HitCheckCapsure(
+    const CapsureParam&	cp,
+    HitEventBase&		HitEvent)
+{
+
+    if (m_DebugDrawVisible)
+    {
+        //デバッグ用球描画(黒)
+        new DebugDrawPole(
+            cp.pos1,
+            cp.pos2,
+            cp.width,
+            COLORf(0.4f, 0, 0, 0)
+            );
+    }
+
+
+    for (auto it = m_DamageBaseMap.begin();
+        it != m_DamageBaseMap.end();
+        ++it
+        )
+    {
+        //もしあたっていたら
+        if (it->second->HitCheckCapsure(&cp) &&
+            HitEvent.Hit(it->second))
+        {
+            //当たった回数カウントを足す
+            ++it->second->HitCount;
+        }
+    }
 }
 
 //あたり判定をデバッグ描画

@@ -9,7 +9,6 @@ DeferredLightManager::DeferredLightManager(
     m_ScreenX(ScreenX),
     m_ScreenY(ScreenY)
 {
-
     char work_path[MAX_PATH];
 
     //カラー出力先テクスチャを生成

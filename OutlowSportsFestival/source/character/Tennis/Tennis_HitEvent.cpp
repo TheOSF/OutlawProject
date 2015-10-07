@@ -65,5 +65,5 @@ bool TennisHitEvent::Hit(DamageBase* pDmg)
 void TennisHitEvent::CalcDamage(DamageBase* pDmg)
 {
     m_pTennis->m_Params.HP -= pDmg->Value;
-    m_pTennis->m_Params.HP = max(m_pTennis->m_Params.HP, 0);
+    m_pTennis->m_Params.HP = max(m_pTennis->m_Params.HP, -1);
 }

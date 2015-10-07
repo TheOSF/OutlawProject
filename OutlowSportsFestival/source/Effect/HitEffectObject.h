@@ -20,7 +20,9 @@ public:
         float     length,
         float     width,
         Vector3   color,
-        UINT      particle_level = 0
+        UINT      particle_level = 0,
+        float     LightSize = 20.0f,
+        UINT      frame = 8
         );
 
     ~HitEffectObject();
@@ -32,6 +34,7 @@ private:
     Vector3                 m_Color;
     PointLight              m_Light;
     const UINT              m_Particle_level;
+    const UINT              m_Frame;
 
     void InitMatrix(
         CrVector3 pos,

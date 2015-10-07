@@ -243,7 +243,6 @@ void PhysicallyMoveBall::Counter(CharacterBase* pCounterChr)
 void PhysicallyMoveBall::ToNoWork()
 {
     //çUåÇîªíËÇÃÇ»Ç¢èÛë‘Ç…Ç∑ÇÈ
-
     m_Params.type = BallBase::Type::_DontWork;
     m_Damage.m_Enable = false;
 

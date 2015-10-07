@@ -53,6 +53,7 @@ void BaseballState_PlayerControll_ShotAttack_B::Exit(BaseballPlayer* b){
 CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_B::CreateShotAttackClass_B(BaseballPlayer* b){
 	class ShotAttackEvent_B :public CharacterShotAttack::Event{
 		BaseballPlayer* m_pBaseball;//　野球
+		MilderHoming* mild;
 	public:
 		//　コンストラクタ
 		ShotAttackEvent_B(BaseballPlayer* pBaseball) :
@@ -72,32 +73,22 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_B::CreateShotAttack
 		// ダメージ判定開始 & ボール発射
 		void Shot()
 		{
-			//ボール発射
 			BallBase::Params param;
-			
-			////　向き補正
-			//Vector3 Target(0, 0, 0);
-			//Target = m_pBaseball->AngleField(Target,0.866f);
 
-			////　一人でも視野角内で生きていたら
-			//if (m_pBaseball->getOutcounter() != m_pBaseball->getCharacounter()){
-			//	chr_func::AngleControll(m_pBaseball, Target);
-			//}
-			////　カウンターリセット
-			//m_pBaseball->setCharacounter(0);
-			//m_pBaseball->setOutcounter(0);
+			chr_func::GetFront(m_pBaseball, &param.move);
+			param.move *= 0.7f;
+			param.pos = m_pBaseball->m_Params.pos;
+			param.pos.y = BallBase::UsualBallShotY;
+			param.pParent = m_pBaseball ;
+			param.type = BallBase::Type::_Usual;
 
-			//　遠距離攻撃(param計算)
-			param = m_pBaseball->BaseballShot(m_pBaseball, param,0.8f);
-			
-			//生成
 			new UsualBall(param, DamageBase::Type::_WeekDamage, 1);
 		}
 
 		//　遠距離攻撃開始
 		void AttackStart()override{
 			//　☆モーション
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mt_Shot);
+			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Shot);
 		}
 
 		void AttackEnd()

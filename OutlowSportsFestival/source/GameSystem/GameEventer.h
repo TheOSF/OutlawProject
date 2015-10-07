@@ -24,16 +24,20 @@ public:
         UINT  round_count;
 	};
 
-	Param m_Param;
-
-	GameEventer(const Param& p, State* pInitState);
+	Param          m_Param;
+    
+    GameEventer(const Param& p, State* pInitState, LPVECTOR3 pControllDirColor);
 	~GameEventer();
 	
 	void SetState(State* pState);
+    void SetLightChange();
 
 private:
 
 	StateMachine*  m_pStateMachine;
+    Vector3* const m_pControllDirColor;
+    const Vector3  m_InitDirColor;
+
 
 	bool Update();
 	bool Msg(MsgType mt);
@@ -88,14 +92,35 @@ namespace MatchState
 		~MatchPlay();
 
 	private:
+
+        //ゲームストップを管理するクラス
+        class GameStopMgr
+        {
+        public:
+            GameStopMgr();
+
+            //毎フレームの更新
+            void Update();
+
+            //ストップさせる(引数：何フレーム後にストップするか、何フレームストップするか)
+            void SetStop(UINT ep_frame,UINT stop_frame);
+        private:
+            int m_Ep_frame;
+            int m_Stop_frame;
+        };
+
         CharacterManager::CharacterMap  m_CharacterMap;
 		UINT                            m_Frame;
+        UINT                            m_PreLiveCount;
+        GameStopMgr                     m_GameStopMgr;
 
         void GetLiveCharacterMap(CharacterManager::CharacterMap& Out);
 
 		void Enter(_Client_type_ptr);
 		void Execute(_Client_type_ptr);
 		void Exit(_Client_type_ptr);
+
+        void SwitchState(const UINT now_LiveCount, _Client_type_ptr p);
 	};
 
     //一人勝ちステート

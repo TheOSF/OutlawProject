@@ -24,6 +24,7 @@ public:
 		_CantCounter,			//カウンターできない通常のボール
 		_CanVolleySmash,		//バレーキャラクタでスマッシュすることができる状態のボール
 		_TennisSpecialAtk,		//テニス
+        _Milder,                //野球ホーミング
 	};
 
 	//パラメータ構造体

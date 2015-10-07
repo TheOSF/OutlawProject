@@ -67,7 +67,6 @@ bool sceneGamePlay::Initialize()
 
 sceneGamePlay::~sceneGamePlay()
 {
-
 	DefGameObjMgr.Release(); //ゲームオブジェクト削除は一番初めに
 
 	DefCharacterMgr.Release();
@@ -91,18 +90,17 @@ sceneGamePlay::~sceneGamePlay()
 //*****************************************************************************************************************************
 void	sceneGamePlay::Update()
 {
-	{// Bullet Physics
-
-		DefBulletSystem.StepSimulation(1.0f / 60.0f);
-	};
-
+    //カメラ更新
 	DefCamera.Update();
-    
+
+    //全ゲームオブジェクト更新
     DefGameObjMgr.Update();
+    
+    //キャラクタ押しのける
     DefCharacterMgr.CheckCharacterSpace();
-
+    
+    //ダメージのデバッグ描画
     DefDamageMgr.DebugDraw();
-
     DefDamageMgr.m_DebugDrawVisible = GetKeyState('P') != 0;
 }
 
@@ -114,6 +112,7 @@ void	sceneGamePlay::Update()
 
 void	sceneGamePlay::Render()
 {
+    //カメラクリア
 	DefCamera.Clear();
 	
 	//デバッグ用描画切り替え
@@ -124,6 +123,7 @@ void	sceneGamePlay::Render()
 	}
 	else
 	{
+        //通常描画
         DefRendererMgr.Render();
 	}
 }

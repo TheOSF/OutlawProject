@@ -2,7 +2,8 @@
 #include "Baseball_HitEvent.h"
 #include "BaseballPlayerState.h"
 #include "../CharacterFunction.h"
-
+#include "../../Effect/HitEffectObject.h"
+#include "../../Effect/BlurImpact.h"
 BaseballState_DamageMotion_Weak::BaseballState_DamageMotion_Weak(
 	BaseballPlayer* pBaseball,
 	const Vector3& Damage_vec  //ダメージを受けた方向
@@ -15,7 +16,7 @@ BaseballState_DamageMotion_Weak::BaseballState_DamageMotion_Weak(
 
 void BaseballState_DamageMotion_Weak::Enter(BaseballPlayer* t)
 {
-	//キャラクタ共通ひるみクラスのテニス固有イベントクラス
+	//キャラクタ共通ひるみクラスの野球固有イベントクラス
 	class BaseballEvent :public CharacterDamageMotion::Event
 	{
 	public:
@@ -30,7 +31,7 @@ void BaseballState_DamageMotion_Weak::Enter(BaseballPlayer* t)
 		void Start()
 		{
 			//ひるみモーションをセット
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mt_Damage_Weak);
+			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Damage_Weak);
 		}
 		void End()
 		{
@@ -59,7 +60,22 @@ void BaseballState_DamageMotion_Weak::Enter(BaseballPlayer* t)
 		new BaseballHitEvent(m_pBaseball),
 		Param
 		);
+	//ヒットエフェクト作成
+	new HitEffectObject(
+		m_pBaseball->m_Params.pos + Vector3(0, 3, 0),
+		m_Damage_vec,
+		0.05f,
+		0.15f,
+		Vector3(1.0f, 1.0f, 1.0f)
+		);
 
+	//ブラーエフェクト
+	new BlurImpactSphere(
+		m_pBaseball->m_Params.pos + Vector3(0, 3, 0),
+		10,
+		15,
+		30
+		);
 }
 
 void BaseballState_DamageMotion_Weak::Execute(BaseballPlayer* t)
@@ -69,5 +85,5 @@ void BaseballState_DamageMotion_Weak::Execute(BaseballPlayer* t)
 
 void BaseballState_DamageMotion_Weak::Exit(BaseballPlayer* t)
 {
-    delete m_pDamageMotionClass;
+
 }

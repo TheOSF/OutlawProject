@@ -36,7 +36,7 @@ public:
             return Vector3Zero;
         }
 
-        vec = Vector3MulMatrix3x3(vec, matView);
+        vec = DefCamera.GetRight()*vec.x + DefCamera.GetUp()*vec.z;
         vec.Normalize();
 
         return vec;
@@ -62,7 +62,7 @@ public:
             return Vector3Zero;
         }
 
-        vec = Vector3MulMatrix3x3(vec, matView);
+        vec = DefCamera.GetRight()*vec.x + DefCamera.GetUp()*vec.z;
         vec.Normalize();
 
         return vec;
@@ -88,7 +88,7 @@ public:
             return Vector3Zero;
         }
 
-        vec = Vector3MulMatrix3x3(vec, matView);
+        vec = DefCamera.GetRight()*vec.x + DefCamera.GetUp()*vec.z;
         vec.Normalize();
 
         return vec;
@@ -269,7 +269,8 @@ void TennisState_PlayerControll_Move::Execute(TennisPlayer* t)
         return;
     }
 
-    if (controller::GetTRG(controller::button::_L1, t->m_PlayerInfo.number))
+    if (controller::GetTRG(controller::button::_L1, t->m_PlayerInfo.number) &&
+        t->isCanBoundBallAtk())
     {// [L1] で [バウンドボール攻撃
         t->SetState(new TennisState_BoundBallAtk(new PlayerBoundBallControll(t)));
         return;

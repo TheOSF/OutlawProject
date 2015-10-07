@@ -8,6 +8,9 @@
 #include "../../Ball/BallFadeOutRenderer.h"
 #include "../../Effect/HitEffectObject.h"
 #include "../../Camera/Camera.h"
+#include "../../GameSystem/ResourceManager.h"
+#include "../../Effect/EffectFactory.h"
+#include "../../Sound/Sound.h"
 
 TennisState_BoundBallAtk::TennisState_BoundBallAtk(
     ControllClass* pControllClass   //バウンド方向をコントロールするクラス(終了時にdeleteする)
@@ -47,24 +50,27 @@ void TennisState_BoundBallAtk::Execute(TennisPlayer* t)
 
     }
 
+    //サウンド
+    if (m_Timer == SmashFrame - 3)
+    {
+        Sound::Play(Sound::Tennis_BallAtk);
+    }
+
     //発射
     if (m_Timer == SmashFrame)
     {
-        BallBase::Params param;
+        Vector3 pos, move;
 
-        param.pos = t->m_Params.pos + Vector3(0, BallBase::UsualBallShotY, 0);
-        param.pParent = t;
-        param.type = BallBase::Type::_CantCounter;
+        pos = t->m_Params.pos + Vector3(0, BallBase::UsualBallShotY, 0);
 
-
-        chr_func::GetFront(t, &param.move);
-        param.move *= 0.5f;
-        param.move.y = 0.8f;
+        chr_func::GetFront(t, &move);
+        move *= 0.3f;
+        move.y = 0.6f;
 
         new TennisBoundBall(
-            param,
-            -0.04f,
-            Vector3AxisX
+            pos,
+            move,
+            t
             );
     }
 
@@ -102,248 +108,398 @@ void TennisState_BoundBallAtk::Exit(TennisPlayer* t)
 
 
 TennisBoundBall::TennisBoundBall(
-    BallBase::Params	params,			//ボールパラメータ
-    float               glavity,        //重力
-    CrVector3           AtkVec          //バウンドする方向
+    CrVector3  pos,
+    CrVector3  first_move,
+    TennisPlayer* const pOwner
     ) :
-    m_Locus(8),
-    m_pStateFunc(&TennisBoundBall::State_Flying),
-    m_Glavity(glavity),
-    m_Timer(0),
-    m_MoveVec(AtkVec)
+    m_Locus(20),
+    m_pRigidBody(nullptr),
+    m_pOwnerTennis(pOwner)
 {
-    m_Params = params;
+    //ボール基本パラメータ初期化
+    m_Params.pos = pos;
+    m_Params.move = first_move;
+    m_Params.pParent = pOwner;
+    m_Params.scale = 0.1f;
+    m_Params.type = BallBase::Type::_CantCounter;
 
-    //メッシュ作成
+    //初期ステートを設定
+    SetState(&TennisBoundBall::StateFly);
+
+    //メッシュ初期化
     {
-        iexMesh* pMesh = nullptr;
+        iexMesh* pBallMesh;
 
-        UsualBall::GetBallMesh(params.pParent->m_PlayerInfo.chr_type, &pMesh);
+        UsualBall::GetBallMesh(pOwner->m_PlayerInfo.chr_type, &pBallMesh);
 
-        m_pMeshRenderer = new MeshRenderer(pMesh, false, MeshRenderer::RenderType::UseColor);
+        m_pBallRenderer = new MeshRenderer(
+            pBallMesh,
+            false,
+            MeshRenderer::RenderType::UseColor,
+            nullptr
+            );
     }
 
     {
-        //ワールド変換行列の更新
-        D3DXQuaternionIdentity(&m_BallRot);
-        UpdateTransMatrix(0.5f);
-    }
-
-    {
-        //軌跡
+        //軌跡の設定
         m_Locus.m_StartParam.Width = 0.25f;
-        m_Locus.m_EndParam.Width = 0.05f;
+        m_Locus.m_EndParam.Width = 0.025f;
 
-        m_Locus.m_EndParam.Color = Vector4(1, 1, 1, 0);
+        UpdateLocusColor();
+    }
+
+    {
+        //ダメージ判定の更新
+        m_Damage.Value = 2.5f;
+        m_Damage.type = DamageBase::Type::_WeekDamage;
+        m_Damage.pParent = pOwner;
+        m_Damage.m_Enable = false;
+        m_Damage.pBall = this;
+        m_Damage.m_Param.size = 1.0f;
+
+        UpdateDamage();
     }
 }
 
 TennisBoundBall::~TennisBoundBall()
 {
-    delete m_pMeshRenderer;
+    delete m_pBallRenderer;
+    m_pBallRenderer = nullptr;
+
+    DefBulletSystem.RemoveRigidBody(m_pRigidBody);
+    m_pRigidBody = nullptr;
 }
+
+
 
 bool TennisBoundBall::Update()
 {
-    {
-        Vector3 vec;
-
-        Vector3Cross(vec, DefCamera.GetForward(), m_Params.move);
-        vec.Normalize();
-
-        m_Locus.AddPoint(m_Params.pos, vec);
-    }
-
-
     (this->*m_pStateFunc)();
 
-    
-    
-    return m_pStateFunc != &TennisBoundBall::State_Finish;
+    UpdateMesh();
+    UpdateLocusColor();
+    UpdateDamage();
+
+    return m_pStateFunc != &TennisBoundBall::StateFinish;
 }
+
 
 bool TennisBoundBall::Msg(MsgType mt)
 {
     return false;
 }
 
-void TennisBoundBall::UpdateTransMatrix(RATIO scaleYratio)
+
+
+void TennisBoundBall::StateFly()
 {
-    Matrix M;
+    const float Glavity = -0.02f;
 
-    GetTransMatrix(M, scaleYratio);
+    //重力計算
+    m_Params.move.y += Glavity;
 
-    m_pMeshRenderer->SetMatrix(M);
-}
-
-//ワールド変換行列を算出する
-void TennisBoundBall::GetTransMatrix(Matrix& m,RATIO scaleYratio)
-{
-    Matrix T;
-
+    //ステージとの判定
     {
-        const float scale = UsualBall::GetBallScale(m_Params.pParent->m_PlayerInfo.chr_type);
-        D3DXMatrixScaling(&m, scale, scale*scaleYratio, scale);
-    }
-
-    {
-        D3DXMatrixRotationQuaternion(&T, &m_BallRot);
-        m *= T;
-    }
-
-    {
-        m._41 = m_Params.pos.x;
-        m._42 = m_Params.pos.y;
-        m._43 = m_Params.pos.z;
-    }
-
-}
-
-
-void TennisBoundBall::RotateY()
-{
-    //Ｙ軸回転や！
-    {
-        D3DXQUATERNION q;
-
-        D3DXQuaternionRotationYawPitchRoll(&q, D3DXToRadian(10), 0, 0);
-
-        m_BallRot *= q;
-    }
-}
-
-
-
-void TennisBoundBall::State_Flying()
-{
-    m_Params.move.y += m_Glavity;
-    m_Params.pos += m_Params.move;
-
-    RotateY();
-    UpdateTransMatrix(0.5f);
-
-    {
-        Vector3 out, pos(m_Params.pos), vec(m_Params.move);
+        Vector3 out, pos(m_Params.pos), vec(Vector3Normalize(m_Params.move));
         float dist = m_Params.move.Length()*1.5f;
-        int material;
+        int material = 0;
 
-        vec.Normalize();
-
-        if (
-            DefCollisionMgr.RayPick(
+        //ステージとあたっていたら
+        if (DefCollisionMgr.RayPick(
             &out,
             &pos,
             &vec,
             &dist,
             &material,
-            CollisionManager::RayType::_Usual
-            ) != nullptr)
+            CollisionManager::RayType::_Ball
+            ) != nullptr
+            )
         {
-            //あたった面が大体上向きで、高低さもない場合成功
-            if (
-                Vector3Radian(Vector3AxisY, vec) < D3DXToRadian(45) &&
-                BallBase::UsualBallShotY > out.y
-                )
+            //あたっていた場所が 高すぎる or 床でない　場合は失敗
+            if (out.y > BallBase::UsualBallShotY*1.5f ||
+                Vector3Normalize(vec).y < 0.5f)
             {
-                m_Params.pos = out + Vector3(0, 0.5f, 0);
-                m_pStateFunc = &TennisBoundBall::State_Rolling;
+                SetState(&TennisBoundBall::StateNoDamage);
+
+                m_Params.move = Vector3Refrect(m_Params.move, vec) * 0.5f;
             }
             else
             {
-                //失敗の場合(壁に当たった)
-                m_pStateFunc = &TennisBoundBall::State_Failed;
+                //成功
+                SetState(&TennisBoundBall::StateGroundTouch);
             }
+
+            //高さを床の位置に補正する
+            m_Params.pos.y = out.y + m_Params.scale;
         }
     }
 
-    //ステージ外にいった場合の処理
+
+    //寿命管理(ステージ外につけぬけた場合の応急処置
+    if (++m_Timer > 300)
     {
-        if (m_Params.pos.Length() > 500)
+        SetState(&TennisBoundBall::StateFinish);
+    }
+
+    //移動更新
+    m_Params.pos += m_Params.move;
+
+    //軌跡の点を追加
+    AddLocusPoint();
+
+    //飛んでいる間は発射主のテニスが次弾を発射できないように
+    m_pOwnerTennis->SetDontBoundBallAtkTimer();
+
+}
+
+void TennisBoundBall::StateGroundTouch()
+{
+    //放ったプレイヤーに向けて帰っていくように設定
+    m_Params.move = m_Params.pParent->m_Params.pos - m_Params.pos;
+    m_Params.move.y = 0;
+
+    m_Params.move.Normalize();
+    m_Params.move *= 0.55f;
+
+    m_Params.type = BallBase::Type::_Usual;
+
+    //エフェクト
+    {
+        COLORf EffectColor(CharacterBase::GetPlayerColor(m_Params.pParent->m_PlayerInfo.number));
+
+        //エフェクトの設定
+        new HitEffectObject(
+            m_Params.pos,
+            Vector3Normalize(m_Params.move),
+            0.1f,
+            0.1f,
+            Vector3(EffectColor.r, EffectColor.g, EffectColor.b)
+            );
+
+        //パーティクル
+        EffectFactory::Smoke(
+            m_Params.pos,
+            Vector3Zero,
+            2.0f,
+            0x80FFA080,
+            true
+            );
+    }
+
+    //ＳＥ
+    Sound::Play(Sound::Swing2);
+
+    //あたり判定を有効化
+    m_Damage.m_Enable = true;
+
+    //移動ステートに移行
+    SetState(&TennisBoundBall::StateMove);
+}
+
+void TennisBoundBall::StateMove()
+{
+    //床についているので、適切な高さ ( BallBase::UsualBallShotY ) まで上昇する
+    m_Params.pos.y += (BallBase::UsualBallShotY - m_Params.pos.y) * 0.2f;
+
+    //移動
+    m_Params.pos += m_Params.move;
+
+    //ステージとの判定
+    {
+        Vector3 out, pos(m_Params.pos), vec(Vector3Normalize(m_Params.move));
+        float dist = m_Params.move.Length() * 1.5f;
+        int material = 0;
+
+        //ステージとあたっていたら
+        if (DefCollisionMgr.RayPick(
+            &out,
+            &pos,
+            &vec,
+            &dist,
+            &material,
+            CollisionManager::RayType::_Ball
+            ) != nullptr)
         {
-            m_pStateFunc = &TennisBoundBall::State_Finish;
+            //成功
+            SetState(&TennisBoundBall::StateNoDamage);
+
+            //高さを床の位置に補正する
+            m_Params.pos.y = out.y + m_Params.scale*0.5f;
         }
+    }
+
+    //軌跡の点を追加
+    AddLocusPoint();
+}
+
+void TennisBoundBall::StateNoDamage()
+{
+    //剛体作成
+    CreateRigidBody();
+
+    //あたり判定を無効化
+    m_Damage.m_Enable = false;
+
+    //ボールタイプをカウンターできないタイプに設定
+    m_Params.type = BallBase::Type::_DontWork;
+
+    //RigidBodyクラスの行列を自身に適用する
+    {
+        Matrix M;
+        Vector3 PrePos = m_Params.pos;
+
+        m_pRigidBody->Get_TransMatrix(M);
+
+        M = m_BaseMatrix * M;
+
+        m_pBallRenderer->SetMatrix(M);
+
+        m_Params.pos = Vector3(M._41, M._42, M._43);
+        m_Params.move = m_Params.pos - PrePos;
+
+    }
+
+    //軌跡の太さを徐々に減らしていく
+    {
+        //軌跡
+        m_Locus.m_StartParam.Color.w *= 0.95f;
+
+        //太さが一定以下なら描画しない
+        if (m_Locus.m_StartParam.Color.w < 0.1f)
+        {
+            m_Locus.m_Visible = false;
+        }
+
+        if (m_Locus.m_Visible)
+        {
+            //軌跡の点を追加
+            AddLocusPoint();
+        }
+    }
+
+    //時間経過でフェードアウト
+    if (++m_Timer > 60)
+    {
+        SetState(&TennisBoundBall::StateCreateFadeOutBall);
     }
 }
 
-void TennisBoundBall::State_Failed()
+void TennisBoundBall::StateFinish()
 {
-    iexMesh*   pMesh;
-    Matrix     BaseMatrix;
-    RigidBody* pRigidBody;
+
+}
+
+void TennisBoundBall::StateCreateFadeOutBall() 
+{
+    //フェードアウトして消えるボールクラスを作成する
+    iexMesh* pMesh;
+
+    //剛体作成
+    CreateRigidBody();
 
     UsualBall::GetBallMesh(m_Params.pParent->m_PlayerInfo.chr_type, &pMesh);
 
-    UpdateTransMatrix(1);
-
-    BaseMatrix = m_pMeshRenderer->GetMatrix();
-
-    BaseMatrix._41 = 0;
-    BaseMatrix._42 = 0;
-    BaseMatrix._43 = 0;
-
-    pRigidBody = DefBulletSystem.AddRigidSphere(
-        1.5f,
-        RigidBody::ct_dynamic,
-        m_Params.pos,
-        Vector3Zero,
-        0.5f,
-        0.8f,
-        0.25f,
-        m_Params.move * 30.0f
-        );
-
     new BallFadeOutRenderer(
         pMesh,
-        BaseMatrix,
-        pRigidBody,
+        m_BaseMatrix,
+        m_pRigidBody,
         60
         );
 
-    m_pStateFunc = &TennisBoundBall::State_Finish;
+    //自身で開放しないようにnullに設定しておく
+    m_pRigidBody = nullptr;
+
+
+    //ステートを終了に設定
+    SetState(&TennisBoundBall::StateFinish);
 }
 
-void TennisBoundBall::State_Rolling()
+void TennisBoundBall::CreateRigidBody()
 {
-    const int RollingFrame = 60;
-
-    if (++m_Timer == RollingFrame)
+    //すでに作成済みならreturn
+    if (m_pRigidBody != nullptr)
     {
-        m_pStateFunc = &TennisBoundBall::State_AtkStart;
+        return;
     }
-}
 
-void TennisBoundBall::State_AtkStart()
-{
-    //エフェクト
-    {
-        const COLORf Color = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number);
+    m_BaseMatrix = m_pBallRenderer->GetMatrix();
 
-        //ヒットエフェクト作成
-        new HitEffectObject(
-            m_Params.pos,
-            Vector3Normalize(m_MoveVec),
-            0.05f,
-            0.15f,
-            Vector3(Color.r, Color.g, Color.b)
+    m_BaseMatrix._41 = 0;
+    m_BaseMatrix._42 = 0;
+    m_BaseMatrix._43 = 0;
+
+    const UsualBall::PhysicsParam p = UsualBall::GetBallPhysics(m_Params.pParent->m_PlayerInfo.chr_type);
+
+
+    m_pRigidBody = DefBulletSystem.AddRigidSphere(
+        p.Mass,
+        RigidBody::ct_dynamic,
+        m_Params.pos,
+        Vector3Zero,
+        p.Radius,
+        p.Friction,
+        p.Restitution,
+        m_Params.move * 45.0f
         );
-    }
+}
 
-    //ボール発射
-    {
-        BallBase::Params param = m_Params;
+void TennisBoundBall::SetState(StateFunc pNextState)
+{
+    m_pStateFunc = pNextState;
+    m_Timer = 0;
+}
 
-        //移動量
-        param.move = Vector3Normalize(m_MoveVec);
-        //スピードは適当
-        param.move *= 1.0f;
-        //高さをキャラ共通ボール発射のYに(違和感あるかもな～
-        param.pos.y = BallBase::UsualBallShotY;
-        //通常タイプ
-        param.type = BallBase::Type::_Usual;
+void TennisBoundBall::Counter(CharacterBase* pCounterCharacter)
+{
+    m_Damage.pParent = m_Params.pParent = pCounterCharacter;
 
-        //生成
-        new UsualBall(param, DamageBase::Type::_WeekDamage, 1, 2);
-    }
+    UpdateLocusColor();
 
-    m_pStateFunc = &TennisBoundBall::State_Finish;
+    m_Damage.type = DamageBase::Type::_VanishDamage;
+}
+
+
+void TennisBoundBall::AddLocusPoint()
+{
+    Vector3 v;
+    Vector3Cross(v, m_Params.move, DefCamera.GetForward());
+    v.Normalize();
+
+    m_Locus.AddPoint(m_Params.pos, v);
+}
+
+void TennisBoundBall::UpdateMesh()
+{
+    //メッシュ更新
+    const float scale = UsualBall::GetBallScale(m_Params.pParent->m_PlayerInfo.chr_type);
+    Matrix m;
+    
+    D3DXMatrixScaling(&m, scale, scale, scale);
+    m._41 = m_Params.pos.x;
+    m._42 = m_Params.pos.y;
+    m._43 = m_Params.pos.z;
+
+    m_pBallRenderer->SetMatrix(m);
+}
+
+void TennisBoundBall::UpdateLocusColor()
+{
+    //軌跡色更新
+    const DWORD Color = CharacterBase::GetPlayerColor(m_Params.pParent->m_PlayerInfo.number);
+
+    m_Locus.m_StartParam.Color = Vector4(
+        float((Color >> 16) & 0xFF) / 255.f,
+        float((Color >> 8) & 0xFF) / 255.f,
+        float(Color & 0xFF) / 255.f,
+        0.5f
+        );
+
+    m_Locus.m_EndParam.Color = Vector4(1, 1, 1, 0);
+}
+
+
+void TennisBoundBall::UpdateDamage()     //当たり判定の更新
+{
+    m_Damage.vec = m_Params.move;
+    m_Damage.m_Param.pos = m_Params.pos;
 }

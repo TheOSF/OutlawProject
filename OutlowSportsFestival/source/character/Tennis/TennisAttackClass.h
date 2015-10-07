@@ -90,6 +90,7 @@ private:
     bool                  m_DoCombo;
     LocusHDR              m_Locus;
     int                   m_DamageHitCount;
+    int                   m_HitStopCount;
 
     void(TennisAttackClass::*m_pStateFunc)();
 

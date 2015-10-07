@@ -19,13 +19,13 @@ class UsualBall :public GameObjectBase, public BallBase
 public:
 
     //物理パラメータ
-    struct
+    struct PhysicsParam
     {
         float Mass;
         float Friction;
+        float Radius;
         float Restitution;
-    }
-    PhysicsParam;
+    };
 
 
 	//コンストラクタ
@@ -48,15 +48,20 @@ public:
         CharacterType::Value	type    //ボールのキャラクタタイプ
         );
 
+    //ボールの物理パラメータを返す
+    static PhysicsParam GetBallPhysics(
+        CharacterType::Value	type	//ボールのキャラクタタイプ
+        );
+
 	bool Update();
 	bool Msg(MsgType mt);
 
 private:
 
+    bool(UsualBall::*m_pStateFunc)();
 	LpMeshRenderer		m_pMeshRenderer;
-	DamageShpere		m_Damage;
-    UINT                m_DeleteFrame;
-	D3DXQUATERNION		m_Ballrot;
+	DamageCapsure		m_Damage;
+    int                 m_DeleteFrame;
     Locus               m_Locus;
     Matrix              m_BaseMatrix;
     RigidBody*          m_pRigitBody;
@@ -64,17 +69,20 @@ private:
     UINT                m_HitCountSave;
     UINT                m_HitStopFrame;
 
-	bool isOutofField()const;
-	void UpdateDamageClass();
-	void UpdateMesh();
-    void UpdateLocusColor();
-    void UpdateMove();
-    void SetHDR();
-    void UpdateWallCheck();
+
+	bool isOutofField()const;  //フィールド外に出ているか
+
+	void UpdateDamageClass();  //ダメージ判定の位置を現在の位置に更新
+    void UpdateLocusColor();   //軌跡の色を現在の親キャラクタの色に設定
+    bool UpdateWallCheck(Vector3& outNewMove);    //壁との判定を取り、接触していたなら移動値を反射してステート移行をする
+    void AddLocusPoint();      //軌跡のポイントを現在のパラメータで一点追加する
 
     void Counter(CharacterBase* pCounterCharacter)override;
 
-    void ToNoWork();
+    void ToNoWork();           //攻撃判定のない状態にする
+
+    bool StateFlyMove();
+    bool StatePhysicMove();
 };
 
 #endif

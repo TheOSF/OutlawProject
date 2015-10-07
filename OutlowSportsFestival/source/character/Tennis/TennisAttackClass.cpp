@@ -15,7 +15,8 @@ TennisAttackClass::TennisAttackClass(
     m_ComboCount(-1),
     m_pStateFunc(&TennisAttackClass::State_NextAtk),
     m_Locus(7),
-    m_DamageHitCount(0)
+    m_DamageHitCount(0),
+    m_HitStopCount(0)
 {
     m_Damage.m_Enable = false;
 
@@ -23,10 +24,10 @@ TennisAttackClass::TennisAttackClass(
     m_Locus.m_pTexture = DefResource.Get(Resource::TextureType::Locus1);
 
     m_Locus.m_StartParam.Color    = Vector4(1, 1, 1, 1);
-    m_Locus.m_StartParam.HDRColor = Vector4(1, 1, 1, 0.2f);
+    m_Locus.m_StartParam.HDRColor = Vector4(0, 0, 0, 0);
 
     m_Locus.m_EndParam.Color      = Vector4(1, 1, 1, 0);
-    m_Locus.m_EndParam.HDRColor   = Vector4(1, 0, 1, 0);
+    m_Locus.m_EndParam.HDRColor   = Vector4(0, 0, 0, 0);
 }
 
 TennisAttackClass::~TennisAttackClass()
@@ -68,6 +69,12 @@ void TennisAttackClass::State_Attack()
 {
     AttackInfo* const pNowAtk = m_AttackInfoArray.at(m_ComboCount);
 
+    if (m_HitStopCount > 0)
+    {
+        --m_HitStopCount;
+        return;
+    }
+
     //カウント進行
     ++m_Timer;
     
@@ -82,6 +89,8 @@ void TennisAttackClass::State_Attack()
     {
         m_DamageHitCount = m_Damage.HitCount;
         pNowAtk->HitAttack(&m_Damage);
+
+    //    m_HitStopCount = 5;
     }
 
     //角度更新

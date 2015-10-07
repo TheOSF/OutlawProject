@@ -20,10 +20,24 @@ public:
         UseColorSpecularLightMap,
     };
 
-	MeshRenderer(
-		LPIEXMESH	pMesh,		//描画するメッシュのポインタ
-		bool		MeshDelete,	//第一引数のメッシュをdeleteするかどうか
-        RenderType  type
+    class PreRenderCallBack
+    {
+    public:
+        enum Type
+        {
+            MasterRender,
+            GbufRender,
+            DepthRender,
+        };
+        virtual ~PreRenderCallBack(){}
+        virtual void Execute(MeshRenderer* pRenderer, Type type){}
+    };
+
+    MeshRenderer(
+        LPIEXMESH	pMesh,		//描画するメッシュのポインタ
+        bool		MeshDelete,	//第一引数のメッシュをdeleteするかどうか
+        RenderType  type,
+        PreRenderCallBack* pCallBack = nullptr
 		);
 
 	~MeshRenderer();
@@ -49,6 +63,7 @@ private:
 	iexMesh*	const	m_pMesh;
 	bool		const	m_MeshDelete;
     RenderType  const   m_RenderType;
+    PreRenderCallBack*  m_pCallBack;
 };
 
 #endif

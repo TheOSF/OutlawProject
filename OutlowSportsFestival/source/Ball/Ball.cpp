@@ -20,7 +20,9 @@ BallBase::~BallBase()
 bool BallBase::isCanCounter(const BallBase* pBall)
 {
 	//カウンター可能なボールかどうか
-	return pBall->m_Params.type == BallBase::Type::_Usual;
+    return
+        pBall->m_Params.type == BallBase::Type::_Usual ||
+        pBall->m_Params.type == BallBase::Type::_Milder;
 }
 
 //*****************************************************

@@ -2,7 +2,10 @@
 #include "BaseballState_PlayerControll_Evasion.h"
 #include "BaseballState_PlayerControll_ShotAttack_B.h"
 #include "BaseballState_PlayerControll_ShotAttack_P.h"
-
+#include "BaseballPlayerState_Attack_B.h"
+#include "BaseballPlayerState_Attack_P.h"
+#include "BaseballPlayerState_Counter.h"
+#include "BaseballState_SPAttack_P.h"
 #include "Baseball_HitEvent.h"
 #include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
@@ -13,6 +16,34 @@
 #include "../../Ball/MilderHoming.h"
 #include "../../Damage/Damage.h"
 #include "../CharacterCounterClass.h"
+
+//ローリングの方向制御クラス
+class PlayerRollingControll :public BaseballState_Rolling::CallBackClass
+{
+public:
+	BaseballPlayer*const pb;
+
+	PlayerRollingControll(BaseballPlayer* pb) :pb(pb){}
+
+
+	Vector3 GetVec()override
+	{
+		Vector2 stick = controller::GetStickValue(controller::stick::left, pb->m_PlayerInfo.number);
+		Vector3 vec(stick.x, 0, stick.y);
+
+		if (vec.Length() < 0.25f)
+		{
+			return Vector3Zero;
+		}
+
+		vec = Vector3MulMatrix3x3(vec, matView);
+		vec.Normalize();
+
+		return vec;
+	}
+};
+
+
 
 //***************************************
 //　移動
@@ -27,6 +58,7 @@ BaseballState* BaseballState_PlayerControll_Move::GetPlayerControllMove(
 		return new BaseballState_PlayerControll_Move();
 
 	case PlayerType::_Computer:
+		return new BaseballState_PlayerControll_Move();
 		switch (pt->m_PlayerInfo.strong_type)
 		{
 		case StrongType::_Weak:
@@ -40,7 +72,7 @@ BaseballState* BaseballState_PlayerControll_Move::GetPlayerControllMove(
 	default:break;
 	}
 
-	assert("通常ステートが作成できないキャラクタタイプです TennisState_PlayerControll_Move::GetPlayerControllMove" && 0);
+	assert("通常ステートが作成できないキャラクタタイプです BaseballState_PlayerControll_Move::GetPlayerControllMove" && 0);
 	return nullptr;
 }
 
@@ -62,11 +94,11 @@ void BaseballState_PlayerControll_Move::Enter(BaseballPlayer* b)
 		}
 		//　走り始めにモーションセット
 		void RunStart(){
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mt_Run);
+			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Run);
 		}
 		//　立ち始めにモーションセット
 		void StandStart(){
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mt_Stand);
+			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand);
 		}
 	};
 
@@ -163,10 +195,22 @@ void BaseballState_PlayerControll_Move::Batter(BaseballPlayer* b){
 		b->SetState(new BaseballState_PlayerControll_ShotAttack_B());
 		return;
 	}
+	//　近距離攻撃[□]
+	if (controller::GetTRG(controller::button::shikaku, b->m_PlayerInfo.number)){
+		b->SetState(new Baseball_PlayerControll_Attack_B(b));
+		return;
+	}
 	//　回避行動[×]
 	if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number)){
-		b->SetState(new BaseballState_PlayerControll_Evasion(0.25f));
+		b->SetState(new BaseballState_Rolling(new PlayerRollingControll(b)));
 		return;
+	}
+
+	// カウンター[R1]
+	if (controller::GetTRG(controller::button::_R1, b->m_PlayerInfo.number))
+	{
+		b->SetState(new  BaseballState_PlayerControll_Counter(5));
+		return ;
 	}
 }
 
@@ -177,9 +221,25 @@ void  BaseballState_PlayerControll_Move::Pitcher(BaseballPlayer* b){
 		b->SetState(new BaseballState_PlayerControll_ShotAttack_P());
 		return;
 	}
+	//　近距離攻撃[□]
+	if (controller::GetTRG(controller::button::shikaku, b->m_PlayerInfo.number)){
+		b->SetState(new Baseball_PlayerControll_Attack_P(b));
+		return;
+	}
 	//　回避行動[×]
 	if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number)){
-		b->SetState(new BaseballState_PlayerControll_Evasion(0.45f));
+		b->SetState(new BaseballState_Rolling(new PlayerRollingControll(b)));
+		return;
+	}
+	//　必殺技[○]
+	/*if (controller::GetTRG(controller::button::maru, b->m_PlayerInfo.number)){
+		b->SetState(new BaseballState_SPAttack_P());
+		return;
+	}*/
+	// カウンター[R1]
+	if (controller::GetTRG(controller::button::_R1, b->m_PlayerInfo.number))
+	{
+		b->SetState(new  BaseballState_PlayerControll_Counter(9));
 		return;
 	}
 }

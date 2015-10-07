@@ -1,105 +1,169 @@
-
-#include "BaseballPlayerState.h"
 #include "BaseballState_PlayerControll_Evasion.h"
-#include "Baseball_HitEvent.h"
-#include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
-#include "../CharacterManager.h"
-#include "../CharacterEvasionClass.h"
-
-#include "../../Damage/Damage.h"
-#include "../CharacterCounterClass.h"
+#include "BaseballPlayerState.h"
+#include "Baseball_HitEvent.h"
+#include "../../Effect/EffectFactory.h"
 
 
-//***************************************
-//　回避
-//***************************************
-
-//　コンストラクタ
-BaseballState_PlayerControll_Evasion::BaseballState_PlayerControll_Evasion(float speed) :
-m_pEvasionClass(nullptr)
+BaseballState_Rolling::BaseballState_Rolling(CallBackClass* pCallBackClass) :
+m_pCallBackClass(pCallBackClass)
 {
-	roolspeed = speed;
+
 }
 
-//　ステート開始
-void BaseballState_PlayerControll_Evasion::Enter(BaseballPlayer* b){
-	// 回避クラス作成
-	m_pEvasionClass = this->CreateEvasionClass(b);
+BaseballState_Rolling::~BaseballState_Rolling()
+{
+	delete m_pCallBackClass;
 }
 
 
-//　ステート実行
-void BaseballState_PlayerControll_Evasion::Execute(BaseballPlayer* b){
-	// スティックの値セット
-	m_pEvasionClass->SetStickValue(
-		controller::GetStickValue(controller::stick::left, b->m_PlayerInfo.number));
+// ステート開始
+void BaseballState_Rolling::Enter(BaseballPlayer* b)
+{
+	m_Timer = 0;
 
-	// 更新
-	if (m_pEvasionClass->Update() == false)
+	//デフォルトのローリング方向としてキャラの前ベクトルを入れる
+	chr_func::GetFront(b, &m_Vec);
+
+	//キャラクタの移動量を初期化
+	chr_func::ResetMove(b);
+}
+
+// ステート実行
+void BaseballState_Rolling::Execute(BaseballPlayer* b)
+{
+	const int EndFrame = 52;          //終了までのフレーム
+	const int CanControllFrame = 2;   //移動方向をコントロールできるフレーム
+	const int NoDamageFrame = 10;     //無敵時間
+	const float DownValue = 0.05f;     //減速量
+	float MoveValue = 0.0f;
+
+	//　バッターorピッチャーの移動量
+	if (b->getBatterFlg())
 	{
-		return;
+		MoveValue = 0.5f;    //バッター時
+	}
+	else
+	{
+		MoveValue = 0.8f;    //ピッチャー時
+	}
+
+	//フレームカウント更新
+	++m_Timer;
+
+	//モーションセット
+	if (m_Timer == 1)
+	{
+		b->m_Renderer.SetMotion(baseball_player::_mb_Evasion);
+	}
+
+	//移動方向をコントロール
+	if (m_Timer < CanControllFrame)
+	{
+		Vector3 Vec = m_pCallBackClass->GetVec();
+
+		//値があった場合は更新
+		if (Vec != Vector3Zero)
+		{
+			m_Vec = Vec;
+		}
+	}
+
+	//コントロールできるフレームが終わった場合向きと移動を設定
+	if (m_Timer == CanControllFrame)
+	{
+		m_Vec.y = 0;
+		m_Vec.Normalize();
+
+		chr_func::AngleControll(b, b->m_Params.pos + m_Vec);
+
+		chr_func::AddMoveFront(b, MoveValue, MoveValue);
+	}
+
+	//終了
+	if (m_Timer == EndFrame)
+	{
+		//通常ステートに移行
+		b->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(b));
+	}
+
+	//煙エフェクト
+	{
+		//スタート時
+		if (m_Timer == 2)
+		{
+			for (int i = 0; i < 2; ++i)
+			{
+				EffectFactory::Smoke(
+					b->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
+					Vector3Zero,
+					1.5f,
+					0xFFFFA080,
+					true
+					);
+			}
+		}
+
+		//軌跡
+		if (m_Timer < 5)
+		{
+			for (int i = 0; i < 2; ++i)
+			{
+				EffectFactory::Smoke(
+					b->m_Params.pos + Vector3(0, 2, 0) + Vector3Rand() * 0.2f,
+					Vector3Zero,
+					1.0f + frand()*0.5f,
+					0x20FFA080
+					);
+			}
+		}
+
+		//着地時
+		if (m_Timer == 43)
+		{
+			for (int i = 0; i < 2; ++i)
+			{
+				EffectFactory::Smoke(
+					b->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
+					Vector3Zero,
+					2.5f,
+					0xFFFFA080,
+					true
+					);
+			}
+		}
+
+	}
+
+	//基本的な更新
+	{
+		DamageManager::HitEventBase NoDmgHitEvent;   //ノーダメージ
+		BaseballHitEvent              UsualHitEvent(b);//通常
+
+
+		//移動量の減衰
+		chr_func::XZMoveDown(b, DownValue);
+
+		//無敵フレームかによってヒットイベントクラスの分岐
+		if (m_Timer < NoDamageFrame)
+		{
+			chr_func::UpdateAll(b, &NoDmgHitEvent);
+		}
+		else
+		{
+			chr_func::UpdateAll(b, &UsualHitEvent);
+		}
+
+		//モデル更新
+		b->m_Renderer.Update(1);
+
+		//行列更新
+		chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
 	}
 }
 
-//　ステート終了
-void BaseballState_PlayerControll_Evasion::Exit(BaseballPlayer* b){
-	delete m_pEvasionClass;
-}
+// ステート終了
+void BaseballState_Rolling::Exit(BaseballPlayer* b)
+{
 
-
-//　回避クラス
-CharacterEvasion* BaseballState_PlayerControll_Evasion::CreateEvasionClass(BaseballPlayer* b){
-	class EvasionEvent : public CharacterEvasion::Event{
-		BaseballPlayer* m_pBaseball;//　野球
-	public:
-		//　コンストラクタ
-		EvasionEvent(BaseballPlayer* pBaseball) :
-			m_pBaseball(pBaseball){}
-
-		// 更新
-		void Update()override
-		{
-			// モデル更新
-			m_pBaseball->m_Renderer.Update(1.0f);
-
-			// 転送行列更新
-			chr_func::CreateTransMatrix(
-				m_pBaseball,
-				0.05f,
-				&m_pBaseball->m_Renderer.m_TransMatrix);
-		}
-
-
-		// 回避行動開始
-		void EvasionStart()override
-		{
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mt_Evasion);
-		}
-
-
-		// 回避行動終了
-		void EvasionEnd()override
-		{
-			// 通常移動へ
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mt_Stand);
-			m_pBaseball->SetState(new BaseballState_PlayerControll_Move());
-		}
-	};
-
-	// 回避パラメータ設定
-	CharacterEvasion::EvasionParams params;
-	params.AllFrame = 35;         // 全35フレーム
-	params.MaxTurnRadian = PI / 4;    // 45°
-	params.MoveDownSpeed = 0.2f;      // 減速割合
-	params.MoveSpeed = roolspeed;    // 移動スピード
-	params.NoDamageStartFrame = 3;          // 開始3フレームで無敵開始
-	params.NoDamageEndFrame = 20;       // 開始20フレームで無敵終了
-
-	// 作成
-	return new CharacterEvasion(
-		b,
-		new EvasionEvent(b),
-		params
-		);
 }

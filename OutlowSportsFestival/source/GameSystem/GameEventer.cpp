@@ -22,8 +22,10 @@
 //  試合遷移メッセージを送信するクラス
 //----------------------------------------------------
 
-GameEventer::GameEventer(const Param& p, State* pInitState) :
-m_Param(p)
+GameEventer::GameEventer(const Param& p, State* pInitState, LPVECTOR3 pControllDirColor) :
+m_Param(p),
+m_pControllDirColor(pControllDirColor),
+m_InitDirColor(*pControllDirColor)
 {
     m_Param.round_count = 1;
 
@@ -45,9 +47,17 @@ void GameEventer::SetState(State* pState)
 	m_pStateMachine->set_state(pState);
 }
 
+void GameEventer::SetLightChange()
+{
+    *m_pControllDirColor = Vector3Zero;
+}
+
 bool GameEventer::Update()
 {
 	m_pStateMachine->state_execute();
+
+    *m_pControllDirColor += (m_InitDirColor - *m_pControllDirColor)*0.05f;
+
 	return true;
 }
 
@@ -173,9 +183,17 @@ void MatchState::RoundResetCountdown::Enter(_Client_type_ptr p)
 
 void MatchState::RoundResetCountdown::Execute(_Client_type_ptr p)
 {
-    if (++m_Frame > 140)
+
+    //ＵＩ表示
+    if (m_Frame == 120)
     {
         new FightUI(0);
+    }
+
+    if (++m_Frame > 140)
+    {
+        //ゴング音再生
+        Sound::Play(Sound::Gong_Start);
 
         DefCamera.SetNewState(new CameraStateGamePlay());
         p->SetState(new MatchPlay());
@@ -195,7 +213,8 @@ void MatchState::RoundResetCountdown::Exit(_Client_type_ptr p)
 //--------------------------------------------------
 
 MatchState::MatchPlay::MatchPlay():
-m_Frame(0)
+m_Frame(0),
+m_PreLiveCount(0)
 {
 
 }
@@ -203,6 +222,31 @@ m_Frame(0)
 MatchState::MatchPlay::~MatchPlay()
 {
 
+}
+
+MatchState::MatchPlay::GameStopMgr::GameStopMgr()
+{
+    m_Ep_frame = 0;
+    m_Stop_frame = 0;
+}
+
+//毎フレームの更新
+void MatchState::MatchPlay::GameStopMgr::Update()
+{
+    if (m_Ep_frame == 0)
+    {
+        std::list<LpGameObjectBase> UpdateList;
+        DefGameObjMgr.FreezeOtherObjectUpdate(UpdateList, (UINT)m_Stop_frame);
+    }
+
+    m_Ep_frame = max(m_Ep_frame - 1, -1);
+}
+
+//ストップさせる(引数：何フレーム後にストップするか、何フレームストップするか)
+void MatchState::MatchPlay::GameStopMgr::SetStop(UINT ep_frame, UINT stop_frame)
+{
+    m_Ep_frame = (int)ep_frame;
+    m_Stop_frame = (int)stop_frame;
 }
 
 
@@ -229,20 +273,52 @@ void MatchState::MatchPlay::Enter(_Client_type_ptr p)
 
 void MatchState::MatchPlay::Execute(_Client_type_ptr p)
 {
-
     const UINT liveCount = DefCharacterMgr.GetCharacterLiveCount();
-    
+
+    //ゲームストップ管理クラスの更新
+    m_GameStopMgr.Update();
+
+    //初期化
+    if (m_PreLiveCount == 0)
+    {
+        m_PreLiveCount = liveCount;
+    }
+
+    //ステート変更関数の呼び出し
+    SwitchState(liveCount,p);
+
+    //前回のフレームとキャラクタ数が違った場合は時間をとめる
+    if (m_PreLiveCount != liveCount && liveCount > 1)
+    {
+        Sound::Play(Sound::Impact2);
+        m_GameStopMgr.SetStop(3, 60);
+        p->SetLightChange();
+    }
+
+    //生存キャラクタカウンタを更新
+    m_PreLiveCount = liveCount;
+
+    //生存しているキャラクタデータを更新する
+    GetLiveCharacterMap(m_CharacterMap);
+}
+
+void MatchState::MatchPlay::Exit(_Client_type_ptr p)
+{
+
+}
+
+void MatchState::MatchPlay::SwitchState(const UINT liveCount, _Client_type_ptr p)
+{
     if (liveCount == 1)
     {
         //一人がちパターンの場合
-
         CharacterManager::CharacterMap NowLiveCharacterMap;
         GetLiveCharacterMap(NowLiveCharacterMap);
 
         //勝利したキャラクタを検索
         LpCharacterBase  WinCharacter = NowLiveCharacterMap.begin()->first;
         LpCharacterBase  LastDieCharacter = nullptr;
-        
+
         //最後に倒されたキャラクタを検索
         for (auto& it : m_CharacterMap)
         {
@@ -267,7 +343,7 @@ void MatchState::MatchPlay::Execute(_Client_type_ptr p)
         int a = 0;
     }
     else if (++m_Frame > p->m_Param.time)
-	{
+    {
         //タイムアップの場合
         LpCharacterBase  WinCharacter = nullptr;
         RATIO            MostManyLife = 0.0f;
@@ -285,22 +361,15 @@ void MatchState::MatchPlay::Execute(_Client_type_ptr p)
                 WinCharacter = it.first;
             }
         }
-        
+
 
         MyAssert(WinCharacter != nullptr, "タイムアップ時にキャラクタがいませんでした(ありえない!)");
 
         //タイムアップ勝ちステートをセット
-     //   p->SetState(new WinPose(LastDieCharacter, WinCharacter));
+        //   p->SetState(new WinPose(LastDieCharacter, WinCharacter));
 
         return;
-	}
-
-    //生存しているキャラクタデータを更新する
-    GetLiveCharacterMap(m_CharacterMap);
-}
-
-void MatchState::MatchPlay::Exit(_Client_type_ptr p)
-{
+    }
 
 }
 
@@ -333,6 +402,12 @@ void MatchState::WinPose::Enter(_Client_type_ptr p)
 void MatchState::WinPose::Execute(_Client_type_ptr p)
 {
     ++m_Frame;
+
+    if (m_Frame == 1)
+    {
+        //ゴング音再生
+        Sound::Play(Sound::Gong_End);
+    }
 
     if (m_Frame == 6)
     {

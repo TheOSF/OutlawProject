@@ -123,6 +123,30 @@ void	iexPolygon::PolygonRender3DHDR(LpHdrLVERTEX lpVertex, int Num, LPIEX2DOBJ l
     shader->End();
 }
 
+void	iexPolygon::PolygonRenderBlurVertex(LpVectorBlurVERTEX lpVertex, int Num, LPIEX2DOBJ lpObj, iexShader* shader, char* name)
+{
+    LPDEVICE	lpDevice = iexSystem::Device;
+
+    //	シェーダーの適用
+    u32 pass = shader->Begine(name);
+
+    lpDevice->SetFVF(
+        (D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1));
+    
+    if (lpObj) shader->SetTexture(lpObj->GetTexture());
+
+    for (u32 p = 0; p<pass; p++)
+    {
+        shader->BeginePass(p);
+        shader->CommitChanges();
+        //	レンダリング
+        lpDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, Num, lpVertex, sizeof(HdrLVERTEX));
+        shader->EndPass();
+    }
+    shader->End();
+}
+
+
 //*****************************************************************************
 //	矩形描画
 //*****************************************************************************

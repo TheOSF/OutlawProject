@@ -4,6 +4,7 @@
 #include "../CharacterFunction.h"
 
 #include "../../Effect/HitEffectObject.h"
+#include "../../Effect/SoccerSpecialHitEffect.h"
 #include "../../Effect/BlurImpact.h"
 
 
@@ -114,6 +115,13 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
         0.15f,
         Vector3(1.0f, 1.0f, 1.0f)
         );
+    
+    //new SoccerSpecialHitEffect(
+    //    m_pTennis->m_Params.pos + Vector3Normalize(m_Damage_vec) * 8, 
+    //       m_Damage_vec,
+    //       Vector3(1.0f, 1.0f, 1.0f),
+    //       10
+    //    );
 
     //ブラーエフェクト
     new BlurImpactSphere(

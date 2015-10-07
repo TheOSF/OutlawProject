@@ -4,6 +4,8 @@
 
 #include "../Effect/EffectFactory.h"
 #include "../Sound/Sound.h"
+#include "../Collision/Collision.h"
+#include "../Camera/Camera.h"
 
 CharacterDamageVanish::CharacterDamageVanish(
     CharacterBase*    pCharacter,//吹き飛ぶキャラクタ
@@ -15,8 +17,9 @@ CharacterDamageVanish::CharacterDamageVanish(
     m_pEvent(pEvent),
     m_pStateFunc(&CharacterDamageVanish::Initialize),
     m_Count(0),
-    m_Rotate(0,0,0),
-    m_pHitEvent(pHitEvent)
+    m_Rotate(0, 0, 0),
+    m_pHitEvent(pHitEvent),
+    m_WallHit(false)
 {
     m_Param = param;
 }
@@ -58,6 +61,8 @@ void CharacterDamageVanish::Initialize()
 
     //サウンド
     Sound::Play(Sound::Damage2);
+
+    
 }
 
 void CharacterDamageVanish::Flying()
@@ -105,6 +110,39 @@ void CharacterDamageVanish::Flying()
 
         //ズザー音
         Sound::Play(Sound::Sand2);
+    }
+
+    //壁についていた場合は反転
+    if (m_WallHit == false)
+    {
+        Vector3 out, pos(m_pCharacter->m_Params.pos), vec(m_pCharacter->m_Params.move);
+        float dist = m_pCharacter->m_Params.size+ Vector3XZLength(m_pCharacter->m_Params.move)*2.0f;
+        int material;
+
+        vec.y = 0;
+        vec.Normalize();
+
+        if (DefCollisionMgr.RayPick(
+            &out,
+            &pos,
+            &vec,
+            &dist,
+            &material,
+            CollisionManager::RayType::_Usual
+            ) != nullptr)
+        {
+            m_Param.move = Vector3Refrect(m_pCharacter->m_Params.move, vec);
+
+            {
+                m_Param.move *= 0.25f;
+                m_Param.move.y += 0.5f;
+            }
+
+            m_pStateFunc = &CharacterDamageVanish::Initialize;
+            m_WallHit = true;
+
+            DefCamera.SetShock(Vector2(0.3f, 0.3f), 15);
+        }
     }
 }
 

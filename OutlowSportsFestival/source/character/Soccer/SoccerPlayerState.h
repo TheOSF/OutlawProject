@@ -5,6 +5,8 @@
 #include "SoccerDash.h"
 #include "SoccerPlayer.h"
 
+#include "SoccerAttackInfo_UsualAttack.h"
+
 #include "../Attack/CharacterAttack.h"
 #include "../../Ball/UsualBall.h"
 #include "../CharacterMoveClass.h"
@@ -14,6 +16,8 @@
 
 #include "../CharacterShotAttackClass.h"
 #include "../CharacterCounterClass.h"
+
+#include "../CharacterDamageMotion.h"
 
 
 //****************************************************
@@ -26,6 +30,8 @@ class SoccerState_PlayerControll_Move :public SoccerState
 private:
 	CharacterUsualMove*		m_pMoveClass;
 public:
+
+	static SoccerState* GetPlayerControllMove(SoccerPlayer* ps);
 	void Enter(SoccerPlayer* s);
 	void Execute(SoccerPlayer* s);
 	void Exit(SoccerPlayer* s);
@@ -33,48 +39,68 @@ public:
 //プレイヤー操作の回避クラス
 class SoccerState_PlayerControll_Sliding :public SoccerState
 {
-private:
-	SoccerSliding*		m_pSlidingClass;
-	int timer = 0;
+	//攻撃操作クラス
+	class PlayerControllEvent :public SoccerAttackClass::ControllEvent
+	{
+	public:
+		PlayerControllEvent(SoccerPlayer*const pSoccer);
+
+		bool isDoCombo();
+		void AngleControll(RADIAN angle);
+
+	private:
+		SoccerPlayer*const m_pSoccer;
+
+		const CharacterBase* GetFrontTargetEnemy();
+	};
 public:
-	void Enter(SoccerPlayer* s);
-	void Execute(SoccerPlayer* s);
-	void Exit(SoccerPlayer* s);
+	SoccerState_PlayerControll_Sliding(SoccerPlayer* s);
+	~SoccerState_PlayerControll_Sliding();
+
+	// ステート開始
+	void Enter(SoccerPlayer* t)override;
+
+	// ステート実行
+	void Execute(SoccerPlayer* t)override;
+
+	// ステート終了
+	void Exit(SoccerPlayer* t)override;
+
+private:
+	SoccerAttackClass   m_Attack;        //攻撃クラスへのポインタ
 };
 //プレイヤー操作の攻撃クラス
 class SoccerState_PlayerControll_Attack :public SoccerState
 {
-private:
-	CharacterNearAttack*		m_pMoveClass;
-	CharacterNearAttack::Params p;
-	
-	int timer;
+	//攻撃操作クラス
+	class PlayerControllEvent :public SoccerAttackClass::ControllEvent
+	{
+	public:
+		PlayerControllEvent(SoccerPlayer*const pSoccer);
+
+		bool isDoCombo();
+		void AngleControll(RADIAN angle);
+
+	private:
+		SoccerPlayer*const m_pSoccer;
+
+		const CharacterBase* GetFrontTargetEnemy();
+	};
 public:
-	void Enter(SoccerPlayer* s);
-	void Execute(SoccerPlayer* s);
-	void Exit(SoccerPlayer* s);
-};
-class SoccerState_PlayerControll_AttackCombo :public SoccerState
-{
+	SoccerState_PlayerControll_Attack(SoccerPlayer* s);
+	~SoccerState_PlayerControll_Attack();
+
+	// ステート開始
+	void Enter(SoccerPlayer* t)override;
+
+	// ステート実行
+	void Execute(SoccerPlayer* t)override;
+
+	// ステート終了
+	void Exit(SoccerPlayer* t)override;
+
 private:
-	CharacterNearAttack*		m_pMoveClass;
-	CharacterNearAttack::Params p;
-	int timer;
-public:
-	void Enter(SoccerPlayer* s);
-	void Execute(SoccerPlayer* s);
-	void Exit(SoccerPlayer* s);
-};
-class SoccerState_PlayerControll_AttackFinish :public SoccerState
-{
-private:
-	CharacterNearAttack*		m_pMoveClass;
-	CharacterNearAttack::Params p;
-	int timer;
-public:
-	void Enter(SoccerPlayer* s);
-	void Execute(SoccerPlayer* s);
-	void Exit(SoccerPlayer* s);
+	SoccerAttackClass   m_Attack;        //攻撃クラスへのポインタ
 };
 //プレイヤー操作の射撃クラス
 class SoccerState_PlayerControll_Shot :public SoccerState
@@ -90,8 +116,7 @@ public:
 class SoccerState_PlayerControll_Counter : public SoccerState
 {
 private:
-	CharacterCounter* CreateCounterClass(SoccerPlayer* t);
-	CharacterCounter*		m_pCounterClass;
+	CharacterDefaultCounter* m_pCounter; // カウンタークラス
 public:
 	void Enter(SoccerPlayer* s);
 	void Execute(SoccerPlayer* s);
@@ -108,5 +133,26 @@ public:
 	void Execute(SoccerPlayer* s);
 	void Exit(SoccerPlayer* s);
 };
+//プレイヤー操作の必殺技クラス
+class SoccerState_PlayerControll_Finisher : public SoccerState
+{
+private:
+	//　遠距離クラス作成
+	CharacterShotAttack* SnakeShotClass(SoccerPlayer* s);
+private:
+	//　遠距離クラス
+	CharacterShotAttack* m_pSnakeShotClass;
+	
+public:
+
+	//　コンストラクタ
+	SoccerState_PlayerControll_Finisher();
+
+	void Enter(SoccerPlayer* s);
+	void Execute(SoccerPlayer* s);
+	void Exit(SoccerPlayer* s);
+
+};
+
 
 #endif

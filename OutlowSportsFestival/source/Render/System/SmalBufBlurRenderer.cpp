@@ -188,5 +188,4 @@ void SmalBufBlurRenderer::RenderToTexture(UINT from, UINT to)
         m_pShader,
         "gauss"
         );
-
 }

@@ -41,6 +41,7 @@
 
 // Bullet
 #include "../Library/Bullet/BulletSystem.h"
+#include "../Library/Bullet/BulletUpdateGameobject.h"
 
 #include "../GameSystem/GameEventer.h"
 #include "../character/CharacterFunction.h"
@@ -59,7 +60,7 @@
 #include "../Effect/StageSmokeEmitter.h"
 
 #include "../Effect/ParticleManagerUpdater.h"
-
+#include "LightEventExecuter.h"
 
 
 static void CreateCharacter(
@@ -150,55 +151,50 @@ void GameInitializer_DevelopMode::GameCreate()
     {
 
         CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Baseball);
 
-        CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Soccer);
         CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Tennis);
     }
 
 
     {
-        GameEventer::Param param;
-
-        param.round = 3;
-        param.time = 60 * 60 * 3; //３分
-
-        new GameEventer(param, new MatchState::RoundResetCountdown());
-    }
-
-
-    {
         //ステージ作成
-        pStageMesh = new iexMesh("DATA\\STAGE\\Stage.IMO");
-
-        //当たり判定のあるステージにする
-        new HitStageObject(
-            new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColor),
-            new MeshCollider(pStageMesh, new MeshCollider::HitEvent)
-            );
-
-
+        if (true)
         {
-            iexMesh* pStageMesh = new IEXMESH("DATA\\tennis\\tennie.imo");
+            pStageMesh = new iexMesh("DATA\\STAGE\\Stage.IMO");
+
+            //当たり判定のあるステージにする
+            new HitStageObject(
+                new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColor),
+                new MeshCollider(pStageMesh, new MeshCollider::HitEvent)
+                );
+        }
+        else
+        {
+            pStageMesh = new iexMesh("DATA\\Stages\\Kasenjiki.IMO");
+
             Matrix m;
-            D3DXMatrixRotationY(&m, PI);
+
+            const float scale = 0.1f;
+
+            MeshRenderer* R = new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColor);
+            MeshCollider* C = new MeshCollider(pStageMesh, new MeshCollider::HitEvent);
+
+            D3DXMatrixScaling(&m, scale, scale, scale);
             {
-                Matrix k;
-                D3DXMatrixScaling(&k, 0.32f, 0.32f, 0.32f);
-
-                m *= k;
+                Matrix s;
+                D3DXMatrixRotationY(&s, PI);
+                m *= s;
             }
-            
-
-            MeshRenderer* R =
-                new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColorSpecular);
 
             R->SetMatrix(m);
+            C->SetWorldMatrix(m);
 
             //当たり判定のあるステージにする
             new HitStageObject(
                 R,
-                new MeshCollider(pStageMesh, new MeshCollider::HitEvent)
+                C
                 );
         }
 
@@ -216,7 +212,7 @@ void GameInitializer_DevelopMode::GameCreate()
     {// Bullet
 
         DefBulletSystem.StartUp();
-        DefBulletSystem.InitializeBulletPhysics(btVector3(0, -9.8f, 0), iexSystem::Device);
+        DefBulletSystem.InitializeBulletPhysics(btVector3(0, -9.8f, 0)*2.0f, iexSystem::Device);
 
         //土台のステージ
         DefBulletSystem.AddRigidMesh(
@@ -228,6 +224,9 @@ void GameInitializer_DevelopMode::GameCreate()
             Vector3(0, 0, 0),
             Vector3(0, 0, 0)
             );
+
+        //更新クラスの作成
+        new BulletUpdateGameobject();
     }
 
     {
@@ -312,9 +311,11 @@ void GameInitializer_DevelopMode::GameCreate()
         new StaticGameObjectTemplate<DamageShpere>(d);
     }
 
+    Vector3 *pDirLightColor = nullptr;
 
     {
         //ライティング設定
+
         
         {
             HemiLight* H = new HemiLight;
@@ -329,13 +330,15 @@ void GameInitializer_DevelopMode::GameCreate()
         {
             DirLight* D = new DirLight;
 
-            D->param.color = Vector3(0.2f, 0.25f, 0.25f);
+            D->param.color = Vector3(0.3f, 0.2f, 0.2f);
             D->param.vec = Vector3Normalize(Vector3(0.2f, -2, 0.5f));
             D->param.Shadow.visible = true;
             D->param.Shadow.Near = 5;
             D->param.Shadow.Far = 150;
             D->param.Shadow.origin = DefCamera.m_Position + Vector3(0, 20, 20);
             D->param.Shadow.Size = 120;
+
+            pDirLightColor = &D->param.color;
 
             new DebugControllGameObject(&D->param.color, 0, 0.01f, "DirColor", 'D');
             new StaticGameObjectTemplate<DirLight>(D);
@@ -344,14 +347,22 @@ void GameInitializer_DevelopMode::GameCreate()
         {
             AmbientLight* A = new AmbientLight;
 
-            A->param.color = Vector3(0.38f, 0.24f, 0.24f);
+            A->param.color = Vector3(0.24f, 0.24f, 0.24f);
             A->param.Occlusion.SamplingSize = 0.025f;
-            A->param.Occlusion.Enable = true;
+            A->param.Occlusion.Enable = false;
 
-            new DebugControllGameObject(nullptr, &A->param.Occlusion.SamplingSize, 0.01f, "AmbSize", 'S');
             new DebugControllGameObject(&A->param.color, 0, 0.01f, "AmbColor", 'A');
             new StaticGameObjectTemplate<AmbientLight>(A);
         }
     }
    
+
+    {
+        GameEventer::Param param;
+
+        param.round = 3;
+        param.time = 60 * 60 * 3; //３分
+
+        new GameEventer(param, new MatchState::RoundResetCountdown(), pDirLightColor);
+    }
 }

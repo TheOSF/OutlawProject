@@ -1,12 +1,17 @@
 #include "SoccerPlayer.h"
+#include "../../Damage/Damage.h"
+#include "../../GameSystem/GameController.h"
+#include "../../Ball/UsualBall.h"
 
+#include "../CharacterFunction.h"
+#include "../CharacterManager.h"
 
 //*************************************************************
 //		サッカープレイヤークラス
 //*************************************************************
 
 SoccerPlayer::SoccerPlayer(const CharacterBase::PlayerInfo& info) :
-CharacterBase(info),
+CharacterBase(info), m_ModelSize(0.05f),
 m_Renderer(new BlendAnimationMesh("DATA\\CHR\\Soccer\\Player_S.iem"))
 {
 	m_pStateMachine = new SoccerStateMachine(this);
@@ -37,5 +42,3 @@ bool SoccerPlayer::Msg(MsgType mt)
 {
 	return m_pStateMachine->Msg(mt);
 }
-
-

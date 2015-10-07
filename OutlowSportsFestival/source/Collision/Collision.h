@@ -14,6 +14,7 @@ public:
 	enum RayType
 	{
 		_Usual,
+        _Ball,
 	};
 
 	CollisionBase();

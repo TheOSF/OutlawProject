@@ -10,12 +10,15 @@ HitEffectObject::HitEffectObject(
     float     length,
     float     width,
     Vector3   color,
-    UINT      level
+    UINT      level,
+    float     LightSize,
+    UINT      frame 
     ) :
     m_Renderer(DefResource.Get(Resource::MeshType::HitEffect), false),
     m_Color(color),
     m_T(0),
-    m_Particle_level(level)
+    m_Particle_level(level),
+    m_Frame(frame)
 {
     InitMatrix(pos, vec, length, width);
 
@@ -28,7 +31,7 @@ HitEffectObject::HitEffectObject(
     //ƒ‰ƒCƒg
     m_Light.param.color = color*0.25f;
     m_Light.param.pos = pos;
-    m_Light.param.size = 20.0f;
+    m_Light.param.size = LightSize;
 }
 
 HitEffectObject::~HitEffectObject()
@@ -149,7 +152,7 @@ void HitEffectObject::UpdateMatrix()
 
 bool HitEffectObject::Update()
 {
-    const float Speed = 1 / 8.0f;
+    const float Speed = 1 / (float)m_Frame;
     m_T += Speed;
 
     UpdateMatrix();

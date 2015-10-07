@@ -14,8 +14,11 @@ public:
 	BaseballHitEvent(BaseballPlayer* pt);
 
 	bool Hit(DamageBase* pDmg);//当たった時に呼ばれる関数(戻り値：当たったかどうか)
+
 private:
 	BaseballPlayer* m_pBaseball;
+	//ダメージ計算
+	void CalcDamage(DamageBase* pDmg);
 };
 
 #endif

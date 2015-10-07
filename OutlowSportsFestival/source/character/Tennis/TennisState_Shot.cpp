@@ -146,7 +146,7 @@ void TennisState_Shot::Execute(TennisPlayer* t)
             //移動は前向き
             chr_func::GetFront(t, &param.move);
             //スピードは適当
-            param.move *= 0.7f;
+            param.move *= 0.6f;
 
             //キャラの場所に(最終的に腕の位置に？)
             param.pos = m_pUpBall->m_Params.pos;
@@ -179,9 +179,6 @@ void TennisState_Shot::Execute(TennisPlayer* t)
             //上に上げたボールを消去
             m_pUpBall->m_DeleteFlag = true;
             m_pUpBall = nullptr;
-
-
-            
         }
     }
 

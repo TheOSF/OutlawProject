@@ -81,7 +81,7 @@ private:
     //スティックによる角度調整
     void SetStickAngle(CrVector3 OriginVec,RADIAN controllRad);
 
-    //
+    
     void SetAutoCounter();
 
     CharacterBase* const                m_pOwner;       //オーナーキャラクタ
