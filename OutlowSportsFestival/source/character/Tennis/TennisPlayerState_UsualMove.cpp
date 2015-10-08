@@ -117,5 +117,3 @@ void TennisState_PlayerControll_Move::Exit(TennisPlayer* t)
 {
 	delete m_pMoveClass;
 }
-
-

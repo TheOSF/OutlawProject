@@ -1,7 +1,35 @@
 #include "SoccerPlayerState.h"
+#include "SoccerCommonState.h"
+#include "SoccerHitEvent.h"
 #include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
 #include "../CharacterBase.h"
+
+SoccerState* SoccerState_PlayerControll_Move::GetPlayerControllMove(
+	SoccerPlayer* ps)
+{
+	switch (ps->m_PlayerInfo.player_type)
+	{
+	case PlayerType::_Player:
+		return new SoccerState_PlayerControll_Move();
+
+	case PlayerType::_Computer:
+		switch (ps->m_PlayerInfo.strong_type)
+		{
+		case StrongType::_Weak:
+			//return new 弱い通常移動
+		case StrongType::_Usual:
+			//return new 弱い通常移動
+		case StrongType::_Strong:
+			//return new 弱い通常移動
+		default:break;
+		}
+	default:break;
+	}
+
+	assert("通常ステートが作成できないキャラクタタイプです TennisState_PlayerControll_Move::GetPlayerControllMove" && 0);
+	return nullptr;
+}
 
 void SoccerState_PlayerControll_Move::Enter(SoccerPlayer* s)
 {
@@ -12,16 +40,17 @@ void SoccerState_PlayerControll_Move::Enter(SoccerPlayer* s)
 		SoccerMoveEvent(SoccerPlayer* pSoccer) :
 			m_pSoccer(pSoccer){}
 
+		//アニメーションの更新
 		void Update(bool isRun, RATIO speed_ratio)
 		{
 			m_pSoccer->m_Renderer.Update(1);
 		}
-
+		//走り始めにモーションをセット
 		void RunStart()
 		{
 			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Run);
 		}
-
+		//立ちはじめにモーションをセット
 		void StandStart()
 		{
 			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Stand);
@@ -35,11 +64,20 @@ void SoccerState_PlayerControll_Move::Enter(SoccerPlayer* s)
 	p.TurnSpeed = 0.3f;
 	p.DownSpeed = 0.2f;
 
-	m_pMoveClass = new CharacterUsualMove(s, p, new SoccerMoveEvent(s),new DamageManager::HitEventBase());
+	m_pMoveClass = new CharacterUsualMove(
+		s, 
+		p, 
+		new SoccerMoveEvent(s),
+		new SoccerHitEvent(s));
 }
 void SoccerState_PlayerControll_Move::Execute(SoccerPlayer* s)
 {
 	Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
+
+	m_pMoveClass->SetStickValue(st);
+	m_pMoveClass->Update();
+
+
 	// [×] で スライディング
 	if (controller::GetTRG(controller::button::batu, s->m_PlayerInfo.number))
 	{
@@ -66,8 +104,7 @@ void SoccerState_PlayerControll_Move::Execute(SoccerPlayer* s)
 		s->SetState(new SoccerState_PlayerControll_Dash());
 	}
 
-	m_pMoveClass->SetStickValue(st);
-	m_pMoveClass->Update();
+	
 
 	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
 }
@@ -146,7 +183,7 @@ void SoccerState_PlayerControll_Attack::Enter(SoccerPlayer* s)
 	p.damage = 20;
 	p.speed = 0.2f;
 	p.CanHitNum = 1;
-	p.HitCenter = 0.5f;
+	p.HitCenter = 10.5f;
 
 	timer = 0;
 
@@ -208,6 +245,8 @@ void SoccerState_PlayerControll_AttackCombo::Enter(SoccerPlayer* s)
 	p.EndFrame = 35;
 	p.damage = 20;
 	p.speed = 0.2f;
+	p.CanHitNum = 1;
+	p.HitCenter = 10.5f;
 
 	timer = 0;
 
@@ -269,12 +308,14 @@ void SoccerState_PlayerControll_AttackFinish::Enter(SoccerPlayer* s)
 	p.EndFrame = 35;
 	p.damage = 20;
 	p.speed = 0.2f;
+	p.CanHitNum = 1;
+	p.HitCenter = 10.5f;
 
 	timer = 0;
 
 	p.TurnSpeed = 0.1f;
 
-	m_pMoveClass = new CharacterNearAttack(s, p, new SoccerAttackEvent(s), DamageBase::Type::_WeekDamage, 1);
+	m_pMoveClass = new CharacterNearAttack(s, p, new SoccerAttackEvent(s), DamageBase::Type::_VanishDamage, 1);
 }
 void SoccerState_PlayerControll_AttackFinish::Execute(SoccerPlayer* s)
 {
@@ -547,4 +588,9 @@ void SoccerState_PlayerControll_Dash::Execute(SoccerPlayer* s)
 void SoccerState_PlayerControll_Dash::Exit(SoccerPlayer* s)
 {
 	delete m_pMoveClass;
+}
+
+void SoccerState_SmallDamage(SoccerPlayer* s)
+{
+
 }

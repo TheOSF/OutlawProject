@@ -45,6 +45,7 @@ public:
 	~SoccerPlayer();
 
 	CharacterRenderer	m_Renderer;
+	const float m_ModelSize;
 
 	void SetState(SoccerState* state);
 	bool Update();

@@ -15,6 +15,8 @@
 #include "../CharacterShotAttackClass.h"
 #include "../CharacterCounterClass.h"
 
+#include "../CharacterDamageMotion.h"
+
 
 //****************************************************
 //	サッカープレイヤーの操作クラスヘッダー
@@ -26,6 +28,8 @@ class SoccerState_PlayerControll_Move :public SoccerState
 private:
 	CharacterUsualMove*		m_pMoveClass;
 public:
+
+	static SoccerState* GetPlayerControllMove(SoccerPlayer* ps);
 	void Enter(SoccerPlayer* s);
 	void Execute(SoccerPlayer* s);
 	void Exit(SoccerPlayer* s);
@@ -108,5 +112,7 @@ public:
 	void Execute(SoccerPlayer* s);
 	void Exit(SoccerPlayer* s);
 };
+//サッカーのヒット時(通常)クラス
+
 
 #endif
