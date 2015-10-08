@@ -78,6 +78,8 @@ bool CharacterNearAttack::Update()
 		if (m_Params.CanHitNum==m_Damage.HitCount)
 			m_Damage.m_Enable = false;
 	}
+	if (m_Params.CanHitNum == m_Damage.HitCount)
+		m_Damage.m_Enable = false;
 	if (m_timer >= m_Params.EndFrame)
 	{// UŒ‚I—¹
 		m_pAttackEvent->AttackEnd();
