@@ -3,6 +3,7 @@
 #include "SoccerPlayerState.h"
 #include "SoccerHitEvent.h"
 #include "../../Effect/EffectFactory.h"
+#include "../../Sound/Sound.h"
 
 
 SoccerState_Rolling::SoccerState_Rolling(CallBackClass* pCallBackClass,bool dash) :
@@ -136,7 +137,11 @@ void SoccerState_Rolling::Execute(SoccerPlayer* s)
 		}
 
 	}
-
+	if (m_Timer == EndFrame - 25)
+	{
+		//ズザー音
+		Sound::Play(Sound::Sand1);
+	}
 	//基本的な更新
 	{
 		DamageManager::HitEventBase NoDmgHitEvent;   //ノーダメージ

@@ -1,5 +1,6 @@
 #include "SoccerAttackInfo_UsualAttack.h"
 #include "../CharacterFunction.h"
+#include "../../Sound/Sound.h"
 
 
 SoccerAttackInfo_UsualAtk::SoccerAttackInfo_UsualAtk(
@@ -98,6 +99,10 @@ bool SoccerAttackInfo_UsualAtk::isCanAngleControll(int Frame, RADIAN& OutControl
 //引数のフレームが、ダメージ判定有効フレームかどうか
 bool SoccerAttackInfo_UsualAtk::isDamageEnable(int Frame)
 {
+	if (Frame == m_Param.DamageEnableStart)
+	{
+		Sound::Play(Sound::Swing2);
+	}
 	return
 		Frame >= m_Param.DamageEnableStart&&
 		Frame <= m_Param.DamageEnableEnd;

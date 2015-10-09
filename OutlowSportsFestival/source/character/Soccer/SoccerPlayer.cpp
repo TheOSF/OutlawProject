@@ -1,4 +1,5 @@
 #include "SoccerPlayer.h"
+#include "SoccerPlayerState.h"
 #include "../../Damage/Damage.h"
 #include "../../GameSystem/GameController.h"
 #include "../../Ball/UsualBall.h"
@@ -40,5 +41,12 @@ bool SoccerPlayer::Update()
 
 bool SoccerPlayer::Msg(MsgType mt)
 {
+	if (mt == MsgType::_RoundReset)
+	{
+		SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(this));
+		m_Renderer.SetMotion(_ms_Stand);
+		m_Renderer.Update(0);
+		ResetRound();
+	}
 	return m_pStateMachine->Msg(mt);
 }

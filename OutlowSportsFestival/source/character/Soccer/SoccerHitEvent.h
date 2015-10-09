@@ -16,6 +16,9 @@ public:
 	bool Hit(DamageBase* pDmg);//当たった時に呼ばれる関数(戻り値：当たったかどうか)
 private:
 	SoccerPlayer* m_pSoccer;
+
+	//ダメージ計算
+	void CalcDamage(DamageBase* pDmg);
 };
 
 #endif

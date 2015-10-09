@@ -44,5 +44,27 @@ private:
 	SoccerPlayer*               m_pSoccer;
 	Vector3                     m_Damage_vec;
 };
+class SoccerState_DamageMotion_Die : public SoccerState
+{
+public:
+	SoccerState_DamageMotion_Die(
+		SoccerPlayer*  pSoccer,
+		const Vector3& Damage_vec  //ダメージを受けた方向
+		);
+
+	// ステート開始
+	void Enter(SoccerPlayer* s)override;
+
+	// ステート実行
+	void Execute(SoccerPlayer* s)override;
+
+	// ステート終了
+	void Exit(SoccerPlayer* s)override;
+
+private:
+	CharacterDamageVanish*   m_pDamageVanishClass;	//ひるみ更新クラス
+	SoccerPlayer*            m_pSoccer;
+	Vector3                  m_Damage_vec;
+};
 
 #endif
