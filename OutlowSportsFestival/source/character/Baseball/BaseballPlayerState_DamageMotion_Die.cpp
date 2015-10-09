@@ -74,7 +74,8 @@ void BaseballState_DamageMotion_Die::Enter(BaseballPlayer* b)
 
 		void End()
 		{
-			//何もしない
+			//カメラ写すフラグをfalseに
+			m_pBaseball->m_Params.camera_draw = false;
 		}
 
 	private:
@@ -102,14 +103,18 @@ void BaseballState_DamageMotion_Die::Enter(BaseballPlayer* b)
 		new DamageManager::HitEventBase()
 		);
 
+	COLORf EffectColor(CharacterBase::GetPlayerColor(b->m_PlayerInfo.number));
+
+
 	//ヒットエフェクト作成
 	new HitEffectObject(
-		m_pBaseball->m_Params.pos + Vector3(0, 3, 0),
+		m_pBaseball->m_Params.pos + Vector3(0, 3, 0) + Vector3Normalize(m_Damage_vec)*3.5f,
 		m_Damage_vec,
 		0.05f,
 		0.15f,
-		Vector3(1.0f, 1.0f, 1.0f),
-		5
+		Vector3(EffectColor.r, EffectColor.g, EffectColor.b),
+		5,
+		50
 		);
 
 	//ブラーエフェクト

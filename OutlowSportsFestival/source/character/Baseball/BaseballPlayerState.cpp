@@ -16,6 +16,7 @@
 #include "../../Ball/MilderHoming.h"
 #include "../../Damage/Damage.h"
 #include "../CharacterCounterClass.h"
+#include "../../Camera/Camera.h"
 
 //ローリングの方向制御クラス
 class PlayerRollingControll :public BaseballState_Rolling::CallBackClass
@@ -40,6 +41,70 @@ public:
 		vec.Normalize();
 
 		return vec;
+	}
+};
+
+
+//ショット中のコントロールクラス
+class PlayerShotControllClass :public BaseballState_PlayerControll_ShotAttack_B::ControllClass
+{
+	BaseballPlayer* const   m_pBaseball;
+public:
+	PlayerShotControllClass(BaseballPlayer* pBaseball) :
+		m_pBaseball(pBaseball){}
+
+	Vector3 GetVec()
+	{
+		Vector2 stick = controller::GetStickValue(controller::stick::left, m_pBaseball->m_PlayerInfo.number);
+		Vector3 vec(stick.x, 0, stick.y);
+
+		if (vec.Length() < 0.25f)
+		{
+			return Vector3Zero;
+		}
+
+		vec = DefCamera.GetRight()*vec.x + DefCamera.GetUp()*vec.z;
+		vec.Normalize();
+
+		return vec;
+	}
+
+	bool DoOtherAction()
+	{
+		BaseballPlayer * const b = m_pBaseball;
+
+		//　近距離攻撃[□]
+		if (controller::GetTRG(controller::button::shikaku, b->m_PlayerInfo.number)){
+			b->SetState(new Baseball_PlayerControll_Attack_B(b));
+			return true;
+		}
+		//　回避行動[×]
+		if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number)){
+			b->SetState(new BaseballState_Rolling(new PlayerRollingControll(b)));
+			return true;
+		}
+
+		// カウンター[R1]
+		if (controller::GetTRG(controller::button::_R1, b->m_PlayerInfo.number))
+		{
+			b->SetState(new  BaseballState_PlayerControll_Counter(5));
+			return true;
+		}
+
+		return false;
+	}
+
+	bool DoShotAfterAction()
+	{
+		BaseballPlayer * const b = m_pBaseball;
+
+		if (controller::GetTRG(controller::button::shikaku, b->m_PlayerInfo.number))
+		{// [□] で [近距離攻撃]
+			b->SetState(new Baseball_PlayerControll_Attack_B(b));
+			return true;
+		}
+
+		return false;
 	}
 };
 
@@ -158,16 +223,7 @@ void BaseballState_PlayerControll_Move::Execute(BaseballPlayer* b){
 
 	//　スティックの値を取得
 	Vector2 st = controller::GetStickValue(controller::stick::left, b->m_PlayerInfo.number);
-
-	//　スティックの値セット
-	m_pMoveClass->SetStickValue(st);
-
-	//　更新
-	m_pMoveClass->Update();
-
-	//　モデルのワールド変換行列を更新
-	chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
-
+	
 	//　切り替え
 
 	SetBatterFlg(b);
@@ -180,6 +236,14 @@ void BaseballState_PlayerControll_Move::Execute(BaseballPlayer* b){
 		//　投手時
 		Pitcher(b);
 	}
+	//　スティックの値セット
+	m_pMoveClass->SetStickValue(st);
+
+
+	//　更新
+	m_pMoveClass->Update();
+	//　モデルのワールド変換行列を更新
+	chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
 
 }
 
@@ -192,7 +256,7 @@ void BaseballState_PlayerControll_Move::Exit(BaseballPlayer* b){
 void BaseballState_PlayerControll_Move::Batter(BaseballPlayer* b){
 	//　遠距離攻撃[△]
 	if (controller::GetTRG(controller::button::sankaku, b->m_PlayerInfo.number)){
-		b->SetState(new BaseballState_PlayerControll_ShotAttack_B());
+		b->SetState(new BaseballState_PlayerControll_ShotAttack_B(new PlayerShotControllClass(b)));
 		return;
 	}
 	//　近距離攻撃[□]

@@ -12,6 +12,7 @@
 #include "../../Damage/Damage.h"
 #include "../CharacterCounterClass.h"
 
+#include "Sound/Sound.h"
 
 //***************************************
 //　遠距離(投手)
@@ -99,10 +100,13 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 		void AttackStart()override{
 			//　☆モーション
 			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Shot);
+			//　効果音
+			Sound::Play(Sound::Swing3);
 		}
 
 		void AttackEnd()
 		{
+			
 			//攻撃終了時に通常移動モードに戻る
 			m_pBaseball->SetState(new BaseballState_PlayerControll_Move());
 		}

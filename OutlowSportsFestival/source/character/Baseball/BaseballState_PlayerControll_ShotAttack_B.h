@@ -1,30 +1,40 @@
-#ifndef __BASEBALL_SHOTATTACK_B_H__
-#define __BASEBALL_SHOTATTACK_B_H__
+#pragma once
 
-#include "../../Damage/Damage.h"
 #include "BaseballPlayer.h"
+#include "../../GameSystem/ForwardDecl.h"
+#include "../../Ball/PhysicallyMoveBall.h"
 
-
-
-
-//プレイヤー操作の遠距離クラス(バッター)
-class CharacterShotAttack;
-class BaseballState_PlayerControll_ShotAttack_B :public BaseballState{
-private:
-	//　遠距離クラス作成(バッター)
-	CharacterShotAttack* CreateShotAttackClass_B(BaseballPlayer* b);
-private:
-	//　遠距離クラス
-	CharacterShotAttack* m_pShotAttackClass_B;
+//****************************************************
+//	テニス_遠距離攻撃クラス
+//****************************************************
+class BaseballState_PlayerControll_ShotAttack_B :public BaseballState
+{
 public:
-	//　コンストラクタ
-	BaseballState_PlayerControll_ShotAttack_B();
-	//　ステート開始
-	void Enter(BaseballPlayer* b)override;
-	//　ステート実行
-	void Execute(BaseballPlayer* b)override;
-	//　ステート終了
-	void Exit(BaseballPlayer* b)override;
-};
+	class ControllClass
+	{
+	public:
+		virtual ~ControllClass(){}
+		virtual Vector3 GetVec() = 0;
+		virtual bool DoOtherAction() = 0;
+		virtual bool DoShotAfterAction() = 0;
+	};
 
-#endif
+	BaseballState_PlayerControll_ShotAttack_B(
+		ControllClass*       pControllClass //終了時にdeleteする
+		);
+
+	~BaseballState_PlayerControll_ShotAttack_B();
+
+
+	void Enter(BaseballPlayer* b)override;
+	void Execute(BaseballPlayer* b)override;
+	void Exit(BaseballPlayer* b)override;
+
+private:
+	int                  m_Timer;
+	PhysicallyMoveBall*  m_pUpBall;
+	ControllClass*       m_pControllClass;
+
+	const CharacterBase* GetFrontTarget(BaseballPlayer* b)const;
+
+};

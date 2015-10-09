@@ -1,6 +1,6 @@
 #include "BaseballAttackInfo_UsualAtk.h"
 #include "../CharacterFunction.h"
-
+#include "../../Sound/Sound.h"
 
 BaseballAttackInfo_UsualAtk::BaseballAttackInfo_UsualAtk(
 	BaseballPlayer* pOwner
@@ -98,6 +98,10 @@ bool BaseballAttackInfo_UsualAtk::isCanAngleControll(int Frame, RADIAN& OutContr
 //引数のフレームが、ダメージ判定有効フレームかどうか
 bool BaseballAttackInfo_UsualAtk::isDamageEnable(int Frame)
 {
+	if (Frame == m_Param.DamageEnableStart)
+	{
+		Sound::Play(Sound::Swing2);
+	}
 	return
 		Frame >= m_Param.DamageEnableStart&&
 		Frame <= m_Param.DamageEnableEnd;

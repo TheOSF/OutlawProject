@@ -44,6 +44,8 @@ namespace Sound
 
         Scene_Enter,//シーン移行時
 
+		Change,//　野球切り替え時
+
         // BGM 
         BGM_Battle,
         BGM_LastRound,

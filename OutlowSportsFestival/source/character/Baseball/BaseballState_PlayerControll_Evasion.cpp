@@ -3,7 +3,7 @@
 #include "BaseballPlayerState.h"
 #include "Baseball_HitEvent.h"
 #include "../../Effect/EffectFactory.h"
-
+#include "../../Sound/Sound.h"
 
 BaseballState_Rolling::BaseballState_Rolling(CallBackClass* pCallBackClass) :
 m_pCallBackClass(pCallBackClass)
@@ -133,6 +133,13 @@ void BaseballState_Rolling::Execute(BaseballPlayer* b)
 			}
 		}
 
+	}
+
+	//サウンド
+	if (m_Timer == EndFrame - 25)
+	{
+		//ズザー音
+		Sound::Play(Sound::Sand1);
 	}
 
 	//基本的な更新
