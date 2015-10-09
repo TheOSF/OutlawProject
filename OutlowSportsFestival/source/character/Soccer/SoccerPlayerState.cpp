@@ -10,6 +10,7 @@
 #include "../CharacterManager.h"
 #include "../CharacterFunction.h"
 #include "../CharacterBase.h"
+#include "../../Sound/Sound.h"
 
 
 //ローリングの方向制御クラス
@@ -107,11 +108,6 @@ void SoccerState_PlayerControll_Move::Execute(SoccerPlayer* s)
 {
 	Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
 	
-
-	m_pMoveClass->SetStickValue(st);
-	m_pMoveClass->Update();
-
-
 	// [×] で ローリング
 	if (controller::GetTRG(controller::button::batu, s->m_PlayerInfo.number))
 	{
@@ -142,7 +138,8 @@ void SoccerState_PlayerControll_Move::Execute(SoccerPlayer* s)
 	{
 		s->SetState(new SoccerState_PlayerControll_Dash());
 	}
-
+	m_pMoveClass->SetStickValue(st);
+	m_pMoveClass->Update();
 
 	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
 }
@@ -259,6 +256,7 @@ void SoccerState_PlayerControll_Sliding::Enter(SoccerPlayer* s)
 	{
 		{ 6, 1.0f, 1.5f, DamageBase::Type::_VanishDamage, 5, 22, 0.17f, 5, 10, SoccerPlayer::_ms_Rolling, 35, 20, 27, 35, 0, 2, D3DXToRadian(0), 12 },
 	};
+	Sound::Play(Sound::Sand2);
 
 	for (int i = 0; i < (int)ARRAYSIZE(AtkParam); ++i)
 	{
@@ -393,9 +391,9 @@ void SoccerState_PlayerControll_Attack::Enter(SoccerPlayer* s)
 
 	SoccerAttackInfo_UsualAtk::Param AtkParam[] =
 	{
-		{ 6, 1.0f, 1.5f, DamageBase::Type::_WeekDamage, 15, 22, 0.07f, 5, 10, SoccerPlayer::_ms_Atk1, 35, 20, 27, 35, 0, 15, D3DXToRadian(5), 12 },
-		{ 2, 1.0f, 1.5f, DamageBase::Type::_WeekDamage, 5, 8, 0.02f, 1, 5, SoccerPlayer::_ms_Atk2, 20, 5, 15, 20, 0, 5, D3DXToRadian(5), 12 },
-		{ 8, 1.0f, 1.5f, DamageBase::Type::_VanishDamage, 8, 16, 0.05f, 1, 6, SoccerPlayer::_ms_Atk3, 40, -1, -1, -1, 0, 8, D3DXToRadian(5), 12 },
+		{ 6, 1.0f, 1.5f, DamageBase::Type::_WeekDamage, 3, 20, 0.07f, 5, 10, SoccerPlayer::_ms_Atk1, 35, 20, 27, 35, 0, 5, D3DXToRadian(5), 21 },
+		{ 2, 1.0f, 1.5f, DamageBase::Type::_WeekDamage, 5, 18, 0.02f, 1, 5, SoccerPlayer::_ms_Atk2, 20, 5, 15, 20, 0, 5, D3DXToRadian(5), 3 },
+		{ 8, 1.0f, 1.5f, DamageBase::Type::_VanishDamage, 8, 16, 0.05f, 1, 6, SoccerPlayer::_ms_Atk3, 40, -1, -1, -1, 0, 8, D3DXToRadian(5), 21 },
 	};
 
 	for (int i = 0; i < (int)ARRAYSIZE(AtkParam); ++i)
@@ -454,7 +452,7 @@ void SoccerState_PlayerControll_Shot::Enter(SoccerPlayer* s)
 			param.pos.y = BallBase::UsualBallShotY;
 			param.pParent = m_pSoccer;
 			param.type = BallBase::Type::_Usual;
-
+			Sound::Play(Sound::Impact2);
 			new UsualBall(param, DamageBase::Type::_WeekDamage, 1);
 		}
 	};
@@ -561,6 +559,7 @@ void SoccerState_PlayerControll_Counter::Enter(SoccerPlayer* s)
 		{
 			chr_func::ResetMove(m_pSoccer);
 			chr_func::AddMoveFront(m_pSoccer, -0.15f, 1000);
+			
 		}
 
 		//打ち失敗
@@ -646,14 +645,14 @@ void SoccerState_PlayerControll_Dash::Enter(SoccerPlayer* s)
 	p.TurnSpeed = 0.02f;
 	p.DownSpeed = 0.2f;
 
-
+	m_timer = 0;
 
 	m_pMoveClass = new SoccerDash(s, p, new SoccerDashEvent(s), new DamageManager::HitEventBase());
 }
 void SoccerState_PlayerControll_Dash::Execute(SoccerPlayer* s)
 {
 	Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
-	
+	++m_timer;
 	// [L1]離すと戻る
 	if (!controller::GetPush(controller::button::_L1, s->m_PlayerInfo.number))
 	{
@@ -677,6 +676,11 @@ void SoccerState_PlayerControll_Dash::Execute(SoccerPlayer* s)
 	if (controller::GetTRG(controller::button::shikaku, s->m_PlayerInfo.number))
 	{
 		s->SetState(new SoccerState_PlayerControll_Sliding(s));
+	}
+
+	if (m_timer % 13==5)
+	{
+		Sound::Play(Sound::Sand1);
 	}
 
 	
@@ -761,6 +765,7 @@ CharacterShotAttack* SoccerState_PlayerControll_Finisher::SnakeShotClass(SoccerP
 			param.type = BallBase::Type::_Usual;
 
 			//生成
+			Sound::Play(Sound::Beam2);
 			new Snakeshot(param, 1);
 		}
 

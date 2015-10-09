@@ -50,7 +50,7 @@ class SoccerState_PlayerControll_Sliding :public SoccerState
 
 	private:
 		SoccerPlayer*const m_pSoccer;
-
+		
 		const CharacterBase* GetFrontTargetEnemy();
 	};
 public:
@@ -128,6 +128,7 @@ class SoccerState_PlayerControll_Dash : public SoccerState
 {
 private:
 	SoccerDash*		m_pMoveClass;
+	int m_timer;
 public:
 	void Enter(SoccerPlayer* s);
 	void Execute(SoccerPlayer* s);

@@ -1,6 +1,6 @@
 #include "SoccerHitEvent.h"
 #include "SoccerCommonState.h"
-//#include "TennisPlayerState_Vanish.h"
+#include "../CharacterFunction.h"
 
 SoccerHitEvent::SoccerHitEvent(SoccerPlayer* ps) :
 m_pSoccer(ps)
@@ -12,10 +12,23 @@ bool SoccerHitEvent::Hit(DamageBase* pDmg)
 {
 
 	//自分の作っているダメージだった場合は何もしない
-	if (pDmg->pParent->m_PlayerInfo.number == m_pSoccer->m_PlayerInfo.number)
+	if (pDmg->pParent != nullptr &&
+		pDmg->pParent->m_PlayerInfo.number == m_pSoccer->m_PlayerInfo.number)
 	{
 		return false;
 	}
+
+	//ダメージ計算
+	CalcDamage(pDmg);
+
+
+	//もし体力がなかったら、どんな攻撃であろうと死亡ステートへ
+	if (chr_func::isDie(m_pSoccer))
+	{
+		m_pSoccer->SetState(new SoccerState_DamageMotion_Die(m_pSoccer, pDmg->vec));
+		return true;
+	}
+
 
 	//当たった時にそのダメージの種類から、それぞれのステートに派生させる
 	switch (pDmg->type)
@@ -41,4 +54,10 @@ bool SoccerHitEvent::Hit(DamageBase* pDmg)
 	}
 
 	return false;
+}
+//ダメージ計算
+void SoccerHitEvent::CalcDamage(DamageBase* pDmg)
+{
+	m_pSoccer->m_Params.HP -= pDmg->Value;
+	m_pSoccer->m_Params.HP = max(m_pSoccer->m_Params.HP, -1);
 }
