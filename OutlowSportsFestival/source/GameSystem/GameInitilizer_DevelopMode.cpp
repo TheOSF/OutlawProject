@@ -270,7 +270,7 @@ void GameInitializer_DevelopMode::GameCreate()
             //    );
 
 
-            for (int i = 0; i < 50; ++i)
+            for (int i = 0; i < 5; ++i)
             {
                 StageObjFactory::CreateCone(
                     Vector3((frand() - 0.5f) * 60, 2.0f, (frand() - 0.5f) * 60),
@@ -400,9 +400,9 @@ void GameInitializer_DevelopMode::GameCreate()
     //ƒLƒƒƒ‰ƒNƒ^ì¬
     {
         CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Baseball);
 
-        CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Baseball);
+     //   CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Tennis);
     }
 }
