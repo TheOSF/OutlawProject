@@ -11,7 +11,7 @@
 
 
 //球の構造体
-struct ShpereParam
+struct SphereParam
 {
 	Vector3		pos;
 	float		size;
@@ -48,7 +48,7 @@ public:
 	DamageBase();
 	virtual ~DamageBase();
 
-    virtual bool HitCheckSphere(const ShpereParam* sp) = 0; 
+    virtual bool HitCheckSphere(const SphereParam* sp) = 0;
     virtual bool HitCheckCapsure(const CapsureParam* cp) = 0;
 
     virtual void DebugDraw() = 0;
@@ -62,11 +62,11 @@ class DamageShpere :public DamageBase
 {
 public:
 	bool			m_Enable;	//このダメージが有効かどうか
-	ShpereParam		m_Param;	//このダメージの球の構造体
+    SphereParam		m_Param;	//このダメージの球の構造体
 
 	DamageShpere();
 private:
-	bool HitCheckSphere(const ShpereParam* sp);
+    bool HitCheckSphere(const SphereParam* sp);
     bool HitCheckCapsure(const CapsureParam* cp);
 
     void DebugDraw();
@@ -83,7 +83,7 @@ public:
 
     DamageCapsure();
 private:
-    bool HitCheckSphere(const ShpereParam* sp);
+    bool HitCheckSphere(const SphereParam* sp);
     bool HitCheckCapsure(const CapsureParam* cp);
     void DebugDraw();
 };
@@ -116,7 +116,7 @@ public:
 
 	//球でダメージ判定を取得する
 	void HitCheckSphere(
-		const ShpereParam&	sp,
+        const SphereParam&	sp,
 		HitEventBase&		HitEvent
 		);
 

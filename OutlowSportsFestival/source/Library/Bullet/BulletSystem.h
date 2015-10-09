@@ -137,6 +137,33 @@ public:
 		const Vector3&velocity
 		);
 
+
+    // Coneをワールドに追加
+    RigidBody* AddRigidCone(
+        float mass,
+        RigidBody::CollisionTypes collisionType,
+        const Vector3& pos,
+        const Vector3& angle,
+        float radius,
+        float height,
+        float friction,
+        float restitution,
+        const Vector3&velocity
+        );
+
+    // Capsureをワールドに追加
+    RigidBody* AddRigidCapsure(
+        float mass,
+        RigidBody::CollisionTypes collisionType,
+        const Vector3& pos,
+        const Vector3& angle,
+        float radius,
+        float height,
+        float friction,
+        float restitution,
+        const Vector3&velocity
+        );
+
 	// Sphereをワールドに追加
 	RigidBody* AddRigidSphere(
 		float mass,

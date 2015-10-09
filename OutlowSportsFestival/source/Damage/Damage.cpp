@@ -27,7 +27,7 @@ m_Enable(true)
 }
 
 //ダメージクラス(球)
-bool DamageShpere::HitCheckSphere(const ShpereParam* sp)
+bool DamageShpere::HitCheckSphere(const SphereParam* sp)
 {
 	if (!m_Enable)
 	{
@@ -46,25 +46,14 @@ bool DamageShpere::HitCheckCapsure(const CapsureParam* cp)
         return false;
     }
 
-    Vector3 v1 = m_Param.pos - cp->pos1;
-    Vector3 v2 = cp->pos2 - cp->pos1;
-
-    float v2l = v2.Length();
-
-    v2 /= v2l;
-
-    float l = Vector3Dot(v1, v2);
-
-    if (l < 0)
-    {
-        l = 0;
-    }
-    else if (l > v2l)
-    {
-        l = v2l;
-    }
-
-    return Vector3Distance(m_Param.pos, cp->pos1 + v2*l) < m_Param.size + cp->width;
+    return 
+        isHitSphereCapsure(
+            m_Param.pos,
+            m_Param.size,
+            cp->pos1,
+            cp->pos2,
+            cp->width
+        );
 }
 
 void DamageShpere::DebugDraw()
@@ -97,7 +86,7 @@ m_Enable(true)
 }
 
 //ダメージクラス(カプセル)
-bool DamageCapsure::HitCheckSphere(const ShpereParam* sp)
+bool DamageCapsure::HitCheckSphere(const SphereParam* sp)
 {
     if (!m_Enable)
     {
@@ -131,6 +120,8 @@ bool DamageCapsure::HitCheckCapsure(const CapsureParam* cp)
     {
         return false;
     }
+
+
 
     return false;
 }
@@ -184,7 +175,7 @@ void DamageManager::Release()
 
 //球のダメージ判定をとる
 void DamageManager::HitCheckSphere(
-	const ShpereParam&	sp,
+    const SphereParam&	sp,
 	HitEventBase&		HitEvent
 	)
 {

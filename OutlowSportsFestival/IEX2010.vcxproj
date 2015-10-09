@@ -159,6 +159,7 @@
     <ClCompile Include="source\character\CharacterFunction.cpp" />
     <ClCompile Include="source\character\CharacterManager.cpp" />
     <ClCompile Include="source\character\CharacterMoveClass.cpp" />
+    <ClCompile Include="source\character\CharacterPhysic.cpp" />
     <ClCompile Include="source\character\CharacterRenderer.cpp" />
     <ClCompile Include="source\character\CharacterSliding.cpp" />
     <ClCompile Include="source\character\CharacterDefaultCounterClass.cpp" />
@@ -200,6 +201,7 @@
     <ClCompile Include="source\Collision\MeshCollider.cpp" />
     <ClCompile Include="source\Collision\GameObjectCollisionMesh.cpp" />
     <ClCompile Include="source\Damage\Damage.cpp" />
+    <ClCompile Include="source\Damage\DamageCheckObject.cpp" />
     <ClCompile Include="source\debug\DebugDraw.cpp" />
     <ClCompile Include="source\Effect\AnimationBordRenderer.cpp" />
     <ClCompile Include="source\Effect\BlurImpact.cpp" />
@@ -248,7 +250,10 @@
     <ClCompile Include="source\Sound\Sound.cpp" />
     <ClCompile Include="source\Stage\HitStageObject.cpp" />
     <ClCompile Include="source\Stage\PhysicsMeshObject.cpp" />
+    <ClCompile Include="source\Stage\StageDamagePhysicMoveObject.cpp" />
+    <ClCompile Include="source\Stage\StageObjectFactory.cpp" />
     <ClCompile Include="source\Stage\StagePhysicMoveObject.cpp" />
+    <ClCompile Include="source\Stage\StageResourceLoadFaction.cpp" />
     <ClCompile Include="source\UI\FightUI.cpp" />
     <ClCompile Include="source\UI\PlayerGauge.cpp" />
     <ClCompile Include="source\UI\RoundUI.cpp" />
@@ -295,6 +300,7 @@
     <ClInclude Include="source\character\CharacterFunction.h" />
     <ClInclude Include="source\character\CharacterManager.h" />
     <ClInclude Include="source\character\CharacterMoveClass.h" />
+    <ClInclude Include="source\character\CharacterPhysic.h" />
     <ClInclude Include="source\character\CharacterRenderer.h" />
     <ClInclude Include="source\character\CharacterSliding.h" />
     <ClInclude Include="source\character\CharacterStateTemplate.h" />
@@ -337,6 +343,7 @@
     <ClInclude Include="source\Collision\MeshCollider.h" />
     <ClInclude Include="source\Collision\GameObjectCollisionMesh.h" />
     <ClInclude Include="source\Damage\Damage.h" />
+    <ClInclude Include="source\Damage\DamageCheckObject.h" />
     <ClInclude Include="source\debug\DebugDraw.h" />
     <ClInclude Include="source\debug\DebugFunction.h" />
     <ClInclude Include="source\Effect\AnimationBordRenderer.h" />
@@ -388,7 +395,10 @@
     <ClInclude Include="source\Sound\Sound.h" />
     <ClInclude Include="source\Stage\HitStageObject.h" />
     <ClInclude Include="source\Stage\PhysicsMeshObject.h" />
+    <ClInclude Include="source\Stage\StageDamagePhysicMoveObject.h" />
+    <ClInclude Include="source\Stage\StageObjectFactory.h" />
     <ClInclude Include="source\Stage\StagePhysicMoveObject.h" />
+    <ClInclude Include="source\Stage\StageResourceLoadFaction.h" />
     <ClInclude Include="source\UI\FightUI.h" />
     <ClInclude Include="source\UI\PlayerGauge.h" />
     <ClInclude Include="source\UI\RoundUI.h" />

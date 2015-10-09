@@ -57,6 +57,7 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
 
             //ワールド変換行列を計算
             chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
+
         }
 
         void StandUpStart()

@@ -40,6 +40,10 @@ bool TennisPlayer::Update()
     {
         --m_DontBoundBallAtkTimer;
     }
+
+    //キャラクタ基本更新
+    BaseUpdate();
+
 	return true;	//常にtrueを返すと消去されない
 }
 

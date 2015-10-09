@@ -5,6 +5,7 @@
 #include "../GameSystem/GameSystem.h"
 #include "iextreme.h"
 #include "../utillity/ColorUtility.h"
+#include "CharacterPhysic.h"
 
 //***************************************************
 //		キャラクタクラス
@@ -50,7 +51,6 @@ public:
 
 	const PlayerInfo	m_PlayerInfo; //プレイヤー情報にする構造体
 	Params				m_Params;     //キャラクタ基本パラメーター
-
    
 	CharacterBase(const PlayerInfo& info);
 	virtual ~CharacterBase();
@@ -62,8 +62,14 @@ public:
     //ラウンドリセット時のパラメターにセットする
     void ResetRound();
 
+    //毎フレームの更新
+    void BaseUpdate();
+
 	virtual bool Update() = 0;	//この関数がfalseを返すとdeleteされる
 	virtual bool Msg(MsgType mt) = 0;	//受信できたメッセージはtrueを
+
+private:
+    CharacterPhysic     m_PhysicObj;  //物理判定オブジェクト
 };
 
 #endif

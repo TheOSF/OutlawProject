@@ -338,8 +338,9 @@ bool UsualBall::StateFlyMove()
         //ヒット最大値ならダメージ判定のない状態へ移行する
         if (m_Damage.HitCount >= (int)m_HitNum)
         {
-            m_Params.move *= 0.8f;
+            m_Params.move *= -0.25f;
             m_Params.move.y += 0.2f;
+
 
             //攻撃判定のない状態にする
             ToNoWork();

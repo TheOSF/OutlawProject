@@ -24,6 +24,12 @@ public:
         Tennis_ball,
         Volley_ball,
 
+        //ステージ１
+        Bus,
+        Cone,
+        Bench,
+        Pipe,
+
 
 
         _MaxType

@@ -56,11 +56,12 @@ public:
 	void SetMatrix(const Matrix& mat);
 	const Matrix& GetMatrix()const;
 
+    iexMesh*		    m_pMesh;
+
     //ŒÌˆÓ‚É‹P‚©‚¹‚éÛ‚Ìƒpƒ‰ƒ[ƒ^(xyz = rgb)
     Vector3 m_HDR;
 private:
     Matrix              m_TransMatrix;
-	iexMesh*	const	m_pMesh;
 	bool		const	m_MeshDelete;
     RenderType  const   m_RenderType;
     PreRenderCallBack*  m_pCallBack;

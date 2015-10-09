@@ -54,7 +54,7 @@ public:
 
 	
 	CharacterRenderer	m_Renderer;
-	const float m_ModelSize;
+	const float         m_ModelSize;
 
 	void SetState(TennisState* state);
 

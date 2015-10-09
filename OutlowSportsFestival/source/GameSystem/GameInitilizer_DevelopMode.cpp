@@ -62,14 +62,15 @@
 #include "../Effect/ParticleManagerUpdater.h"
 #include "LightEventExecuter.h"
 
+#include "../Stage/StageDamagePhysicMoveObject.h"
+#include "../Stage/StageResourceLoadFaction.h"
+#include "../Stage/StageObjectFactory.h"
 
 static void CreateCharacter(
     PlayerNum::Value      n,
     PlayerType::Value     pl,
     CharacterType::Value  chr)
 {
-    
-
     CharacterBase* pChr = nullptr;
 
     CharacterBase::PlayerInfo info;
@@ -147,17 +148,72 @@ void GameInitializer_DevelopMode::GameCreate()
     DefDamageMgr.m_DebugDrawVisible = true;
 
 
-    //キャラクタ作成
-    {
+    {// Bullet
 
-        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Baseball);
+        DefBulletSystem.StartUp();
+        DefBulletSystem.InitializeBulletPhysics(btVector3(0, -9.8f, 0)*2.0f, iexSystem::Device);
 
-        CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Soccer);
-        CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Tennis);
+        //更新クラスの作成
+        new BulletUpdateGameobject();
     }
 
 
+    {
+        //デバッグ描画用の球メッシュ
+        DefResource.Regist(
+            Resource::MeshType::Sphere,
+            new iexMesh("DATA\\Mesh\\sphere.imo")
+            );
+
+        //デバッグ描画用のカプセルメッシュ
+        DefResource.Regist(
+            Resource::MeshType::Pole,
+            new iexMesh("DATA\\Mesh\\Capsure.imo")
+            );
+    }
+
+
+    {
+        //ボール登録(最終的に登場するキャラクタのボールのみ読み込むようにしたほうが良い)
+
+        DefResource.Regist(
+            Resource::MeshType::Amefoot_ball,
+            new iexMesh("DATA\\CHR\\Soccer_ball\\soccer_ball.imo")
+            );
+
+        DefResource.Regist(
+            Resource::MeshType::BaseBall_ball,
+            new iexMesh("DATA\\CHR\\golf_ball\\golf_ball.imo")
+            );
+
+        DefResource.Regist(
+            Resource::MeshType::Lacrosse_ball,
+            new iexMesh("DATA\\CHR\\Tennis_ball\\Tennis_ball.imo")
+            );
+
+        DefResource.Regist(
+            Resource::MeshType::Soccer_ball,
+            new iexMesh("DATA\\CHR\\Soccer_ball\\soccer_ball.imo")
+            );
+
+
+        DefResource.Regist(
+            Resource::MeshType::Tennis_ball,
+            new iexMesh("DATA\\CHR\\Tennis_ball\\Tennis_ball.imo")
+            );
+
+        DefResource.Regist(
+            Resource::MeshType::Volley_ball,
+            new iexMesh("DATA\\CHR\\Soccer_ball\\soccer_ball.imo")
+            );
+    }
+
+    {
+        //ステージ１のメッシュをリソースに登録
+        StageResourceLoadFaction::LoadStage1Object();
+    }
+
+    //描画デバイス呼び出し
     {
         //ステージ作成
         if (true)
@@ -198,6 +254,35 @@ void GameInitializer_DevelopMode::GameCreate()
                 );
         }
 
+
+        {
+            //テスト用にオブジェクトを配置
+            
+            //StageObjFactory::CreateBench(
+            //    Vector3(10, 2, 0),
+            //    Vector3(0, 0, 0)
+            //    );
+
+
+            //StageObjFactory::CreateBench(
+            //    Vector3(-10, 2, 0),
+            //    Vector3(0, PI/2, 0)
+            //    );
+
+
+            for (int i = 0; i < 50; ++i)
+            {
+                StageObjFactory::CreateCone(
+                    Vector3((frand() - 0.5f) * 60, 2.0f, (frand() - 0.5f) * 60),
+                    //Vector3(frand()*PI, frand()*PI, frand()*PI)
+                    Vector3Zero
+                    );
+            }
+
+            
+        }
+
+
         //ステージの煙の演出
         new StageSmokeEmitter(
             Vector3(-50,0,-50),
@@ -207,27 +292,19 @@ void GameInitializer_DevelopMode::GameCreate()
             50
             );
 
-    }
 
-    {// Bullet
-
-        DefBulletSystem.StartUp();
-        DefBulletSystem.InitializeBulletPhysics(btVector3(0, -9.8f, 0)*2.0f, iexSystem::Device);
-
-        //土台のステージ
+        //土台のステージを物理エンジンに登録
         DefBulletSystem.AddRigidMesh(
             pStageMesh,
-            10000.0f,
-            RigidBody::ct_kinematic,
+            0,
+            RigidBody::ct_static,
             0.5f,
             0.5f,
             Vector3(0, 0, 0),
             Vector3(0, 0, 0)
             );
-
-        //更新クラスの作成
-        new BulletUpdateGameobject();
     }
+
 
     {
         //エフェクト読み込み
@@ -247,55 +324,6 @@ void GameInitializer_DevelopMode::GameCreate()
             );
     }
 
-    {
-        //デバッグ描画用の球メッシュ
-        DefResource.Regist(
-            Resource::MeshType::Sphere,
-            new iexMesh("DATA\\Mesh\\sphere.imo")
-            );
-
-        //デバッグ描画用のカプセルメッシュ
-        DefResource.Regist(
-            Resource::MeshType::Pole,
-            new iexMesh("DATA\\Mesh\\Capsure.imo")
-            );
-    }
-
-    {
-        //ボール登録(最終的に登場するキャラクタのボールのみ読み込むようにしたほうが良い)
-        
-        DefResource.Regist(
-            Resource::MeshType::Amefoot_ball,
-            new iexMesh("DATA\\CHR\\Soccer_ball\\soccer_ball.imo")
-            );
-
-        DefResource.Regist(
-            Resource::MeshType::BaseBall_ball,
-            new iexMesh("DATA\\CHR\\golf_ball\\golf_ball.imo")
-            );
-
-        DefResource.Regist(
-            Resource::MeshType::Lacrosse_ball,
-            new iexMesh("DATA\\CHR\\Tennis_ball\\Tennis_ball.imo")
-            );
-
-        DefResource.Regist(
-            Resource::MeshType::Soccer_ball,
-            new iexMesh("DATA\\CHR\\Soccer_ball\\soccer_ball.imo")
-            );
-
-
-        DefResource.Regist(
-            Resource::MeshType::Tennis_ball,
-            new iexMesh("DATA\\CHR\\Tennis_ball\\Tennis_ball.imo")
-            );
-
-        DefResource.Regist(
-            Resource::MeshType::Volley_ball,
-            new iexMesh("DATA\\CHR\\Soccer_ball\\soccer_ball.imo")
-            );
-    }
-    
 
     if (0)
     {
@@ -364,5 +392,17 @@ void GameInitializer_DevelopMode::GameCreate()
         param.time = 60 * 60 * 3; //３分
 
         new GameEventer(param, new MatchState::RoundResetCountdown(), pDirLightColor);
+    }
+
+
+
+
+    //キャラクタ作成
+    {
+        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Tennis);
+
+        CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Tennis);
     }
 }

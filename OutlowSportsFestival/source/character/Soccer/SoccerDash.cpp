@@ -71,7 +71,7 @@ void SoccerDash::Update()
 	}
 
 	//‚ ‚½‚è”»’è‚ð‚Æ‚é
-	ShpereParam sp;
+	SphereParam sp;
 
 	sp.pos = m_pParent->m_Params.pos;
 	sp.pos.y += BallBase::UsualBallShotY;

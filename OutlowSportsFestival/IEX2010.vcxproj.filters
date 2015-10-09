@@ -190,6 +190,11 @@
     <ClCompile Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Die.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Vanish.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballState_SPAttack_P.cpp" />
+    <ClCompile Include="source\Damage\DamageCheckObject.cpp" />
+    <ClCompile Include="source\Stage\StageDamagePhysicMoveObject.cpp" />
+    <ClCompile Include="source\Stage\StageObjectFactory.cpp" />
+    <ClCompile Include="source\Stage\StageResourceLoadFaction.cpp" />
+    <ClCompile Include="source\character\CharacterPhysic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -339,6 +344,11 @@
     <ClInclude Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Die.h" />
     <ClInclude Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Vanish.h" />
     <ClInclude Include="source\character\Baseball\BaseballState_SPAttack_P.h" />
+    <ClInclude Include="source\Damage\DamageCheckObject.h" />
+    <ClInclude Include="source\Stage\StageDamagePhysicMoveObject.h" />
+    <ClInclude Include="source\Stage\StageObjectFactory.h" />
+    <ClInclude Include="source\Stage\StageResourceLoadFaction.h" />
+    <ClInclude Include="source\character\CharacterPhysic.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

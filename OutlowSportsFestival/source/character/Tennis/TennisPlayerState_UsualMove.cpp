@@ -225,25 +225,8 @@ void TennisState_PlayerControll_Move::Enter(TennisPlayer* t)
 
 void TennisState_PlayerControll_Move::Execute(TennisPlayer* t)
 {
-    {
-        //スティックの値をセット
-        Vector2 st = controller::GetStickValue(controller::stick::left, t->m_PlayerInfo.number);
-        Vector3 st_vec3;
 
-        //ビュー空間に変換
-        st_vec3 = DefCamera.GetRight()*st.x + DefCamera.GetForward()*st.y;
-        st.x = st_vec3.x;
-        st.y = st_vec3.z;
 
-        //スティックの値セット
-        m_pMoveClass->SetStickValue(st);
-
-    }
-	//更新
-	m_pMoveClass->Update();
-
-	//モデルのワールド変換行列を更新
-	chr_func::CreateTransMatrix(t, t->m_ModelSize, &t->m_Renderer.m_TransMatrix);
 
     if (controller::GetTRG(controller::button::sankaku, t->m_PlayerInfo.number))
     {// [△] でボール発射
@@ -275,6 +258,28 @@ void TennisState_PlayerControll_Move::Execute(TennisPlayer* t)
         t->SetState(new TennisState_BoundBallAtk(new PlayerBoundBallControll(t)));
         return;
     }
+
+    {
+        //スティックの値をセット
+        Vector2 st = controller::GetStickValue(controller::stick::left, t->m_PlayerInfo.number);
+        Vector3 st_vec3;
+
+        //ビュー空間に変換
+        st_vec3 = DefCamera.GetRight()*st.x + DefCamera.GetForward()*st.y;
+        st.x = st_vec3.x;
+        st.y = st_vec3.z;
+
+        //スティックの値セット
+        m_pMoveClass->SetStickValue(st);
+
+    }
+
+    //更新
+    m_pMoveClass->Update();
+
+
+    //モデルのワールド変換行列を更新
+    chr_func::CreateTransMatrix(t, t->m_ModelSize, &t->m_Renderer.m_TransMatrix);
 }
 
 void TennisState_PlayerControll_Move::Exit(TennisPlayer* t)

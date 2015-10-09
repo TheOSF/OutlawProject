@@ -95,6 +95,7 @@ void TennisState_PlayerControll_Counter::Enter(TennisPlayer* t)
 // ステート実行
 void TennisState_PlayerControll_Counter::Execute(TennisPlayer* t)
 {
+    
     m_pCounter->SetStickValue(controller::GetStickValue(controller::stick::left, t->m_PlayerInfo.number));
 	//更新
 	m_pCounter->Update();

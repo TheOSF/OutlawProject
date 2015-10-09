@@ -14,7 +14,8 @@ const CharacterBase::CommonParams CharacterBase::m_CommonParams =
 };
 
 CharacterBase::CharacterBase(const PlayerInfo& info):
-m_PlayerInfo(info)
+m_PlayerInfo(info),
+m_PhysicObj(this)
 {
 
 	m_Params.win = 0;
@@ -81,4 +82,10 @@ void CharacterBase::ResetRound()
     m_Params.move = Vector3Zero;
     m_Params.camera_draw = true;
     chr_func::AngleControll(this, Vector3(0, m_Params.pos.y, 0));
+}
+
+//毎フレームの更新
+void CharacterBase::BaseUpdate()
+{
+    m_PhysicObj.Update();
 }

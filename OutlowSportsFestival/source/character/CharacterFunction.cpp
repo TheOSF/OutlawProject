@@ -22,6 +22,7 @@ void chr_func::UpdateAll(
 
     //あたり判定を取る
     DamageCheck(p, pHitEvent);
+
 }
 
 //座標に移動量を更新する
@@ -175,7 +176,7 @@ void chr_func::DamageCheck(
 	)
 {
 	//あたり判定をとる
-	ShpereParam sp;
+    SphereParam sp;
 
 	sp.pos = pCharacter->m_Params.pos;
 	sp.pos.y += BallBase::UsualBallShotY;
@@ -231,6 +232,7 @@ bool chr_func::CheckWall(CharacterBase* p)
     //基準からの回転角度
     float RotateCheckVec[]=
     {
+        0,
         PI / 4,
         -PI / 4,
     };
