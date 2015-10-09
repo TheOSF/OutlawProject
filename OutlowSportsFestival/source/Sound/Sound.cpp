@@ -51,6 +51,8 @@ void Sound::Initialize()
 
     RegistSE(Scene_Enter, "enter_next");
 
+	RegistSE(Change, "change");
+
     
     RegistBGM(BGM_Battle,"battle\\battle_normal");
     RegistBGM(BGM_LastRound, "battle\\battle_last");

@@ -50,6 +50,7 @@ class BaseballPlayer :public CharacterBase
 {
 protected:
 	bool batterflg;//　(true:バッター,false:投手)
+	int changetime;//　切り替え用タイマー
 	
 private:
 	BaseballStateMachine*		m_pStateMachine;
@@ -70,6 +71,8 @@ public:
 public:
 	//　切り替え
 	void Change();
+	//　リセット
+	void Riset();
 	
 public:
 	//　ゲッター
