@@ -208,6 +208,7 @@
     <ClCompile Include="source\Effect\EffectFactory.cpp" />
     <ClCompile Include="source\Effect\EffectResourceLoad.cpp" />
     <ClCompile Include="source\Effect\FadeGameObject.cpp" />
+    <ClCompile Include="source\Effect\GlavityLocus.cpp" />
     <ClCompile Include="source\Effect\HitEffectObject.cpp" />
     <ClCompile Include="source\Effect\ImpactLightObject.cpp" />
     <ClCompile Include="source\Effect\ParticleBase.cpp" />
@@ -351,6 +352,7 @@
     <ClInclude Include="source\Effect\EffectFactory.h" />
     <ClInclude Include="source\Effect\EffectResourceLoad.h" />
     <ClInclude Include="source\Effect\FadeGameObject.h" />
+    <ClInclude Include="source\Effect\GlavityLocus.h" />
     <ClInclude Include="source\Effect\HitEffectObject.h" />
     <ClInclude Include="source\Effect\ImpactLightObject.h" />
     <ClInclude Include="source\Effect\ParticleBase.h" />

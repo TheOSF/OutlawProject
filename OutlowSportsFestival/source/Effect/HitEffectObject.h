@@ -51,6 +51,12 @@ private:
         Vector3   color
         );
 
+    void SetGlLocus(
+        CrVector3 pos,
+        CrVector3 vec,
+        Vector3   color
+        );
+
     void UpdateMatrix();
     bool Update();
     bool Msg(MsgType mt);

@@ -32,12 +32,12 @@ void TennisState_Rolling::Enter(TennisPlayer* t)
 // ステート実行
 void TennisState_Rolling::Execute(TennisPlayer* t)
 {
-    const int EndFrame = 52;          //終了までのフレーム
-    const int CanControllFrame = 2;   //移動方向をコントロールできるフレーム
+    const int EndFrame = 30;          //終了までのフレーム
+    const int CanControllFrame = 3;   //移動方向をコントロールできるフレーム
     const int NoDamageFrame = 10;     //無敵時間
 
     const float MoveValue = 0.7f;    //移動量
-    const float DownValue = 0.05f;     //減速量
+    const float DownValue = 0.06f;     //減速量
 
     //フレームカウント更新
     ++m_Timer;
@@ -45,7 +45,7 @@ void TennisState_Rolling::Execute(TennisPlayer* t)
     //モーションセット
     if (m_Timer == 1)
     {
-        t->m_Renderer.SetMotion(TennisPlayer::_mt_Rolling);
+        t->m_Renderer.SetMotion(TennisPlayer::_mt_Guard);
     }
 
     //移動方向をコントロール

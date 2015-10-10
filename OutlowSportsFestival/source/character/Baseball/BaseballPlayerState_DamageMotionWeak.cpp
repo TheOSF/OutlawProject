@@ -60,6 +60,7 @@ void BaseballState_DamageMotion_Weak::Enter(BaseballPlayer* t)
 		new BaseballHitEvent(m_pBaseball),
 		Param
 		);
+
 	//ヒットエフェクト作成
 	new HitEffectObject(
 		m_pBaseball->m_Params.pos + Vector3(0, 3, 0),

@@ -45,9 +45,9 @@ void TennisAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, TennisPlayer* p
 
     pDmg->m_Param.pos = Pos + Forward*m_Param.DamagePosLength;
 
-   // pDmg->vec = pDmg->m_Param.pos - pTennis->m_Params.pos;
     chr_func::GetFront(pTennis, &pDmg->vec);
-    pDmg->vec.y = 0;
+    pDmg->vec *= 0.5f;
+    pDmg->vec.y = 0.2f;
 
     m_LocusPos = pDmg->m_Param.pos;
     m_LocusVec = Forward;
@@ -88,6 +88,11 @@ bool TennisAttackInfo_UsualAtk::isComboButtonFrame(int Frame)
 bool TennisAttackInfo_UsualAtk::isCanAngleControll(int Frame, RADIAN& OutControllVal)
 {
     OutControllVal = m_Param.AngleControllValue;
+
+    if (Frame < 3)
+    {
+        OutControllVal = D3DXToRadian(45);
+    }
 
     return
         Frame >= m_Param.AngleControllStartFrame&&

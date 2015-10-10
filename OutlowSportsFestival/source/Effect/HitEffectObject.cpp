@@ -3,6 +3,8 @@
 #include "ParticleRenderer.h"
 #include "ParticleMoveObject.h"
 #include "../GameSystem/ResourceManager.h"
+#include "GlavityLocus.h"
+
 
 HitEffectObject::HitEffectObject(
     CrVector3 pos,
@@ -22,8 +24,12 @@ HitEffectObject::HitEffectObject(
 {
     InitMatrix(pos, vec, length, width);
 
-    SetParticle(
-        pos, vec, length, width, color
+    //SetParticle(
+    //    pos, vec, length, width, color
+    //    );
+
+    SetGlLocus(
+        pos, vec, color
         );
 
     m_Renderer.m_Color.SetColor(0, 0, 0, 0);
@@ -128,6 +134,51 @@ void HitEffectObject::SetParticle(
             );
     }
 }
+
+
+void HitEffectObject::SetGlLocus(
+    CrVector3 pos,
+    CrVector3 vec,
+    Vector3   color
+    )
+{
+    Vector3 power(0, -0.01f, 0);
+    GlavityLocus* g;
+
+    const Vector4 
+        stCol(color.x, color.y, color.z, 1.0f),
+        endCol(color.x, color.y, color.z, 0);
+
+    const Vector4
+        stHdCol(color.x, color.y, color.z, 1),
+        endHdCol(color.x, color.y, color.z, 0);
+
+    const Vector3 move = Vector3Normalize(vec)*0.8f;
+
+
+    for (int i = 0; i < m_Particle_level * 5; ++i)
+    {
+        g = new GlavityLocus(
+            pos, move + Vector3Rand() * 0.4f, power, 4, 40
+            );
+
+        g->m_BoundRatio = 0.8f;
+        g->m_CheckWall = false;
+
+        g->m_Locus.m_StartParam.Color = stCol;
+        g->m_Locus.m_EndParam.Color = endCol;
+
+        g->m_Locus.m_StartParam.HDRColor = stHdCol;
+        g->m_Locus.m_EndParam.HDRColor = endHdCol;
+
+        g->m_Locus.m_StartParam.Width = 0.05f;
+        g->m_Locus.m_EndParam.Width = 0.00f;
+
+        g->m_Locus.m_pTexture = DefResource.Get(Resource::TextureType::Locus1);
+    }
+    
+}
+
 
 void HitEffectObject::UpdateMatrix()
 {

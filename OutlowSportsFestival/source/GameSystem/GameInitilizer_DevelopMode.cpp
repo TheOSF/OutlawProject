@@ -151,7 +151,7 @@ void GameInitializer_DevelopMode::GameCreate()
     {// Bullet
 
         DefBulletSystem.StartUp();
-        DefBulletSystem.InitializeBulletPhysics(btVector3(0, -9.8f, 0)*2.0f, iexSystem::Device);
+        DefBulletSystem.InitializeBulletPhysics(btVector3(0, -9.8f, 0)*3.5f, iexSystem::Device);
 
         //更新クラスの作成
         new BulletUpdateGameobject();
@@ -216,7 +216,7 @@ void GameInitializer_DevelopMode::GameCreate()
     //描画デバイス呼び出し
     {
         //ステージ作成
-        if (true)
+        if (false)
         {
             pStageMesh = new iexMesh("DATA\\STAGE\\Stage.IMO");
 
@@ -236,6 +236,9 @@ void GameInitializer_DevelopMode::GameCreate()
 
             MeshRenderer* R = new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColor);
             MeshCollider* C = new MeshCollider(pStageMesh, new MeshCollider::HitEvent);
+
+            pStageMesh->SetScale(scale, scale, scale);
+            pStageMesh->SetAngle(0, PI, PI);
 
             D3DXMatrixScaling(&m, scale, scale, scale);
             {
@@ -400,9 +403,7 @@ void GameInitializer_DevelopMode::GameCreate()
     //キャラクタ作成
     {
         CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Baseball);
+        CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Tennis);
 
-        CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Baseball);
-     //   CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Tennis);
     }
 }

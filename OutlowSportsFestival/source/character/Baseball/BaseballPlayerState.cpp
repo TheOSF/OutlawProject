@@ -18,96 +18,103 @@
 #include "../CharacterCounterClass.h"
 #include "../../Camera/Camera.h"
 
-//ローリングの方向制御クラス
-class PlayerRollingControll :public BaseballState_Rolling::CallBackClass
+
+
+class BaseBallUtillityClass
 {
 public:
-	BaseballPlayer*const pb;
 
-	PlayerRollingControll(BaseballPlayer* pb) :pb(pb){}
+    //ローリングの方向制御クラス
+    class PlayerRollingControll :public BaseballState_Rolling::CallBackClass
+    {
+    public:
+        BaseballPlayer*const pb;
+
+        PlayerRollingControll(BaseballPlayer* pb) :pb(pb){}
 
 
-	Vector3 GetVec()override
-	{
-		Vector2 stick = controller::GetStickValue(controller::stick::left, pb->m_PlayerInfo.number);
-		Vector3 vec(stick.x, 0, stick.y);
+        Vector3 GetVec()override
+        {
+            Vector2 stick = controller::GetStickValue(controller::stick::left, pb->m_PlayerInfo.number);
+            Vector3 vec(stick.x, 0, stick.y);
 
-		if (vec.Length() < 0.25f)
-		{
-			return Vector3Zero;
-		}
+            if (vec.Length() < 0.25f)
+            {
+                return Vector3Zero;
+            }
 
-		vec = Vector3MulMatrix3x3(vec, matView);
-		vec.Normalize();
+            vec = Vector3MulMatrix3x3(vec, matView);
+            vec.Normalize();
 
-		return vec;
-	}
+            return vec;
+        }
+    };
+
+
+    //ショット中のコントロールクラス
+    class PlayerShotControllClass_B :public BaseballState_PlayerControll_ShotAttack_B::ControllClass
+    {
+        BaseballPlayer* const   m_pBaseball;
+    public:
+        PlayerShotControllClass_B(BaseballPlayer* pBaseball) :
+            m_pBaseball(pBaseball){}
+
+        Vector3 GetVec()
+        {
+            Vector2 stick = controller::GetStickValue(controller::stick::left, m_pBaseball->m_PlayerInfo.number);
+            Vector3 vec(stick.x, 0, stick.y);
+
+            if (vec.Length() < 0.25f)
+            {
+                return Vector3Zero;
+            }
+
+            vec = DefCamera.GetRight()*vec.x + DefCamera.GetUp()*vec.z;
+            vec.Normalize();
+
+            return vec;
+        }
+
+        bool DoOtherAction()
+        {
+            BaseballPlayer * const b = m_pBaseball;
+
+            //　近距離攻撃[□]
+            if (controller::GetTRG(controller::button::shikaku, b->m_PlayerInfo.number)){
+                b->SetState(new Baseball_PlayerControll_Attack_B(b));
+                return true;
+            }
+            //　回避行動[×]
+            if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number)){
+                b->SetState(new BaseballState_Rolling(new PlayerRollingControll(b)));
+                return true;
+            }
+
+            // カウンター[R1]
+            if (controller::GetTRG(controller::button::_R1, b->m_PlayerInfo.number))
+            {
+                b->SetState(new  BaseballState_PlayerControll_Counter(5));
+                return true;
+            }
+
+            return false;
+        }
+
+        bool DoShotAfterAction()
+        {
+            BaseballPlayer * const b = m_pBaseball;
+
+            if (controller::GetTRG(controller::button::shikaku, b->m_PlayerInfo.number))
+            {// [□] で [近距離攻撃]
+                b->SetState(new Baseball_PlayerControll_Attack_B(b));
+                return true;
+            }
+
+            return false;
+        }
+    };
+
 };
-
-
-//ショット中のコントロールクラス
-class PlayerShotControllClass :public BaseballState_PlayerControll_ShotAttack_B::ControllClass
-{
-	BaseballPlayer* const   m_pBaseball;
-public:
-	PlayerShotControllClass(BaseballPlayer* pBaseball) :
-		m_pBaseball(pBaseball){}
-
-	Vector3 GetVec()
-	{
-		Vector2 stick = controller::GetStickValue(controller::stick::left, m_pBaseball->m_PlayerInfo.number);
-		Vector3 vec(stick.x, 0, stick.y);
-
-		if (vec.Length() < 0.25f)
-		{
-			return Vector3Zero;
-		}
-
-		vec = DefCamera.GetRight()*vec.x + DefCamera.GetUp()*vec.z;
-		vec.Normalize();
-
-		return vec;
-	}
-
-	bool DoOtherAction()
-	{
-		BaseballPlayer * const b = m_pBaseball;
-
-		//　近距離攻撃[□]
-		if (controller::GetTRG(controller::button::shikaku, b->m_PlayerInfo.number)){
-			b->SetState(new Baseball_PlayerControll_Attack_B(b));
-			return true;
-		}
-		//　回避行動[×]
-		if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number)){
-			b->SetState(new BaseballState_Rolling(new PlayerRollingControll(b)));
-			return true;
-		}
-
-		// カウンター[R1]
-		if (controller::GetTRG(controller::button::_R1, b->m_PlayerInfo.number))
-		{
-			b->SetState(new  BaseballState_PlayerControll_Counter(5));
-			return true;
-		}
-
-		return false;
-	}
-
-	bool DoShotAfterAction()
-	{
-		BaseballPlayer * const b = m_pBaseball;
-
-		if (controller::GetTRG(controller::button::shikaku, b->m_PlayerInfo.number))
-		{// [□] で [近距離攻撃]
-			b->SetState(new Baseball_PlayerControll_Attack_B(b));
-			return true;
-		}
-
-		return false;
-	}
-};
-
 
 
 //***************************************
@@ -256,7 +263,7 @@ void BaseballState_PlayerControll_Move::Exit(BaseballPlayer* b){
 void BaseballState_PlayerControll_Move::Batter(BaseballPlayer* b){
 	//　遠距離攻撃[△]
 	if (controller::GetTRG(controller::button::sankaku, b->m_PlayerInfo.number)){
-		b->SetState(new BaseballState_PlayerControll_ShotAttack_B(new PlayerShotControllClass(b)));
+        b->SetState(new BaseballState_PlayerControll_ShotAttack_B(new BaseBallUtillityClass::PlayerShotControllClass_B(b)));
 		return;
 	}
 	//　近距離攻撃[□]
@@ -266,7 +273,7 @@ void BaseballState_PlayerControll_Move::Batter(BaseballPlayer* b){
 	}
 	//　回避行動[×]
 	if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number)){
-		b->SetState(new BaseballState_Rolling(new PlayerRollingControll(b)));
+        b->SetState(new BaseballState_Rolling(new BaseBallUtillityClass::PlayerRollingControll(b)));
 		return;
 	}
 
@@ -279,20 +286,25 @@ void BaseballState_PlayerControll_Move::Batter(BaseballPlayer* b){
 }
 
 //　投手時
-void  BaseballState_PlayerControll_Move::Pitcher(BaseballPlayer* b){
+void  BaseballState_PlayerControll_Move::Pitcher(BaseballPlayer* b)
+{
+
 	//　遠距離攻撃[△]
-	if (controller::GetTRG(controller::button::sankaku, b->m_PlayerInfo.number)){
+	if (controller::GetTRG(controller::button::sankaku, b->m_PlayerInfo.number))
+    {
 		b->SetState(new BaseballState_PlayerControll_ShotAttack_P());
 		return;
 	}
 	//　近距離攻撃[□]
-	if (controller::GetTRG(controller::button::shikaku, b->m_PlayerInfo.number)){
+	if (controller::GetTRG(controller::button::shikaku, b->m_PlayerInfo.number))
+    {
 		b->SetState(new Baseball_PlayerControll_Attack_P(b));
 		return;
 	}
 	//　回避行動[×]
-	if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number)){
-		b->SetState(new BaseballState_Rolling(new PlayerRollingControll(b)));
+	if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number))
+    {
+        b->SetState(new BaseballState_Rolling(new BaseBallUtillityClass::PlayerRollingControll(b)));
 		return;
 	}
 	//　必殺技[○]

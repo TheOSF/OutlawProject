@@ -76,7 +76,8 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
         m_Damage_vec,
         0.05f,
         0.15f,
-        Vector3(1.0f, 1.0f, 1.0f)
+        Vector3(1.0f, 1.0f, 1.0f),
+        1
         );
 
     //ブラーエフェクト

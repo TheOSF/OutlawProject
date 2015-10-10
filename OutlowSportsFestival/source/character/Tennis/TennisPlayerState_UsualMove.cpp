@@ -17,127 +17,135 @@
 #include "../../Camera/Camera.h"
 
 
-//ローリングの高校制御クラス
-class PlayerRollingControll :public TennisState_Rolling::CallBackClass
+
+class TennisUtillityClass
 {
 public:
-    TennisPlayer*const pt;
 
-    PlayerRollingControll(TennisPlayer* pt) :pt(pt){}
-
-
-    Vector3 GetVec()override
+    //ローリングの高校制御クラス
+    class PlayerRollingControll :public TennisState_Rolling::CallBackClass
     {
-        Vector2 stick = controller::GetStickValue(controller::stick::left, pt->m_PlayerInfo.number);
-        Vector3 vec(stick.x, 0, stick.y);
+    public:
+        TennisPlayer*const pt;
 
-        if (vec.Length() < 0.25f)
+        PlayerRollingControll(TennisPlayer* pt) :pt(pt){}
+
+
+        Vector3 GetVec()override
         {
-            return Vector3Zero;
+            Vector2 stick = controller::GetStickValue(controller::stick::left, pt->m_PlayerInfo.number);
+            Vector3 vec(stick.x, 0, stick.y);
+
+            if (vec.Length() < 0.25f)
+            {
+                return Vector3Zero;
+            }
+
+            vec = DefCamera.GetRight()*vec.x + DefCamera.GetForward()*vec.z;
+            vec.Normalize();
+
+            return vec;
+        }
+    };
+
+
+    //バウンド攻撃の方向制御クラス
+    class PlayerBoundBallControll :public TennisState_BoundBallAtk::ControllClass
+    {
+    public:
+        TennisPlayer*const pt;
+
+        PlayerBoundBallControll(TennisPlayer* pt) :pt(pt){}
+
+        Vector3 GetBoundVec()override
+        {
+            Vector2 stick = controller::GetStickValue(controller::stick::left, pt->m_PlayerInfo.number);
+            Vector3 vec(stick.x, 0, stick.y);
+
+            if (vec.Length() < 0.25f)
+            {
+                return Vector3Zero;
+            }
+
+            vec = DefCamera.GetRight()*vec.x + DefCamera.GetForward()*vec.z;
+            vec.Normalize();
+
+            return vec;
+        }
+    };
+
+
+    //ショット中のコントロールクラス
+    class PlayerShotControllClass :public TennisState_Shot::ControllClass
+    {
+        TennisPlayer* const   m_pTennis;
+    public:
+        PlayerShotControllClass(TennisPlayer* pTennis) :
+            m_pTennis(pTennis){}
+
+        Vector3 GetVec()
+        {
+            Vector2 stick = controller::GetStickValue(controller::stick::left, m_pTennis->m_PlayerInfo.number);
+            Vector3 vec(stick.x, 0, stick.y);
+
+            if (vec.Length() < 0.25f)
+            {
+                return Vector3Zero;
+            }
+
+            vec = DefCamera.GetRight()*vec.x + DefCamera.GetForward()*vec.z;
+            vec.Normalize();
+
+            return vec;
         }
 
-        vec = DefCamera.GetRight()*vec.x + DefCamera.GetUp()*vec.z;
-        vec.Normalize();
+        bool DoOtherAction()
+        {
+            TennisPlayer * const t = m_pTennis;
 
-        return vec;
-    }
+            if (controller::GetTRG(controller::button::shikaku, t->m_PlayerInfo.number))
+            {// [□] で [近距離攻撃]
+                t->SetState(new TennisState_PlayerControll_Attack(t));
+                return true;
+            }
+
+            if (controller::GetTRG(controller::button::batu, t->m_PlayerInfo.number))
+            {// [×] で [ローリング]
+                t->SetState(new TennisState_Rolling(new PlayerRollingControll(t)));
+                return true;
+            }
+
+            if (controller::GetTRG(controller::button::_R1, t->m_PlayerInfo.number))
+            {// [R1] で [カウンター]
+                t->SetState(new TennisState_PlayerControll_Counter());
+                return true;
+            }
+
+            if (controller::GetTRG(controller::button::_L1, t->m_PlayerInfo.number))
+            {// [L1] で [バウンドボール攻撃
+                t->SetState(new TennisState_BoundBallAtk(new PlayerBoundBallControll(t)));
+                return true;
+            }
+
+            return false;
+        }
+
+        bool DoShotAfterAction()
+        {
+            TennisPlayer * const t = m_pTennis;
+
+            if (controller::GetTRG(controller::button::shikaku, t->m_PlayerInfo.number))
+            {// [□] で [近距離攻撃]
+                t->SetState(new TennisState_PlayerControll_Attack(t));
+                return true;
+            }
+
+            return false;
+        }
+    };
+
 };
 
-
-//バウンド攻撃の方向制御クラス
-class PlayerBoundBallControll :public TennisState_BoundBallAtk::ControllClass
-{
-public:
-    TennisPlayer*const pt;
-
-    PlayerBoundBallControll(TennisPlayer* pt) :pt(pt){}
-
-    Vector3 GetBoundVec()override
-    {
-        Vector2 stick = controller::GetStickValue(controller::stick::left, pt->m_PlayerInfo.number);
-        Vector3 vec(stick.x, 0, stick.y);
-
-        if (vec.Length() < 0.25f)
-        {
-            return Vector3Zero;
-        }
-
-        vec = DefCamera.GetRight()*vec.x + DefCamera.GetUp()*vec.z;
-        vec.Normalize();
-
-        return vec;
-    }
-};
-
-
-//ショット中のコントロールクラス
-class PlayerShotControllClass :public TennisState_Shot::ControllClass
-{
-    TennisPlayer* const   m_pTennis;
-public:
-    PlayerShotControllClass(TennisPlayer* pTennis) :
-        m_pTennis(pTennis){}
-
-    Vector3 GetVec()
-    {
-        Vector2 stick = controller::GetStickValue(controller::stick::left, m_pTennis->m_PlayerInfo.number);
-        Vector3 vec(stick.x, 0, stick.y);
-
-        if (vec.Length() < 0.25f)
-        {
-            return Vector3Zero;
-        }
-
-        vec = DefCamera.GetRight()*vec.x + DefCamera.GetUp()*vec.z;
-        vec.Normalize();
-
-        return vec;
-    }
-
-    bool DoOtherAction()
-    {
-        TennisPlayer * const t = m_pTennis;
-
-        if (controller::GetTRG(controller::button::shikaku, t->m_PlayerInfo.number))
-        {// [□] で [近距離攻撃]
-            t->SetState(new TennisState_PlayerControll_Attack(t));
-            return true;
-        }
-
-        if (controller::GetTRG(controller::button::batu, t->m_PlayerInfo.number))
-        {// [×] で [ローリング]
-            t->SetState(new TennisState_Rolling(new PlayerRollingControll(t)));
-            return true;
-        }
-
-        if (controller::GetTRG(controller::button::_R1, t->m_PlayerInfo.number))
-        {// [R1] で [カウンター]
-            t->SetState(new TennisState_PlayerControll_Counter());
-            return true;
-        }
-
-        if (controller::GetTRG(controller::button::_L1, t->m_PlayerInfo.number))
-        {// [L1] で [バウンドボール攻撃
-            t->SetState(new TennisState_BoundBallAtk(new PlayerBoundBallControll(t)));
-            return true;
-        }
-
-        return false;
-    }
-
-    bool DoShotAfterAction()
-    {
-        TennisPlayer * const t = m_pTennis;
-
-        if (controller::GetTRG(controller::button::shikaku, t->m_PlayerInfo.number))
-        {// [□] で [近距離攻撃]
-            t->SetState(new TennisState_PlayerControll_Attack(t));
-            return true;
-        }
-
-        return false;
-    }
-};
 
 //****************************************************
 //	テニスプレイヤーの操作クラス
@@ -205,8 +213,8 @@ void TennisState_PlayerControll_Move::Enter(TennisPlayer* t)
 	//移動パラメータを代入
 	CharacterUsualMove::Params p;
 
-	p.Acceleration = 0.2f;
-	p.MaxSpeed = 0.2f;
+	p.Acceleration = 0.15f;
+	p.MaxSpeed = 0.28f;
 	p.TurnSpeed = 0.3f;
 	p.DownSpeed = 0.2f;
 
@@ -230,7 +238,7 @@ void TennisState_PlayerControll_Move::Execute(TennisPlayer* t)
 
     if (controller::GetTRG(controller::button::sankaku, t->m_PlayerInfo.number))
     {// [△] でボール発射
-        t->SetState(new TennisState_Shot(new PlayerShotControllClass(t)));
+        t->SetState(new TennisState_Shot(new TennisUtillityClass::PlayerShotControllClass(t)));
         return;
     }
 
@@ -242,7 +250,7 @@ void TennisState_PlayerControll_Move::Execute(TennisPlayer* t)
 
     if (controller::GetTRG(controller::button::batu, t->m_PlayerInfo.number))
     {// [×] で [ローリング]
-        t->SetState(new TennisState_Rolling(new PlayerRollingControll(t)));
+        t->SetState(new TennisState_Rolling(new TennisUtillityClass::PlayerRollingControll(t)));
         return;
     }
 
@@ -255,7 +263,7 @@ void TennisState_PlayerControll_Move::Execute(TennisPlayer* t)
     if (controller::GetTRG(controller::button::_L1, t->m_PlayerInfo.number) &&
         t->isCanBoundBallAtk())
     {// [L1] で [バウンドボール攻撃
-        t->SetState(new TennisState_BoundBallAtk(new PlayerBoundBallControll(t)));
+        t->SetState(new TennisState_BoundBallAtk(new TennisUtillityClass::PlayerBoundBallControll(t)));
         return;
     }
 

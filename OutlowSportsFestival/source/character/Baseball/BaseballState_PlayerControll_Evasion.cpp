@@ -5,6 +5,8 @@
 #include "../../Effect/EffectFactory.h"
 #include "../../Sound/Sound.h"
 
+
+
 BaseballState_Rolling::BaseballState_Rolling(CallBackClass* pCallBackClass) :
 m_pCallBackClass(pCallBackClass)
 {

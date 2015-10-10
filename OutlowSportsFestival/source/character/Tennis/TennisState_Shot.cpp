@@ -83,7 +83,7 @@ void TennisState_Shot::Execute(TennisPlayer* t)
     //‘Å‚¿ƒLƒƒƒ“ƒZƒ‹
     if (m_Timer > CancelStart && m_Timer < ShotFrame - 3)
     {        
-        if (m_pControllClass->DoOtherAction())
+        if (m_pUpBall != nullptr && m_pControllClass->DoOtherAction())
         {
             m_pUpBall->m_Damage.m_Enable = true;
             m_pUpBall->m_Params.type = BallBase::Type::_CantCounter;

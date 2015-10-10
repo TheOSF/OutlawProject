@@ -12,31 +12,37 @@
 #include "../CharacterBase.h"
 #include "../../Sound/Sound.h"
 
-
-//ローリングの方向制御クラス
-class PlayerRollingControll :public SoccerState_Rolling::CallBackClass
+class SoccerUtillityClass
 {
 public:
-	SoccerPlayer*const ps;
-
-	PlayerRollingControll(SoccerPlayer* ps) :ps(ps){}
 
 
-	Vector3 GetVec()override
-	{
-		Vector2 stick = controller::GetStickValue(controller::stick::left, ps->m_PlayerInfo.number);
-		Vector3 vec(stick.x, 0, stick.y);
+    //ローリングの方向制御クラス
+    class PlayerRollingControll :public SoccerState_Rolling::CallBackClass
+    {
+    public:
+        SoccerPlayer*const ps;
 
-		if (vec.Length() < 0.25f)
-		{
-			return Vector3Zero;
-		}
+        PlayerRollingControll(SoccerPlayer* ps) :ps(ps){}
 
-		vec = Vector3MulMatrix3x3(vec, matView);
-		vec.Normalize();
 
-		return vec;
-	}
+        Vector3 GetVec()override
+        {
+            Vector2 stick = controller::GetStickValue(controller::stick::left, ps->m_PlayerInfo.number);
+            Vector3 vec(stick.x, 0, stick.y);
+
+            if (vec.Length() < 0.25f)
+            {
+                return Vector3Zero;
+            }
+
+            vec = Vector3MulMatrix3x3(vec, matView);
+            vec.Normalize();
+
+            return vec;
+        }
+    };
+
 };
 
 SoccerState* SoccerState_PlayerControll_Move::GetPlayerControllMove(
@@ -111,7 +117,7 @@ void SoccerState_PlayerControll_Move::Execute(SoccerPlayer* s)
 	// [×] で ローリング
 	if (controller::GetTRG(controller::button::batu, s->m_PlayerInfo.number))
 	{
-		s->SetState(new SoccerState_Rolling(new PlayerRollingControll(s),false));
+        s->SetState(new SoccerState_Rolling(new SoccerUtillityClass::PlayerRollingControll(s), false));
 	}
 	// [□] で 格闘
 	if (controller::GetTRG(controller::button::shikaku, s->m_PlayerInfo.number))
@@ -456,6 +462,7 @@ void SoccerState_PlayerControll_Shot::Enter(SoccerPlayer* s)
 			new UsualBall(param, DamageBase::Type::_WeekDamage, 1);
 		}
 	};
+
 	class SoccerHitEvent :public DamageManager::HitEventBase
 	{
 	public:
@@ -670,7 +677,7 @@ void SoccerState_PlayerControll_Dash::Execute(SoccerPlayer* s)
 	// [×] で ローリング
 	if (controller::GetTRG(controller::button::batu, s->m_PlayerInfo.number))
 	{
-		s->SetState(new SoccerState_Rolling(new PlayerRollingControll(s),true));
+		s->SetState(new SoccerState_Rolling(new SoccerUtillityClass::PlayerRollingControll(s),true));
 	}
 	// [□] で スライディング
 	if (controller::GetTRG(controller::button::shikaku, s->m_PlayerInfo.number))

@@ -195,6 +195,7 @@
     <ClCompile Include="source\Stage\StageObjectFactory.cpp" />
     <ClCompile Include="source\Stage\StageResourceLoadFaction.cpp" />
     <ClCompile Include="source\character\CharacterPhysic.cpp" />
+    <ClCompile Include="source\Effect\GlavityLocus.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -349,6 +350,7 @@
     <ClInclude Include="source\Stage\StageObjectFactory.h" />
     <ClInclude Include="source\Stage\StageResourceLoadFaction.h" />
     <ClInclude Include="source\character\CharacterPhysic.h" />
+    <ClInclude Include="source\Effect\GlavityLocus.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

@@ -97,6 +97,7 @@ void SoccerState_SmallDamage::Exit(SoccerPlayer* t)
 {
 
 }
+
 SoccerState_DamageVanish::SoccerState_DamageVanish(
 	SoccerPlayer* pSoccer,
 	const Vector3& Damage_vec  //ƒ_ƒ[ƒW‚ğó‚¯‚½•ûŒü

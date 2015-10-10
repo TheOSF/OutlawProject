@@ -290,8 +290,8 @@ RigidBody* BulletSystem::AddRigidMesh(
 
 		pbtTriangleMesh->addTriangle(
 			btVector3(v1.x, v1.y, v1.z),
-			btVector3(v2.x, v2.y, v2.z),
-			btVector3(v3.x, v3.y, v3.z)
+			btVector3(v3.x, v3.y, v3.z),
+			btVector3(v2.x, v2.y, v2.z)
 			);
 	}
 
@@ -317,7 +317,7 @@ RigidBody* BulletSystem::AddRigidMesh(
 	Vector3 angle = pMesh->GetAngle();
 
 	transform.setRotation(
-		btQuaternion(-angle.x, angle.y, angle.z)
+		btQuaternion(angle.x, angle.y, angle.z)
 		);
 
 	// btRigidBodyê∂ê¨
