@@ -47,7 +47,11 @@ void TennisAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, TennisPlayer* p
 
     chr_func::GetFront(pTennis, &pDmg->vec);
     pDmg->vec *= 0.5f;
-    pDmg->vec.y = 0.2f;
+
+    if (m_Param.DamageType == DamageBase::Type::_VanishDamage)
+    {
+        pDmg->vec.y = 0.2f;
+    }
 
     m_LocusPos = pDmg->m_Param.pos;
     m_LocusVec = Forward;

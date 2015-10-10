@@ -281,7 +281,7 @@ void CameraStateCharacterZoom::Enter(Camera* c)
 void CameraStateCharacterZoom::Execute(Camera* c)
 {
     const Vector3 target = m_pZoomCharacter->m_Params.pos + Vector3(0, 3, 0);
-    const Vector3 pos = target + Vector3(0, 3, -10);
+    const Vector3 pos = target + Vector3(0, 2, -13);
 
 
     c->m_Position += (pos - c->m_Position)*m_Speed;

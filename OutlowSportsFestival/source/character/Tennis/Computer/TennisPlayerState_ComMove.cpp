@@ -200,6 +200,7 @@ void ComMoveControllClass::StateMove(Vector2& out)
     
 
     //目標に到達できない or 新目標があればそこに変更する
+   
 
 
     //目標に向かって移動

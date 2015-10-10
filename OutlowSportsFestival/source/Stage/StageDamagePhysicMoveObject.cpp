@@ -11,6 +11,7 @@ StageDamagePhysicMoveObject::StageDamagePhysicMoveObject(
     CrVector3     angle,
     float         HitScale,           //あたり安定の大きさ
     RigidBodyCreater* pCreater,
+    MeshCollider*     pCollider,      //当たり判定メッシュ(ダメージがあたるとdeleteする)
     CrVector3     diff_pos
     ) :
     m_pRenderMesh(pRenderMesh),
@@ -19,7 +20,8 @@ StageDamagePhysicMoveObject::StageDamagePhysicMoveObject(
     m_Scale(scale),
     m_Angle(angle),
     m_pCreater(pCreater),
-    m_Diffpos(diff_pos)
+    m_Diffpos(diff_pos),
+    m_pCollider(pCollider)
 {
     {
         Matrix m;
@@ -48,6 +50,7 @@ StageDamagePhysicMoveObject::~StageDamagePhysicMoveObject()
 {
     delete m_pRenderMesh;
     delete m_pCreater;
+    delete m_pCollider;
 }
 
 bool StageDamagePhysicMoveObject::Update()

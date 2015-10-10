@@ -2,6 +2,7 @@
 #include "StageDamagePhysicMoveObject.h"
 #include "../GameSystem/ResourceManager.h"
 #include "../Effect/HitEffectObject.h"
+#include "../debug/DebugDraw.h"
 
 //” ì¬
 class BoxCreater :public StageDamagePhysicMoveObject::RigidBodyCreater
@@ -66,7 +67,7 @@ public:
             mass,
             RigidBody::CollisionTypes::ct_dynamic,
             pos, angle, radius, height, friction, restitution,
-            v*35.0f
+            v*70.0f
             );
 
         new HitEffectObject(
@@ -93,10 +94,38 @@ void StageObjFactory::CreateCone(CrVector3 pos, CrVector3 angle)
     c->angle = angle;
     c->friction = 1000.0f;
     c->height = 3.0f;
-    c->mass = 3.0f;
+    c->mass = 5.0f;
     c->pos = pos;
     c->radius = 1.25f;
-    c->restitution = 0.5f;
+    c->restitution = 0.2f;
+
+    MeshCollider* pCollider =
+        new MeshCollider(
+        DefResource.Get(Resource::MeshType::Sphere),
+        new MeshCollider::HitEvent()
+        );
+
+    {
+        Matrix m;
+
+        D3DXMatrixScaling(&m, 0.6f, 0.6f, 0.6f);
+
+        m._41 = pos.x;
+        m._42 = pos.y - 0.5f;
+        m._43 = pos.z;
+
+        pCollider->SetWorldMatrix(
+            m
+            );
+
+        //new DebugDrawSphere(
+        //    Vector3(m._41, m._42, m._43),
+        //    2,
+        //    COLORf(1, 1, 0, 0.5f),
+        //    600
+        //    );
+
+    }
 
     new StageDamagePhysicMoveObject(
         new MeshRenderer(DefResource.Get(Resource::MeshType::Cone), false, MeshRenderer::RenderType::UseColorSpecular),
@@ -105,6 +134,7 @@ void StageObjFactory::CreateCone(CrVector3 pos, CrVector3 angle)
         angle,
         1.5f,
         c,
+        pCollider,
         Vector3(0, -1.3f, 0)
         );
 }
@@ -121,13 +151,36 @@ void StageObjFactory::CreatePipe(CrVector3 pos, CrVector3 angle)
     c->radius = 0.05f;
     c->restitution = 0.5f;
 
+
+    MeshCollider* pCollider =
+        new MeshCollider(
+        DefResource.Get(Resource::MeshType::Pole),
+        new MeshCollider::HitEvent()
+        );
+
+    {
+        Matrix m;
+
+        D3DXMatrixScaling(&m, 1, 1, 1);
+
+        m._41 = pos.x;
+        m._42 = pos.y;
+        m._43 = pos.z;
+
+        pCollider->SetWorldMatrix(
+            m
+            );
+
+    }
+
     new StageDamagePhysicMoveObject(
         new MeshRenderer(DefResource.Get(Resource::MeshType::Pipe), false, MeshRenderer::RenderType::UseColorSpecular),
         pos,
         Vector3(1, 1, 1)*0.05f,
         angle,
         3,
-        c
+        c,
+        pCollider
         );
 }
 
@@ -142,12 +195,35 @@ void StageObjFactory::CreateBench(CrVector3 pos, CrVector3 angle)
     c->pos = pos;
     c->restitution = 0.5f;
 
+
+    MeshCollider* pCollider =
+        new MeshCollider(
+        DefResource.Get(Resource::MeshType::Pole),
+        new MeshCollider::HitEvent()
+        );
+
+    {
+        Matrix m;
+
+        D3DXMatrixScaling(&m, 1, 1, 1);
+
+        m._41 = pos.x;
+        m._42 = pos.y;
+        m._43 = pos.z;
+
+        pCollider->SetWorldMatrix(
+            m
+            );
+
+    }
+
     new StageDamagePhysicMoveObject(
         new MeshRenderer(DefResource.Get(Resource::MeshType::Bench), false, MeshRenderer::RenderType::UseColorSpecular),
         pos,
         Vector3(1, 1, 1)*0.05f,
         angle,
         3,
-        c
+        c,
+        pCollider
         );
 }
