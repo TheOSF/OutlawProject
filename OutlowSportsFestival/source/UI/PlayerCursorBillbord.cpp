@@ -38,6 +38,15 @@ PlayerCursorBillbord::~PlayerCursorBillbord()
 
 }
 
+bool PlayerCursorBillbord::Update()
+{
+    return true;
+}
+
+bool PlayerCursorBillbord::Msg(MsgType mt)
+{
+    return false;
+}
 
 void PlayerCursorBillbord::CalcZ()
 {

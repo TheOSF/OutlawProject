@@ -14,7 +14,7 @@ FadeGameObject::Renderer::~Renderer()
 
 void FadeGameObject::Renderer::CalcZ()
 {
-    m_SortZ = 0;
+    m_SortZ = -1;
 }
 
 void FadeGameObject::Renderer::Render()

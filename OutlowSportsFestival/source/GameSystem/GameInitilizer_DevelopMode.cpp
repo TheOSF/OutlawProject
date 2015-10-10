@@ -295,19 +295,17 @@ void GameInitializer_DevelopMode::GameCreate()
                     Vector3Zero
                     );
             }
-
-            
         }
 
 
-        //ステージの煙の演出
-        new StageSmokeEmitter(
-            Vector3(-50,0,-50),
-            Vector3(50, 5, 50),
-            0x80FFA080,
-            120,
-            50
-            );
+        ////ステージの煙の演出
+        //new StageSmokeEmitter(
+        //    Vector3(-50,0,-50),
+        //    Vector3(50, 5, 50),
+        //    0x80FFA080,
+        //    120,
+        //    50
+        //    );
 
 
         //土台のステージを物理エンジンに登録
@@ -411,10 +409,10 @@ void GameInitializer_DevelopMode::GameCreate()
     //キャラクタ作成
     {
         CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Tennis);
 
-        CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)3, PlayerType::_Player, CharacterType::_Tennis);
+        //CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Tennis);
+        //CreateCharacter((PlayerNum::Value)3, PlayerType::_Player, CharacterType::_Tennis);
 
     }
 }

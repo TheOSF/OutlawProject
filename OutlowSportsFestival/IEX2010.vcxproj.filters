@@ -197,6 +197,7 @@
     <ClCompile Include="source\GameScene\sceneGamePlay.cpp" />
     <ClCompile Include="source\GameScene\sceneMain.cpp" />
     <ClCompile Include="source\UI\PlayerCursorBillbord.cpp" />
+    <ClCompile Include="source\UI\GameSetUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -353,6 +354,7 @@
     <ClInclude Include="source\GameScene\SceneGamePlay.h" />
     <ClInclude Include="source\GameScene\sceneMain.h" />
     <ClInclude Include="source\UI\PlayerCursorBillbord.h" />
+    <ClInclude Include="source\UI\GameSetUI.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

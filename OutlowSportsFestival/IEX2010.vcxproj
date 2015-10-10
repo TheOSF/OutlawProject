@@ -256,6 +256,7 @@
     <ClCompile Include="source\Stage\StagePhysicMoveObject.cpp" />
     <ClCompile Include="source\Stage\StageResourceLoadFaction.cpp" />
     <ClCompile Include="source\UI\FightUI.cpp" />
+    <ClCompile Include="source\UI\GameSetUI.cpp" />
     <ClCompile Include="source\UI\PlayerCursorBillbord.cpp" />
     <ClCompile Include="source\UI\PlayerGauge.cpp" />
     <ClCompile Include="source\UI\RoundUI.cpp" />
@@ -403,6 +404,7 @@
     <ClInclude Include="source\Stage\StagePhysicMoveObject.h" />
     <ClInclude Include="source\Stage\StageResourceLoadFaction.h" />
     <ClInclude Include="source\UI\FightUI.h" />
+    <ClInclude Include="source\UI\GameSetUI.h" />
     <ClInclude Include="source\UI\PlayerCursorBillbord.h" />
     <ClInclude Include="source\UI\PlayerGauge.h" />
     <ClInclude Include="source\UI\RoundUI.h" />

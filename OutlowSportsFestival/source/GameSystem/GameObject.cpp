@@ -1,4 +1,6 @@
 #include "GameObject.h"
+#include <typeinfo>
+
 
 GameObjectManager*	GameObjectManager::m_pInstance = nullptr;
 
@@ -47,6 +49,21 @@ void GameObjectManager::Update()
     else
     {
         UsualUpdate();
+    }
+
+    //デバッグ用
+
+    if (KEY(KEY_ENTER, 0) == 3)
+    {
+        MyDebugString("\n-----現在のオブジェクト-------\n\n");
+        
+        for (auto& it : m_GameObjectMap)
+        {
+            const char* p = typeid(*it.first).name();
+            MyDebugString("%s \n", p);
+        }
+
+        MyDebugString("\n-----総数 = %d -------\n\n", (int)m_GameObjectMap.size());
     }
 }
 
@@ -110,10 +127,11 @@ GameObjectManager::~GameObjectManager()
 void GameObjectManager::FreezeUpdate()
 {
     GameObjectMap::iterator it2;
+    GameObjectList::iterator it = m_FreezeUpdateList.begin();
 
-    for (GameObjectList::iterator it = m_FreezeUpdateList.begin();
-        it != m_FreezeUpdateList.end();
-        ++it)
+    while (
+        it != m_FreezeUpdateList.end()
+        )
     {
         it2 = m_GameObjectMap.find(*it);
 
@@ -128,9 +146,12 @@ void GameObjectManager::FreezeUpdate()
 
             delete *it;
             it = m_FreezeUpdateList.erase(it);
+            m_GameObjectMap.erase(it2);
 
             continue;
         }
+
+        ++it;
     }
 
 }

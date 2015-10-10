@@ -15,6 +15,7 @@
 
 #include "../UI/RoundUI.h"
 #include "../UI/FightUI.h"
+#include "../UI/GameSetUI.h"
 
 #include "../Sound/Sound.h"
 
@@ -413,11 +414,14 @@ void MatchState::WinPose::Execute(_Client_type_ptr p)
     {
         std::list<LpGameObjectBase> UpdateList;
 
+        UpdateList.push_back(new GameSetUI());
+      
         DefGameObjMgr.FreezeOtherObjectUpdate(UpdateList, 120);
     }
 
     if (m_Frame == 120)
     {
+        Sound::Play(Sound::Kira_n);
         DefCamera.SetNewState(new CameraStateCharacterZoom(m_pWinCharacter, 0.05f));
     }
 

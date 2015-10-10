@@ -39,6 +39,8 @@ namespace Sound
         Cursor_enter, //カーソル決定
         Cursor_cancel,//カーソルキャンセル
 
+        Kira_n,     //ラウンドポイント取得音
+
         Gong_Start, //ゴング音スタート
         Gong_End,   //ゴング音エンド
 

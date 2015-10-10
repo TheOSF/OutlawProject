@@ -95,12 +95,10 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
     Param.move = m_Damage_vec * 0.7f;
     Param.move.y = 0.2f;
 
-
     Param.down_frame = 15;
     Param.down_muteki_frame = 15;
     Param.standup_frame = 50;
     Param.standup_muteki_frame = 10;
-
 
     //ひるみクラスを作成
     m_pDamageVanishClass = new CharacterDamageVanish(
@@ -125,13 +123,13 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
             );
     }
 
-    //ブラーエフェクト
-    new BlurImpactSphere(
-        m_pTennis->m_Params.pos + Vector3(0, BallBase::UsualBallShotY, 0),
-        20,
-        50,
-        15
-        );
+    ////ブラーエフェクト
+    //new BlurImpactSphere(
+    //    m_pTennis->m_Params.pos + Vector3(0, BallBase::UsualBallShotY, 0),
+    //    20,
+    //    50,
+    //    15
+    //    );
 
     //カメラショック
     DefCamera.SetShock(
