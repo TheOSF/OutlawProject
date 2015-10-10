@@ -33,7 +33,7 @@ bool VolleyBallPlayer::Update()
 	return true;	//í‚Étrue‚ð•Ô‚·‚ÆÁ‹Ž‚³‚ê‚È‚¢
 }
 
-bool VolleyBallPlayer::Msg(MsgType mt)
+bool VolleyBallPlayer::CharacterMsg(MsgType mt)
 {
 	return m_pStateMachine->Msg(mt);
 }

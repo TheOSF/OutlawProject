@@ -47,14 +47,13 @@ bool TennisPlayer::Update()
 	return true;	//í‚Étrue‚ð•Ô‚·‚ÆÁ‹Ž‚³‚ê‚È‚¢
 }
 
-bool TennisPlayer::Msg(MsgType mt)
+bool TennisPlayer::CharacterMsg(MsgType mt)
 {
     if (mt == MsgType::_RoundReset)
     {
         SetState(TennisState_PlayerControll_Move::GetPlayerControllMove(this));
         m_Renderer.SetMotion(_mt_Stand);
         m_Renderer.Update(0);
-        ResetRound();
     }
 
 	return m_pStateMachine->Msg(mt);

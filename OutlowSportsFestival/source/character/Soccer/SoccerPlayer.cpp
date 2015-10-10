@@ -39,14 +39,13 @@ bool SoccerPlayer::Update()
 	return true;	//í‚Étrue‚ð•Ô‚·‚ÆÁ‹Ž‚³‚ê‚È‚¢
 }
 
-bool SoccerPlayer::Msg(MsgType mt)
+bool SoccerPlayer::CharacterMsg(MsgType mt)
 {
 	if (mt == MsgType::_RoundReset)
 	{
 		SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(this));
 		m_Renderer.SetMotion(_ms_Stand);
 		m_Renderer.Update(0);
-		ResetRound();
 	}
 	return m_pStateMachine->Msg(mt);
 }

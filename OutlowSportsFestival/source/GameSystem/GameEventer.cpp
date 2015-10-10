@@ -269,7 +269,11 @@ void MatchState::MatchPlay::GetLiveCharacterMap(CharacterManager::CharacterMap& 
 
 void MatchState::MatchPlay::Enter(_Client_type_ptr p)
 {
-    Sound::Play(Sound::BGM_Battle, 1, true);
+    //‚Í‚¶‚ß‚Ìƒ‰ƒEƒ“ƒh‚È‚çÄ¶
+    if (p->m_Param.round_count == 2)
+    {
+        Sound::Play(Sound::BGM_Battle, 1, true);
+    }
 }
 
 void MatchState::MatchPlay::Execute(_Client_type_ptr p)

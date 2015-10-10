@@ -50,7 +50,7 @@ bool LacrossePlayer::Update()
 
 
 // ステートにメッセージを送信
-bool LacrossePlayer::Msg(MsgType msg)
+bool LacrossePlayer::CharacterMsg(MsgType msg)
 {
 	return m_pStateMachine->Msg(msg);
 }

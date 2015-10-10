@@ -124,8 +124,8 @@ void StageObjFactory::CreateCone(CrVector3 pos, CrVector3 angle)
         //    COLORf(1, 1, 0, 0.5f),
         //    600
         //    );
-
     }
+
 
     new StageDamagePhysicMoveObject(
         new MeshRenderer(DefResource.Get(Resource::MeshType::Cone), false, MeshRenderer::RenderType::UseColorSpecular),

@@ -56,7 +56,7 @@ public:
 
 	void SetState(SoccerState* state);
 	bool Update();
-	bool Msg(MsgType mt);
+    bool CharacterMsg(MsgType mt);
 
 
 };

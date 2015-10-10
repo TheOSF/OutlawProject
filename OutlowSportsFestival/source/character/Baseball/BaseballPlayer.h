@@ -67,7 +67,7 @@ public:
 
 	void SetState(BaseballState* state);
 	bool Update();
-	bool Msg(MsgType mt);
+    bool CharacterMsg(MsgType mt);
 public:
 	//@Ø‚è‘Ö‚¦
 	void Change();

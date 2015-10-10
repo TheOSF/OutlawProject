@@ -59,7 +59,7 @@ public:
 	void SetState(TennisState* state);
 
 	bool Update();
-	bool Msg(MsgType mt);
+    bool CharacterMsg(MsgType mt);
     
 
     bool isCanBoundBallAtk();

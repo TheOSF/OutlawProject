@@ -44,7 +44,7 @@ bool BaseballPlayer::Update(){
 	return true;	//常にtrueを返すと消去されない
 }
 
-bool  BaseballPlayer::Msg(MsgType mt)
+bool  BaseballPlayer::CharacterMsg(MsgType mt)
 {
 	//　ラウンドごとにリセット
 	if (mt == MsgType::_RoundReset)
@@ -87,7 +87,6 @@ void BaseballPlayer::Riset()
 	SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(this));
 	m_Renderer.SetMotion(baseball_player::_mb_Stand);
 	m_Renderer.Update(0);
-	ResetRound();
 	batterflg = true;
 	changetime = 30;
 

@@ -13,9 +13,10 @@ const CharacterBase::CommonParams CharacterBase::m_CommonParams =
     -0.02f,        //èdóÕâ¡ë¨ìx
 };
 
-CharacterBase::CharacterBase(const PlayerInfo& info):
+CharacterBase::CharacterBase(const PlayerInfo& info) :
 m_PlayerInfo(info),
-m_PhysicObj(this)
+m_PhysicObj(this),
+m_StateType(State::Usual)
 {
 
 	m_Params.win = 0;
@@ -91,4 +92,32 @@ void CharacterBase::ResetRound()
 void CharacterBase::BaseUpdate()
 {
     m_PhysicObj.Update();
+}
+
+bool CharacterBase::Msg(MsgType mt)
+{
+    switch (mt)
+    {
+    case MsgType::_PlayStart:
+        m_StateType = State::Usual;
+        break;
+
+    case MsgType::_RoundReset:
+        m_StateType = State::Freeze;
+        ResetRound();
+        break;
+
+    case MsgType::_TimeUp:
+        m_StateType = State::Freeze;
+        break;
+
+    case MsgType::_WinPose:
+        m_StateType = State::WinPose;
+        break;
+
+    default:
+        return false;
+    }
+
+    return CharacterMsg(mt);
 }

@@ -48,7 +48,7 @@ public:
 
 	void SetState(VolleyBallState* state);
 	bool Update();
-	bool Msg(MsgType mt);
+    bool CharacterMsg(MsgType mt);
 
 private:
 	VolleyBallStateMachine*		m_pStateMachine;

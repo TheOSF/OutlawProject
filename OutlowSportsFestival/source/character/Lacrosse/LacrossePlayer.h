@@ -73,6 +73,6 @@ public:
 	bool Update()override;
 
 	// ステートにメッセージを送信
-	bool Msg(MsgType msg)override;
+    bool CharacterMsg(MsgType mt)override;
 
 };

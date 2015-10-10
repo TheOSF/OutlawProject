@@ -47,6 +47,16 @@ public:
         float  Glavity; //重力加速度
     };
 
+    //キャラクタの現在の状態
+    enum class State
+    {
+        Usual,    //通常(戦闘中
+        Die,      //死んでいる
+        WinPose,  //勝ちポーズ中
+        LosePose, //負けポーズ中
+        Freeze,   //とまっている
+    };
+
     static const CommonParams m_CommonParams;
 
 	const PlayerInfo	m_PlayerInfo; //プレイヤー情報にする構造体
@@ -66,10 +76,14 @@ public:
     void BaseUpdate();
 
 	virtual bool Update() = 0;	//この関数がfalseを返すとdeleteされる
-	virtual bool Msg(MsgType mt) = 0;	//受信できたメッセージはtrueを
+    virtual bool CharacterMsg(MsgType mt) = 0; //受信できたメッセージはtrueを
+    
+    bool Msg(MsgType mt);
 
+    State GetStateType()const;
 private:
     CharacterPhysic     m_PhysicObj;  //物理判定オブジェクト
+    State               m_StateType;  //現在のステートタイプ
 };
 
 #endif
