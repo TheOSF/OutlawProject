@@ -43,6 +43,7 @@ public:
         Locus2,
 
         UI_strings,
+        UI_player_name,
 
         Anime_Circle,
         Anime_Smoke,

@@ -45,7 +45,7 @@ namespace chr_func
     void GetRight(CharacterBase* p, Vector3* pOut);
 
 	//キャラクタが死んでいるかどうか
-	bool isDie(CharacterBase* p);
+	bool isDie(const CharacterBase* p);
 
 	//ダメージ判定をとる
 	void DamageCheck(

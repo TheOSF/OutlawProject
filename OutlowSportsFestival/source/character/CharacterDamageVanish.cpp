@@ -94,11 +94,6 @@ void CharacterDamageVanish::Flying()
         m_pEvent->Flying(R);
     }
 
-    {
-        //移動更新
-        chr_func::UpdateAll(m_pCharacter, &DamageManager::HitEventBase());
-    }
-
 
     //地面についていた場合はステート移行
     if (chr_func::isTouchGround(m_pCharacter) &&
@@ -131,6 +126,8 @@ void CharacterDamageVanish::Flying()
             CollisionManager::RayType::_Usual
             ) != nullptr)
         {
+            vec.y = 0;
+            vec.Normalize();
             m_Param.move = Vector3Refrect(m_pCharacter->m_Params.move, vec);
 
             {
@@ -143,6 +140,11 @@ void CharacterDamageVanish::Flying()
 
             DefCamera.SetShock(Vector2(0.3f, 0.3f), 15);
         }
+    }
+
+    {
+        //移動更新
+        chr_func::UpdateAll(m_pCharacter, &DamageManager::HitEventBase());
     }
 }
 
@@ -168,6 +170,17 @@ void CharacterDamageVanish::Dowing()
             );
     }
 
+
+
+
+    //ステート移行
+    if (m_Count > m_Param.down_frame)
+    {
+        m_pEvent->StandUpStart();
+        m_pStateFunc = &CharacterDamageVanish::StandUping;
+        m_Count = 0;
+    }
+
     //移動更新
     if (m_Count > m_Param.down_muteki_frame)
     {
@@ -178,15 +191,6 @@ void CharacterDamageVanish::Dowing()
     {
         //ノーダメージ版
         chr_func::UpdateAll(m_pCharacter, &DamageManager::HitEventBase());
-    }
-
-
-    //ステート移行
-    if (m_Count > m_Param.down_frame)
-    {
-        m_pEvent->StandUpStart();
-        m_pStateFunc = &CharacterDamageVanish::StandUping;
-        m_Count = 0;
     }
 }
 
@@ -200,6 +204,17 @@ void CharacterDamageVanish::StandUping()
     m_pEvent->StandUping();
 
 
+    //ステート移行
+    if (m_Count > m_Param.standup_frame)
+    {
+        m_pEvent->End();
+        m_pStateFunc = &CharacterDamageVanish::End;
+        m_Count = 0;
+    }
+
+
+
+
     //移動更新
     if (m_Count > m_Param.standup_muteki_frame)
     {
@@ -211,29 +226,21 @@ void CharacterDamageVanish::StandUping()
         //ノーダメージ版
         chr_func::UpdateAll(m_pCharacter, &DamageManager::HitEventBase());
     }
-
-
-
-    //ステート移行
-    if (m_Count > m_Param.standup_frame)
-    {
-        m_pEvent->End();
-        m_pStateFunc = &CharacterDamageVanish::End;
-        m_Count = 0;
-    }
 }
 
 
 void CharacterDamageVanish::End()
 {
-    //移動更新
-    {
-        chr_func::UpdateAll(m_pCharacter, m_pHitEvent);
-    }
 
     if (m_Count == 0)
     {
         m_Count = 1;
         m_pEvent->End();
     }
+
+    //移動更新
+    {
+        chr_func::UpdateAll(m_pCharacter, m_pHitEvent);
+    }
+
 }

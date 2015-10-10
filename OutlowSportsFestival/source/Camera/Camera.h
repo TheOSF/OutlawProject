@@ -30,7 +30,7 @@ public:
 	//カメラの振動を与える
 	void SetShock(Vector2 power, float frame);
 
-	//ワールド座標をプロジェクション空間座標に変換する
+	//ワールド座標をプロジェクション空間座標に変換する(wで除算済み)
 	bool WorldToProjection(Vector3* pOut, CrVector3 In);
 
 	//プロジェクション空間座標をワールド座標に変換する

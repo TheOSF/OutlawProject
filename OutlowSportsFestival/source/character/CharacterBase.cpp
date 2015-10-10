@@ -1,7 +1,7 @@
 #include "CharacterBase.h"
 #include "CharacterManager.h"
 #include "CharacterFunction.h"
-
+#include "../UI/PlayerCursorBillbord.h"
 
 //***************************************************
 //		キャラクタクラス
@@ -28,6 +28,9 @@ m_PhysicObj(this)
     m_Params.maxHP = 100;
 	m_Params.SP = 0;
     m_Params.size = 1.2f;
+
+    //カーソルＵＩ
+    new PlayerCursorBillbord(this);
 
 	//マネージャに登録
 	DefCharacterMgr.Add(this);

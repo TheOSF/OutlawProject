@@ -60,6 +60,13 @@ typedef float RADIAN;
 
 #define RELEASE(obj) if( obj ){ (obj)->Release(); (obj) = null; }
 
+inline float fClamp(float x, float max_val, float min_val)
+{
+    return (x<min_val) ? (min_val) : ((x>max_val) ? (max_val) : (x));
+}
+
+
+
 class iex2DObj;
 class iexShader;
 
@@ -133,6 +140,23 @@ public:
 
 extern	Matrix	matView;		//	カメラ行列
 extern	Matrix	matProjection;	//	投影変換行列
+
+
+class RectI
+{
+public:
+    int x, y, w, h;
+
+    RectI() :x(0), y(0), w(0), h(0)
+    {
+    }
+
+    RectI(int x, int y, int w, int h) :x(x), y(y), w(w), h(h)
+    {
+    }
+
+    ~RectI(){}
+};
 
 //*****************************************************************************************************************************
 //
@@ -342,6 +366,15 @@ inline Vector3 Vector3MulMatrix(const Vector& v, const Matrix& m)
 		v.x*m._12 + v.y*m._22 + v.z*m._32 + m._42,
 		v.x*m._13 + v.y*m._23 + v.z*m._33 + m._43
 		);
+}
+
+inline Vector3 Vector3MulMatrixDivW(const Vector& v, const Matrix& m)
+{
+    return Vector3(
+        v.x*m._11 + v.y*m._21 + v.z*m._31 + m._41,
+        v.x*m._12 + v.y*m._22 + v.z*m._32 + m._42,
+        v.x*m._13 + v.y*m._23 + v.z*m._33 + m._43
+        ) / (v.x*m._14 + v.y*m._24 + v.z*m._34 + m._44);
 }
 
 inline Vector3 Vector3MulMatrix3x3(const Vector& v, const Matrix& m)
@@ -843,6 +876,13 @@ public:
 	void Render(iexShader* shader, char* tech);
 	void Render(s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 SrcY, s32 width, s32 height, u32 dwFlags = RS_COPY, COLOR color = 0xFFFFFFFF, float z = .0f);
 	void Render(s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 SrcY, s32 width, s32 height, iexShader* shader, char* tech, COLOR color = 0xFFFFFFFF, float z = .0f);
+    void Render(
+        const RectI& draw_rect,
+        const RectI& tex_rect,
+        DWORD	dwFlags = RS_COPY,			//描画方法
+        COLOR color = 0xFFFFFFFF,				//頂点カラー
+        float z = 0							//頂点ｚ値
+        );
 
 	//回転付き描画
 	void RenderPlus(
@@ -855,6 +895,8 @@ public:
 		COLOR color=0xFFFFFFFF,				//頂点カラー
 		float z=0							//頂点ｚ値
 		);
+
+    
 };
 
 

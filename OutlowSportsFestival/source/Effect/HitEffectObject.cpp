@@ -146,17 +146,17 @@ void HitEffectObject::SetGlLocus(
     GlavityLocus* g;
 
     const Vector4 
-        stCol(color.x, color.y, color.z, 1.0f),
+        stCol(color.x, color.y, color.z, 0),
         endCol(color.x, color.y, color.z, 0);
 
     const Vector4
-        stHdCol(color.x, color.y, color.z, 1),
+        stHdCol(color.x, color.y, color.z, 5.0f),
         endHdCol(color.x, color.y, color.z, 0);
 
     const Vector3 move = Vector3Normalize(vec)*0.8f;
 
 
-    for (int i = 0; i < m_Particle_level * 5; ++i)
+    for (int i = 0; i < (int)m_Particle_level * 5; ++i)
     {
         g = new GlavityLocus(
             pos, move + Vector3Rand() * 0.4f, power, 4, 40

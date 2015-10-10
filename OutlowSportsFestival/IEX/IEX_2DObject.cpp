@@ -178,6 +178,31 @@ void iex2DObj::Render( s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 Src
 	iexPolygon::Render2D( v, 2, this, shader, tech );
 }
 
+void iex2DObj::Render(
+    const RectI& draw_rect,
+    const RectI& tex_rect,
+    DWORD	dwFlags ,			//描画方法
+    COLOR color ,				//頂点カラー
+    float z 							//頂点ｚ値
+    )
+{
+    Render(
+        draw_rect.x,
+        draw_rect.y,
+        draw_rect.w,
+        draw_rect.h,
+
+        tex_rect.x,
+        tex_rect.y,
+        tex_rect.w,
+        tex_rect.h,
+        
+        dwFlags,
+        color,
+        z
+        );
+}
+
 //回転付き描画
 void iex2DObj::RenderPlus(
 	const Vector2& screen_center_pos,	//描画する中心位置

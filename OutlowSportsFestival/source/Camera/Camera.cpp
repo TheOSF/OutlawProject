@@ -72,7 +72,7 @@ void Camera::SetShock(Vector2 power, float frame)
 //ワールド座標をプロジェクション空間座標に変換する
 bool Camera::WorldToProjection(Vector3* pOut, CrVector3 In)
 {
-	*pOut = Vector3MulMatrix(In, m_VP);
+	*pOut = Vector3MulMatrixDivW(In, m_VP);
 
 	return true;
 }

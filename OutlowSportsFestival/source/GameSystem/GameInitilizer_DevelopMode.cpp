@@ -159,6 +159,20 @@ void GameInitializer_DevelopMode::GameCreate()
 
 
     {
+        //ＵＩ用文字列画像
+        DefResource.Regist(
+            Resource::TextureType::UI_strings,
+            new iex2DObj("DATA\\Texture\\title_raund_nowlording.png")
+            );
+
+        //ＵＩ用プレイヤーネーム
+        DefResource.Regist(
+            Resource::TextureType::UI_player_name,
+            new iex2DObj("DATA\\Texture\\PlayerNo.png")
+            );
+    }
+
+    {
         //デバッグ描画用の球メッシュ
         DefResource.Regist(
             Resource::MeshType::Sphere,
@@ -319,13 +333,7 @@ void GameInitializer_DevelopMode::GameCreate()
         new ParticleManagerUpdater();
     }
 
-    {
-        //ＵＩ用文字列画像
-        DefResource.Regist(
-            Resource::TextureType::UI_strings,
-            new iex2DObj("DATA\\Texture\\title_raund_nowlording.png")
-            );
-    }
+
 
 
     if (0)
@@ -403,7 +411,10 @@ void GameInitializer_DevelopMode::GameCreate()
     //キャラクタ作成
     {
         CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Tennis);
+
+        CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)3, PlayerType::_Player, CharacterType::_Tennis);
 
     }
 }

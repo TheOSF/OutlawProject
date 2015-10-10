@@ -164,7 +164,7 @@ void chr_func::GetRight(CharacterBase* p, Vector3* pOut)
     pOut->z = cosf(angle);
 }
 
-bool chr_func::isDie(CharacterBase* p)
+bool chr_func::isDie(const CharacterBase* p)
 {
 	return p->m_Params.HP <= 0;
 }

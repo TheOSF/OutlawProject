@@ -74,8 +74,6 @@
     <ClCompile Include="source\character\CharacterRenderer.cpp" />
     <ClCompile Include="source\character\CharacterSliding.cpp" />
     <ClCompile Include="source\Damage\Damage.cpp" />
-    <ClCompile Include="source\GameScene\sceneGamePlay.cpp" />
-    <ClCompile Include="source\GameScene\sceneMain.cpp" />
     <ClCompile Include="source\GameSystem\GameController.cpp" />
     <ClCompile Include="source\GameSystem\GameObject.cpp" />
     <ClCompile Include="source\IexSystem\Framework.cpp" />
@@ -196,6 +194,9 @@
     <ClCompile Include="source\Stage\StageResourceLoadFaction.cpp" />
     <ClCompile Include="source\character\CharacterPhysic.cpp" />
     <ClCompile Include="source\Effect\GlavityLocus.cpp" />
+    <ClCompile Include="source\GameScene\sceneGamePlay.cpp" />
+    <ClCompile Include="source\GameScene\sceneMain.cpp" />
+    <ClCompile Include="source\UI\PlayerCursorBillbord.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -217,8 +218,6 @@
     <ClInclude Include="source\character\CharacterStateTemplate.h" />
     <ClInclude Include="source\Damage\Damage.h" />
     <ClInclude Include="source\debug\DebugFunction.h" />
-    <ClInclude Include="source\GameScene\SceneGamePlay.h" />
-    <ClInclude Include="source\GameScene\sceneMain.h" />
     <ClInclude Include="source\GameSystem\ForwardDecl.h" />
     <ClInclude Include="source\GameSystem\GameController.h" />
     <ClInclude Include="source\GameSystem\GameObject.h" />
@@ -351,6 +350,9 @@
     <ClInclude Include="source\Stage\StageResourceLoadFaction.h" />
     <ClInclude Include="source\character\CharacterPhysic.h" />
     <ClInclude Include="source\Effect\GlavityLocus.h" />
+    <ClInclude Include="source\GameScene\SceneGamePlay.h" />
+    <ClInclude Include="source\GameScene\sceneMain.h" />
+    <ClInclude Include="source\UI\PlayerCursorBillbord.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

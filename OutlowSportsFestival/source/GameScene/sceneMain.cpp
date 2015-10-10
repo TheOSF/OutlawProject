@@ -1,7 +1,11 @@
 #include	"iextreme.h"
+
 #include	"../IexSystem/System.h"
 #include	"debug\DebugFunction.h"
 #include	"sceneMain.h"
+
+
+
 //*****************************************************************************************************************************
 //
 //	ƒOƒ[ƒoƒ‹•Ï”
