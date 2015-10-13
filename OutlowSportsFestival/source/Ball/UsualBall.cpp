@@ -6,6 +6,8 @@
 #include "../Stage/PhysicsMeshObject.h"
 #include "../Collision/Collision.h"
 #include "BallFadeOutRenderer.h"
+#include "../Effect/ParticleHDRRenderer.h"
+#include "../Effect/ParticleMoveObject.h"
 
 
 UsualBall::UsualBall(
@@ -369,7 +371,7 @@ bool UsualBall::StateFlyMove()
     //メッシュ更新
     {
         Matrix m = m_pMeshRenderer->GetMatrix();
-          
+
         m._41 = m_Params.pos.x;
         m._42 = m_Params.pos.y;
         m._43 = m_Params.pos.z;
@@ -379,6 +381,33 @@ bool UsualBall::StateFlyMove()
         //軌跡の点を追加
         AddLocusPoint();
     }
+
+    //パーティクル
+    {
+        if (m_Damage.type == DamageBase::Type::_VanishDamage)
+        {
+            ParticleHDRRenderer* r = new ParticleHDRRenderer();
+
+            r->m_HDRcolor = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number).toDWORD();
+            r->m_Param.pos = m_Params.pos + Vector3Rand()*0.2f;
+            r->m_Param.dw_Flag = RS_ADD;
+            r->m_Param.size = Vector2(1, 1);
+            r->m_pTexture = DefResource.Get(Resource::TextureType::Particle);
+            r->SetCellUV(4, 4, 1);
+
+            ParticleMoveObject* m = 
+                new ParticleMoveObject(
+                r,
+                Vector3Zero,
+                Vector3Zero,
+                5,
+                false,
+                1,
+                1
+                );
+        }
+    }
+
 
     //フィールド外なら更新失敗
     return !isOutofField();

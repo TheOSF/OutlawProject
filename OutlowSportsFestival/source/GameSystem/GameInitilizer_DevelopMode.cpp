@@ -287,7 +287,7 @@ void GameInitializer_DevelopMode::GameCreate()
             //    );
 
 
-            for (int i = 0; i < 50; ++i)
+            for (int i = 0; i < 5; ++i)
             {
                 StageObjFactory::CreateCone(
                     Vector3((frand() - 0.5f) * 60, 2.0f, (frand() - 0.5f) * 60),

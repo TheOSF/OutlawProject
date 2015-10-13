@@ -102,6 +102,11 @@ void	sceneGamePlay::Update()
     //ダメージのデバッグ描画
     DefDamageMgr.DebugDraw();
     DefDamageMgr.m_DebugDrawVisible = GetKeyState('P') != 0;
+
+    if (KEY(KEY_ENTER, 0) == 3)
+    {
+        KEY_Vibration(10000, -10, 0);
+    }
 }
 
 //*****************************************************************************************************************************

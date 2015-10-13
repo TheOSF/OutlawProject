@@ -24,9 +24,9 @@ HitEffectObject::HitEffectObject(
 {
     InitMatrix(pos, vec, length, width);
 
-    //SetParticle(
-    //    pos, vec, length, width, color
-    //    );
+    SetParticle(
+        pos, vec, length, width, color
+        );
 
     SetGlLocus(
         pos, vec, color
@@ -101,10 +101,10 @@ void HitEffectObject::SetParticle(
     Vector3   color
     )
 {
-    ParticleRenderer* Renderer;
+    ParticleRenderer*   Renderer;
     ParticleMoveObject* MoveObj;
 
-    const int numParticle = 10 * (int)(1 + m_Particle_level);
+    const int numParticle = 5 * (int)(1 + m_Particle_level);
     
     COLORf Colorf(1, color.x, color.y, color.z);
     LPIEX2DOBJ pTexture = DefResource.Get(Resource::TextureType::Particle);
@@ -142,7 +142,7 @@ void HitEffectObject::SetGlLocus(
     Vector3   color
     )
 {
-    Vector3 power(0, -0.01f, 0);
+    Vector3 power(0, -0.02f, 0);
     GlavityLocus* g;
 
     const Vector4 
@@ -156,7 +156,7 @@ void HitEffectObject::SetGlLocus(
     const Vector3 move = Vector3Normalize(vec)*0.8f;
 
 
-    for (int i = 0; i < (int)m_Particle_level * 5; ++i)
+    for (int i = 0; i < (int)(m_Particle_level) * 2; ++i)
     {
         g = new GlavityLocus(
             pos, move + Vector3Rand() * 0.4f, power, 4, 40 + rand() % 30
@@ -171,7 +171,7 @@ void HitEffectObject::SetGlLocus(
         g->m_Locus.m_StartParam.HDRColor = stHdCol;
         g->m_Locus.m_EndParam.HDRColor = endHdCol;
 
-        g->m_Locus.m_StartParam.Width = 0.05f;
+        g->m_Locus.m_StartParam.Width = 0.07f;
         g->m_Locus.m_EndParam.Width = 0.00f;
 
         g->m_Locus.m_pTexture = DefResource.Get(Resource::TextureType::Locus1);

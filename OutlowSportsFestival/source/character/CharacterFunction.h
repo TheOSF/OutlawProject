@@ -76,6 +76,18 @@ namespace chr_func
 
     //引数の場所が引数のキャラクタからみて前かどうか
     bool isFront(CharacterBase* p, CrVector3 pos);
+
+    //引数のキャラクタのゲージを加算する
+    void AddSkillGauge(CharacterBase* p, RATIO value);
+
+    //引数のキャラクタのゲージをリセットする(０にする)
+    void ResetSkillGauge(CharacterBase* p);
+
+    //引数のスキル値が必殺技を発動できるかどうか
+    bool isCanSpecialAttack(RATIO value);
+
+    //引数のキャラクタが必殺技を発動できるかどうか
+    bool isCanSpecialAttack(CharacterBase* p);
 }
 
 #endif

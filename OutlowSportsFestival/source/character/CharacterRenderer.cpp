@@ -163,6 +163,9 @@ void CharacterRenderer::MasterRender()
     char HairTechnique[] = { "DeffLightNoSp" };
     char BodyTechnique[] = { "DeffLightNoSp" };
 
+
+  //  m_HDR = Vector3(0.05f, 0.05f, 0);
+
     tecs.insert(Techniques::value_type(0, FaceTechnique));
     tecs.insert(Techniques::value_type(1, FaceTechnique));
     tecs.insert(Techniques::value_type(2, FaceTechnique));

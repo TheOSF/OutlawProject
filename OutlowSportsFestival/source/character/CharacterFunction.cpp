@@ -2,6 +2,10 @@
 #include "CharacterBase.h"
 #include "../Ball/Ball.h"
 #include "../Collision/Collision.h"
+#include "../Effect/ParticleRenderer.h"
+#include "../Effect/ParticleMoveObject.h"
+#include "../GameSystem/ResourceManager.h"
+
 
 //基本的な更新(座標更新、壁との判定など)をすべて行う
 void chr_func::UpdateAll(
@@ -313,4 +317,62 @@ bool chr_func::isFront(CharacterBase* p, CrVector3 pos)
     GetFront(p, &v2);
 
     return Vector3Dot(v1, v2) > 0.0f;
+}
+
+
+//引数のキャラクタのゲージを加算する
+void chr_func::AddSkillGauge(CharacterBase* p, RATIO value)
+{
+    const float pre_value = p->m_Params.SP;
+
+    p->m_Params.SP += value;
+    p->m_Params.SP = fClamp(p->m_Params.SP, 1.0f, 0.0f);
+
+    //(必殺技が打てるようになったら)
+    if (isCanSpecialAttack(pre_value) == false &&
+        isCanSpecialAttack(p->m_Params.SP))
+    {
+        //エフェクト
+        ParticleRenderer* r = new ParticleRenderer();
+
+        r->m_Param.color = COLORf(1, 1, 1, 1);
+        r->m_Param.dw_Flag = RS_ADD;
+        r->m_Param.pos = p->m_Params.pos + Vector3(0, 3, 0);
+        r->m_Param.size = Vector2(10, 10);
+        r->m_pTexture = DefResource.Get(Resource::TextureType::Anime_Circle);
+        
+
+        ParticleMoveObject* m = new ParticleMoveObject(
+            r,
+            Vector3Zero,
+            Vector3Zero,
+            60,
+            true,
+            8,4
+            );
+
+    }
+}
+
+
+//引数のキャラクタのゲージをリセットする(０にする)
+void chr_func::ResetSkillGauge(CharacterBase* p)
+{
+    p->m_Params.SP = 0;
+}
+
+
+
+
+//引数のキャラクタが必殺技を発動できるかどうか
+bool chr_func::isCanSpecialAttack(CharacterBase* p)
+{
+    return p->m_Params.SP >= 0.5f;
+}
+
+
+//引数のスキル値が必殺技を発動できるかどうか
+bool chr_func::isCanSpecialAttack(RATIO value)
+{
+    return value >= 0.5f;
 }

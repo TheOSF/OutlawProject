@@ -1,5 +1,5 @@
-#ifndef __PLAYER_GAUGE_H__
-#define __PLAYER_GAUGE_H__
+#pragma once
+
 
 #include "iextreme.h"
 #include "../character/CharacterBase.h"
@@ -48,4 +48,3 @@ private:
     bool Msg(MsgType mt);
 };
 
-#endif
