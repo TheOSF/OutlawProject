@@ -95,6 +95,7 @@ void SoccerState_SmallDamage::Execute(SoccerPlayer* t)
 
 void SoccerState_SmallDamage::Exit(SoccerPlayer* t)
 {
+	delete m_pDamageMotionClass;
 
 }
 
@@ -213,7 +214,7 @@ void SoccerState_DamageVanish::Execute(SoccerPlayer* s)
 
 void SoccerState_DamageVanish::Exit(SoccerPlayer* s)
 {
-
+	delete m_pDamageVanishClass;
 }
 
 SoccerState_DamageMotion_Die::SoccerState_DamageMotion_Die(

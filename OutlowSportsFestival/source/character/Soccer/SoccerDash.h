@@ -42,6 +42,7 @@ public:
 		return m_Params;
 	}
 	void Update();	//çXêV
+	void UpdateLocusColor();
 	void SetStickValue(CrVector2 StickValue);
 private:
 	typedef DamageManager::HitEventBase HitEventBase;
@@ -51,6 +52,8 @@ private:
 	HitEventBase*	m_pHitEventBase;
 	Params			m_Params;
 	Vector2			m_StickValue;
+	Locus           m_Locus;
 	bool			m_isRun;
+	bool            m_Init;
 };
 #endif
