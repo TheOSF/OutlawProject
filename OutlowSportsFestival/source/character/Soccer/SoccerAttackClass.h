@@ -66,7 +66,8 @@ public:
 
 	SoccerAttackClass(
 		SoccerPlayer*   pOwner,  //サッカープレイヤーへのポインタ
-		ControllEvent*  pEvent   //イベントクラス(終了時にdeleteする)
+		ControllEvent*  pEvent,   //イベントクラス(終了時にdeleteする)
+		int NoDamageFrame
 		);
 
 	~SoccerAttackClass();
@@ -84,6 +85,7 @@ private:
 	DamageShpere	      m_Damage;
 	int                   m_Timer;
 	int                   m_ComboCount;
+	int                   NoDamageFrame;
 	bool                  m_DoCombo;
 	LocusHDR              m_Locus;
 

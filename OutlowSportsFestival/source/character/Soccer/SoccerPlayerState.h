@@ -67,6 +67,7 @@ public:
 	void Exit(SoccerPlayer* t)override;
 
 private:
+	int m_Timer;
 	SoccerAttackClass   m_Attack;        //攻撃クラスへのポインタ
 };
 //プレイヤー操作の攻撃クラス

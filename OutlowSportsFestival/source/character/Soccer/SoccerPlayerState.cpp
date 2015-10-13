@@ -102,7 +102,10 @@ void SoccerState_PlayerControll_Move::Enter(SoccerPlayer* s)
 		s, 
 		p, 
 		new SoccerMoveEvent(s),
-		new SoccerHitEvent(s));
+		new SoccerHitEvent(s)
+		);
+	//初期のたちモーションセット
+	s->m_Renderer.SetMotion(SoccerPlayer::_ms_Stand);
 }
 void SoccerState_PlayerControll_Move::Execute(SoccerPlayer* s)
 {
@@ -237,7 +240,7 @@ const CharacterBase* SoccerState_PlayerControll_Sliding::PlayerControllEvent::Ge
 }
 //-------------スライディング攻撃ステートクラス-------------
 SoccerState_PlayerControll_Sliding::SoccerState_PlayerControll_Sliding(SoccerPlayer* s) :
-m_Attack(s, new PlayerControllEvent(s))
+m_Attack(s, new PlayerControllEvent(s),10)
 {
 
 }
@@ -254,7 +257,7 @@ void SoccerState_PlayerControll_Sliding::Enter(SoccerPlayer* s)
 
 	SoccerAttackInfo_UsualAtk::Param AtkParam[] =
 	{
-		{ 6, 1.0f, 1.5f, DamageBase::Type::_VanishDamage, 5, 22, 0.17f, 5, 10, SoccerPlayer::_ms_Rolling, 35, 20, 27, 35, 0, 2, D3DXToRadian(0), 12 },
+		{ 6, 1.0f, 1.5f, DamageBase::Type::_VanishDamage, 5, 22, 0.17f, 5, 10, SoccerPlayer::_ms_Rolling, 35, 20, 27, 35, 0, 2, D3DXToRadian(1), 18 },
 	};
 	Sound::Play(Sound::Sand2);
 
@@ -374,7 +377,7 @@ const CharacterBase* SoccerState_PlayerControll_Attack::PlayerControllEvent::Get
 
 //-------------近距離攻撃ステートクラス-------------
 SoccerState_PlayerControll_Attack::SoccerState_PlayerControll_Attack(SoccerPlayer* s) :
-m_Attack(s, new PlayerControllEvent(s))
+m_Attack(s, new PlayerControllEvent(s),0)
 {
 
 }
@@ -612,6 +615,7 @@ void SoccerState_PlayerControll_Counter::Exit(SoccerPlayer* s)
 {
 	delete m_pCounter;
 }
+//-------------ダッシュステートクラス-------------
 
 void SoccerState_PlayerControll_Dash::Enter(SoccerPlayer* s)
 {
@@ -641,18 +645,28 @@ void SoccerState_PlayerControll_Dash::Enter(SoccerPlayer* s)
 	SoccerDash::Params p;
 
 	p.Acceleration = 0.2f;
-	p.MaxSpeed = 0.5f;
-	p.TurnSpeed = 0.02f;
+	p.MaxSpeed = 0.4f;
+	p.TurnSpeed = 0.07f;
 	p.DownSpeed = 0.2f;
 
 	m_timer = 0;
 
-	m_pMoveClass = new SoccerDash(s, p, new SoccerDashEvent(s), new DamageManager::HitEventBase());
+	m_pMoveClass = new SoccerDash(
+		s,
+		p,
+		new SoccerDashEvent(s),
+		new SoccerHitEvent(s)
+		);
 }
 void SoccerState_PlayerControll_Dash::Execute(SoccerPlayer* s)
 {
-	Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
+
+	
 	++m_timer;
+
+
+	Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
+	
 	// [L1]離すと戻る
 	if (!controller::GetPush(controller::button::_L1, s->m_PlayerInfo.number))
 	{
