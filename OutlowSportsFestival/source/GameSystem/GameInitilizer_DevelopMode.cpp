@@ -191,33 +191,33 @@ void GameInitializer_DevelopMode::GameCreate()
 
         DefResource.Regist(
             Resource::MeshType::Amefoot_ball,
-            new iexMesh("DATA\\CHR\\Soccer_ball\\soccer_ball.imo")
+            new iexMesh("DATA\\CHR\\Ball\\foot_ball.imo")
             );
 
         DefResource.Regist(
             Resource::MeshType::BaseBall_ball,
-            new iexMesh("DATA\\CHR\\golf_ball\\golf_ball.imo")
+            new iexMesh("DATA\\CHR\\Ball\\base_ball.imo")
             );
 
         DefResource.Regist(
             Resource::MeshType::Lacrosse_ball,
-            new iexMesh("DATA\\CHR\\Tennis_ball\\Tennis_ball.imo")
+            new iexMesh("DATA\\CHR\\Ball\\base_ball.imo")
             );
 
         DefResource.Regist(
             Resource::MeshType::Soccer_ball,
-            new iexMesh("DATA\\CHR\\Soccer_ball\\soccer_ball.imo")
+            new iexMesh("DATA\\CHR\\Ball\\soccer_ball.imo")
             );
 
 
         DefResource.Regist(
             Resource::MeshType::Tennis_ball,
-            new iexMesh("DATA\\CHR\\Tennis_ball\\Tennis_ball.imo")
+            new iexMesh("DATA\\CHR\\Ball\\Tennis_ball.imo")
             );
 
         DefResource.Regist(
             Resource::MeshType::Volley_ball,
-            new iexMesh("DATA\\CHR\\Soccer_ball\\soccer_ball.imo")
+            new iexMesh("DATA\\CHR\\Ball\\soccer_ball.imo")
             );
     }
 
@@ -418,10 +418,10 @@ void GameInitializer_DevelopMode::GameCreate()
 
     //ÉLÉÉÉâÉNÉ^çÏê¨
     {
-        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Soccer);
+        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
         CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Tennis);
 
-    //    CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Tennis);
+    //    CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Baseball);
     //    CreateCharacter((PlayerNum::Value)3, PlayerType::_Player, CharacterType::_Tennis);
 
     }

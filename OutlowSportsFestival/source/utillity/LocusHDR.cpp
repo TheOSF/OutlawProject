@@ -59,6 +59,19 @@ void LocusHDR::SubPoint(
     m_UseCount -= num;
 }
 
+//“_‚ğ“¾‚é(‚È‚¯‚ê‚Îfalse‚ğ•Ô‚·)
+bool LocusHDR::GetPos(UINT n, Vector3& out)const
+{
+    if (n >= m_UseCount)
+    {
+        return false;
+    }
+
+    out = m_pPointData[n].pos;
+
+    return true;
+}
+
 //‰Šú‰»
 void LocusHDR::Initialize()
 {

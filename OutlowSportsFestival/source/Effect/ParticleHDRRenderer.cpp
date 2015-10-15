@@ -1,5 +1,6 @@
 #include "ParticleHDRRenderer.h"
 #include "../Camera/Camera.h"
+#include "../GameSystem/ResourceManager.h"
 
 //----------------------------------------------------------
 //   HDRパーティクルのレンダラークラス
@@ -9,7 +10,7 @@ ParticleHDRRenderer::ParticleHDRRenderer() :
 m_Zenable(true),
 m_HDRcolor(0)
 {
-
+    m_pTexture = DefResource.Get(Resource::TextureType::White);
 }
 
 ParticleHDRRenderer::~ParticleHDRRenderer()

@@ -140,24 +140,24 @@ float UsualBall::GetBallScale(
     switch (type)
     {
     case CharacterType::_Americanfootball:
-        return 0.0045f;
+        return 0.18f;
 
     case CharacterType::_Baseball:
-        return 0.0045f;
+        return 0.1f;
 
     case CharacterType::_Lacrosse:
-        return 0.0045f;
+        return 0.18f;
 
     case CharacterType::_Soccer:
         return 0.18f;
 
 
     case CharacterType::_Tennis:
-        return 0.0045f;
+        return 0.1f;
 
 
     case CharacterType::_Volleyball:
-        return 0.0045f;
+        return 0.18f;
 
     default:
         break;
@@ -175,8 +175,8 @@ UsualBall::PhysicsParam UsualBall::GetBallPhysics(
 {
     PhysicsParam params[]=
     {
-        { 0.5f, 100.0f, 0.5f, 0.2f },
-        { 0.5f, 100.0f, 0.5f, 0.2f },
+        { 0.5f, 100.0f, 0.4f, 0.2f },
+        { 0.5f, 100.0f, 0.4f, 0.2f },
         { 0.5f, 100.0f, 0.55f, 0.2f },
         { 0.5f, 100.0f, 0.5f, 0.2f },
         { 0.5f, 100.0f, 0.5f, 0.2f },
@@ -399,30 +399,30 @@ bool UsualBall::StateFlyMove()
     }
 
     //パーティクル
-    {
-        if (m_Damage.type == DamageBase::Type::_VanishDamage)
-        {
-            ParticleHDRRenderer* r = new ParticleHDRRenderer();
+    //{
+    //    if (m_Damage.type == DamageBase::Type::_VanishDamage)
+    //    {
+    //        ParticleHDRRenderer* r = new ParticleHDRRenderer();
 
-            r->m_HDRcolor = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number).toDWORD();
-            r->m_Param.pos = m_Params.pos + Vector3Rand()*0.2f;
-            r->m_Param.dw_Flag = RS_ADD;
-            r->m_Param.size = Vector2(1, 1);
-            r->m_pTexture = DefResource.Get(Resource::TextureType::Particle);
-            r->SetCellUV(4, 4, 1);
+    //        r->m_HDRcolor = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number).toDWORD();
+    //        r->m_Param.pos = m_Params.pos + Vector3Rand()*0.2f;
+    //        r->m_Param.dw_Flag = RS_ADD;
+    //        r->m_Param.size = Vector2(1, 1);
+    //        r->m_pTexture = DefResource.Get(Resource::TextureType::Particle);
+    //        r->SetCellUV(4, 4, 1);
 
-            ParticleMoveObject* m = 
-                new ParticleMoveObject(
-                r,
-                Vector3Zero,
-                Vector3Zero,
-                5,
-                false,
-                1,
-                1
-                );
-        }
-    }
+    //        ParticleMoveObject* m = 
+    //            new ParticleMoveObject(
+    //            r,
+    //            Vector3Zero,
+    //            Vector3Zero,
+    //            5,
+    //            false,
+    //            1,
+    //            1
+    //            );
+    //    }
+    //}
 
 
     //フィールド外なら更新失敗

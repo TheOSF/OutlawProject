@@ -221,6 +221,7 @@
     <ClCompile Include="source\Effect\ParticleRenderer.cpp" />
     <ClCompile Include="source\Effect\SoccerSpecialHitEffect.cpp" />
     <ClCompile Include="source\Effect\StageSmokeEmitter.cpp" />
+    <ClCompile Include="source\Effect\ThunderEffect.cpp" />
     <ClCompile Include="source\GameScene\sceneGamePlay.cpp" />
     <ClCompile Include="source\GameScene\sceneMain.cpp" />
     <ClCompile Include="source\GameSystem\GameController.cpp" />
@@ -369,6 +370,7 @@
     <ClInclude Include="source\Effect\ParticleRenderer.h" />
     <ClInclude Include="source\Effect\SoccerSpecialHitEffect.h" />
     <ClInclude Include="source\Effect\StageSmokeEmitter.h" />
+    <ClInclude Include="source\Effect\ThunderEffect.h" />
     <ClInclude Include="source\GameScene\SceneGamePlay.h" />
     <ClInclude Include="source\GameScene\sceneMain.h" />
     <ClInclude Include="source\GameSystem\ForwardDecl.h" />

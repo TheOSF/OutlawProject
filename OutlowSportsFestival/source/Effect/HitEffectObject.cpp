@@ -146,11 +146,11 @@ void HitEffectObject::SetGlLocus(
     GlavityLocus* g;
 
     const Vector4 
-        stCol(color.x, color.y, color.z, 0.3f),
+        stCol(color.x, color.y, color.z, 0.0f),
         endCol(color.x, color.y, color.z, 0);
 
     const Vector4
-        stHdCol(color.x, color.y, color.z, 5.0f),
+        stHdCol(color.x, color.y, color.z, 0.2f),
         endHdCol(color.x, color.y, color.z, 0);
 
     const Vector3 move = Vector3Normalize(vec)*0.8f;
@@ -162,7 +162,7 @@ void HitEffectObject::SetGlLocus(
             pos, move + Vector3Rand() * 0.4f, power, 4, 40 + rand() % 30
             );
 
-        g->m_BoundRatio = 0.8f;
+        g->m_BoundRatio = 0.2f;
         g->m_CheckWall = false;
 
         g->m_Locus.m_StartParam.Color = stCol;
@@ -171,7 +171,7 @@ void HitEffectObject::SetGlLocus(
         g->m_Locus.m_StartParam.HDRColor = stHdCol;
         g->m_Locus.m_EndParam.HDRColor = endHdCol;
 
-        g->m_Locus.m_StartParam.Width = 0.07f;
+        g->m_Locus.m_StartParam.Width = 0.05f;
         g->m_Locus.m_EndParam.Width = 0.00f;
 
         g->m_Locus.m_pTexture = DefResource.Get(Resource::TextureType::Locus1);

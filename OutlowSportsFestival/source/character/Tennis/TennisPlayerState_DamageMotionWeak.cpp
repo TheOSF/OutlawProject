@@ -68,18 +68,29 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
 		new TennisEvent(m_pTennis),
 		new TennisHitEvent(m_pTennis),
 		Param
-		);
-
-    //ヒットエフェクト作成
-    new HitEffectObject(
-        m_pTennis->m_Params.pos + Vector3(0, 3, 0),
-        m_Damage_vec,
-        0.05f,
-        0.15f,
-        Vector3(1.0f, 1.0f, 1.0f),
-        1
         );
 
+    {
+        Vector3 pos, vec;
+        
+        vec = m_Damage_vec;
+        vec.y = 0;
+        vec.Normalize();
+
+
+        pos = m_pTennis->m_Params.pos + Vector3(0, 3.5f, 0) + vec*1.5f;
+
+        //ヒットエフェクト作成
+        new HitEffectObject(
+            pos,
+            vec,
+            0.03f,
+            0.10f,
+            Vector3(1.0f, 1.0f, 1.0f),
+            1
+            );
+
+    }
     //ブラーエフェクト
     new BlurImpactSphere(
         m_pTennis->m_Params.pos + Vector3(0, 3, 0),

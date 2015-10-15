@@ -138,6 +138,8 @@ TennisBoundBall::TennisBoundBall(
             MeshRenderer::RenderType::UseColor,
             nullptr
             );
+
+        UpdateMesh();
     }
 
     {

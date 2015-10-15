@@ -16,7 +16,7 @@ const CharacterBase::CommonParams CharacterBase::m_CommonParams =
 CharacterBase::CharacterBase(const PlayerInfo& info) :
 m_PlayerInfo(info),
 m_PhysicObj(this),
-m_StateType(State::Usual)
+m_StateType(State::Freeze)
 {
 
 	m_Params.win = 0;

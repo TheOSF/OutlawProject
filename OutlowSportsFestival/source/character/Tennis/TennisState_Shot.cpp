@@ -170,10 +170,25 @@ void TennisState_Shot::Execute(TennisPlayer* t)
                 new HitEffectObject(
                     param.pos,
                     Vector3Normalize(param.move),
-                    0.1f,
-                    0.1f,
-                    Vector3(EffectColor.r, EffectColor.g, EffectColor.b)
+                    0.08f,
+                    0.03f,
+                    Vector3(EffectColor.r, EffectColor.g, EffectColor.b),
+                    0,
+                    0
                     );
+
+
+                //エフェクトの設定
+                new HitEffectObject(
+                    param.pos,
+                    Vector3Normalize(param.move),
+                    0.08f,
+                    0.02f,
+                    Vector3(1, 1, 1),
+                    0,
+                    10.0f
+                    );
+
             }
 
             //上に上げたボールを消去

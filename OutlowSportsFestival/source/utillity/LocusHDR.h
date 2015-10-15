@@ -44,6 +44,9 @@ public:
         size_t num       //Á‹‚·‚é“_‚Ì”
         );
 
+    //“_‚ğ“¾‚é(‚È‚¯‚ê‚Îfalse‚ğ•Ô‚·)
+    bool GetPos(UINT n, Vector3& out)const;
+
 private:
 
     struct Point

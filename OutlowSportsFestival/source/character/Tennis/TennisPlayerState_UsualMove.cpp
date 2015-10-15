@@ -18,6 +18,8 @@
 #include "TennisPlayerState_DamageMotionDie.h"
 #include "TennisPlayerState_PoseMotion.h"
 
+#include "../../Render/LightObject.h"
+#include "../../Effect/ThunderEffect.h"
 
 class TennisUtillityClass
 {
@@ -288,6 +290,24 @@ void TennisState_PlayerControll_Move::Execute(TennisPlayer* t)
     {
         //スティックの値セット
         m_pMoveClass->SetStickValue(Vector2(0, 0));
+    }
+
+
+    if (controller::GetTRG(controller::button::maru, t->m_PlayerInfo.number))
+    {
+
+        for (int i = 0; i < 1; ++i)
+        {
+            new ThunderEffect(
+                t->m_Params.pos + Vector3(0, 3, 0),
+                Vector3AxisY * 5, 
+                4.0f,
+                0.5f,
+                60,
+                Vector4(0, 0, 1, 1),
+                60
+                );   
+        }
     }
 
     //更新
