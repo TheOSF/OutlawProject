@@ -1,25 +1,25 @@
 #include "StageObjectFactory.h"
-#include "StageDamagePhysicMoveObject.h"
+#include "StagePhysicMoveObject.h"
 #include "../GameSystem/ResourceManager.h"
-#include "../Effect/HitEffectObject.h"
 #include "../debug/DebugDraw.h"
 
 //” ì¬
-class BoxCreater :public StageDamagePhysicMoveObject::RigidBodyCreater
+class BoxCreater
 {
 public:
     float mass;
-    Vector3 pos, angle, scale;
+    Vector3 pos, angle, scale, Inertia;
     float friction;
     float restitution;
 
-    RigidBody* Create(CrVector3 v)
+    RigidBody* Create()
     {
         RigidBody* ret = DefBulletSystem.AddRigidBox(
             mass,
             RigidBody::CollisionTypes::ct_dynamic,
             pos,angle,scale,friction,restitution,
-            v
+            Vector3Zero,
+            Inertia
             );
 
         return ret;
@@ -27,7 +27,7 @@ public:
 };
 
 
-class CapsureCreater :public StageDamagePhysicMoveObject::RigidBodyCreater
+class CapsureCreater
 {
 public:
     float mass;
@@ -37,13 +37,13 @@ public:
     float friction;
     float restitution;
 
-    RigidBody* Create(CrVector3 v)
+    RigidBody* Create()
     {
         RigidBody* ret = DefBulletSystem.AddRigidCapsure(
             mass,
             RigidBody::CollisionTypes::ct_dynamic,
             pos, angle, radius, height, friction, restitution,
-            v
+            Vector3Zero
             );
 
         return ret;
@@ -51,33 +51,25 @@ public:
 };
 
 
-class ConeCreater :public StageDamagePhysicMoveObject::RigidBodyCreater
+class ConeCreater
 {
 public:
     float mass;
-    Vector3 pos, angle;
+    Vector3 pos, angle, Inertia;
     float radius;
     float height;
     float friction;
     float restitution;
 
-    RigidBody* Create(CrVector3 v)
+    RigidBody* Create()
     {
         RigidBody* ret = DefBulletSystem.AddRigidCone(
             mass,
             RigidBody::CollisionTypes::ct_dynamic,
             pos, angle, radius, height, friction, restitution,
-            v*70.0f
+            Vector3Zero
             );
-
-        new HitEffectObject(
-            pos,
-            v,
-            0.025f,
-            0.075f,
-            Vector3(1,1,1)
-            );
-
+        
         return ret;
     }
 };
@@ -89,141 +81,65 @@ public:
 
 void StageObjFactory::CreateCone(CrVector3 pos, CrVector3 angle)
 {
-    ConeCreater* c = new ConeCreater();
+    ConeCreater c;
 
-    c->angle = angle;
-    c->friction = 1000.0f;
-    c->height = 3.0f;
-    c->mass = 5.0f;
-    c->pos = pos;
-    c->radius = 1.25f;
-    c->restitution = 0.2f;
-
-    MeshCollider* pCollider =
-        new MeshCollider(
-        DefResource.Get(Resource::MeshType::Sphere),
-        new MeshCollider::HitEvent()
-        );
-
-    {
-        Matrix m;
-
-        D3DXMatrixScaling(&m, 0.6f, 0.6f, 0.6f);
-
-        m._41 = pos.x;
-        m._42 = pos.y - 0.5f;
-        m._43 = pos.z;
-
-        pCollider->SetWorldMatrix(
-            m
-            );
-
-        //new DebugDrawSphere(
-        //    Vector3(m._41, m._42, m._43),
-        //    2,
-        //    COLORf(1, 1, 0, 0.5f),
-        //    600
-        //    );
-    }
+    c.angle = angle;
+    c.friction = 5.0f;
+    c.height = 3.8f;
+    c.mass = 5.0f;
+    c.pos = pos;
+    c.radius = 1.25f;
+    c.restitution = 0.2f;
+    c.Inertia = Vector3(0, -1.5f, 0);
 
 
-    new StageDamagePhysicMoveObject(
+    new StagePhysicMoveObject(
         new MeshRenderer(DefResource.Get(Resource::MeshType::Cone), false, MeshRenderer::RenderType::UseColorSpecular),
-        pos,
+        c.Create(),
         Vector3(1, 1, 1)*0.05f,
-        angle,
-        1.5f,
-        c,
-        pCollider,
-        Vector3(0, -1.3f, 0)
+        2.0f
         );
 }
 
 void StageObjFactory::CreatePipe(CrVector3 pos, CrVector3 angle)
 {
-    CapsureCreater* c = new CapsureCreater();
+    BoxCreater c;
 
-    c->angle = angle;
-    c->friction = 0.5f;
-    c->height = 1.0f;
-    c->mass = 5.0f;
-    c->pos = pos;
-    c->radius = 0.05f;
-    c->restitution = 0.5f;
+    c.angle = angle;
+    c.friction = 5.0f;
+    c.scale = Vector3(0.35f, 5.5f, 0.35f);
+    c.mass = 100.0f;
+    c.pos = pos;
+    c.restitution = 0.2f;
+    c.Inertia = Vector3(0, 0, 0);
 
-
-    MeshCollider* pCollider =
-        new MeshCollider(
-        DefResource.Get(Resource::MeshType::Pole),
-        new MeshCollider::HitEvent()
-        );
-
-    {
-        Matrix m;
-
-        D3DXMatrixScaling(&m, 1, 1, 1);
-
-        m._41 = pos.x;
-        m._42 = pos.y;
-        m._43 = pos.z;
-
-        pCollider->SetWorldMatrix(
-            m
-            );
-
-    }
-
-    new StageDamagePhysicMoveObject(
+    new StagePhysicMoveObject(
         new MeshRenderer(DefResource.Get(Resource::MeshType::Pipe), false, MeshRenderer::RenderType::UseColorSpecular),
-        pos,
-        Vector3(1, 1, 1)*0.05f,
-        angle,
-        3,
-        c,
-        pCollider
+        c.Create(),
+        Vector3(2.5f, 1, 2.5f)*0.1f,
+        2.0f
         );
+
 }
 
 void StageObjFactory::CreateBench(CrVector3 pos, CrVector3 angle)
 {
-    BoxCreater* c = new BoxCreater();
+    BoxCreater c;
 
-    c->angle = angle;
-    c->friction = 0.5f;
-    c->scale = Vector3(4, 0.3f, 0.5f);
-    c->mass = 15.0f;
-    c->pos = pos;
-    c->restitution = 0.5f;
+     
+    c.angle = angle;
+    c.friction = 5.0f;
+    c.scale = Vector3(4.3f, 0.65f, 0.8f);
+    c.mass = 30.0f;
+    c.pos = pos;
+    c.restitution = 0.2f;
+    c.Inertia = Vector3(0, 1, 0);
 
 
-    MeshCollider* pCollider =
-        new MeshCollider(
-        DefResource.Get(Resource::MeshType::Pole),
-        new MeshCollider::HitEvent()
-        );
-
-    {
-        Matrix m;
-
-        D3DXMatrixScaling(&m, 1, 1, 1);
-
-        m._41 = pos.x;
-        m._42 = pos.y;
-        m._43 = pos.z;
-
-        pCollider->SetWorldMatrix(
-            m
-            );
-
-    }
-
-    new StageDamagePhysicMoveObject(
+    new StagePhysicMoveObject(
         new MeshRenderer(DefResource.Get(Resource::MeshType::Bench), false, MeshRenderer::RenderType::UseColorSpecular),
-        pos,
+        c.Create(),
         Vector3(1, 1, 1)*0.05f,
-        angle,
-        3,
-        c,
-        pCollider
+        2.0f
         );
 }

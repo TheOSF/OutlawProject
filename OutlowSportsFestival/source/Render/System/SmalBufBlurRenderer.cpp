@@ -97,14 +97,14 @@ void SmalBufBlurRenderer::Render()
     iexSystem::Device->SetDepthStencilSurface(pSaveDepthStencil);
     pSaveDepthStencil->Release();
 
-    float alpha = 0.6f;
+    float alpha = 0.8f;
 
     //ブラーテクスチャを出力
     for (UINT i = 0; i < m_TextureNum; ++i)
     {
         m_pShader->SetValue("g_Alpha", alpha);
 
-        alpha *= 0.9f;
+        alpha *= 0.8f;
 
         m_pWorkTextures[i]->Render(
             0, 0, iexSystem::ScreenWidth, iexSystem::ScreenHeight,

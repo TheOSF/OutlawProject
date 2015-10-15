@@ -12,14 +12,19 @@
 //プレイヤー操作の移動クラス
 class TennisState_PlayerControll_Move :public TennisState
 {
-private:
-	CharacterUsualMove*		m_pMoveClass;
+
 public:
 	static TennisState* GetPlayerControllMove(TennisPlayer* pt);
+    static bool SwitchGameState(TennisPlayer* pt);
 
 	void Enter(TennisPlayer* t)override;
 	void Execute(TennisPlayer* t)override;
 	void Exit(TennisPlayer* t)override;
+
+private:
+    CharacterUsualMove*		m_pMoveClass;
+
+    void ActionStateSwitch(TennisPlayer* t);
 };
 
 

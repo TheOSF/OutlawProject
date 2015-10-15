@@ -16,7 +16,7 @@ m_DontBoundBallAtkTimer(0)
 {
 	m_pStateMachine = new TennisStateMachine(this);
 
-    m_Params.maxHP = m_Params.HP = 30;
+    m_Params.maxHP = m_Params.HP = 100;
 }
 
 TennisPlayer::~TennisPlayer()
@@ -68,3 +68,4 @@ void TennisPlayer::SetDontBoundBallAtkTimer()
 {
     m_DontBoundBallAtkTimer = 5;
 }
+

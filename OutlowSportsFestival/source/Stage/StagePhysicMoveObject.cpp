@@ -1,19 +1,20 @@
 #include "StagePhysicMoveObject.h"
 #include "../Ball/BallFadeOutRenderer.h"
+#include "../Damage/Damage.h"
+
+#include "../Effect/HitEffectObject.h"
 
 StagePhysicMoveObject::StagePhysicMoveObject(
-    MeshRenderer* pRenderMesh,       //描画するメッシュ
-    RigidBody*    pRigidBody,        //描画
-    const Matrix& InitTransMatrix,   //初期姿勢
-    UINT          FadeOutStartFrame, //フェードアウトし始めるフレーム
-    UINT          FadeOutEndFrame    //フェードアウトして消えるフレーム
+    MeshRenderer*       pRenderMesh,
+    RigidBody*          pRigidBody,
+    CrVector3           Scale,
+    float               HitScale
     ) :
     m_pRenderMesh(pRenderMesh),
     m_pRigidBody(pRigidBody),
-    m_InitTransMatrix(InitTransMatrix),
-    m_FadeOutStartFrame(FadeOutStartFrame),
-    m_FadeOutEndFrame(FadeOutEndFrame),
-    m_Frame(0)
+    m_HitScale(HitScale),
+    m_Scale(Scale),
+    m_HitCount(0)
 {
 
 }
@@ -26,30 +27,97 @@ StagePhysicMoveObject::~StagePhysicMoveObject()
 
 bool StagePhysicMoveObject::Update()
 {
+    class HitCheckObj :public DamageManager::HitEventBase
+    {
+    public:
+        Vector3 vec;
+        bool isHit;
+        DamageBase*    MyDmg;
+
+        HitCheckObj() :
+            isHit(false){}
+
+        bool Hit(DamageBase* pDmg)
+        {
+            if (MyDmg == pDmg)
+            {
+                return false;
+            }
+
+            vec = pDmg->vec;
+            isHit = true;
+
+            return false;
+        }
+    };
+
+    m_HitCount = max(m_HitCount - 1, 0);
+
     Matrix M;
+    Vector3 pre_pos;
 
     m_pRigidBody->Get_TransMatrix(M);
 
-    M = m_InitTransMatrix * M;
-
-    m_pRenderMesh->SetMatrix(M);
-
-    if (++m_Frame > m_FadeOutStartFrame)
     {
-        new BallFadeOutRenderer(
-            m_pRenderMesh->m_pMesh,
-            m_InitTransMatrix,
-            m_pRigidBody,
-            (m_FadeOutEndFrame > m_FadeOutStartFrame) ? (m_FadeOutEndFrame - m_FadeOutStartFrame) : (0)
-            );
-        
-        m_pRenderMesh->m_pMesh = nullptr;
-        m_pRigidBody = nullptr;
+        M._11 *= m_Scale.x;
+        M._12 *= m_Scale.x;
+        M._13 *= m_Scale.x;
 
-        return false;
+        M._21 *= m_Scale.y;
+        M._22 *= m_Scale.y;
+        M._23 *= m_Scale.y;
+
+        M._31 *= m_Scale.z;
+        M._32 *= m_Scale.z;
+        M._33 *= m_Scale.z;
+
+        m_pRenderMesh->SetMatrix(M);
+
     }
 
-    return true;
+    SphereParam sp;
+    HitCheckObj HitEvent;
+
+    sp.pos = Vector3(M._41, M._42, M._43);
+    sp.size = m_HitScale;
+
+    DefDamageMgr.HitCheckSphere(sp, HitEvent);
+
+
+    if (HitEvent.isHit && m_HitCount == 0)
+    {
+        HitEvent.vec.Normalize();
+
+
+        //エフェクト
+        new HitEffectObject(
+            sp.pos,
+            HitEvent.vec,
+            0.025f,
+            0.075f,
+            Vector3(1, 1, 1)
+            );
+
+        HitEvent.vec.y = 0.2f;
+        HitEvent.vec *= 35.0f;
+
+        btVector3 p(HitEvent.vec.x, HitEvent.vec.y, HitEvent.vec.z);
+       
+        
+        m_pRigidBody->pRigidBody->setLinearVelocity(
+            p
+            );
+
+        m_pRigidBody->pRigidBody->setAngularVelocity(
+            btVector3(frand(), frand(), frand())*(frand() - 0.5f)*0.05f
+            );
+
+        
+        m_HitCount = 10;
+    }
+
+
+    return Vector3(M._41, M._42, M._43).Length() < 200.0f;
 }
 
 bool StagePhysicMoveObject::Msg(GameObjectBase::MsgType type)

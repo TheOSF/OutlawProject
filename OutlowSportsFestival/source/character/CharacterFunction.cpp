@@ -214,6 +214,64 @@ void chr_func::CheckGround(CharacterBase* p)
 }
 
 
+static bool GetWall(const Vector3& pos, Vector3& v, float& outLen)
+{
+    Vector3 out;
+    outLen = 10000.0f;
+    Vector3 p = pos;
+    int m;
+
+    if (DefCollisionMgr.RayPick(&out, &p, &v, &outLen, &m, CollisionManager::RayType::_Usual))
+    {
+        out -= pos;
+        outLen = out.Length();
+
+        return true;
+    }
+
+    return false;
+}
+
+
+static bool HitCheckWall(
+    LPVECTOR3 pOutChecked,
+    LPVECTOR3 pOut,
+    LPVECTOR3 pPos,
+    LPVECTOR3 pVec,
+    float* pDist,
+    float client_size)
+{
+    float TempDist = 0;
+    *pOutChecked = *pPos;
+
+    if (GetWall(*pPos, *pVec, *pDist) &&
+        *pDist<client_size)
+    {
+        pVec->Normalize();	//かべの法線
+        
+        *pDist = client_size - *pDist;//調整する長さ
+
+        *pPos = *pVec**pDist;	//補正ベクトル
+
+        *pDist = pPos->Length();	//補正距離
+
+        *pVec = *pPos;
+        pVec->Normalize();	//補正ベクトル正規化
+
+        TempDist = *pDist;//補正距離temp
+
+        if (!GetWall(*pPos, *pVec, *pDist) ||
+            TempDist < *pDist)
+        {
+            *pOutChecked += *pPos;
+        }
+        return true;
+    }
+
+    return false;
+}
+
+
 //XZ方向の壁との接触判定を行う(戻り値＝壁とあたっているかどうか)
 bool chr_func::CheckWall(CharacterBase* p)
 {
@@ -237,6 +295,9 @@ bool chr_func::CheckWall(CharacterBase* p)
     float RotateCheckVec[]=
     {
         0,
+        PI / 2, 
+        -PI / 2,
+
         PI / 4,
         -PI / 4,
     };
@@ -247,6 +308,7 @@ bool chr_func::CheckWall(CharacterBase* p)
     int material;
 
     const float Character_size = 2.0f;
+    Vector3 calc_out = p->m_Params.pos;
 
     for (int i = 0; i < (int)ARRAYSIZE(RotateCheckVec); ++i)
     {
@@ -254,6 +316,17 @@ bool chr_func::CheckWall(CharacterBase* p)
         pos.y += 1.0f;
         vec = Vector3RotateAxis(Vector3AxisY, RotateCheckVec[i], CheckVec);
         dist = 100;
+
+        //if (HitCheckWall(
+        //    &calc_out,
+        //    &out,
+        //    &pos,
+        //    &vec,
+        //    &dist,
+        //    Character_size))
+        //{
+        //    isHit = true;
+        //}
 
         if (DefCollisionMgr.RayPick(
             &out,
@@ -267,21 +340,28 @@ bool chr_func::CheckWall(CharacterBase* p)
             vec.y = 0;
             vec.Normalize();
 
-            pos = p->m_Params.pos - out;
-            pos.y = 0;
 
-            pos = p->m_Params.pos - vec * Vector3Dot(vec, pos);
-            pos -= p->m_Params.pos;
+            //pos = p->m_Params.pos - vec * Vector3Dot(vec, pos);
+            //pos -= p->m_Params.pos;
 
-            dist = pos.Length();
+            //dist = pos.Length();
+
+            dist = Vector3Dot(vec, p->m_Params.pos - out);
 
             if (dist < Character_size)
             {
                 p->m_Params.pos += vec * (Character_size - dist);
                 isHit = true;
             }
+           
         }
     }
+
+    /*if (isHit)
+    {
+        p->m_Params.pos.x = calc_out.x;
+        p->m_Params.pos.z = calc_out.z;
+    }*/
 
     return isHit;
 }

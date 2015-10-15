@@ -164,7 +164,7 @@ void CharacterRenderer::MasterRender()
     char BodyTechnique[] = { "DeffLightNoSp" };
 
 
-  //  m_HDR = Vector3(0.05f, 0.05f, 0);
+  //  m_HDR = Vector3(0.08f, 0.05f, 0.00f);
 
     tecs.insert(Techniques::value_type(0, FaceTechnique));
     tecs.insert(Techniques::value_type(1, FaceTechnique));

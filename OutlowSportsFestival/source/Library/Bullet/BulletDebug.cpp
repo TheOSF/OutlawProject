@@ -1,6 +1,6 @@
 #include "BulletDebug.h"
 #include "DebugDrawManager.h"
-
+#include "../../debug/DebugDraw.h"
 
 //*****************************************************************
 //          BulletDebugクラス
@@ -11,8 +11,11 @@
 // コンストラクタ
 BulletDebugDrawer::BulletDebugDrawer(IDirect3DDevice9* pDevice) :
 m_debugDrawMode(btIDebugDraw::DBG_NoDebug),
-m_pDevice(pDevice)
+m_pDevice(pDevice),
+m_Vb(pDevice, sizeof(D3DXVECTOR3)* 2)
 {
+
+
 
 }
 
@@ -35,6 +38,17 @@ const D3DXVECTOR3 BulletDebugDrawer::btVector3ToVector3(const btVector3& btVec3)
 }
 
 
+// btVector3→Vector3
+Vector3 btVector3ToIexVector3(const btVector3& btVec3)
+{
+    Vector3 vec;
+    vec.x = btVec3.x();
+    vec.y = btVec3.y();
+    vec.z = btVec3.z();
+    return vec;
+}
+
+
 // btVector3→D3DXCOLOR
 const D3DXCOLOR BulletDebugDrawer::btVector3ToColor(const btVector3& btVec3)
 {
@@ -50,13 +64,39 @@ const D3DXCOLOR BulletDebugDrawer::btVector3ToColor(const btVector3& btVec3)
 // 線の描画
 void BulletDebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
 {
-	// 線の描画
-	_DDM::I().DrawLine(
-		m_pDevice,
-		btVector3ToVector3(from),
-		btVector3ToVector3(to),
-		btVector3ToColor(color)
-		);
+    if (rand() % 10 == 0)
+    {
+        new DebugDrawLine(
+            btVector3ToIexVector3(from),
+            btVector3ToIexVector3(to),
+            0.08f,
+            COLORf(0.5f, color.x(), color.y(), color.z()),
+            1
+            );
+    }
+
+    //D3DXVECTOR3 *p;
+    //m_Vb->Lock(0, 0, (void **)&p, 0);
+    //p[0] = btVector3ToVector3(from);
+    //p[1] = btVector3ToVector3(to);
+    //m_Vb->Unlock();
+
+    //D3DMATERIAL9 m = { 0 };
+    //m.Diffuse = m.Ambient = D3DXCOLOR(color);
+    //m_pDevice->SetMaterial(&m);
+
+    //m_pDevice->SetFVF(D3DFVF_XYZ);
+    //m_pDevice->SetStreamSource(0, m_Vb, 0, sizeof(D3DXVECTOR3));
+    //m_pDevice->SetTransform(D3DTS_WORLD, &D3DXMATRIX(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1));
+    //m_pDevice->DrawPrimitive(D3DPT_LINELIST, 0, 1);
+
+	//// 線の描画
+	//_DDM::I().DrawLine(
+	//	m_pDevice,
+	//	btVector3ToVector3(from),
+	//	btVector3ToVector3(to),
+	//	btVector3ToColor(color)
+	//	);
 }
 
 

@@ -15,7 +15,8 @@
 
 #include "Computer\TennisPlayerState_ComMove.h"
 #include "../../Camera/Camera.h"
-
+#include "TennisPlayerState_DamageMotionDie.h"
+#include "TennisPlayerState_PoseMotion.h"
 
 
 class TennisUtillityClass
@@ -182,6 +183,38 @@ TennisState* TennisState_PlayerControll_Move::GetPlayerControllMove(
 	return nullptr;
 }
 
+
+bool TennisState_PlayerControll_Move::SwitchGameState(TennisPlayer* pt)
+{
+    Vector3 v;
+
+    switch (pt->GetStateType())
+    {
+    case CharacterBase::State::Usual:
+
+        return false;
+
+    case CharacterBase::State::Freeze:
+
+        return true;
+
+    case CharacterBase::State::LosePose:
+        pt->SetState(new TennisState_PoseMotion(TennisPlayer::_mt_LosePose, 0.2f, 1000));
+        return true;
+
+    case CharacterBase::State::WinPose:
+        pt->SetState(new TennisState_PoseMotion(TennisPlayer::_mt_WinPose, 0.2f, 1000));
+
+        return true;
+    default:
+        break;
+    }
+
+    return false;
+
+
+}
+
 //ステート開始
 void TennisState_PlayerControll_Move::Enter(TennisPlayer* t)
 {
@@ -233,9 +266,45 @@ void TennisState_PlayerControll_Move::Enter(TennisPlayer* t)
 
 void TennisState_PlayerControll_Move::Execute(TennisPlayer* t)
 {
+    if (SwitchGameState(t) == false)
+    {
+        //各アクションへ移行可能
+        ActionStateSwitch(t);
+
+        //スティックの値をセット
+        Vector2 st = controller::GetStickValue(controller::stick::left, t->m_PlayerInfo.number);
+        Vector3 st_vec3;
+
+        //ビュー空間に変換
+        st_vec3 = DefCamera.GetRight()*st.x + DefCamera.GetForward()*st.y;
+        st.x = st_vec3.x;
+        st.y = st_vec3.z;
+
+        //スティックの値セット
+        m_pMoveClass->SetStickValue(st);
+
+    }
+    else
+    {
+        //スティックの値セット
+        m_pMoveClass->SetStickValue(Vector2(0, 0));
+    }
+
+    //更新
+    m_pMoveClass->Update();
 
 
+    //モデルのワールド変換行列を更新
+    chr_func::CreateTransMatrix(t, t->m_ModelSize, &t->m_Renderer.m_TransMatrix);
+}
 
+void TennisState_PlayerControll_Move::Exit(TennisPlayer* t)
+{
+	delete m_pMoveClass;
+}
+
+void TennisState_PlayerControll_Move::ActionStateSwitch(TennisPlayer* t)
+{
     if (controller::GetTRG(controller::button::sankaku, t->m_PlayerInfo.number))
     {// [△] でボール発射
         t->SetState(new TennisState_Shot(new TennisUtillityClass::PlayerShotControllClass(t)));
@@ -266,31 +335,4 @@ void TennisState_PlayerControll_Move::Execute(TennisPlayer* t)
         t->SetState(new TennisState_BoundBallAtk(new TennisUtillityClass::PlayerBoundBallControll(t)));
         return;
     }
-
-    {
-        //スティックの値をセット
-        Vector2 st = controller::GetStickValue(controller::stick::left, t->m_PlayerInfo.number);
-        Vector3 st_vec3;
-
-        //ビュー空間に変換
-        st_vec3 = DefCamera.GetRight()*st.x + DefCamera.GetForward()*st.y;
-        st.x = st_vec3.x;
-        st.y = st_vec3.z;
-
-        //スティックの値セット
-        m_pMoveClass->SetStickValue(st);
-
-    }
-
-    //更新
-    m_pMoveClass->Update();
-
-
-    //モデルのワールド変換行列を更新
-    chr_func::CreateTransMatrix(t, t->m_ModelSize, &t->m_Renderer.m_TransMatrix);
-}
-
-void TennisState_PlayerControll_Move::Exit(TennisPlayer* t)
-{
-	delete m_pMoveClass;
 }

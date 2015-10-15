@@ -17,6 +17,17 @@ private:
 	int                           m_debugDrawMode;  // デバッグモード
 	IDirect3DDevice9* m_pDevice;                 // 描画に使用するデバイス
 
+    struct _VB
+    {
+        LPDIRECT3DVERTEXBUFFER9 p;
+        _VB(LPDIRECT3DDEVICE9 d3dd, UINT length) : p(0) { d3dd->CreateVertexBuffer(length, 0, D3DFVF_XYZ, D3DPOOL_SYSTEMMEM, &p, NULL); }
+        virtual ~_VB() { if (p) p->Release(); }
+        operator LPDIRECT3DVERTEXBUFFER9() { return p; }
+        LPDIRECT3DVERTEXBUFFER9 operator ->() { return p; }
+    };
+
+    _VB m_Vb;
+
 private:
 	// btVector3→D3DXVECTOR3
 	const D3DXVECTOR3 btVector3ToVector3(const btVector3& btVec3);

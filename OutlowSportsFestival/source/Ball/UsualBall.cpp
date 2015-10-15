@@ -22,7 +22,8 @@ UsualBall::UsualBall(
     m_HitNum(hit_num),
     m_HitCountSave(0),
     m_HitStopFrame(0),
-    m_pStateFunc(&UsualBall::StateFlyMove)
+    m_pStateFunc(&UsualBall::StateFlyMove),
+    m_RotateSpeed(0.15f, 0.05f, 0.05f)
 {
 
     class PhysicUpdateCallBack :public MeshRenderer::PreRenderCallBack
@@ -148,7 +149,7 @@ float UsualBall::GetBallScale(
         return 0.0045f;
 
     case CharacterType::_Soccer:
-        return 0.0045f;
+        return 0.18f;
 
 
     case CharacterType::_Tennis:
@@ -174,12 +175,12 @@ UsualBall::PhysicsParam UsualBall::GetBallPhysics(
 {
     PhysicsParam params[]=
     {
-        { 0.5f, 0.8f, 0.5f, 0.2f },
-        { 0.5f, 0.8f, 0.5f, 0.2f },
-        { 0.5f, 0.8f, 0.5f, 0.2f },
-        { 0.5f, 0.8f, 0.5f, 0.2f },
-        { 0.5f, 0.8f, 0.5f, 0.2f },
-        { 0.5f, 0.8f, 0.5f, 0.2f },
+        { 0.5f, 100.0f, 0.5f, 0.2f },
+        { 0.5f, 100.0f, 0.5f, 0.2f },
+        { 0.5f, 100.0f, 0.55f, 0.2f },
+        { 0.5f, 100.0f, 0.5f, 0.2f },
+        { 0.5f, 100.0f, 0.5f, 0.2f },
+        { 0.5f, 100.0f, 0.5f, 0.2f },
     };                     
 
     MyAssert((int)type >= 0 && (int)type < (int)ARRAYSIZE(params), "存在しないタイプのキャラクタタイプがUsualBall::GetBallPhysicsに渡されました　type= %d ", (int)type);
@@ -197,6 +198,11 @@ bool UsualBall::Msg(MsgType mt)
 {
 
 	return false;
+}
+
+void UsualBall::SetRotateSpeed(CrVector3 AngleSpeed)
+{
+    m_RotateSpeed = AngleSpeed;
 }
 
 
@@ -372,6 +378,16 @@ bool UsualBall::StateFlyMove()
     {
         Matrix m = m_pMeshRenderer->GetMatrix();
 
+        
+        m._41 = m._42 = m._43 = 0.0f;
+        
+        {
+            Matrix R;
+            //回転
+            D3DXMatrixRotationYawPitchRoll(&R, m_RotateSpeed.x, m_RotateSpeed.y, m_RotateSpeed.z);
+            m *= R;
+        }
+        
         m._41 = m_Params.pos.x;
         m._42 = m_Params.pos.y;
         m._43 = m_Params.pos.z;

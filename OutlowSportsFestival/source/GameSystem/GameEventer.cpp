@@ -274,6 +274,9 @@ void MatchState::MatchPlay::Enter(_Client_type_ptr p)
     {
         Sound::Play(Sound::BGM_Battle, 1, true);
     }
+
+    //プレイスタートメッセージを送信
+    DefGameObjMgr.SendMsg(GameObjectBase::MsgType::_PlayStart);
 }
 
 void MatchState::MatchPlay::Execute(_Client_type_ptr p)
@@ -401,6 +404,9 @@ MatchState::WinPose::~WinPose()
 
 void MatchState::WinPose::Enter(_Client_type_ptr p)
 {
+    //プレイ終了メッセージを送信
+    DefGameObjMgr.SendMsg(GameObjectBase::MsgType::_GameSet);
+
     DefCamera.SetNewState(new CameraStateCharacterZoom(m_pLastDieCharacter, 0.05f));
 }
 
@@ -425,6 +431,9 @@ void MatchState::WinPose::Execute(_Client_type_ptr p)
 
     if (m_Frame == 120)
     {
+        //勝利ポーズメッセージを送信
+        m_pWinCharacter->Msg(GameObjectBase::MsgType::_WinPose);
+
         Sound::Play(Sound::Kira_n);
         DefCamera.SetNewState(new CameraStateCharacterZoom(m_pWinCharacter, 0.05f));
     }
@@ -462,10 +471,15 @@ void MatchState::ResetRound::Execute(_Client_type_ptr p)
 {
     if (++m_Frame == 41)
     {
+        //リセットメッセージを送信
         DefGameObjMgr.SendMsg(GameObjectBase::MsgType::_RoundReset);
+        
+        //カメラを初期位置へ
         DefCamera.SetNewState(new CameraStateGamePlay(true));
 
+        //ステート移行
         p->SetState(new RoundResetCountdown());
+
     }
 }
 

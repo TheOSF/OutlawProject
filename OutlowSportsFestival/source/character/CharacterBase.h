@@ -51,7 +51,6 @@ public:
     enum class State
     {
         Usual,    //通常(戦闘中
-        Die,      //死んでいる
         WinPose,  //勝ちポーズ中
         LosePose, //負けポーズ中
         Freeze,   //とまっている

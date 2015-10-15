@@ -126,15 +126,16 @@ public:
 		);
 
 	// Boxをワールドに追加
-	RigidBody* AddRigidBox(
-		float mass, 
-		RigidBody::CollisionTypes collisionType, 
-		const Vector3& pos, 
-		const Vector3& angle, 
-		const Vector3& scale, 
-		float friction, 
-		float restitution,
-		const Vector3&velocity
+    RigidBody* AddRigidBox(
+        float mass,
+        RigidBody::CollisionTypes collisionType,
+        const Vector3& pos,
+        const Vector3& angle,
+        const Vector3& scale,
+        float friction,
+        float restitution,
+        const Vector3&velocity,
+        const Vector3&localInertia = Vector3Zero
 		);
 
 
@@ -148,7 +149,8 @@ public:
         float height,
         float friction,
         float restitution,
-        const Vector3&velocity
+        const Vector3&velocity,
+        const Vector3&localInertia = Vector3Zero
         );
 
     // Capsureをワールドに追加

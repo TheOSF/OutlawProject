@@ -61,8 +61,7 @@
 
 #include "../Effect/ParticleManagerUpdater.h"
 #include "LightEventExecuter.h"
-
-#include "../Stage/StageDamagePhysicMoveObject.h"
+\
 #include "../Stage/StageResourceLoadFaction.h"
 #include "../Stage/StageObjectFactory.h"
 
@@ -280,17 +279,29 @@ void GameInitializer_DevelopMode::GameCreate()
             //    Vector3(0, 0, 0)
             //    );
 
+            for (int i = 0; i < 2; ++i)
+            {
 
-            //StageObjFactory::CreateBench(
-            //    Vector3(-10, 2, 0),
-            //    Vector3(0, PI/2, 0)
-            //    );
+                StageObjFactory::CreateBench(
+                    Vector3((frand() - 0.5f) * 60, 2.0f, (frand() - 0.5f) * 60),
+                    Vector3(0, PI / 2, 0)
+                    );
 
+            }
+
+            for (int i = 0; i < 10; ++i)
+            {
+                StageObjFactory::CreateCone(
+                    Vector3((frand() - 0.5f) * 60, 2.5f, (frand() - 0.5f) * 0),
+                    //Vector3(frand()*PI, frand()*PI, frand()*PI)
+                    Vector3Zero
+                    );
+            }
 
             for (int i = 0; i < 5; ++i)
             {
-                StageObjFactory::CreateCone(
-                    Vector3((frand() - 0.5f) * 60, 2.0f, (frand() - 0.5f) * 60),
+                StageObjFactory::CreatePipe(
+                    Vector3((frand() - 0.5f) * 60, 10.5f, (frand() - 0.5f) * 0),
                     //Vector3(frand()*PI, frand()*PI, frand()*PI)
                     Vector3Zero
                     );
@@ -352,8 +363,6 @@ void GameInitializer_DevelopMode::GameCreate()
 
     {
         //ライティング設定
-
-        
         {
             HemiLight* H = new HemiLight;
 
@@ -368,11 +377,11 @@ void GameInitializer_DevelopMode::GameCreate()
             DirLight* D = new DirLight;
 
             D->param.color = Vector3(0.3f, 0.2f, 0.2f);
-            D->param.vec = Vector3Normalize(Vector3(0.2f, -2, 0.5f));
+            D->param.vec = Vector3Normalize(Vector3(0.8f, -1, 0.2f));
             D->param.Shadow.visible = true;
             D->param.Shadow.Near = 5;
             D->param.Shadow.Far = 150;
-            D->param.Shadow.origin = DefCamera.m_Position + Vector3(0, 20, 20);
+            D->param.Shadow.origin = D->param.vec*-50.0f;
             D->param.Shadow.Size = 120;
 
             pDirLightColor = &D->param.color;
@@ -384,7 +393,8 @@ void GameInitializer_DevelopMode::GameCreate()
         {
             AmbientLight* A = new AmbientLight;
 
-            A->param.color = Vector3(0.24f, 0.24f, 0.24f);
+            A->param.color = Vector3(0.37f, 0.26f, 0.26f);
+          //  A->param.color = Vector3(0.26f, 0.26f, 0.26f);
             A->param.Occlusion.SamplingSize = 0.025f;
             A->param.Occlusion.Enable = false;
 
@@ -408,11 +418,11 @@ void GameInitializer_DevelopMode::GameCreate()
 
     //キャラクタ作成
     {
-        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Soccer);
         CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Tennis);
 
-        //CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Tennis);
-        //CreateCharacter((PlayerNum::Value)3, PlayerType::_Player, CharacterType::_Tennis);
+    //    CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Tennis);
+    //    CreateCharacter((PlayerNum::Value)3, PlayerType::_Player, CharacterType::_Tennis);
 
     }
 }

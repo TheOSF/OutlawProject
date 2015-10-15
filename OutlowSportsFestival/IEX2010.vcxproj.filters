@@ -118,7 +118,6 @@
     <ClCompile Include="source\character\VolleyBall\VolleyBallPlayer.cpp" />
     <ClCompile Include="source\character\VolleyBall\VolleyBallPlayerState.cpp" />
     <ClCompile Include="source\Collision\GameObjectCollisionMesh.cpp" />
-    <ClCompile Include="source\debug\DebugDraw.cpp" />
     <ClCompile Include="source\utillity\ColorUtility.cpp" />
     <ClCompile Include="source\GameSystem\ResourceManager.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_Vanish.cpp" />
@@ -189,7 +188,6 @@
     <ClCompile Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Vanish.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballState_SPAttack_P.cpp" />
     <ClCompile Include="source\Damage\DamageCheckObject.cpp" />
-    <ClCompile Include="source\Stage\StageDamagePhysicMoveObject.cpp" />
     <ClCompile Include="source\Stage\StageObjectFactory.cpp" />
     <ClCompile Include="source\Stage\StageResourceLoadFaction.cpp" />
     <ClCompile Include="source\character\CharacterPhysic.cpp" />
@@ -198,6 +196,10 @@
     <ClCompile Include="source\GameScene\sceneMain.cpp" />
     <ClCompile Include="source\UI\PlayerCursorBillbord.cpp" />
     <ClCompile Include="source\UI\GameSetUI.cpp" />
+    <ClCompile Include="source\Stage\StageEdit.cpp" />
+    <ClCompile Include="source\debug\DebugDraw.cpp" />
+    <ClCompile Include="source\character\CharacterPoseMotion.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisPlayerState_PoseMotion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -218,7 +220,6 @@
     <ClInclude Include="source\character\CharacterSliding.h" />
     <ClInclude Include="source\character\CharacterStateTemplate.h" />
     <ClInclude Include="source\Damage\Damage.h" />
-    <ClInclude Include="source\debug\DebugFunction.h" />
     <ClInclude Include="source\GameSystem\ForwardDecl.h" />
     <ClInclude Include="source\GameSystem\GameController.h" />
     <ClInclude Include="source\GameSystem\GameObject.h" />
@@ -268,7 +269,6 @@
     <ClInclude Include="source\character\VolleyBall\VolleyBallPlayer.h" />
     <ClInclude Include="source\character\VolleyBall\VolleyBallPlayerState.h" />
     <ClInclude Include="source\Collision\GameObjectCollisionMesh.h" />
-    <ClInclude Include="source\debug\DebugDraw.h" />
     <ClInclude Include="source\utillity\ColorUtility.h" />
     <ClInclude Include="source\GameSystem\ResourceManager.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Vanish.h" />
@@ -304,7 +304,6 @@
     <ClInclude Include="source\Stage\PhysicsMeshObject.h" />
     <ClInclude Include="source\Ball\BallFadeOutRenderer.h" />
     <ClInclude Include="source\character\Attack\CharacterDefaultNearAtk.h" />
-    <ClInclude Include="source\character\Tennis\TennisAttackClass.h" />
     <ClInclude Include="source\character\Tennis\TennisAttackInfo_UsualAtk.h" />
     <ClInclude Include="source\character\Tennis\Computer\TennisPlayerState_ComMove.h" />
     <ClInclude Include="source\utillity\LocusHDR.h" />
@@ -346,7 +345,6 @@
     <ClInclude Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Vanish.h" />
     <ClInclude Include="source\character\Baseball\BaseballState_SPAttack_P.h" />
     <ClInclude Include="source\Damage\DamageCheckObject.h" />
-    <ClInclude Include="source\Stage\StageDamagePhysicMoveObject.h" />
     <ClInclude Include="source\Stage\StageObjectFactory.h" />
     <ClInclude Include="source\Stage\StageResourceLoadFaction.h" />
     <ClInclude Include="source\character\CharacterPhysic.h" />
@@ -355,6 +353,12 @@
     <ClInclude Include="source\GameScene\sceneMain.h" />
     <ClInclude Include="source\UI\PlayerCursorBillbord.h" />
     <ClInclude Include="source\UI\GameSetUI.h" />
+    <ClInclude Include="source\Stage\StageEdit.h" />
+    <ClInclude Include="source\debug\DebugDraw.h" />
+    <ClInclude Include="source\debug\DebugFunction.h" />
+    <ClInclude Include="source\character\Tennis\TennisAttackClass.h" />
+    <ClInclude Include="source\character\CharacterPoseMotion.h" />
+    <ClInclude Include="source\character\Tennis\TennisPlayerState_PoseMotion.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

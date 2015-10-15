@@ -13,12 +13,14 @@
 
 // Bullet
 #include "../Library/Bullet/BulletSystem.h"
+#include "../../IEX/DebugDrawManager.h"
 
 #include "../GameSystem/GameInitializer.h"
 #include "../GameSystem/GameInitilizer_DevelopMode.h"
 
 #include "../Effect/ParticleManager.h"
 #include "../Sound/Sound.h"
+
 
 //*****************************************************************************************************************************
 //
@@ -103,9 +105,12 @@ void	sceneGamePlay::Update()
     DefDamageMgr.DebugDraw();
     DefDamageMgr.m_DebugDrawVisible = GetKeyState('P') != 0;
 
-    if (KEY(KEY_ENTER, 0) == 3)
+    //デバッグ用描画切り替え
+    if (GetKeyState('L'))
     {
-        KEY_Vibration(10000, -10, 0);
+        // Bullet Physics
+        DefBulletSystem.DebugDrawWorld();
+
     }
 }
 
@@ -118,17 +123,10 @@ void	sceneGamePlay::Update()
 void	sceneGamePlay::Render()
 {
     //カメラクリア
-	DefCamera.Clear();
-	
-	//デバッグ用描画切り替え
-	if (GetKeyState('L'))
-	{
-		// Bullet Physics
-		DefBulletSystem.DebugDrawWorld();
-	}
-	else
-	{
-        //通常描画
-        DefRendererMgr.Render();
-	}
+    DefCamera.Clear();
+
+
+    //通常描画
+    DefRendererMgr.Render();
+
 }

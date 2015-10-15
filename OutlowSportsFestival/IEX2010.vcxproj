@@ -160,6 +160,7 @@
     <ClCompile Include="source\character\CharacterManager.cpp" />
     <ClCompile Include="source\character\CharacterMoveClass.cpp" />
     <ClCompile Include="source\character\CharacterPhysic.cpp" />
+    <ClCompile Include="source\character\CharacterPoseMotion.cpp" />
     <ClCompile Include="source\character\CharacterRenderer.cpp" />
     <ClCompile Include="source\character\CharacterSliding.cpp" />
     <ClCompile Include="source\character\CharacterDefaultCounterClass.cpp" />
@@ -186,6 +187,7 @@
     <ClCompile Include="source\character\Tennis\TennisPlayer.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_DamageMotionDie.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_DamageMotionWeak.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisPlayerState_PoseMotion.cpp" />
     <ClCompile Include="source\character\Tennis\TennisSpecialAtk.cpp" />
     <ClCompile Include="source\character\Tennis\TennisState_BoundBallAtk.cpp" />
     <ClCompile Include="source\character\Tennis\TennisState_Rolling.cpp" />
@@ -251,7 +253,7 @@
     <ClCompile Include="source\Sound\Sound.cpp" />
     <ClCompile Include="source\Stage\HitStageObject.cpp" />
     <ClCompile Include="source\Stage\PhysicsMeshObject.cpp" />
-    <ClCompile Include="source\Stage\StageDamagePhysicMoveObject.cpp" />
+    <ClCompile Include="source\Stage\StageEdit.cpp" />
     <ClCompile Include="source\Stage\StageObjectFactory.cpp" />
     <ClCompile Include="source\Stage\StagePhysicMoveObject.cpp" />
     <ClCompile Include="source\Stage\StageResourceLoadFaction.cpp" />
@@ -304,6 +306,7 @@
     <ClInclude Include="source\character\CharacterManager.h" />
     <ClInclude Include="source\character\CharacterMoveClass.h" />
     <ClInclude Include="source\character\CharacterPhysic.h" />
+    <ClInclude Include="source\character\CharacterPoseMotion.h" />
     <ClInclude Include="source\character\CharacterRenderer.h" />
     <ClInclude Include="source\character\CharacterSliding.h" />
     <ClInclude Include="source\character\CharacterStateTemplate.h" />
@@ -331,6 +334,7 @@
     <ClInclude Include="source\character\Tennis\TennisPlayer.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_DamageMotionDie.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_DamageMotionWeak.h" />
+    <ClInclude Include="source\character\Tennis\TennisPlayerState_PoseMotion.h" />
     <ClInclude Include="source\character\Tennis\TennisSpecialAtk.h" />
     <ClInclude Include="source\character\Tennis\TennisState_BoundBallAtk.h" />
     <ClInclude Include="source\character\Tennis\TennisState_Rolling.h" />
@@ -399,7 +403,7 @@
     <ClInclude Include="source\Sound\Sound.h" />
     <ClInclude Include="source\Stage\HitStageObject.h" />
     <ClInclude Include="source\Stage\PhysicsMeshObject.h" />
-    <ClInclude Include="source\Stage\StageDamagePhysicMoveObject.h" />
+    <ClInclude Include="source\Stage\StageEdit.h" />
     <ClInclude Include="source\Stage\StageObjectFactory.h" />
     <ClInclude Include="source\Stage\StagePhysicMoveObject.h" />
     <ClInclude Include="source\Stage\StageResourceLoadFaction.h" />

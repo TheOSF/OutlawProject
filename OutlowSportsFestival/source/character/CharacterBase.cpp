@@ -107,7 +107,7 @@ bool CharacterBase::Msg(MsgType mt)
         ResetRound();
         break;
 
-    case MsgType::_TimeUp:
+    case MsgType::_GameSet:
         m_StateType = State::Freeze;
         break;
 
@@ -120,4 +120,10 @@ bool CharacterBase::Msg(MsgType mt)
     }
 
     return CharacterMsg(mt);
+}
+
+
+CharacterBase::State CharacterBase::GetStateType()const
+{
+    return m_StateType;
 }

@@ -103,7 +103,7 @@ bool RigidBody::TransformKinematicObject(const Vector3& pos, const Vector3& angl
 
 	// âÒì]ê›íË
 	// xé≤ÇîΩì]ÇµÇƒâEéËånÇ…Ç»Ç¡ÇƒÇÈÇÃÅH Å¶âˆÇµÇ¢...
-	transform.setRotation(btQuaternion(-angle.x, angle.y, angle.z));
+	transform.setRotation(btQuaternion(angle.x, angle.y, angle.z));
 
 	// ìKâû
 	pRigidBody->getMotionState()->setWorldTransform(transform);
@@ -426,7 +426,8 @@ RigidBody* BulletSystem::AddRigidBox(
 	const Vector3& scale,
 	float friction,
 	float restitution,
-	const Vector3&velocity
+	const Vector3&velocity,
+    const Vector3&Inertia
 	)
 {
 	// éøó 
@@ -453,6 +454,8 @@ RigidBody* BulletSystem::AddRigidBox(
 	// äµê´ÉÇÅ[ÉÅÉìÉgÇÃåvéZ
 	btVector3 localInertia;
 	pbtCollisionShape->calculateLocalInertia(mass, localInertia);
+    
+    localInertia += btVector3(Inertia.x, Inertia.y, Inertia.z);
 
 	// btRigidBodyê∂ê¨
 	btRigidBody::btRigidBodyConstructionInfo rigidBodyInfo(
@@ -548,7 +551,8 @@ RigidBody* BulletSystem::AddRigidCone(
     float height,
     float friction,
     float restitution,
-    const Vector3&velocity
+    const Vector3&velocity,
+    const Vector3&Inertia
     )
 {
 
@@ -574,6 +578,9 @@ RigidBody* BulletSystem::AddRigidCone(
     // äµê´ÉÇÅ[ÉÅÉìÉgÇÃåvéZ
     btVector3 localInertia;
     pbtCollisionShape->calculateLocalInertia(mass, localInertia);
+
+    localInertia += btVector3(Inertia.x, Inertia.y, Inertia.z);
+
 
     // btRigidBodyê∂ê¨
     btRigidBody::btRigidBodyConstructionInfo rigidBodyInfo(

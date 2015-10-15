@@ -4,7 +4,7 @@
 #include "../CharacterFunction.h"
 #include "../CharacterManager.h"
 #include "TennisAttackInfo_UsualAtk.h"
-
+#include "../../Camera/Camera.h"
 
 //------------プレイヤー操作の攻撃操作クラス--------------
 
@@ -35,10 +35,10 @@ void TennisState_PlayerControll_Attack::PlayerControllEvent::AngleControll(RADIA
         //スティックが一定以上倒されているかどうか
         if (Vector2Length(Stick) > 0.25f)
         {
-            Vector3 Vec(Stick.x, 0, Stick.y);
+            Vector3 Vec;
 
             //スティック値をカメラ空間に
-            Vec = Vector3MulMatrix3x3(Vec, matView);
+            Vec = DefCamera.GetForward()*Stick.y + DefCamera.GetRight()*Stick.x;
 
             //キャラクタ回転
             chr_func::AngleControll(m_pTennis, m_pTennis->m_Params.pos + Vec, angle);

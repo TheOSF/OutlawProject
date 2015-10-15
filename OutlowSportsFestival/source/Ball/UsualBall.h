@@ -56,6 +56,8 @@ public:
 	bool Update();
 	bool Msg(MsgType mt);
 
+    void SetRotateSpeed(CrVector3 AngleSpeed);
+
 private:
 
     bool(UsualBall::*m_pStateFunc)();
@@ -68,7 +70,7 @@ private:
     const UINT          m_HitNum;
     UINT                m_HitCountSave;
     UINT                m_HitStopFrame;
-
+    Vector3             m_RotateSpeed;
 
 	bool isOutofField()const;  //フィールド外に出ているか
 

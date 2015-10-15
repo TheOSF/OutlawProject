@@ -176,3 +176,98 @@ void DebugDrawPole::Render()
 
     m_pMesh->Render(shader, "ColorOnly");
 }
+
+
+
+
+//------------------------------------------------------------------------------
+
+
+const UINT DebugDrawLine::LIVETIME_LIMITLESS = UINT_MAX;
+
+DebugDrawLine::DebugDrawLine(
+    CrVector3   pos1,
+    CrVector3   pos2,
+    float       width,
+    COLORf      color,
+    UINT        live_time  //出現時間(LIVETIME_LIMITLESS を指定すると消えない)
+    ) :
+    m_Color(color.toDWORD()),
+    m_Livetime(live_time),
+    m_FirstDraw(false),
+    m_Pos1(pos1),
+    m_Pos2(pos2),
+    m_Width(width)
+{
+
+}
+
+DebugDrawLine::~DebugDrawLine()
+{
+
+}
+
+
+bool DebugDrawLine::Update()
+{
+    //消滅時間カウントを更新
+    if (m_Livetime != LIVETIME_LIMITLESS &&
+        m_Livetime > 0)
+    {
+        --m_Livetime;
+    }
+
+    //生存時間が０以上でtrue
+    return !(m_FirstDraw&&m_Livetime == 0);
+}
+
+bool DebugDrawLine::Msg(MsgType mt)
+{
+    return false;
+}
+
+void DebugDrawLine::CalcZ()
+{
+    m_SortZ = DefCamera.GetCameraZ(m_Pos1);
+}
+
+void DebugDrawLine::Render()
+{
+    m_FirstDraw = true;
+
+    LVERTEX v[4];
+
+    for (int i = 0; i < 4; ++i)
+    {
+        v[i].tu = 0;
+        v[i].tv = 0;
+        v[i].color = m_Color;
+    }
+
+
+    {
+        Vector3 cr;
+
+        Vector3Cross(cr, DefCamera.GetForward(), m_Pos1 - m_Pos2);
+        cr.Normalize();
+        cr *= m_Width;
+
+        v[0].pos = m_Pos1 + cr;
+        v[1].pos = m_Pos1 - cr;
+
+        v[2].pos = m_Pos2 + cr;
+        v[3].pos = m_Pos2 - cr;
+
+    }
+
+    iexSystem::Device->SetRenderState(D3DRS_ZENABLE, FALSE);
+
+    iexPolygon::Render3D(
+        v,
+        2,
+        null,
+        RS_COPY
+        );
+
+    iexSystem::Device->SetRenderState(D3DRS_ZENABLE, TRUE);
+}
