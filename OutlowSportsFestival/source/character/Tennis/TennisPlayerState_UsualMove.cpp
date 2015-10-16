@@ -29,7 +29,7 @@ public:
     class PlayerRollingControll :public TennisState_Rolling::CallBackClass
     {
     public:
-        TennisPlayer*const pt;
+        TennisPlayer* const pt;
 
         PlayerRollingControll(TennisPlayer* pt) :pt(pt){}
 
@@ -293,22 +293,22 @@ void TennisState_PlayerControll_Move::Execute(TennisPlayer* t)
     }
 
 
-    if (controller::GetTRG(controller::button::maru, t->m_PlayerInfo.number))
-    {
+    //if (controller::GetTRG(controller::button::maru, t->m_PlayerInfo.number))
+    //{
 
-        for (int i = 0; i < 1; ++i)
-        {
-            new ThunderEffect(
-                t->m_Params.pos + Vector3(0, 3, 0),
-                Vector3AxisY * 5, 
-                4.0f,
-                0.5f,
-                60,
-                Vector4(0, 0, 1, 1),
-                60
-                );   
-        }
-    }
+    //    for (int i = 0; i < 1; ++i)
+    //    {
+    //        new ThunderEffect(
+    //            t->m_Params.pos + Vector3(0, 3, 0),
+    //            Vector3AxisY * 5, 
+    //            4.0f,
+    //            0.1f,
+    //            60,
+    //            Vector4(0, 0, 1, 1),
+    //            60
+    //            );   
+    //    }
+    //}
 
     //XV
     m_pMoveClass->Update();

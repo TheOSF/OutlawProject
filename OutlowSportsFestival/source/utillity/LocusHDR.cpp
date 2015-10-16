@@ -1,5 +1,7 @@
 #include "LocusHDR.h"
 #include "../Camera/Camera.h"
+#include "../GameSystem/ResourceManager.h"
+
 
 LocusHDR::LocusHDR(size_t SavePointNum) :
 m_NumPoint(SavePointNum),
@@ -10,6 +12,9 @@ m_UseCount(0)
 
     //パラメータ初期化
     Initialize();
+
+    //テクスチャ初期化
+    m_pTexture = DefResource.Get(Resource::TextureType::White);
 }
 
 LocusHDR::~LocusHDR()

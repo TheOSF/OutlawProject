@@ -7,6 +7,13 @@ void EffectResource::Load()
 
     //パーティクルテクスチャ
     DefResource.Regist(
+        Resource::TextureType::White,
+        new iex2DObj("DATA\\Texture\\White.png")
+        );
+
+
+    //パーティクルテクスチャ
+    DefResource.Regist(
         Resource::TextureType::Particle,
         new iex2DObj("DATA\\Texture\\particle.png")
         );

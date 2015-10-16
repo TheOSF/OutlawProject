@@ -38,7 +38,7 @@ void EffectFactory::Counter(CrVector3 pos, float size)
     r->m_pTexture = DefResource.Get(Resource::TextureType::Anime_Counter);
     r->m_Param.pos = pos;
     r->m_Param.color = COLORf(0x40FFFFFF);
-    r->m_HDRcolor = 0x80FFFFFF;
+    r->m_HDRcolor = 0x40FFFFFF;
     r->m_Param.dw_Flag = RS_COPY;
     r->m_Param.size = Vector2(size, size);
     r->m_Zenable = false;

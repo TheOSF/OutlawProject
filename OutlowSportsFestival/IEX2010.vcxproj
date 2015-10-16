@@ -188,6 +188,7 @@
     <ClCompile Include="source\character\Tennis\TennisPlayerState_DamageMotionDie.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_DamageMotionWeak.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_PoseMotion.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisPlayerState_SlowUpBall.cpp" />
     <ClCompile Include="source\character\Tennis\TennisSpecialAtk.cpp" />
     <ClCompile Include="source\character\Tennis\TennisState_BoundBallAtk.cpp" />
     <ClCompile Include="source\character\Tennis\TennisState_Rolling.cpp" />
@@ -336,6 +337,7 @@
     <ClInclude Include="source\character\Tennis\TennisPlayerState_DamageMotionDie.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_DamageMotionWeak.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_PoseMotion.h" />
+    <ClInclude Include="source\character\Tennis\TennisPlayerState_SlowUpBall.h" />
     <ClInclude Include="source\character\Tennis\TennisSpecialAtk.h" />
     <ClInclude Include="source\character\Tennis\TennisState_BoundBallAtk.h" />
     <ClInclude Include="source\character\Tennis\TennisState_Rolling.h" />

@@ -201,6 +201,7 @@
     <ClCompile Include="source\character\CharacterPoseMotion.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_PoseMotion.cpp" />
     <ClCompile Include="source\Effect\ThunderEffect.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisPlayerState_SlowUpBall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -361,6 +362,7 @@
     <ClInclude Include="source\character\CharacterPoseMotion.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_PoseMotion.h" />
     <ClInclude Include="source\Effect\ThunderEffect.h" />
+    <ClInclude Include="source\character\Tennis\TennisPlayerState_SlowUpBall.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

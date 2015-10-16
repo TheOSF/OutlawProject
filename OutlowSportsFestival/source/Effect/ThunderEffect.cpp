@@ -60,7 +60,7 @@ void ThunderEffect::SetNewPos()
 
         if (i % 2 == 0)
         {
-            vec = Vector3Rand() + Vector3Normalize(nowToTarget);
+            vec = Vector3Rand()*2.0f + Vector3Normalize(nowToTarget);
 
             vec.Normalize();
             vec *= frand() * m_Random;

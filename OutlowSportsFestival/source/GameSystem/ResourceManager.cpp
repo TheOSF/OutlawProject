@@ -22,11 +22,15 @@ void Resource::Release()
 
 LPIEXMESH Resource::Get(MeshType type)
 {
+    MyAssert(m_pMeshArray[(int)type] != nullptr, "リソースが登録されていない状態でMesh::Getが呼ばれました type=%d", (int)type);
+
     return m_pMeshArray[(int)type];
 }
 
 LPIEX2DOBJ Resource::Get(TextureType type)
 {
+    MyAssert(m_pTextureArray[(int)type] != nullptr, "リソースが登録されていない状態でTexture::Getが呼ばれました type=%d", (int)type);
+
     return m_pTextureArray[(int)type];
 }
 
