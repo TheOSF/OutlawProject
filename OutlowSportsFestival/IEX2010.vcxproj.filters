@@ -190,6 +190,11 @@
     <ClCompile Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Die.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Vanish.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballState_SPAttack_P.cpp" />
+    <ClCompile Include="source\Ball\Baseball_SpAtk_Ball.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballState_SPAttack_B.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballState_Change.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballSpAttackClass.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballAttackInfo_SpAtk.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -339,6 +344,11 @@
     <ClInclude Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Die.h" />
     <ClInclude Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Vanish.h" />
     <ClInclude Include="source\character\Baseball\BaseballState_SPAttack_P.h" />
+    <ClInclude Include="source\Ball\Baseball_SpAtk_Ball.h" />
+    <ClInclude Include="source\character\Baseball\BaseballState_SPAttack_B.h" />
+    <ClInclude Include="source\character\Baseball\BaseballState_Change.h" />
+    <ClInclude Include="source\character\Baseball\BaseballSpAttackClass.h" />
+    <ClInclude Include="source\character\Baseball\BaseballAttackInfo_SpAtk.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

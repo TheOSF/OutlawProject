@@ -100,6 +100,7 @@ void BaseballAttackClass::State_Attack()
 		m_DoCombo = m_pEvent->isDoCombo();
 	}
 
+	//☆変更予定点(必殺技時->当たったらにする)
 	//コンボ移行
 	if (!isLastAtk() &&
 		m_DoCombo    &&
@@ -122,7 +123,7 @@ void BaseballAttackClass::State_Attack()
 //次の攻撃に移行する
 void BaseballAttackClass::State_NextAtk()
 {
-	MyAssert(!isLastAtk(), "攻撃情報クラスがない状態でTennisAttackClass::State_NextAtkが実行されました");
+	MyAssert(!isLastAtk(), "攻撃情報クラスがない状態でBaseballAttackClass::State_NextAtkが実行されました");
 
 	AttackInfo* const pNowAtk = m_AttackInfoArray.at(++m_ComboCount);
 

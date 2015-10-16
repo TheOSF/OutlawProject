@@ -37,7 +37,7 @@ void Sound::Initialize()
 
     RegistSE(Tennis_BallAtk, "tennis\\tenis_hitball");
 
-    RegistSE(BaseBall_kaki_n, "BaseBall_kaki_n");
+    RegistSE(BaseBall_kaki_n, "BaseBall_kaki_normal");
 
     RegistSE(Golf_Swing, "golfu_swing");
     

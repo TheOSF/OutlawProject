@@ -24,6 +24,8 @@ class MilderHoming :public BallBase, public GameObjectBase
 private:
     float acc;//　加速度
     int homingcounter;//　追尾時間
+	bool frontflg;//　前向きにするよう
+	BaseballPlayer* bp;
 public:
     //物理パラメータ
     struct
@@ -37,7 +39,8 @@ public:
     //コンストラクタ
     MilderHoming(
         BallBase::Params	params,			//ボールパラメータ
-        float				damage_val   	//ダメージ量
+        float				damage_val,  	//ダメージ量
+		BaseballPlayer* b
         );
     ~MilderHoming();
 
@@ -60,6 +63,7 @@ public:
     void State_ToTagetMove();
     void State_NoWork();
     void State_Delete();
+	void State_Normal();
 
 
     bool isOutofField()const;
@@ -69,6 +73,7 @@ public:
     void SetHDR();
     bool isHitWall();
 
+	void Cheak();
 
     void Counter(CharacterBase* pCounterCharacter)override;
 

@@ -25,6 +25,7 @@ public:
 		_CanVolleySmash,		//バレーキャラクタでスマッシュすることができる状態のボール
 		_TennisSpecialAtk,		//テニス
         _Milder,                //野球ホーミング
+		_BaseballSpecialAtk     //野球必殺
 	};
 
 	//パラメータ構造体

@@ -91,9 +91,8 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 			param.pParent = m_pBaseball;
 			param.scale = 1.0f;
 			param.type = BallBase::Type::_Milder;
-
 			//¶¬
-			new MilderHoming(param, 1);
+			new MilderHoming(param,5,m_pBaseball);
 		}
 
 		//@‰“‹——£UŒ‚ŠJn

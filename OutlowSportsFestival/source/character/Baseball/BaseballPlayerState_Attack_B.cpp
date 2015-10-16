@@ -150,5 +150,5 @@ void Baseball_PlayerControll_Attack_B::Execute(BaseballPlayer* b)
 // ステート終了
 void Baseball_PlayerControll_Attack_B::Exit(BaseballPlayer* b)
 {
-
+	
 }

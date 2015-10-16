@@ -1,11 +1,15 @@
 #include "BaseballPlayerState.h"
+
 #include "BaseballState_PlayerControll_Evasion.h"
 #include "BaseballState_PlayerControll_ShotAttack_B.h"
 #include "BaseballState_PlayerControll_ShotAttack_P.h"
 #include "BaseballPlayerState_Attack_B.h"
 #include "BaseballPlayerState_Attack_P.h"
 #include "BaseballPlayerState_Counter.h"
+#include "BaseballState_SPAttack_B.h"
 #include "BaseballState_SPAttack_P.h"
+#include "BaseballState_Change.h"
+
 #include "Baseball_HitEvent.h"
 #include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
@@ -46,11 +50,11 @@ public:
 
 
 //ショット中のコントロールクラス
-class PlayerShotControllClass :public BaseballState_PlayerControll_ShotAttack_B::ControllClass
+class PlayerShotControllClass_B :public BaseballState_PlayerControll_ShotAttack_B::ControllClass
 {
 	BaseballPlayer* const   m_pBaseball;
 public:
-	PlayerShotControllClass(BaseballPlayer* pBaseball) :
+	PlayerShotControllClass_B(BaseballPlayer* pBaseball) :
 		m_pBaseball(pBaseball){}
 
 	Vector3 GetVec()
@@ -74,12 +78,14 @@ public:
 		BaseballPlayer * const b = m_pBaseball;
 
 		//　近距離攻撃[□]
-		if (controller::GetTRG(controller::button::shikaku, b->m_PlayerInfo.number)){
+		if (controller::GetTRG(controller::button::shikaku, b->m_PlayerInfo.number))
+		{
 			b->SetState(new Baseball_PlayerControll_Attack_B(b));
 			return true;
 		}
 		//　回避行動[×]
-		if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number)){
+		if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number))
+		{
 			b->SetState(new BaseballState_Rolling(new PlayerRollingControll(b)));
 			return true;
 		}
@@ -114,8 +120,7 @@ public:
 //　移動
 //***************************************
 
-BaseballState* BaseballState_PlayerControll_Move::GetPlayerControllMove(
-	BaseballPlayer* pt)
+BaseballState* BaseballState_PlayerControll_Move::GetPlayerControllMove(BaseballPlayer* pt)
 {
 	switch (pt->m_PlayerInfo.player_type)
 	{
@@ -256,7 +261,7 @@ void BaseballState_PlayerControll_Move::Exit(BaseballPlayer* b){
 void BaseballState_PlayerControll_Move::Batter(BaseballPlayer* b){
 	//　遠距離攻撃[△]
 	if (controller::GetTRG(controller::button::sankaku, b->m_PlayerInfo.number)){
-		b->SetState(new BaseballState_PlayerControll_ShotAttack_B(new PlayerShotControllClass(b)));
+		b->SetState(new BaseballState_PlayerControll_ShotAttack_B(new PlayerShotControllClass_B(b)));
 		return;
 	}
 	//　近距離攻撃[□]
@@ -269,12 +274,22 @@ void BaseballState_PlayerControll_Move::Batter(BaseballPlayer* b){
 		b->SetState(new BaseballState_Rolling(new PlayerRollingControll(b)));
 		return;
 	}
-
+	//　必殺技[○]
+	if (controller::GetTRG(controller::button::maru, b->m_PlayerInfo.number)){
+		b->SetState(new BaseballState_SPAttack_B(b));
+		return;
+	}
 	// カウンター[R1]
 	if (controller::GetTRG(controller::button::_R1, b->m_PlayerInfo.number))
 	{
 		b->SetState(new  BaseballState_PlayerControll_Counter(5));
 		return ;
+	}
+	// 切り替え[L1]
+	if (controller::GetTRG(controller::button::_L1, b->m_PlayerInfo.number))
+	{
+		b->SetState(new BaseballState_Change());
+		return;
 	}
 }
 
@@ -296,14 +311,20 @@ void  BaseballState_PlayerControll_Move::Pitcher(BaseballPlayer* b){
 		return;
 	}
 	//　必殺技[○]
-	/*if (controller::GetTRG(controller::button::maru, b->m_PlayerInfo.number)){
+	if (controller::GetTRG(controller::button::maru, b->m_PlayerInfo.number)){
 		b->SetState(new BaseballState_SPAttack_P());
 		return;
-	}*/
+	}
 	// カウンター[R1]
 	if (controller::GetTRG(controller::button::_R1, b->m_PlayerInfo.number))
 	{
 		b->SetState(new  BaseballState_PlayerControll_Counter(9));
+		return;
+	}
+	// 切り替え[L1]
+	if (controller::GetTRG(controller::button::_L1, b->m_PlayerInfo.number))
+	{
+		b->SetState(new BaseballState_Change());
 		return;
 	}
 }

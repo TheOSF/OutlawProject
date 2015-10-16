@@ -65,7 +65,8 @@ void EffectFactory::Particle(
     CrVector3 move,
     CrVector2 size,
     DWORD     Color,
-    bool Soft 
+    bool Soft,
+	DWORD dw_Type
     )
 {
     ParticleRenderer* r = new ParticleRenderer();
@@ -73,7 +74,7 @@ void EffectFactory::Particle(
     r->m_pTexture = DefResource.Get(Resource::TextureType::Particle);
     r->m_Param.pos = pos;
     r->m_Param.color = Color;
-    r->m_Param.dw_Flag = RS_COPY;
+	r->m_Param.dw_Flag = dw_Type;
     r->m_Param.size = size;
     r->m_SoftEnable = Soft;
     r->m_SoftDepth = 0.008f;
@@ -89,4 +90,37 @@ void EffectFactory::Particle(
         1,
         1
         );
+}
+
+
+//パーティクル
+void EffectFactory::ParticleHDR(
+	UINT      type,
+	UINT      live_time,
+	CrVector3 pos,
+	CrVector3 move,
+	CrVector2 size,
+	DWORD     Color
+	)
+{
+	ParticleHDRRenderer* r = new ParticleHDRRenderer();
+
+	r->m_pTexture = DefResource.Get(Resource::TextureType::Particle);
+	r->m_Param.pos = pos;
+	r->m_Param.color = Color;
+	r->m_HDRcolor = Color;
+	r->m_Param.dw_Flag = RS_ADD;
+	r->m_Param.size = size;
+	r->SetCellUV(4, 4, (int)type);
+
+	ParticleMoveObject* m =
+		new ParticleMoveObject(
+		r,
+		move,
+		Vector3Zero,
+		live_time,
+		false,
+		1,
+		1
+		);
 }

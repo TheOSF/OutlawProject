@@ -127,6 +127,7 @@
     <ClCompile Include="IEX\IEX_View.cpp" />
     <ClCompile Include="source\Ball\Ball.cpp" />
     <ClCompile Include="source\Ball\BallFadeOutRenderer.cpp" />
+    <ClCompile Include="source\Ball\Baseball_SpAtk_Ball.cpp" />
     <ClCompile Include="source\Ball\MilderHoming.cpp" />
     <ClCompile Include="source\Ball\PhysicallyMoveBall.cpp" />
     <ClCompile Include="source\Ball\UsualBall.cpp" />
@@ -138,6 +139,7 @@
     <ClCompile Include="source\character\Attack\CharacterAttack.cpp" />
     <ClCompile Include="source\character\Attack\CharacterDefaultNearAtk.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballAttackClass.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballAttackInfo_SpAtk.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballAttackInfo_UsualAtk.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballPlayer.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballPlayerState.cpp" />
@@ -147,9 +149,12 @@
     <ClCompile Include="source\character\Baseball\BaseballPlayerState_DamageMotionWeak.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Die.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Vanish.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballSpAttackClass.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballState_Change.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballState_PlayerControll_Evasion.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballState_PlayerControll_ShotAttack_B.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballState_PlayerControll_ShotAttack_P.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballState_SPAttack_B.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballState_SPAttack_P.cpp" />
     <ClCompile Include="source\character\Baseball\Baseball_HitEvent.cpp" />
     <ClCompile Include="source\character\CharacterBase.cpp" />
@@ -263,6 +268,7 @@
     <ClInclude Include="IEX\iextreme.h" />
     <ClInclude Include="source\Ball\Ball.h" />
     <ClInclude Include="source\Ball\BallFadeOutRenderer.h" />
+    <ClInclude Include="source\Ball\Baseball_SpAtk_Ball.h" />
     <ClInclude Include="source\Ball\MilderHoming.h" />
     <ClInclude Include="source\Ball\PhysicallyMoveBall.h" />
     <ClInclude Include="source\Ball\UsualBall.h" />
@@ -274,6 +280,7 @@
     <ClInclude Include="source\character\Attack\CharacterAttack.h" />
     <ClInclude Include="source\character\Attack\CharacterDefaultNearAtk.h" />
     <ClInclude Include="source\character\Baseball\BaseballAttackClass.h" />
+    <ClInclude Include="source\character\Baseball\BaseballAttackInfo_SpAtk.h" />
     <ClInclude Include="source\character\Baseball\BaseballAttackInfo_UsualAtk.h" />
     <ClInclude Include="source\character\Baseball\BaseballPlayer.h" />
     <ClInclude Include="source\character\Baseball\BaseballPlayerState.h" />
@@ -283,9 +290,12 @@
     <ClInclude Include="source\character\Baseball\BaseballPlayerState_DamageMotionWeak.h" />
     <ClInclude Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Die.h" />
     <ClInclude Include="source\character\Baseball\BaseballPlayerState_DamageMotion_Vanish.h" />
+    <ClInclude Include="source\character\Baseball\BaseballSpAttackClass.h" />
+    <ClInclude Include="source\character\Baseball\BaseballState_Change.h" />
     <ClInclude Include="source\character\Baseball\BaseballState_PlayerControll_Evasion.h" />
     <ClInclude Include="source\character\Baseball\BaseballState_PlayerControll_ShotAttack_B.h" />
     <ClInclude Include="source\character\Baseball\BaseballState_PlayerControll_ShotAttack_P.h" />
+    <ClInclude Include="source\character\Baseball\BaseballState_SPAttack_B.h" />
     <ClInclude Include="source\character\Baseball\BaseballState_SPAttack_P.h" />
     <ClInclude Include="source\character\Baseball\Baseball_HitEvent.h" />
     <ClInclude Include="source\character\CharacterBase.h" />
