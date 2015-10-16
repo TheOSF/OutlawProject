@@ -418,7 +418,7 @@ void GameInitializer_DevelopMode::GameCreate()
 
     //ƒLƒƒƒ‰ƒNƒ^ì¬
     {
-        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Baseball);
+        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Soccer);
         CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Tennis);
 
     //    CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Baseball);
