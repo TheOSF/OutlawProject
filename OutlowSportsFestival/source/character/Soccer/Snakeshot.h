@@ -16,10 +16,11 @@ class Snakeshot :public BallBase,public GameObjectBase
 {
 public:
 	//•¨—ƒpƒ‰ƒ[ƒ^
-	struct
+	struct PhysicsParam
 	{
 		float Mass;
 		float Friction;
+		float Radius;
 		float Restitution;
 	}
 	PhysicsParam;
@@ -48,6 +49,7 @@ public:
 
 	void State_TargetDecision();
 	void State_ToTagetMove();
+	void State_NoHomingMove();
 	void State_NoWork();
 	void State_Delete();
 

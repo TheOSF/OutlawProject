@@ -198,6 +198,9 @@
     <ClCompile Include="source\GameScene\sceneMain.cpp" />
     <ClCompile Include="source\UI\PlayerCursorBillbord.cpp" />
     <ClCompile Include="source\UI\GameSetUI.cpp" />
+    <ClCompile Include="source\character\Computer\CharacterComputerMove.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputer_move.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerShot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -355,6 +358,9 @@
     <ClInclude Include="source\GameScene\sceneMain.h" />
     <ClInclude Include="source\UI\PlayerCursorBillbord.h" />
     <ClInclude Include="source\UI\GameSetUI.h" />
+    <ClInclude Include="source\character\Computer\CharacterComputerMove.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerMove.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerShot.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

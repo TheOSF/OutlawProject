@@ -15,8 +15,10 @@ SoccerPlayer::SoccerPlayer(const CharacterBase::PlayerInfo& info) :
 CharacterBase(info), m_ModelSize(0.05f),
 m_Renderer(new BlendAnimationMesh("DATA\\CHR\\Soccer\\Player_S.iem"))
 {
+	
 	m_pStateMachine = new SoccerStateMachine(this);
 	m_Renderer.SetMotion(0);
+	SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(this));
 }
 
 SoccerPlayer::~SoccerPlayer()

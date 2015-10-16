@@ -24,6 +24,7 @@
 //	サッカープレイヤーの操作クラスヘッダー
 //****************************************************
 
+
 //プレイヤー操作の移動クラス
 class SoccerState_PlayerControll_Move :public SoccerState
 {
@@ -155,6 +156,7 @@ public:
 	void Exit(SoccerPlayer* s);
 
 };
+
 
 
 #endif

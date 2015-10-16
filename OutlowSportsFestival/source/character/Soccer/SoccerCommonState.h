@@ -67,4 +67,24 @@ private:
 	Vector3                  m_Damage_vec;
 };
 
+//サッカーのダッシュ後ブレーキクラス
+class SoccerState_brake : public SoccerState
+{
+public:
+	SoccerState_brake(
+		SoccerPlayer*  pSoccer
+		);
+	// ステート開始
+	void Enter(SoccerPlayer* s)override;
+
+	// ステート実行
+	void Execute(SoccerPlayer* s)override;
+
+	// ステート終了
+	void Exit(SoccerPlayer* s)override;
+private:
+	SoccerPlayer*            m_pSoccer;
+	CharacterUsualMove*		m_pMoveClass;
+};
+
 #endif

@@ -23,10 +23,10 @@ SoccerAttackClass::SoccerAttackClass(
 	m_Locus.m_pTexture = DefResource.Get(Resource::TextureType::Locus1);
 
 	m_Locus.m_StartParam.Color = Vector4(1, 1, 1, 1);
-	m_Locus.m_StartParam.HDRColor = Vector4(1, 1, 1, 0.2f);
+	//m_Locus.m_StartParam.HDRColor = Vector4(1, 1, 1, 0.2f);
 
 	m_Locus.m_EndParam.Color = Vector4(1, 1, 1, 0);
-	m_Locus.m_EndParam.HDRColor = Vector4(1, 0, 1, 0);
+	//m_Locus.m_EndParam.HDRColor = Vector4(1, 0, 1, 0);
 }
 
 SoccerAttackClass::~SoccerAttackClass()

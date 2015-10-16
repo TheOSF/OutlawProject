@@ -55,6 +55,11 @@ void Sound::Initialize()
 
 	RegistSE(Change, "change");
 
+	RegistSE(Soccer_Brake, "brake");
+
+	RegistSE(Soccer_Speed_Up1, "speedUp1");
+	RegistSE(Soccer_Speed_Up2, "speedUp2");
+
     
     RegistBGM(BGM_Battle,"battle\\battle_normal");
     RegistBGM(BGM_LastRound, "battle\\battle_last");
