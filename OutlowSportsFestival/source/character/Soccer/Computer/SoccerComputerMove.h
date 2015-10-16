@@ -1,0 +1,24 @@
+#pragma once
+
+#include "../SoccerPlayer.h"
+#include "../../../GameSystem/ForwardDecl.h"
+#include "../../../character/Computer/CharacterComputerMove.h"
+
+//****************************************************
+//	サッカープレイヤーのコンピュータ操作クラスヘッダー
+//****************************************************
+
+
+//コンピュータ操作の移動クラス
+class SoccerState_ComputerControll_Move :public SoccerState
+{
+public:
+	
+
+	void Enter(SoccerPlayer* s)override;
+	void Execute(SoccerPlayer* s)override;
+	void Exit(SoccerPlayer* s)override;
+private:
+	CharacterUsualMove*		m_pMoveClass;
+	CharacterComputerMove*  m_pMoveControllClass;
+};
