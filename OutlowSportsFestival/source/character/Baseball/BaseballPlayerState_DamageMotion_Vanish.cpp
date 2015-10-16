@@ -19,7 +19,7 @@ BaseballState_DamageVanish::BaseballState_DamageVanish(
 
 void BaseballState_DamageVanish::Enter(BaseballPlayer* b)
 {
-	//キャラクタ共通ひるみクラスのテニス固有イベントクラス
+	
 	class BaseballEvent :public CharacterDamageVanish::Event
 	{
 	public:

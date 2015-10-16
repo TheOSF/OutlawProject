@@ -1,11 +1,11 @@
 
 
-#include "BaseballAttackClass.h"
+#include "BaseballSPAttackClass.h"
 #include "../CharacterFunction.h"
 #include "Baseball_HitEvent.h"
 #include "../../GameSystem/ResourceManager.h"
 
-BaseballAttackClass::BaseballAttackClass(
+BaseballSpAttackClass::BaseballSpAttackClass(
 	BaseballPlayer*   pOwner,
 	ControllEvent*  pEvent
 	) :
@@ -13,7 +13,7 @@ BaseballAttackClass::BaseballAttackClass(
 	m_pEvent(pEvent),
 	m_Timer(0),
 	m_ComboCount(-1),
-	m_pStateFunc(&BaseballAttackClass::State_NextAtk),
+	m_pStateFunc(&BaseballSpAttackClass::State_NextAtk),
 	m_Locus(7)
 {
 	m_Damage.m_Enable = false;
@@ -28,7 +28,7 @@ BaseballAttackClass::BaseballAttackClass(
 	m_Locus.m_EndParam.HDRColor = Vector4(1, 0, 1, 0);
 }
 
-BaseballAttackClass::~BaseballAttackClass()
+BaseballSpAttackClass::~BaseballSpAttackClass()
 {
 	for (auto& it : m_AttackInfoArray)
 	{
@@ -38,7 +38,7 @@ BaseballAttackClass::~BaseballAttackClass()
 	delete m_pEvent;
 }
 
-void BaseballAttackClass::Update()
+void BaseballSpAttackClass::Update()
 {
 	m_pOwner->m_Renderer.Update(1);
 
@@ -55,15 +55,15 @@ void BaseballAttackClass::Update()
 	chr_func::CreateTransMatrix(m_pOwner, m_pOwner->m_ModelSize, &m_pOwner->m_Renderer.m_TransMatrix);
 }
 
-bool BaseballAttackClass::isEnd()const
+bool BaseballSpAttackClass::isEnd()const
 {
-	return (m_pStateFunc == &BaseballAttackClass::State_End);
+	return (m_pStateFunc == &BaseballSpAttackClass::State_End);
 }
 
 //----------------------------------------------------------------
 
 
-void BaseballAttackClass::State_Attack()
+void BaseballSpAttackClass::State_Attack()
 {
 	AttackInfo* const pNowAtk = m_AttackInfoArray.at(m_ComboCount);
 
@@ -93,21 +93,21 @@ void BaseballAttackClass::State_Attack()
 		}
 	}
 
-	//コンボ実行フラグのチェック
-	if (m_DoCombo == false &&
-		pNowAtk->isComboButtonFrame(m_Timer))
-	{
-		m_DoCombo = m_pEvent->isDoCombo();
-	}
+	////コンボ実行フラグのチェック
+	//if (m_DoCombo == false &&
+	//	pNowAtk->isComboButtonFrame(m_Timer))
+	//{
+	//	m_DoCombo = m_pEvent->isDoCombo();
+	//}
 
-	//☆変更予定点(必殺技時->当たったらにする)
-	//コンボ移行
-	if (!isLastAtk() &&
-		m_DoCombo    &&
-		pNowAtk->isComboSwitchFrame(m_Timer))
-	{
-		m_pStateFunc = &BaseballAttackClass::State_NextAtk;
-	}
+	////☆変更予定点(必殺技時->当たったらにする)
+	////コンボ移行
+	//if (!isLastAtk() &&
+	//	m_DoCombo    &&
+	//	pNowAtk->isComboSwitchFrame(m_Timer))
+	//{
+	//	m_pStateFunc = &BaseballSpAttackClass::State_NextAtk;
+	//}
 
 	//ダメージ有効・無効
 	m_Damage.m_Enable = pNowAtk->isDamageEnable(m_Timer);
@@ -115,13 +115,13 @@ void BaseballAttackClass::State_Attack()
 	//攻撃終了
 	if (pNowAtk->isEnd(m_Timer))
 	{
-		m_pStateFunc = &BaseballAttackClass::State_End;
+		m_pStateFunc = &BaseballSpAttackClass::State_End;
 	}
 }
 
 
 //次の攻撃に移行する
-void BaseballAttackClass::State_NextAtk()
+void BaseballSpAttackClass::State_NextAtk()
 {
 	MyAssert(!isLastAtk(), "攻撃情報クラスがない状態でBaseballAttackClass::State_NextAtkが実行されました");
 
@@ -134,17 +134,17 @@ void BaseballAttackClass::State_NextAtk()
 	m_Timer = 0;
 	m_DoCombo = false;
 
-	m_pStateFunc = &BaseballAttackClass::State_Attack;
+	m_pStateFunc = &BaseballSpAttackClass::State_Attack;
 }
 
-void BaseballAttackClass::State_End()
+void BaseballSpAttackClass::State_End()
 {
 
 }
 
 
 //最終段攻撃かどうか
-bool BaseballAttackClass::isLastAtk()
+bool BaseballSpAttackClass::isLastAtk()
 {
 	return ((int)m_AttackInfoArray.size() - 1) <= m_ComboCount;
 }

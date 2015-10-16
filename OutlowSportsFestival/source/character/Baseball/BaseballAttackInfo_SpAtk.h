@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BaseballAttackClass.h"
+#include "BaseballSpAttackClass.h"
 
 
 
@@ -8,7 +8,7 @@
 //		野球の攻撃情報クラス
 //****************************************************************
 
-class BaseballAttackInfo_UsualAtk :public BaseballAttackClass::AttackInfo
+class BaseballAttackInfo_SpAtk :public BaseballSpAttackClass::AttackInfo
 {
 public:
 	struct Param
@@ -29,10 +29,7 @@ public:
 
 		int                AllFrame;
 
-		int                CanComboButtonPushFrame;
 
-		int                ComboSwitchStartFrame;
-		int                ComboSwitchEndFrame;
 
 		int                AngleControllStartFrame;
 		int                AngleControllEndFrame;
@@ -43,11 +40,8 @@ public:
 
 	Param m_Param;
 
-	BaseballAttackInfo_UsualAtk(
-		BaseballPlayer* pOwner
-		);
-
-	~BaseballAttackInfo_UsualAtk();
+	BaseballAttackInfo_SpAtk(BaseballPlayer* pOwner);
+	~BaseballAttackInfo_SpAtk();
 
 private:
 
@@ -66,12 +60,7 @@ private:
 	//引数のフレームが攻撃終了かどうか
 	bool isEnd(int Frame);
 
-	//引数のフレームがコンボ移行フレームかどうか
-	bool isComboSwitchFrame(int Frame);
-
-	//引数のフレームが、コンボの移行判定ボタンを押せるフレームかどうか
-	bool isComboButtonFrame(int Frame);
-
+	
 	//引数のフレームが、角度調整を行えるフレームかどうか
 	bool isCanAngleControll(int Frame, RADIAN& OutControllVal);
 

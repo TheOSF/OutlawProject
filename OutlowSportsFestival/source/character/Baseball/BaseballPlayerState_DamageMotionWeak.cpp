@@ -86,5 +86,5 @@ void BaseballState_DamageMotion_Weak::Execute(BaseballPlayer* t)
 
 void BaseballState_DamageMotion_Weak::Exit(BaseballPlayer* t)
 {
-
+	delete m_pDamageMotionClass;
 }

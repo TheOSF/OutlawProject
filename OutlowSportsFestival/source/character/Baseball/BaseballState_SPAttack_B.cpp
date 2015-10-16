@@ -1,25 +1,25 @@
-#include "BaseballPlayerState_Attack_B.h"
+#include "BaseballState_SPAttack_B.h"
 #include "BaseballPlayerState.h"
 #include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
 #include "../CharacterManager.h"
-#include "BaseballAttackInfo_UsualAtk.h"
+#include "BaseballAttackInfo_SpAtk.h"
 
 
 //------------プレイヤー操作の攻撃操作クラス--------------
 
-Baseball_PlayerControll_Attack_B::PlayerControllEvent::PlayerControllEvent(BaseballPlayer*const pBaseball) :
+BaseballState_SPAttack_B::PlayerControllEvent::PlayerControllEvent(BaseballPlayer*const pBaseball) :
 m_pBaseball(pBaseball)
 {
 
 }
 
-bool Baseball_PlayerControll_Attack_B::PlayerControllEvent::isDoCombo()
+bool BaseballState_SPAttack_B::PlayerControllEvent::isDoCombo()
 {
 	return controller::GetTRG(controller::button::shikaku, m_pBaseball->m_PlayerInfo.number);
 }
 
-void  Baseball_PlayerControll_Attack_B::PlayerControllEvent::AngleControll(RADIAN angle)
+void  BaseballState_SPAttack_B::PlayerControllEvent::AngleControll(RADIAN angle)
 {
 	const CharacterBase* const pTargetCharacter = GetFrontTargetEnemy();
 
@@ -46,7 +46,7 @@ void  Baseball_PlayerControll_Attack_B::PlayerControllEvent::AngleControll(RADIA
 	}
 }
 
-const CharacterBase*  Baseball_PlayerControll_Attack_B::PlayerControllEvent::GetFrontTargetEnemy()
+const CharacterBase*  BaseballState_SPAttack_B::PlayerControllEvent::GetFrontTargetEnemy()
 {
 	CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
 
@@ -99,35 +99,35 @@ const CharacterBase*  Baseball_PlayerControll_Attack_B::PlayerControllEvent::Get
 
 //-------------近距離攻撃ステートクラス-------------
 
-Baseball_PlayerControll_Attack_B::Baseball_PlayerControll_Attack_B(BaseballPlayer* b) :
+BaseballState_SPAttack_B::BaseballState_SPAttack_B(BaseballPlayer* b) :
 m_Attack(b, new PlayerControllEvent(b))
 {
 
 }
 
 
-Baseball_PlayerControll_Attack_B::~Baseball_PlayerControll_Attack_B()
+BaseballState_SPAttack_B::~BaseballState_SPAttack_B()
 {
 
 }
 
 // ステート開始
-void  Baseball_PlayerControll_Attack_B::Enter(BaseballPlayer* b)
+void  BaseballState_SPAttack_B::Enter(BaseballPlayer* b)
 {
 	//攻撃クラス作成
-	BaseballAttackInfo_UsualAtk* pAtk;
+	BaseballAttackInfo_SpAtk* pAtk;
 
-	BaseballAttackInfo_UsualAtk::Param AtkParam[] =
+	BaseballAttackInfo_SpAtk::Param AtkParam[] =
 	{
+
+		{ 4, 1.2f, 1.5f, DamageBase::Type::_WeekDamage, 2, 5, 0.07f, 5, 10, baseball_player::_mb_Atk1, 30, 0, 15, D3DXToRadian(8), 8 },
+		{ 6, 1.2f, 1.5f, DamageBase::Type::_WeekDamage, 5, 8, 0.02f, 1, 5, baseball_player::_mb_Atk2, 20, 0, 5, D3DXToRadian(8), 8 },
 		
-		{ 4, 1.2f, 1.5f, DamageBase::Type::_WeekDamage, 2, 5, 0.07f, 5, 10, baseball_player::_mb_Atk1, 30, 20, 23, 35, 0, 15, D3DXToRadian(8), 8 },
-		{ 6, 1.2f, 1.5f, DamageBase::Type::_WeekDamage, 5, 8, 0.02f, 1, 5, baseball_player::_mb_Atk2, 20, 5, 15, 20, 0, 5, D3DXToRadian(8), 8 },
-		{ 8, 1.2f, 1.5f, DamageBase::Type::_VanishDamage, 8, 16, 0.05f, 1, 6, baseball_player::_mb_Atk3, 40, -1, -1, -1, 0, 8, D3DXToRadian(8), 8 },
 	};
 
 	for (int i = 0; i < (int)ARRAYSIZE(AtkParam); ++i)
 	{
-		pAtk = new BaseballAttackInfo_UsualAtk(b);
+		pAtk = new BaseballAttackInfo_SpAtk(b);
 
 		pAtk->m_Param = AtkParam[i];
 
@@ -137,7 +137,7 @@ void  Baseball_PlayerControll_Attack_B::Enter(BaseballPlayer* b)
 
 
 // ステート実行
-void Baseball_PlayerControll_Attack_B::Execute(BaseballPlayer* b)
+void BaseballState_SPAttack_B::Execute(BaseballPlayer* b)
 {
 	m_Attack.Update();
 
@@ -148,7 +148,7 @@ void Baseball_PlayerControll_Attack_B::Execute(BaseballPlayer* b)
 }
 
 // ステート終了
-void Baseball_PlayerControll_Attack_B::Exit(BaseballPlayer* b)
+void BaseballState_SPAttack_B::Exit(BaseballPlayer* b)
 {
-	
+
 }

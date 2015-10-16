@@ -14,12 +14,15 @@
 
 MilderHoming::MilderHoming(
     BallBase::Params	params,			//ボールパラメータ
-    float				damage_val   	//ダメージ量
+    float				damage_val,   	//ダメージ量
+	BaseballPlayer* b
     ) :
     acc(0.2f),
     homingcounter(0),
     m_DeleteFrame(180),
     m_Locus(30),
+	frontflg(true),
+	bp(b),
     m_pRigitBody(nullptr)
 {
     LPIEXMESH		pBallMesh;
@@ -61,13 +64,14 @@ MilderHoming::MilderHoming(
     UpdateLocusColor();
 
     //物理パラメータ初期化
-    PhysicsParam.Friction = 0.8f;
+    PhysicsParam.Friction = 0.4f;
     PhysicsParam.Restitution = 0.25f;
     PhysicsParam.Mass = 1.5f;
 
 
     m_pStatefunc = &MilderHoming::State_TargetDecision;
 }
+
 MilderHoming::~MilderHoming()
 {
     delete	m_pMeshRenderer;
@@ -116,8 +120,8 @@ void MilderHoming::State_TargetDecision()
     }
     else
     {
-        //ターゲットがなければState_NoWorkに移行
-        m_pStatefunc = &MilderHoming::State_NoWork;
+        //ターゲットがなければState_Normalに移行
+		m_pStatefunc = &MilderHoming::State_Normal;
     }
 
 }
@@ -133,25 +137,10 @@ void MilderHoming::State_ToTagetMove()
         m_pStatefunc = &MilderHoming::State_TargetDecision;
     }
 
-    //敵に当たっていたら攻撃判定をなくす
-    if (m_Damage.HitCount > 0)
-    {
-        //攻撃判定のない状態にする
-        m_pStatefunc = &MilderHoming::State_NoWork;
-    }
+	//　当たり判定とか
+	Cheak();
 
-    if (isHitWall())
-    {
-        //攻撃判定のない状態にする
-        m_pStatefunc = &MilderHoming::State_NoWork;
-    }
-
-    //ステージ範囲なら消去ステートへ
-    if (isOutofField())
-    {
-        m_pStatefunc = &MilderHoming::State_Delete;
-    }
-
+	//　追尾！
     Homing(m_pTarget->m_Params.pos);
 
 }
@@ -206,10 +195,49 @@ void MilderHoming::State_NoWork()
     }
 }
 
+//　真っ直ぐ飛ぶ
+void MilderHoming::State_Normal()
+{
+	//　当たり判定とか
+	Cheak();
+	//移動は前向き
+	if (frontflg)
+	{
+		chr_func::GetFront(bp, &m_Params.move);
+		m_Params.move *= 0.6f;
+		frontflg = false;
+	}
+	//m_Params.move *= 0.7f;
+	m_Params.pos += m_Params.move;
+
+}
 
 void MilderHoming::State_Delete()
 {
     //何もしない
+}
+
+void MilderHoming::Cheak()
+{
+	//敵に当たっていたら攻撃判定をなくす
+	if (m_Damage.HitCount > 0)
+	{
+		//攻撃判定のない状態にする
+		m_pStatefunc = &MilderHoming::State_NoWork;
+	}
+
+	//　壁に当たっていたら攻撃判定をなくす
+	if (isHitWall())
+	{
+		//攻撃判定のない状態にする
+		m_pStatefunc = &MilderHoming::State_NoWork;
+	}
+
+	//ステージ範囲なら消去ステートへ
+	if (isOutofField())
+	{
+		m_pStatefunc = &MilderHoming::State_Delete;
+	}
 }
 
 
@@ -293,6 +321,10 @@ void MilderHoming::Counter(CharacterBase* pCounterCharacter)
 
     UpdateLocusColor();
 
+	//　カウンターされたら吹き飛ぶ&ダメージ1.3倍
+	m_Damage.type = DamageBase::Type::_VanishDamage;
+	m_Damage.Value *= 1.3f; //ダメージを増やす
+
     m_pStatefunc = &MilderHoming::State_TargetDecision;
 }
 
@@ -325,9 +357,10 @@ void MilderHoming::ToNoWork()
         m_Params.move * 45.0f
         );
 
-    //　加速度初期化
+    //　初期化
     acc = 0.2f;
     homingcounter = 0;
+	frontflg = true;
 }
 
 //　ホーミング計算

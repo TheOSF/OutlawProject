@@ -159,7 +159,7 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 			param.type = BallBase::Type::_Usual;
 
 			//生成
-			new UsualBall(param, DamageBase::Type::_WeekDamage, 5);
+			new UsualBall(param, DamageBase::Type::_WeekDamage, 8);
 
 
 			//エフェクト
