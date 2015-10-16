@@ -22,31 +22,37 @@
 #include "../CharacterCounterClass.h"
 #include "../../Camera/Camera.h"
 
-//ローリングの方向制御クラス
-class PlayerRollingControll :public BaseballState_Rolling::CallBackClass
+class BallBall_Utillity
 {
 public:
-	BaseballPlayer*const pb;
+    //ローリングの方向制御クラス
+    class PlayerRollingControll :public BaseballState_Rolling::CallBackClass
+    {
+    public:
+        BaseballPlayer*const pb;
 
-	PlayerRollingControll(BaseballPlayer* pb) :pb(pb){}
+        PlayerRollingControll(BaseballPlayer* pb) :pb(pb){}
 
 
-	Vector3 GetVec()override
-	{
-		Vector2 stick = controller::GetStickValue(controller::stick::left, pb->m_PlayerInfo.number);
-		Vector3 vec(stick.x, 0, stick.y);
+        Vector3 GetVec()override
+        {
+            Vector2 stick = controller::GetStickValue(controller::stick::left, pb->m_PlayerInfo.number);
+            Vector3 vec(stick.x, 0, stick.y);
 
-		if (vec.Length() < 0.25f)
-		{
-			return Vector3Zero;
-		}
+            if (vec.Length() < 0.25f)
+            {
+                return Vector3Zero;
+            }
 
-		vec = Vector3MulMatrix3x3(vec, matView);
-		vec.Normalize();
+            vec = Vector3MulMatrix3x3(vec, matView);
+            vec.Normalize();
 
-		return vec;
-	}
+            return vec;
+        }
+    };
 };
+
+
 
 
 //ショット中のコントロールクラス
@@ -86,7 +92,7 @@ public:
 		//　回避行動[×]
 		if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number))
 		{
-			b->SetState(new BaseballState_Rolling(new PlayerRollingControll(b)));
+            b->SetState(new BaseballState_Rolling(new BallBall_Utillity::PlayerRollingControll(b)));
 			return true;
 		}
 
@@ -271,7 +277,7 @@ void BaseballState_PlayerControll_Move::Batter(BaseballPlayer* b){
 	}
 	//　回避行動[×]
 	if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number)){
-		b->SetState(new BaseballState_Rolling(new PlayerRollingControll(b)));
+        b->SetState(new BaseballState_Rolling(new BallBall_Utillity::PlayerRollingControll(b)));
 		return;
 	}
 	//　必殺技[○]
@@ -307,7 +313,7 @@ void  BaseballState_PlayerControll_Move::Pitcher(BaseballPlayer* b){
 	}
 	//　回避行動[×]
 	if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number)){
-		b->SetState(new BaseballState_Rolling(new PlayerRollingControll(b)));
+        b->SetState(new BaseballState_Rolling(new BallBall_Utillity::PlayerRollingControll(b)));
 		return;
 	}
 	//　必殺技[○]

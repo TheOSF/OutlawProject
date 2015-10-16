@@ -48,7 +48,7 @@ bool BaseballPlayer::Update()
 	return true;	//常にtrueを返すと消去されない
 }
 
-bool  BaseballPlayer::Msg(MsgType mt)
+bool  BaseballPlayer::CharacterMsg(MsgType mt)
 {
 	//　ラウンドごとにリセット
 	if (mt == MsgType::_RoundReset)
