@@ -122,7 +122,7 @@ void SoccerState_DamageVanish::Enter(SoccerPlayer* s)
 			//吹き飛びモーションをセット
 			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Blowing);
 		}
-		void Flying(const Matrix& Rotate)
+        void Flying(const Matrix& Rotate, RATIO t)
 		{
 			//モデルのアニメーション更新
 			m_pSoccer->m_Renderer.Update(1);
@@ -243,10 +243,10 @@ void SoccerState_DamageMotion_Die::Enter(SoccerPlayer* t)
 			m_pSoccer->m_Params.camera_draw = false;
 		}
 
-		void Flying(const Matrix& Rotate)
+        void Flying(const Matrix& Rotate, RATIO t)
 		{
 			//モデルのアニメーション更新
-			m_pSoccer->m_Renderer.Update(1);
+			m_pSoccer->m_Renderer.Update(t);
 
 			//位置にもとずき、ワールド変換行列を計算
 			chr_func::CreateTransMatrix(m_pSoccer, m_pSoccer->m_ModelSize, &m_pSoccer->m_Renderer.m_TransMatrix);

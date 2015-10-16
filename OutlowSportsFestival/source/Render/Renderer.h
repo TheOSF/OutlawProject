@@ -57,6 +57,28 @@ public:
 typedef ForwardRenderer* LpForwardRenderer;
 
 
+
+//UI描画用クラス
+class UserInterfaceRenderer
+{
+public:
+    //コンストラクタ・デストラクタで自動的に描画をするための登録をする
+    UserInterfaceRenderer();
+    virtual ~UserInterfaceRenderer();
+
+    //この変数をもとに値が低い順番にSortする
+    float m_SortZ;
+
+    //Z値計算をこの関数で実行することができる
+    virtual void CalcZ() = 0;
+
+    //描画(自動的に呼ばれる)
+    virtual void Render() = 0;
+};
+typedef UserInterfaceRenderer* LpUserInterfaceRenderer;
+
+
+
 //ライト描画クラス
 class LightObject
 {
@@ -145,6 +167,10 @@ public:
 	bool AddForwardRenderer(LpForwardRenderer pFor);
 	bool EraceForwardRenderer(LpForwardRenderer pFor);
 
+    //UI描画用クラスの追加・削除
+    bool AddUIRenderer(LpUserInterfaceRenderer p);
+    bool EraceUIRenderer(LpUserInterfaceRenderer p);
+
     //ライト描画用クラスの追加・削除
     bool AddLightObject(LpLightObject pL);
     bool EraceLightObject(LpLightObject pL);
@@ -176,6 +202,7 @@ private:
 	typedef std::map<LpDeferredRenderer, LpDeferredRenderer> DeferredRendererMap;
     typedef std::map<LpForwardHDRRenderer, LpForwardHDRRenderer> ForwardHDRRendererMap;
     typedef std::map<LpForwardRenderer, LpForwardRenderer> ForwardRendererMap;
+    typedef std::map<LpUserInterfaceRenderer, LpUserInterfaceRenderer> UIRendererMap;
     typedef std::map<LpLightObject, LpLightObject> LightObjectMap;
     typedef std::map<LpPostEffectRenderer, LpPostEffectRenderer> BlurObjectMap;
 
@@ -216,9 +243,16 @@ private:
         void Render();
     };
 
+    class UIRenderer :public DeferredLightManager::IForwardRenderer, public IRenderer
+    {
+    public:
+        void Render();
+    };
+
 	DeferredRendererMap      m_DeferredRendererMap;
     ForwardHDRRendererMap    m_ForwardHDRRendererMap;
 	ForwardRendererMap       m_ForwardRendererMap;
+    UIRendererMap            m_UIRendererMap;
     LightObjectMap           m_LightObjectMap;
     BlurObjectMap            m_BlurObjectMap;
 

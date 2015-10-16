@@ -49,7 +49,7 @@ MilderHoming::MilderHoming(
     m_pMeshRenderer = new MeshRenderer(
         pBallMesh,
         false,
-        MeshRenderer::RenderType::UseColor
+        MeshRenderer::RenderType::UseColorSpecular
         );
 
 
@@ -253,7 +253,6 @@ void MilderHoming::UpdateDamageClass()
 void MilderHoming::UpdateMesh()
 {
     //メッシュのワールド変換行列を更新する
-
     Matrix m;
 
     D3DXMatrixScaling(&m, 0.005f, 0.005f, 0.005f);	//大きさはボールによって変える必要がある

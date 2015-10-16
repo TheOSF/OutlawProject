@@ -32,10 +32,10 @@ void BaseballState_DamageMotion_Die::Enter(BaseballPlayer* b)
 			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Damage_Vanish_Fly);
 		}
 
-		void Flying(const Matrix& Rotate)
+        void Flying(const Matrix& Rotate, RATIO t)
 		{
 			//モデルのアニメーション更新
-			m_pBaseball->m_Renderer.Update(1);
+			m_pBaseball->m_Renderer.Update(t);
 
 			//位置にもとずき、ワールド変換行列を計算
 			chr_func::CreateTransMatrix(m_pBaseball, m_pBaseball->m_ModelSize, &m_pBaseball->m_Renderer.m_TransMatrix);

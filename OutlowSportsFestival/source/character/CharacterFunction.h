@@ -14,8 +14,11 @@ namespace chr_func
     //基本的な更新(座標更新、壁との判定など)をすべて行う
     void UpdateAll(CharacterBase* p, DamageManager::HitEventBase*	pHitEvent);
 
+    //基本的な更新(座標更新、壁との判定など)をすべて行う
+    void UpdateAll(CharacterBase* p, DamageManager::HitEventBase*	pHitEvent, RATIO Speed);
+
 	//座標に移動量を更新する
-	void PositionUpdate(CharacterBase* p);
+    void PositionUpdate(CharacterBase* p, RATIO t = 1.0f);
 			
 	//ＸＺ軸で移動量を足す(max_speedを超えないように設定される)
 	void AddXZMove(CharacterBase*p, float x, float z, float max_speed);
@@ -57,7 +60,7 @@ namespace chr_func
     bool isTouchGround(CharacterBase* p);
 
     //Y軸方向の速度を更新する
-    void UpdateMoveY(CharacterBase* p);
+    void UpdateMoveY(CharacterBase* p, RATIO t = 1.0f);
 
     //Y軸方向の地面判定を行う
     void CheckGround(CharacterBase* p);

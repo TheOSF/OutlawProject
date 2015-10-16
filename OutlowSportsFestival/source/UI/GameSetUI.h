@@ -8,7 +8,7 @@
 //  ゲームセット表示クラス
 //-------------------------------------------------------
 
-class GameSetUI :public ForwardRenderer, public GameObjectBase
+class GameSetUI :public UserInterfaceRenderer, public GameObjectBase
 {
 public:
     GameSetUI();

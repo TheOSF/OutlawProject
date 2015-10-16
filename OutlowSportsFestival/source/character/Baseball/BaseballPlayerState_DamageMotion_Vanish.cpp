@@ -31,7 +31,7 @@ void BaseballState_DamageVanish::Enter(BaseballPlayer* b)
 			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Damage_Vanish_Fly);
 		}
 
-		void Flying(const Matrix& Rotate)
+        void Flying(const Matrix& Rotate, RATIO t)
 		{
 			//モデルのアニメーション更新
 			m_pBaseball->m_Renderer.Update(1);

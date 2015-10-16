@@ -66,7 +66,8 @@ public:
         DeferredLightBufRenderer::IRenderer*    pLightRenderer,
         IMasterRenderer*                        pMasterRenderer,
         IForwardRenderer*                       pForwardRenderer,
-        IPostEffectRenderer*                    pPostEffectRenderer
+        IPostEffectRenderer*                    pPostEffectRenderer,
+        IForwardRenderer*                       pUIRenderer
         );
 
     //デバッグ用テクスチャ描画

@@ -27,7 +27,7 @@ public:
     public:
         virtual ~Event() {}
         virtual void FlyStart() = 0;                     //吹き飛びスタート
-        virtual void Flying(const Matrix& Rotate) = 0;   //吹き飛んでいる最中
+        virtual void Flying(const Matrix& Rotate, RATIO Speed) = 0;   //吹き飛んでいる最中
         virtual void DownStart() = 0;                    //着地時
         virtual void Downing() = 0;                      //根っころがっている最中
         virtual void StandUpStart() = 0;                 //起き上がりスタート
@@ -39,7 +39,8 @@ public:
         CharacterBase*    pCharacter,//吹き飛ぶキャラクタ
         const Param&      param, //吹きとびパラメーター
         Event*            pEvent, //イベントクラスへのポインタ(デストラクタでdeleteする)
-        DamageManager::HitEventBase* pHitEvent //ヒットイベントクラスへのポインタ(デストラクタでdeleteする)
+        DamageManager::HitEventBase* pHitEvent, //ヒットイベントクラスへのポインタ(デストラクタでdeleteする)
+        bool              first_slow = false
         );
 
     ~CharacterDamageVanish();
@@ -55,6 +56,7 @@ private:
     Event*          m_pEvent;      // イベント
     int             m_Count;
     bool            m_WallHit;
+    bool            m_FirstSlow;
 
     void(CharacterDamageVanish::*m_pStateFunc)();
 

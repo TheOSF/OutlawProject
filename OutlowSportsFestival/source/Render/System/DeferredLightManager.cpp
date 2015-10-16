@@ -90,7 +90,8 @@ void DeferredLightManager::Render(
     DeferredLightBufRenderer::IRenderer*    pLightRenderer,
     IMasterRenderer*                        pMasterRenderer,
     IForwardRenderer*                       pForwardRenderer,
-    IPostEffectRenderer*                    pPostEffectRenderer
+    IPostEffectRenderer*                    pPostEffectRenderer,
+    IForwardRenderer*                       pUIRenderer
     )
 {
     //スクリーンサーフェイスを保存
@@ -129,12 +130,11 @@ void DeferredLightManager::Render(
     //フォワードレンダリングを実行
     pForwardRenderer->Render();
 
-
-
-
     //ポストエフェクト処理し、バックバッファに出力
     pPostEffectRenderer->Render(m_pColorTexture, pScreen);
 
+    //ＵＩをバックバッファに出力
+    pUIRenderer->Render();
 }
 
 

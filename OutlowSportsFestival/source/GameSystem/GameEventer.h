@@ -103,10 +103,11 @@ namespace MatchState
             void Update();
 
             //ストップさせる(引数：何フレーム後にストップするか、何フレームストップするか)
-            void SetStop(UINT ep_frame,UINT stop_frame);
+            void SetStop(UINT ep_frame, UINT stop_frame, CharacterBase* pUpdateChr=nullptr);
         private:
             int m_Ep_frame;
             int m_Stop_frame;
+            CharacterBase* m_pUpdateChr;
         };
 
         CharacterManager::CharacterMap  m_CharacterMap;
@@ -121,6 +122,7 @@ namespace MatchState
 		void Exit(_Client_type_ptr);
 
         void SwitchState(const UINT now_LiveCount, _Client_type_ptr p);
+        CharacterBase* GetNowDieCharacter();
 	};
 
     //一人勝ちステート

@@ -331,7 +331,6 @@ void GameInitializer_DevelopMode::GameCreate()
             );
     }
 
-
     {
         //エフェクト読み込み
         EffectResource::Load();
@@ -341,9 +340,6 @@ void GameInitializer_DevelopMode::GameCreate()
         //パーティクルアップデーター生成
         new ParticleManagerUpdater();
     }
-
-
-
 
     if (0)
     {
@@ -414,14 +410,12 @@ void GameInitializer_DevelopMode::GameCreate()
     }
 
 
-
-
     //キャラクタ作成
     {
-        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Soccer);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Baseball);
+        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Tennis);
 
-        CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Tennis);
         CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Tennis);
 
     }

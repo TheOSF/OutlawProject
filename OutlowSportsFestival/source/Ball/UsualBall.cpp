@@ -68,7 +68,7 @@ UsualBall::UsualBall(
         m_pMeshRenderer = new MeshRenderer(
             pBallMesh,
             false,
-            MeshRenderer::RenderType::UseColor
+            MeshRenderer::RenderType::UseColorSpecular
             );
         
         D3DXMatrixScaling(&m, MeshScale, MeshScale, MeshScale);

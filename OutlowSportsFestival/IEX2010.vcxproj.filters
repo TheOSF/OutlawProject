@@ -123,7 +123,6 @@
     <ClCompile Include="source\character\Tennis\TennisPlayerState_Vanish.cpp" />
     <ClCompile Include="source\Camera\Camera.cpp" />
     <ClCompile Include="source\Camera\CameraState.cpp" />
-    <ClCompile Include="source\utillity\PlayerGauge.cpp" />
     <ClCompile Include="source\GameSystem\GameEventer.cpp" />
     <ClCompile Include="source\Render\System\BlurEffectRenderer.cpp" />
     <ClCompile Include="source\Render\System\DeferredGbufRenderer.cpp" />
@@ -202,6 +201,14 @@
     <ClCompile Include="source\character\Tennis\TennisPlayerState_PoseMotion.cpp" />
     <ClCompile Include="source\Effect\ThunderEffect.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_SlowUpBall.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerShot.cpp" />
+    <ClCompile Include="source\Ball\Baseball_SpAtk_Ball.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballAttackInfo_SpAtk.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballSpAttackClass.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballState_Change.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballState_SPAttack_B.cpp" />
+    <ClCompile Include="source\character\Computer\CharacterComputerMove.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputer_move.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -277,7 +284,6 @@
     <ClInclude Include="source\Camera\Camera.h" />
     <ClInclude Include="source\Camera\CameraState.h" />
     <ClInclude Include="source\Render\Header.h" />
-    <ClInclude Include="source\utillity\PlayerGauge.h" />
     <ClInclude Include="source\GameSystem\GameEventer.h" />
     <ClInclude Include="source\Render\System\BlurEffectRenderer.h" />
     <ClInclude Include="source\Render\System\DeferredGbufRenderer.h" />
@@ -363,6 +369,14 @@
     <ClInclude Include="source\character\Tennis\TennisPlayerState_PoseMotion.h" />
     <ClInclude Include="source\Effect\ThunderEffect.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_SlowUpBall.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerShot.h" />
+    <ClInclude Include="source\Ball\Baseball_SpAtk_Ball.h" />
+    <ClInclude Include="source\character\Baseball\BaseballAttackInfo_SpAtk.h" />
+    <ClInclude Include="source\character\Baseball\BaseballSpAttackClass.h" />
+    <ClInclude Include="source\character\Baseball\BaseballState_Change.h" />
+    <ClInclude Include="source\character\Baseball\BaseballState_SPAttack_B.h" />
+    <ClInclude Include="source\character\Computer\CharacterComputerMove.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerMove.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

@@ -276,7 +276,6 @@
     <ClCompile Include="source\utillity\Locus.cpp" />
     <ClCompile Include="source\utillity\LocusBlur.cpp" />
     <ClCompile Include="source\utillity\LocusHDR.cpp" />
-    <ClCompile Include="source\utillity\PlayerGauge.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -439,7 +438,6 @@
     <ClInclude Include="source\utillity\LocusBlur.h" />
     <ClInclude Include="source\utillity\LocusHDR.h" />
     <ClInclude Include="source\utillity\NonCopyable.h" />
-    <ClInclude Include="source\utillity\PlayerGauge.h" />
     <ClInclude Include="source\utillity\SafeMethod.h" />
     <ClInclude Include="source\utillity\Singleton.h" />
     <ClInclude Include="source\utillity\StateTemplate.h" />

@@ -225,7 +225,7 @@ void DeferredLightBufRenderer::LightRenderer::DirLightUseVarianceShadow(DirLight
     iexSystem::Device->GetRenderTarget(0, &pDiffuseTex);
     iexSystem::Device->GetRenderTarget(1, &pSpecularTex);
 
-    m_pMgr->m_pShadowDepthTexture2->RenderTarget(0);
+    m_pMgr->m_pShadowDepthTexture->RenderTarget(0);
     iexSystem::Device->SetRenderTarget(1, 0);
 
     //現在のデプスステンシルバッファを保存し影用のものに
@@ -256,7 +256,7 @@ void DeferredLightBufRenderer::LightRenderer::DirLightUseVarianceShadow(DirLight
     //Z値を描画
     param.Shadow.pDepthRenderer->Render(
         m_pMgr->m_pShader,
-        "WriteZf2"
+        "WriteZ"
         );
 
     //ビューポートを元に戻す
@@ -578,15 +578,8 @@ DeferredLightBufRenderer::DeferredLightBufRenderer(
         IEX2D_FLOAT
         );
 
-    m_pShadowDepthTexture2 = new iex2DObj(
-        (ULONG)m_ShadowViewport.Width,
-        (ULONG)m_ShadowViewport.Height,
-        IEX2D_FLOAT2
-        );
-
     m_pShader->SetValue("ShadowDepthTex", m_pShadowDepthTexture->GetTexture());
-    m_pShader->SetValue("ShadowDepthTex2", m_pShadowDepthTexture2->GetTexture());
-
+ 
 }
 
 
@@ -598,7 +591,6 @@ DeferredLightBufRenderer::~DeferredLightBufRenderer()
     delete m_pDiffuseTexture;
     delete m_pSpecularTexture;
     delete m_pShadowDepthTexture;
-    delete m_pShadowDepthTexture2;
 }
 
 //ライトバッファクリア

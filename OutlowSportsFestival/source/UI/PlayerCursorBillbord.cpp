@@ -102,10 +102,13 @@ void PlayerCursorBillbord::Render()
     {
         Vector3 pos;
 
-        DefCamera.WorldToProjection(
+        if (DefCamera.WorldToProjection(
             &pos,
             m_pCharacter->m_Params.pos + Vector3(0, 7.0f, 0)
-            );
+            ) == false)
+        {
+            return;
+        }
 
         m_DrawRect.x = (int)((pos.x* 0.5f + 0.5f) *(float)iexSystem::ScreenWidth);
         m_DrawRect.y = (int)((pos.y*-0.5f + 0.5f)*(float)iexSystem::ScreenHeight);

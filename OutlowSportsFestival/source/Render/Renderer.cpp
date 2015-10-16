@@ -43,6 +43,21 @@ ForwardRenderer::~ForwardRenderer()
 }
 
 
+UserInterfaceRenderer::UserInterfaceRenderer():
+m_SortZ(0)
+{
+    MyAssert(
+        DefRendererMgr.AddUIRenderer(this),
+        "UserInterfaceRendererの追加に失敗しました");
+}
+
+UserInterfaceRenderer::~UserInterfaceRenderer()
+{
+    MyAssert(
+        DefRendererMgr.EraceUIRenderer(this),
+        "UserInterfaceRendererの削除に失敗しました");
+}
+
 LightObject::LightObject() :
 Visible(true)
 {
@@ -170,6 +185,34 @@ bool RendererManager::EraceForwardRenderer(LpForwardRenderer pDef)
 }
 
 
+//フォワード描画用クラスの追加・削除
+bool RendererManager::AddUIRenderer(LpUserInterfaceRenderer p)
+{
+    if (m_UIRendererMap.find(p) != m_UIRendererMap.end())
+    {
+        return false;
+    }
+
+    m_UIRendererMap.insert(
+        UIRendererMap::value_type(p, p)
+        );
+
+    return true;
+}
+
+bool RendererManager::EraceUIRenderer(LpUserInterfaceRenderer p)
+{
+    auto it = m_UIRendererMap.find(p);
+
+    if (it == m_UIRendererMap.end())
+    {
+        return false;
+    }
+
+    m_UIRendererMap.erase(it);
+    return true;
+}
+
 //ライト描画用クラスの追加・削除
 bool RendererManager::AddLightObject(LpLightObject pL)
 {
@@ -274,11 +317,13 @@ void RendererManager::Render()
     LightbufRenderer Lr;
     MasterRenderer Mr;
     ForwardRenderer Fr;
+    UIRenderer Ur;
 
     Gr.SetMgr(this);
     Lr.SetMgr(this);
     Mr.SetMgr(this);
     Fr.SetMgr(this);
+    Ur.SetMgr(this);
 
     //ブラーパラメータの更新
     SetBlurParameters();
@@ -288,7 +333,8 @@ void RendererManager::Render()
         &Lr,
         &Mr,
         &Fr,
-        &m_BlurEffectRenderer
+        &m_BlurEffectRenderer,
+        &Ur
         );
 
     if (GetKeyState('G'))
@@ -475,6 +521,62 @@ void RendererManager::ForwardRenderer::Render()
 
 	delete[]SortData;
 
+}
+
+
+//Z値比較用関数
+static int CompareUIRendererFunc(const void*p1, const void* p2)
+{
+    return ((**(LpUserInterfaceRenderer*)p1).m_SortZ > (**(LpUserInterfaceRenderer*)p2).m_SortZ) ? (-1) : (1);
+}
+
+void RendererManager::UIRenderer::Render()
+{
+    if (m_pMgr->m_UIRendererMap.empty())
+    {
+        return;
+    }
+
+    //ソート結果用配列を生成
+    LpUserInterfaceRenderer* SortData = new LpUserInterfaceRenderer[m_pMgr->m_UIRendererMap.size()];
+
+    try
+    {
+        int count = 0;
+
+        for (auto it = m_pMgr->m_UIRendererMap.begin();
+            it != m_pMgr->m_UIRendererMap.end();
+            ++it)
+        {
+            SortData[count] = it->second;
+            ++count;
+
+            //Z値を計算する
+            it->second->CalcZ();
+        }
+
+        //遠い順番にソート
+        std::qsort(
+            &SortData[0],
+            count,
+            sizeof(LpUserInterfaceRenderer),
+            CompareUIRendererFunc
+            );
+
+        //描画
+        for (int i = 0; i < count; ++i)
+        {
+            SortData[i]->Render();
+        }
+
+    }
+    catch (...)
+    {
+        delete[]SortData;
+        throw;
+    }
+
+    delete[]SortData;
 }
 
 RendererManager::DepthRenderer::DepthRenderer() :

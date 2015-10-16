@@ -149,7 +149,6 @@ public:
     iex2DObj*   m_pDiffuseTexture;           //ディフューズテクスチャ
     iex2DObj*   m_pSpecularTexture;          //スペキュラテクスチャ
     iex2DObj*   m_pShadowDepthTexture;       //影用Z値テクスチャ
-    iex2DObj*   m_pShadowDepthTexture2;       //影用Z値テクスチャ(float2)
 private:
 
     const UINT     m_X, m_Y;              //スクリーンサイズXY

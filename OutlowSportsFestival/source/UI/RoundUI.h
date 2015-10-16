@@ -8,7 +8,7 @@
 //  ラウンド表示クラス
 //-------------------------------------------------------
 
-class RoundUI :public ForwardRenderer, public GameObjectBase
+class RoundUI :public UserInterfaceRenderer, public GameObjectBase
 {
 public:
     RoundUI(UINT Round, float Z);

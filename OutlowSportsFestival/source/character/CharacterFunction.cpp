@@ -29,10 +29,32 @@ void chr_func::UpdateAll(
 
 }
 
-//座標に移動量を更新する
-void chr_func::PositionUpdate(CharacterBase* p)
+//基本的な更新(座標更新、壁との判定など)をすべて行う
+void chr_func::UpdateAll(
+    CharacterBase* p,
+    DamageManager::HitEventBase*	pHitEvent,
+    RATIO Speed)
 {
-	p->m_Params.pos += p->m_Params.move;
+    //重力加算
+    UpdateMoveY(p, Speed);
+
+    //位置を更新
+    PositionUpdate(p,Speed);
+
+    //壁との接触判定
+    CheckWall(p);
+
+    //床との接触判定
+    CheckGround(p);
+
+    //あたり判定を取る
+    DamageCheck(p, pHitEvent);
+}
+
+//座標に移動量を更新する
+void chr_func::PositionUpdate(CharacterBase* p, RATIO t)
+{
+    p->m_Params.pos += p->m_Params.move*t;
 }
 
 //ＸＺ軸で移動量を足す(max_speedを超えないように設定される)
@@ -197,9 +219,9 @@ bool chr_func::isTouchGround(CharacterBase* p)
 
 
 //Y軸方向の移動、速度を更新する
-void chr_func::UpdateMoveY(CharacterBase* p)
+void chr_func::UpdateMoveY(CharacterBase* p, RATIO t)
 {
-    p->m_Params.move.y += CharacterBase::m_CommonParams.Glavity;
+    p->m_Params.move.y += CharacterBase::m_CommonParams.Glavity*t;
 }
 
 

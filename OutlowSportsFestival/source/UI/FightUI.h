@@ -8,7 +8,7 @@
 //                FIGHT!! •\Ž¦ƒNƒ‰ƒX
 //-------------------------------------------------------
 
-class FightUI :public ForwardRenderer, public GameObjectBase
+class FightUI :public UserInterfaceRenderer, public GameObjectBase
 {
 public:
     FightUI(float Z);

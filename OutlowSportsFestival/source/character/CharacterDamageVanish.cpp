@@ -11,7 +11,8 @@ CharacterDamageVanish::CharacterDamageVanish(
     CharacterBase*    pCharacter,//吹き飛ぶキャラクタ
     const Param&      param, //吹きとびパラメーター
     Event*            pEvent, //イベントクラスへのポインタ(デストラクタでdeleteする)
-    DamageManager::HitEventBase* pHitEvent
+    DamageManager::HitEventBase* pHitEvent,
+    bool              first_slow
     ) :
     m_pCharacter(pCharacter),
     m_pEvent(pEvent),
@@ -19,7 +20,8 @@ CharacterDamageVanish::CharacterDamageVanish(
     m_Count(0),
     m_Rotate(0, 0, 0),
     m_pHitEvent(pHitEvent),
-    m_WallHit(false)
+    m_WallHit(false),
+    m_FirstSlow(false)
 {
     m_Param = param;
 }
@@ -67,6 +69,18 @@ void CharacterDamageVanish::Initialize()
 
 void CharacterDamageVanish::Flying()
 {
+    RATIO Speed = 0;
+
+    if (GetKeyState('O'))
+    {
+        Speed = (m_FirstSlow && m_Count < 30) ? (0.2f) : (1.0f);
+    }
+    else
+    {
+        Speed = (m_FirstSlow) ? (min((float)m_Count*0.05f, 1)) : (1.0f);
+    }
+
+
     ++m_Count;
 
     //エフェクト
@@ -87,11 +101,11 @@ void CharacterDamageVanish::Flying()
 
         D3DXMatrixRotationYawPitchRoll(
             &R,
-            m_Rotate.y, m_Rotate.x, m_Rotate.z
+            m_Rotate.y*Speed, m_Rotate.x*Speed, m_Rotate.z*Speed
             );
 
         //吹き飛び中関数呼び出し
-        m_pEvent->Flying(R);
+        m_pEvent->Flying(R, Speed);
     }
 
 
@@ -144,7 +158,7 @@ void CharacterDamageVanish::Flying()
 
     {
         //移動更新
-        chr_func::UpdateAll(m_pCharacter, &DamageManager::HitEventBase());
+        chr_func::UpdateAll(m_pCharacter, &DamageManager::HitEventBase(), Speed);
     }
 }
 

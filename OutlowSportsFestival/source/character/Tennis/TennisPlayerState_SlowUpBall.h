@@ -8,47 +8,36 @@
 #include "../../Damage/Damage.h"
 
 //*****************************************************
-//		投げ上げるボールクラス
+//		投げ上げるボールクラス(ボール扱いではない)
 //*****************************************************
 
-class TennisUpBall :public GameObjectBase, public BallBase
+class TennisUpBall :public GameObjectBase
 {
 public:
 
     //コンストラクタ
     TennisUpBall(
-        BallBase::Params	params			//ボールパラメータ
+        CrVector3  pos
         );
 
     ~TennisUpBall();
 
-
     bool Update();
     bool Msg(MsgType mt);
 
+    Vector3 GetPos()const;
+
+    bool m_DeleteFlag;
+    bool m_DownFlag;
+
 private:
 
-    bool(TennisUpBall::*m_pStateFunc)();
-    LpMeshRenderer		m_pMeshRenderer;
-    DamageCapsure		m_Damage;
-    int                 m_DeleteFrame;
-    Locus               m_Locus;
-    RigidBody*          m_pRigitBody;
-    Vector3             m_RotateSpeed;
+    MeshRenderer*  m_pMeshRenderer;
+    Vector3        m_Pos;
+    Vector3        m_Move;
+    int            m_Timer;
 
-    bool isOutofField()const;  //フィールド外に出ているか
-
-    void UpdateDamageClass();  //ダメージ判定の位置を現在の位置に更新
-    void UpdateLocusColor();   //軌跡の色を現在の親キャラクタの色に設定
-    bool UpdateWallCheck(Vector3& outNewMove);    //壁との判定を取り、接触していたなら移動値を反射してステート移行をする
-    void AddLocusPoint();      //軌跡のポイントを現在のパラメータで一点追加する
-
-    void Counter(CharacterBase* pCounterCharacter)override;
-
-    void ToNoWork();           //攻撃判定のない状態にする
-
-    bool StateFlyMove();
-    bool StatePhysicMove();
+    void MeshUpdate();
 };
 
 

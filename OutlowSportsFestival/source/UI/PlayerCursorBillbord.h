@@ -4,7 +4,7 @@
 #include "../character/CharacterBase.h"
 #include "../GameSystem/GameObject.h"
 
-class PlayerCursorBillbord :public ForwardRenderer, public GameObjectBase
+class PlayerCursorBillbord :public UserInterfaceRenderer, public GameObjectBase
 {
 public:
     PlayerCursorBillbord(

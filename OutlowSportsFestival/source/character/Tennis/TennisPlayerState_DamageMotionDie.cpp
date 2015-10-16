@@ -8,6 +8,9 @@
 
 #include "../../Camera/Camera.h"
 
+#include "../../Effect/GlavityLocus.h"
+
+
 TennisState_DamageMotion_Die::TennisState_DamageMotion_Die(
     TennisPlayer* pTennis,
     const Vector3& Damage_vec  //ダメージを受けた方向
@@ -30,13 +33,12 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
         {
             //吹き飛びモーションをセット
             m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Damage_Vanish_Fly);
-            m_pTennis->m_Params.camera_draw = false;
         }
 
-        void Flying(const Matrix& Rotate)
+        void Flying(const Matrix& Rotate, RATIO t)
         {
             //モデルのアニメーション更新
-            m_pTennis->m_Renderer.Update(1);
+            m_pTennis->m_Renderer.Update(t);
 
             //位置にもとずき、ワールド変換行列を計算
             chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
@@ -105,7 +107,8 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
         m_pTennis,
         Param,
         new TennisEvent(t),
-        new DamageManager::HitEventBase()
+        new DamageManager::HitEventBase(),
+        true
         );
     
     {
@@ -123,13 +126,13 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
             );
     }
 
-    ////ブラーエフェクト
-    //new BlurImpactSphere(
-    //    m_pTennis->m_Params.pos + Vector3(0, BallBase::UsualBallShotY, 0),
-    //    20,
-    //    50,
-    //    15
-    //    );
+    //ブラーエフェクト
+    new BlurImpactSphere(
+        m_pTennis->m_Params.pos + Vector3(0, BallBase::UsualBallShotY, 0),
+        20,
+        50,
+        15
+        );
 
     //カメラショック
     DefCamera.SetShock(

@@ -20,7 +20,7 @@ public:
 
 private:
 
-    class GaugeRenderer :public ForwardRenderer
+    class GaugeRenderer :public UserInterfaceRenderer
     {
     public:
 

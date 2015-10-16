@@ -19,6 +19,7 @@
 
 #include "../Sound/Sound.h"
 
+
 //----------------------------------------------------
 //  試合遷移メッセージを送信するクラス
 //----------------------------------------------------
@@ -229,6 +230,7 @@ MatchState::MatchPlay::GameStopMgr::GameStopMgr()
 {
     m_Ep_frame = 0;
     m_Stop_frame = 0;
+    m_pUpdateChr = nullptr;
 }
 
 //毎フレームの更新
@@ -237,6 +239,12 @@ void MatchState::MatchPlay::GameStopMgr::Update()
     if (m_Ep_frame == 0)
     {
         std::list<LpGameObjectBase> UpdateList;
+
+        if (m_pUpdateChr != nullptr)
+        {
+            UpdateList.push_back(m_pUpdateChr);
+        }
+
         DefGameObjMgr.FreezeOtherObjectUpdate(UpdateList, (UINT)m_Stop_frame);
     }
 
@@ -244,10 +252,11 @@ void MatchState::MatchPlay::GameStopMgr::Update()
 }
 
 //ストップさせる(引数：何フレーム後にストップするか、何フレームストップするか)
-void MatchState::MatchPlay::GameStopMgr::SetStop(UINT ep_frame, UINT stop_frame)
+void MatchState::MatchPlay::GameStopMgr::SetStop(UINT ep_frame, UINT stop_frame, CharacterBase* pUpdateChr)
 {
     m_Ep_frame = (int)ep_frame;
     m_Stop_frame = (int)stop_frame;
+    m_pUpdateChr = pUpdateChr;
 }
 
 
@@ -295,13 +304,17 @@ void MatchState::MatchPlay::Execute(_Client_type_ptr p)
     //ステート変更関数の呼び出し
     SwitchState(liveCount,p);
 
-    //前回のフレームとキャラクタ数が違った場合は時間をとめる
-    if (m_PreLiveCount != liveCount && liveCount > 1)
-    {
-        Sound::Play(Sound::Impact2);
-        m_GameStopMgr.SetStop(3, 60);
-        p->SetLightChange();
-    }
+    ////前回のフレームとキャラクタ数が違った場合は時間をとめる
+    //if (m_PreLiveCount != liveCount && liveCount > 1)
+    //{
+    //    Sound::Play(Sound::Impact2);
+
+    //    {
+    //        //死んだキャラクタ以外の更新をとめる
+    //        m_GameStopMgr.SetStop(4, 30);
+    //    }
+    //    p->SetLightChange();
+    //}
 
     //生存キャラクタカウンタを更新
     m_PreLiveCount = liveCount;
@@ -313,6 +326,39 @@ void MatchState::MatchPlay::Execute(_Client_type_ptr p)
 void MatchState::MatchPlay::Exit(_Client_type_ptr p)
 {
 
+}
+
+CharacterBase* MatchState::MatchPlay::GetNowDieCharacter()
+{
+    //今死んだキャラクタを検索する
+    CharacterBase* pRet = nullptr;
+
+    CharacterManager::CharacterMap NowLiveMap;
+    GetLiveCharacterMap(NowLiveMap);
+
+
+    for (auto& it1 : m_CharacterMap)
+    {
+        //見つけたかどうか
+        bool find_succes = true;
+
+        for (auto& it2 : NowLiveMap)
+        {
+            //両方のデータに生存していたら生きている
+            if (it1.first == it2.first)
+            {
+                find_succes = false;
+                break;
+            }
+        }
+
+        if (find_succes)
+        {
+            pRet = it1.first;
+        }
+    }
+
+    return pRet;
 }
 
 void MatchState::MatchPlay::SwitchState(const UINT liveCount, _Client_type_ptr p)
@@ -425,9 +471,16 @@ void MatchState::WinPose::Execute(_Client_type_ptr p)
         std::list<LpGameObjectBase> UpdateList;
 
         UpdateList.push_back(new GameSetUI());
+   //     UpdateList.push_back(m_pLastDieCharacter);
       
         DefGameObjMgr.FreezeOtherObjectUpdate(UpdateList, 120);
     }
+
+    //if (m_Frame == 7)
+    //{
+    //    std::list<LpGameObjectBase> UpdateList;
+    //    DefGameObjMgr.FreezeOtherObjectUpdate(UpdateList, 100);
+    //}
 
     if (m_Frame == 120)
     {

@@ -32,10 +32,10 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
             m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Damage_Vanish_Fly);
         }
 
-        void Flying(const Matrix& Rotate)
+        void Flying(const Matrix& Rotate, RATIO t)
         {
             //モデルのアニメーション更新
-            m_pTennis->m_Renderer.Update(1);
+            m_pTennis->m_Renderer.Update(t);
 
             //位置にもとずき、ワールド変換行列を計算
             chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
