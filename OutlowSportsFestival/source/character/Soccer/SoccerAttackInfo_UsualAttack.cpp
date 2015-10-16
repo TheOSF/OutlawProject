@@ -110,7 +110,7 @@ bool SoccerAttackInfo_UsualAtk::isDamageEnable(int Frame)
 
 
 //–ˆƒtƒŒ[ƒ€ŒÄ‚Î‚ê‚é
-void SoccerAttackInfo_UsualAtk::Update(int Frame, LocusHDR* pLocus)
+void SoccerAttackInfo_UsualAtk::Update(int Frame, Locus* pLocus)
 {
 	pLocus->AddPoint(m_LocusPos, m_LocusVec);
 

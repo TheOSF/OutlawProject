@@ -244,15 +244,16 @@ bool UsualBall::UpdateWallCheck(Vector3& outNewMove)
 
     Vec.Normalize();
 
-    if (DefCollisionMgr.RayPick(
+    if (DefCollisionMgr.RayPick
+		(
         &Out,
         &Pos,
         &Vec,
         &Dist,
         &Material,
         CollisionManager::RayType::_Usual
-        )
-        )
+		)
+		)
     {
         outNewMove = Vector3Refrect(m_Params.move, Vec);
         outNewMove *= 0.75f;

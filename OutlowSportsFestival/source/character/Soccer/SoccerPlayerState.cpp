@@ -3,6 +3,9 @@
 #include "SoccerHitEvent.h"
 #include "SoccerRolling.h"
 #include "Snakeshot.h"
+#include "../../Effect/EffectFactory.h"
+#include "../Soccer/Computer/SoccerComputerMove.h"
+
 
 #include "../CharacterDefaultCounterClass.h"
 #include "../../GameSystem/GameController.h"
@@ -15,36 +18,33 @@
 class SoccerUtillityClass
 {
 public:
+	//ローリングの方向制御クラス
+	class PlayerRollingControll :public SoccerState_Rolling::CallBackClass
+	{
+	public:
+		SoccerPlayer*const ps;
+
+		PlayerRollingControll(SoccerPlayer* ps) :ps(ps){}
 
 
-    //ローリングの方向制御クラス
-    class PlayerRollingControll :public SoccerState_Rolling::CallBackClass
-    {
-    public:
-        SoccerPlayer*const ps;
+		Vector3 GetVec()override
+		{
+			Vector2 stick = controller::GetStickValue(controller::stick::left, ps->m_PlayerInfo.number);
+			Vector3 vec(stick.x, 0, stick.y);
 
-        PlayerRollingControll(SoccerPlayer* ps) :ps(ps){}
+			if (vec.Length() < 0.25f)
+			{
+				return Vector3Zero;
+			}
 
+			vec = Vector3MulMatrix3x3(vec, matView);
+			vec.Normalize();
 
-        Vector3 GetVec()override
-        {
-            Vector2 stick = controller::GetStickValue(controller::stick::left, ps->m_PlayerInfo.number);
-            Vector3 vec(stick.x, 0, stick.y);
-
-            if (vec.Length() < 0.25f)
-            {
-                return Vector3Zero;
-            }
-
-            vec = Vector3MulMatrix3x3(vec, matView);
-            vec.Normalize();
-
-            return vec;
-        }
-    };
+			return vec;
+		}
+	};
 
 };
-
 SoccerState* SoccerState_PlayerControll_Move::GetPlayerControllMove(
 	SoccerPlayer* ps)
 {
@@ -54,6 +54,9 @@ SoccerState* SoccerState_PlayerControll_Move::GetPlayerControllMove(
 		return new SoccerState_PlayerControll_Move();
 
 	case PlayerType::_Computer:
+
+		return new SoccerState_ComputerControll_Move();
+
 		switch (ps->m_PlayerInfo.strong_type)
 		{
 		case StrongType::_Weak:
@@ -67,7 +70,7 @@ SoccerState* SoccerState_PlayerControll_Move::GetPlayerControllMove(
 	default:break;
 	}
 
-	assert("通常ステートが作成できないキャラクタタイプです TennisState_PlayerControll_Move::GetPlayerControllMove" && 0);
+	assert("通常ステートが作成できないキャラクタタイプです SoccerState_PlayerControll_Move::GetPlayerControllMove" && 0);
 	return nullptr;
 }
 //-------------移動ステートクラス-------------
@@ -99,8 +102,8 @@ void SoccerState_PlayerControll_Move::Enter(SoccerPlayer* s)
 
 	CharacterUsualMove::Params p;
 
-	p.Acceleration = 0.2f;
-	p.MaxSpeed = 0.2f;
+	p.Acceleration = 0.17f;
+	p.MaxSpeed = 0.29f;
 	p.TurnSpeed = 0.3f;
 	p.DownSpeed = 0.2f;
 
@@ -115,6 +118,7 @@ void SoccerState_PlayerControll_Move::Enter(SoccerPlayer* s)
 }
 void SoccerState_PlayerControll_Move::Execute(SoccerPlayer* s)
 {
+	float movelen = s->m_Params.move.Length();
 	Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
 	
 	// [×] で ローリング
@@ -143,7 +147,7 @@ void SoccerState_PlayerControll_Move::Execute(SoccerPlayer* s)
 		s->SetState(new SoccerState_PlayerControll_Counter());
 	}
 	// [L1] で 固有技(ダッシュ)
-	if (controller::GetTRG(controller::button::_L1, s->m_PlayerInfo.number))
+	if (controller::GetPush(controller::button::_L1, s->m_PlayerInfo.number) && movelen>0.18f)
 	{
 		s->SetState(new SoccerState_PlayerControll_Dash());
 	}
@@ -400,8 +404,8 @@ void SoccerState_PlayerControll_Attack::Enter(SoccerPlayer* s)
 
 	SoccerAttackInfo_UsualAtk::Param AtkParam[] =
 	{
-		{ 6, 1.0f, 1.5f, DamageBase::Type::_WeekDamage, 3, 20, 0.07f, 5, 10, SoccerPlayer::_ms_Atk1, 35, 20, 27, 35, 0, 5, D3DXToRadian(5), 21 },
-		{ 2, 1.0f, 1.5f, DamageBase::Type::_WeekDamage, 5, 18, 0.02f, 1, 5, SoccerPlayer::_ms_Atk2, 20, 5, 15, 20, 0, 5, D3DXToRadian(5), 3 },
+		{ 6, 1.0f, 1.5f, DamageBase::Type::_WeekDamage, 3, 20, 0.07f, 5, 10, SoccerPlayer::_ms_Atk1, 50, 20, 27, 35, 0, 5, D3DXToRadian(5), 21 },
+		{ 2, 1.0f, 1.5f, DamageBase::Type::_WeekDamage, 5, 18, 0.02f, 1, 5, SoccerPlayer::_ms_Atk2, 35, 5, 15, 20, 0, 5, D3DXToRadian(5), 3 },
 		{ 8, 1.0f, 1.5f, DamageBase::Type::_VanishDamage, 8, 16, 0.05f, 1, 6, SoccerPlayer::_ms_Atk3, 40, -1, -1, -1, 0, 8, D3DXToRadian(5), 21 },
 	};
 
@@ -462,7 +466,7 @@ void SoccerState_PlayerControll_Shot::Enter(SoccerPlayer* s)
 			param.pParent = m_pSoccer;
 			param.type = BallBase::Type::_Usual;
 			Sound::Play(Sound::Impact2);
-			new UsualBall(param, DamageBase::Type::_WeekDamage, 1);
+			new UsualBall(param, DamageBase::Type::_WeekDamage, 10);
 		}
 	};
 
@@ -525,6 +529,11 @@ void SoccerState_PlayerControll_Shot::Execute(SoccerPlayer* s)
 	{
 		s->SetState(new SoccerState_PlayerControll_Move);
 	}
+	//基本的な更新
+	SoccerHitEvent HitEvent(s);
+	chr_func::UpdateAll(s, &HitEvent);
+	//モデル関連の更新
+	s->m_Renderer.Update(1);
 	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
 }
 void SoccerState_PlayerControll_Shot::Exit(SoccerPlayer* s)
@@ -626,7 +635,7 @@ void SoccerState_PlayerControll_Counter::Exit(SoccerPlayer* s)
 
 void SoccerState_PlayerControll_Dash::Enter(SoccerPlayer* s)
 {
-	class SoccerDashEvent :public SoccerDash::MoveEvent
+	class SoccerDashEvent 
 	{
 		SoccerPlayer* m_pSoccer;
 	public:
@@ -648,21 +657,10 @@ void SoccerState_PlayerControll_Dash::Enter(SoccerPlayer* s)
 			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Stand);
 		}
 	};
-
-	SoccerDash::Params p;
-
-	p.Acceleration = 0.2f;
-	p.MaxSpeed = 0.4f;
-	p.TurnSpeed = 0.07f;
-	p.DownSpeed = 0.2f;
-
 	m_timer = 0;
-
+	Sound::Play(Sound::Soccer_Speed_Up1);
 	m_pMoveClass = new SoccerDash(
-		s,
-		p,
-		new SoccerDashEvent(s),
-		new SoccerHitEvent(s)
+		s
 		);
 }
 void SoccerState_PlayerControll_Dash::Execute(SoccerPlayer* s)
@@ -673,11 +671,12 @@ void SoccerState_PlayerControll_Dash::Execute(SoccerPlayer* s)
 
 
 	Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
+
 	
-	// [L1]離すと戻る
-	if (!controller::GetPush(controller::button::_L1, s->m_PlayerInfo.number))
+	// [L1]離す / カーソル倒さないと戻る
+	if (!controller::GetPush(controller::button::_L1, s->m_PlayerInfo.number) || (st.x==0 &&st.y==0))
 	{
-		s->SetState(new SoccerState_PlayerControll_Move());
+		s->SetState(new SoccerState_brake(s));
 	}
 	else
 	{
@@ -698,10 +697,27 @@ void SoccerState_PlayerControll_Dash::Execute(SoccerPlayer* s)
 	{
 		s->SetState(new SoccerState_PlayerControll_Sliding(s));
 	}
+	// [〇] で 必殺技
+	if (controller::GetTRG(controller::button::maru, s->m_PlayerInfo.number))
+	{
+		s->SetState(new SoccerState_PlayerControll_Finisher);
+	}
+	// [R1] で 必殺技
+	if (controller::GetTRG(controller::button::_R1, s->m_PlayerInfo.number))
+	{
+		s->SetState(new SoccerState_PlayerControll_Counter());
+	}
 
-	if (m_timer % 13==5)
+	if (m_timer % 19==5)
 	{
 		Sound::Play(Sound::Sand1);
+		EffectFactory::Smoke(
+			s->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
+			Vector3Zero,
+			1.8f,
+			0xFFFFA080,
+			true
+			);
 	}
 
 	

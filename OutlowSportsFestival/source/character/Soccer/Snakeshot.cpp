@@ -83,7 +83,7 @@ bool Snakeshot::Update()
 
 	UpdateDamageClass();
 
-	UpdateMesh();
+	
 
 
 	return m_pStatefunc != &Snakeshot::State_Delete;
@@ -148,29 +148,54 @@ void Snakeshot::State_ToTagetMove()
 	}
 
 	Homing(m_pTarget->m_Params.pos);
+	UpdateMesh();
 
 }
-
 void Snakeshot::State_NoWork()
 {
 	//一定時間でState_Deleteに移行
 
 	ToNoWork();
+	//RigidBodyクラスの行列を自身に適用する
+	{
 
+		Matrix M;
+		Vector3 PrePos = m_Params.pos;
 
-	Matrix M;
-	Vector3 PrePos = m_Params.pos;
+		m_pRigitBody->Get_TransMatrix(M);
 
-	m_pRigitBody->Get_TransMatrix(M);
+		M = m_BaseMatrix * M;
 
-	M = m_BaseMatrix * M;
+		m_pMeshRenderer->SetMatrix(M);
 
-	m_pMeshRenderer->SetMatrix(M);
+		m_Params.pos = Vector3(M._41, M._42, M._43);
+		m_Params.move = m_Params.pos - PrePos;
+	}
 
-	m_Params.pos = Vector3(M._41, M._42, M._43);
-	m_Params.move = m_Params.pos - PrePos;
+	
+	//寿命管理
+	{
+		//消滅タイマー
+		m_DeleteFrame--;
 
+		if (m_DeleteFrame == 0)
+		{
+			iexMesh* pMesh;
 
+			UsualBall::GetBallMesh(m_Params.pParent->m_PlayerInfo.chr_type, &pMesh);
+
+			new BallFadeOutRenderer(
+				pMesh,
+				m_BaseMatrix,
+				m_pRigitBody,
+				180
+				);
+
+			m_pRigitBody = nullptr;
+
+			m_pStatefunc = &Snakeshot::State_Delete;
+		}
+	}
 	//軌跡
 	m_Locus.m_StartParam.Color.w *= 0.95f;
 
@@ -178,26 +203,16 @@ void Snakeshot::State_NoWork()
 	{
 		m_Locus.m_Visible = false;
 	}
-
-	//消滅タイマー
-	m_DeleteFrame--;
-
-	if (m_DeleteFrame == 0)
+	if (m_Locus.m_Visible)
 	{
-		iexMesh* pMesh;
+		//軌跡の点を追加
+		{
+			Vector3 v;
+			Vector3Cross(v, m_Params.move, DefCamera.GetForward());
+			v.Normalize();
 
-		UsualBall::GetBallMesh(m_Params.pParent->m_PlayerInfo.chr_type, &pMesh);
-
-		new BallFadeOutRenderer(
-			pMesh,
-			m_BaseMatrix,
-			m_pRigitBody,
-			60
-			);
-
-		m_pRigitBody = nullptr;
-
-		m_pStatefunc = &Snakeshot::State_Delete;
+			m_Locus.AddPoint(m_Params.pos, v);
+		}
 	}
 }
 
@@ -246,7 +261,7 @@ void Snakeshot::UpdateLocusColor()
 		float((Color >> 16) & 0xFF) / 255.f,
 		float((Color >> 8) & 0xFF) / 255.f,
 		float(Color & 0xFF) / 255.f,
-		0.5f
+		0.2f
 		);
 
     m_Locus.m_EndParam.Color = Vector4(1, 1, 1, 0);
@@ -310,6 +325,8 @@ void Snakeshot::ToNoWork()
 	m_Params.type = BallBase::Type::_DontWork;
 	m_Damage.m_Enable = false;
 
+	
+
 	m_BaseMatrix = m_pMeshRenderer->GetMatrix();
 
 	m_BaseMatrix._41 = 0;
@@ -323,7 +340,7 @@ void Snakeshot::ToNoWork()
 		Vector3Zero,
 		0.5f,
 		0.8f,
-		0.25f,
+		0.2f,
 		m_Params.move * 45.0f
 		);
 }
@@ -332,7 +349,7 @@ void Snakeshot::ToNoWork()
 void Snakeshot::Homing(Vector3 TargetPos)
 {
 	//引数の位置に向かって移動する(ホーミング)
-	const RADIAN HomingRad = D3DXToRadian(3);
+	const RADIAN HomingRad = D3DXToRadian(4);
 	RADIAN rotate;
 
 	Vector3 v1, v2;

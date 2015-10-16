@@ -3,7 +3,7 @@
 #include "iextreme.h"
 #include "Damage/Damage.h"
 #include "SoccerPlayer.h"
-#include "../../utillity/LocusHDR.h"
+#include "../../utillity/Locus.h"
 #include <vector>
 
 //****************************************************************
@@ -56,7 +56,7 @@ public:
 		virtual bool isDamageEnable(int Frame) = 0;
 
 		//ñàÉtÉåÅ[ÉÄåƒÇŒÇÍÇÈ
-		virtual void Update(int Frame, LocusHDR* pLocus) = 0;
+		virtual void Update(int Frame, Locus* pLocus) = 0;
 	};
 
 	typedef std::vector<AttackInfo*> AttackInfoArray;
@@ -87,7 +87,7 @@ private:
 	int                   m_ComboCount;
 	int                   NoDamageFrame;
 	bool                  m_DoCombo;
-	LocusHDR              m_Locus;
+	Locus                 m_Locus;
 
 	void(SoccerAttackClass::*m_pStateFunc)();
 

@@ -5,25 +5,22 @@
 #include "Ball/Ball.h"
 #include "Camera/Camera.h"
 #include "SoccerDash.h"
+#include "SoccerPlayerState.h"
+#include "SoccerRolling.h"
+#include "SoccerHitEvent.h"
 //****************************************************************
 //		キャラクタ共通の動きクラス
 //****************************************************************
 
 SoccerDash::SoccerDash(
-	CharacterBase*					pParent,	//操るキャラクタのポインタ
-	const Params&					param,		//移動パラメータ構造体
-	MoveEvent*						pMoveEvent,	//移動イベントに反応するクラス
-	DamageManager::HitEventBase*	pHitEventBase//ダメージを受けた時に反応するクラス
+	SoccerPlayer*					pParent	//操るキャラクタのポインタ
 	) :
 	m_StickValue(0, 0),
 	m_pParent(pParent),
 	m_isRun(false),
-	m_pMoveEvent(pMoveEvent),
-	m_pHitEventBase(pHitEventBase),
 	m_Init(false),
 	m_Locus(20)
 {
-	m_Params = param;
 	m_Locus.m_Division = 1;
 
 	//軌跡の設定
@@ -37,8 +34,6 @@ SoccerDash::SoccerDash(
 
 SoccerDash:: ~SoccerDash()
 {
-	delete m_pMoveEvent;
-	delete m_pHitEventBase;
 }
 
 void SoccerDash::UpdateLocusColor()
@@ -58,74 +53,70 @@ void SoccerDash::UpdateLocusColor()
 
 void SoccerDash::Update()
 {
-	//走っているかどうか
-	bool now = Vector2Length(m_StickValue) > 0.1f;
+	const float Acceleration = 0.4f;
+	const float MaxSpeed = 0.7f;
+	const float TurnSpeed = 0.05f;
 
-	Vector3 v;
-	Vector3Cross(v, m_pParent->m_Params.move, DefCamera.GetForward());
-	v.Normalize();
-
-	Vector3 BasePos = m_pParent->m_Params.pos;
-	BasePos.y += 2.0f;
-
-	m_Locus.AddPoint(BasePos, v);
-
-	//初期化
-	if (m_Init == false)
 	{
-		m_Init = true;
-		m_pMoveEvent->StandStart();
+		Vector3 v;
+		Vector3Cross(v, m_pParent->m_Params.move, DefCamera.GetForward());
+		v.Normalize();
+
+		Vector3 BasePos = m_pParent->m_Params.pos;
+		BasePos.y += 2.0f;
+
+		m_Locus.AddPoint(BasePos, v);
 	}
-	//イベントクラスの更新
-	m_pMoveEvent->Update(now, (m_Params.MaxSpeed > 0.0f) ? (Vector3XZLength(m_pParent->m_Params.move) / m_Params.MaxSpeed) : (0));
 
-	//走っているorいない処理の実行
-	if (now)
 	{
+	    //走っている処理の実行
 		//前に加速し、方向をスティックの向きに
-		chr_func::AddMoveFront(m_pParent, m_Params.Acceleration, m_Params.MaxSpeed);
+		chr_func::AddMoveFront(m_pParent, Acceleration,MaxSpeed);
 
 		chr_func::AngleControll(
 			m_pParent,
 			m_pParent->m_Params.pos + Vector3(m_StickValue.x, 0, m_StickValue.y),//DefCamera.GetRight()*m_StickValue.x + DefCamera.GetForward()*m_StickValue.y,
-			m_Params.TurnSpeed
+			TurnSpeed
 			);
 	}
-	else
+
 	{
-		//減速
-		chr_func::XZMoveDown(m_pParent, m_Params.DownSpeed);
+		SoccerHitEvent HitEvent(m_pParent);
+
+		chr_func::UpdateAll(m_pParent, &HitEvent);
 	}
 
-	//イベントクラスの関数の呼び出し
-	if (now != m_isRun)
-	{
-		m_isRun = now;
-		if (now)
-		{
-			m_pMoveEvent->RunStart();
-		}
-		else
-		{
-			m_pMoveEvent->StandStart();
-		}
-	}
-	chr_func::UpdateAll(m_pParent, m_pHitEventBase);
-	////あたり判定をとる
-	//ShpereParam sp;
-
-	//sp.pos = m_pParent->m_Params.pos;
-	//sp.pos.y += BallBase::UsualBallShotY;
-	//sp.size = m_pParent->m_Params.hitScale;
-
-	//DefDamageMgr.HitCheckSphere(sp, *m_pHitEventBase);
-
-
-	////位置の更新
-	//chr_func::PositionUpdate(m_pParent);
+	m_pParent->m_Renderer.Update(1);
+	chr_func::CreateTransMatrix(m_pParent, m_pParent->m_ModelSize, &m_pParent->m_Renderer.m_TransMatrix);
 }
 
 void SoccerDash::SetStickValue(CrVector2 StickValue)
 {
 	m_StickValue = StickValue;
+}
+void SoccerDash::DoSliding()
+{
+	m_pParent->SetState(new SoccerState_PlayerControll_Sliding(m_pParent));
+	return;
+}
+void SoccerDash::DoShot()
+{
+	
+	
+}
+void SoccerDash::DoAvoid()
+{
+	
+}
+void SoccerDash::DoCounter()
+{
+	
+}
+void SoccerDash::DoFinisher()
+{
+	
+}
+void SoccerDash::DoStop()
+{
+	
 }

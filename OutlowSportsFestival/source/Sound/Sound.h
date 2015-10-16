@@ -48,6 +48,10 @@ namespace Sound
 
 		Change,//　野球切り替え時
 
+		Soccer_Brake,//サッカーのブレーキ
+		Soccer_Speed_Up1,//サッカーのダッシュ
+		Soccer_Speed_Up2,//サッカーのダッシュ案２
+
         // BGM 
         BGM_Battle,
         BGM_LastRound,

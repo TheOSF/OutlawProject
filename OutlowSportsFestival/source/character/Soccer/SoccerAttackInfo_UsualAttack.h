@@ -79,5 +79,5 @@ private:
 	bool isDamageEnable(int Frame);
 
 	//–ˆƒtƒŒ[ƒ€ŒÄ‚Î‚ê‚é
-	void Update(int Frame, LocusHDR* pLocus);
+	void Update(int Frame, Locus* pLocus);
 };

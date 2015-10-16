@@ -125,6 +125,7 @@
     <ClCompile Include="IEX\IEX_System.cpp" />
     <ClCompile Include="IEX\IEX_Texture.cpp" />
     <ClCompile Include="IEX\IEX_View.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerShot.cpp" />
     <ClCompile Include="source\Ball\Ball.cpp" />
     <ClCompile Include="source\Ball\BallFadeOutRenderer.cpp" />
     <ClCompile Include="source\Ball\Baseball_SpAtk_Ball.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="source\character\CharacterRenderer.cpp" />
     <ClCompile Include="source\character\CharacterSliding.cpp" />
     <ClCompile Include="source\character\CharacterDefaultCounterClass.cpp" />
+    <ClCompile Include="source\character\Computer\CharacterComputerMove.cpp" />
     <ClCompile Include="source\character\Lacrosse\LacrosseAttackClose.cpp" />
     <ClCompile Include="source\character\Lacrosse\LacrosseCounterClass.cpp" />
     <ClCompile Include="source\character\Lacrosse\LacrosseCounterPoseClass.cpp" />
@@ -176,6 +178,7 @@
     <ClCompile Include="source\character\CharacterShotAttackClass.cpp" />
     <ClCompile Include="source\character\Lacrosse\LacrossePlayer.cpp" />
     <ClCompile Include="source\character\Lacrosse\LacrossePlayerState.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputer_move.cpp" />
     <ClCompile Include="source\character\Soccer\Snakeshot.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerAttack.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerAttackInfo_UsualAttack.cpp" />
@@ -278,6 +281,7 @@
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
     <ClInclude Include="IEX\iextreme.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerShot.h" />
     <ClInclude Include="source\Ball\Ball.h" />
     <ClInclude Include="source\Ball\BallFadeOutRenderer.h" />
     <ClInclude Include="source\Ball\Baseball_SpAtk_Ball.h" />
@@ -323,6 +327,7 @@
     <ClInclude Include="source\character\CharacterSliding.h" />
     <ClInclude Include="source\character\CharacterStateTemplate.h" />
     <ClInclude Include="source\character\CharacterDefaultCounterClass.h" />
+    <ClInclude Include="source\character\Computer\CharacterComputerMove.h" />
     <ClInclude Include="source\character\Lacrosse\LacrosseAttackClose.h" />
     <ClInclude Include="source\character\Lacrosse\LacrosseCounterClass.h" />
     <ClInclude Include="source\character\Lacrosse\LacrosseCounterPoseClass.h" />
@@ -330,6 +335,7 @@
     <ClInclude Include="source\character\CharacterShotAttackClass.h" />
     <ClInclude Include="source\character\Lacrosse\LacrossePlayer.h" />
     <ClInclude Include="source\character\Lacrosse\LacrossePlayerState.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerMove.h" />
     <ClInclude Include="source\character\Soccer\Snakeshot.h" />
     <ClInclude Include="source\character\Soccer\SoccerAttackClass.h" />
     <ClInclude Include="source\character\Soccer\SoccerAttackInfo_UsualAttack.h" />
