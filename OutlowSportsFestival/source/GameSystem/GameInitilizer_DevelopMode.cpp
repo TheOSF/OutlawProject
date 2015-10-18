@@ -279,12 +279,12 @@ void GameInitializer_DevelopMode::GameCreate()
             //    Vector3(0, 0, 0)
             //    );
 
-            for (int i = 0; i < 2; ++i)
+            for (int i = 0; i < 5; ++i)
             {
 
                 StageObjFactory::CreateBench(
                     Vector3((frand() - 0.5f) * 60, 2.0f, (frand() - 0.5f) * 60),
-                    Vector3(0, PI / 2, 0)
+                    Vector3(frand()*PI, frand()*PI, frand()*PI)
                     );
 
             }
@@ -307,17 +307,6 @@ void GameInitializer_DevelopMode::GameCreate()
                     );
             }
         }
-
-
-        ////ステージの煙の演出
-        //new StageSmokeEmitter(
-        //    Vector3(-50,0,-50),
-        //    Vector3(50, 5, 50),
-        //    0x80FFA080,
-        //    120,
-        //    50
-        //    );
-
 
         //土台のステージを物理エンジンに登録
         DefBulletSystem.AddRigidMesh(
@@ -373,6 +362,7 @@ void GameInitializer_DevelopMode::GameCreate()
             DirLight* D = new DirLight;
 
             D->param.color = Vector3(0.3f, 0.2f, 0.2f);
+         //   D->param.color = Vector3(0.2f, 0.2f, 0.2f);
             D->param.vec = Vector3Normalize(Vector3(0.8f, -1, 0.2f));
             D->param.Shadow.visible = true;
             D->param.Shadow.Near = 5;
@@ -382,7 +372,7 @@ void GameInitializer_DevelopMode::GameCreate()
 
             pDirLightColor = &D->param.color;
 
-            new DebugControllGameObject(&D->param.color, 0, 0.01f, "DirColor", 'D');
+        //    new DebugControllGameObject(&D->param.color, 0, 0.01f, "DirColor", 'D');
             new StaticGameObjectTemplate<DirLight>(D);
         }
 
@@ -394,7 +384,7 @@ void GameInitializer_DevelopMode::GameCreate()
             A->param.Occlusion.SamplingSize = 0.025f;
             A->param.Occlusion.Enable = false;
 
-            new DebugControllGameObject(&A->param.color, 0, 0.01f, "AmbColor", 'A');
+       //     new DebugControllGameObject(&A->param.color, 0, 0.01f, "AmbColor", 'A');
             new StaticGameObjectTemplate<AmbientLight>(A);
         }
     }
@@ -405,6 +395,7 @@ void GameInitializer_DevelopMode::GameCreate()
 
         param.round = 3;
         param.time = 60 * 60 * 3; //３分
+       // param.time = 60 * 3;
 
         new GameEventer(param, new MatchState::RoundResetCountdown(), pDirLightColor);
     }
@@ -413,10 +404,10 @@ void GameInitializer_DevelopMode::GameCreate()
     //キャラクタ作成
     {
         CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Tennis);
 
-        CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Tennis);
+        //CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Tennis);
+        //CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Tennis);
 
     }
 }

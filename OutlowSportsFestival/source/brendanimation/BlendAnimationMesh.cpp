@@ -222,14 +222,14 @@ void BlendAnimationMesh::Render(iexShader* shader, char* name)
 	iexMesh::Render(shader, name);
 }
 
-void BlendAnimationMesh::Render(iexShader* shader, std::map<int, char*> tec)
+void BlendAnimationMesh::Render(iexShader* shader, const std::map<int, const char*>& tec)
 {
  
     shader->SetValue("g_W_mat", TransMatrix);
 
     for (auto& it : tec)
     {
-       // MyAssert(it.first < (int)MaterialCount,"存在しないマテリアル番号の描画が実行されました");
+        MyAssert(it.first < (int)MaterialCount,"存在しないマテリアル番号の描画が実行されました");
         if (it.first >= (int)MaterialCount)
         {
             continue;

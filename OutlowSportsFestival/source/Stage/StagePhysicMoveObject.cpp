@@ -32,18 +32,12 @@ bool StagePhysicMoveObject::Update()
     public:
         Vector3 vec;
         bool isHit;
-        DamageBase*    MyDmg;
 
         HitCheckObj() :
             isHit(false){}
 
         bool Hit(DamageBase* pDmg)
         {
-            if (MyDmg == pDmg)
-            {
-                return false;
-            }
-
             vec = pDmg->vec;
             isHit = true;
 

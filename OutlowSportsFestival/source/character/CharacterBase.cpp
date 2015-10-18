@@ -35,6 +35,7 @@ m_StateType(State::Freeze)
 
 	//マネージャに登録
 	DefCharacterMgr.Add(this);
+  
 }
 
 CharacterBase::~CharacterBase()

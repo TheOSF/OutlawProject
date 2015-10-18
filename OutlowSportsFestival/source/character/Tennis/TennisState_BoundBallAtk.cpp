@@ -330,6 +330,12 @@ void TennisBoundBall::StateMove()
         }
     }
 
+    //寿命管理(ステージ外につけぬけた場合の応急処置
+    if (++m_Timer > 300)
+    {
+        SetState(&TennisBoundBall::StateFinish);
+    }
+
     //軌跡の点を追加
     AddLocusPoint();
 }

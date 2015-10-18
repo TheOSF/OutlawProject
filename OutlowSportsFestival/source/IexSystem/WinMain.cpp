@@ -30,7 +30,7 @@ BOOL	InitApp( HWND hWnd )
 	//	システムの初期化
 	SYSTEM_Initialize();
 	//	メインフレームワーク生成
-	MainFrame = new Framework();
+    MainFrame = new Framework(FPS_60);
 	//	初期シーン登録
 	MainFrame->ChangeScene(new sceneGamePlay());
 

@@ -3,6 +3,7 @@
 
 #include "../Render/Renderer.h"
 #include "../brendanimation/BlendAnimationMesh.h"
+#include "../utillity/ColorUtility.h"
 #include <vector>
 
 //*************************************************
@@ -12,6 +13,15 @@
 class CharacterRenderer :public DeferredRenderer
 {
 public:
+    enum class RenderType
+    {
+        Skin,
+        Hair,
+        Clothes,
+        Face,
+        Normal,
+    };
+
 	//通常コンストラクタ
 	CharacterRenderer(
 		BlendAnimationMesh* pAnimeMesh
@@ -25,6 +35,11 @@ public:
 		);
 
 	~CharacterRenderer();
+
+
+    //マテリアルがどの部位かを指定する(描画切り替えのため)
+    void SetMaterialRenderType(int MaterialNum, RenderType Type);
+
 
 	//通常のモーションセット
 	void SetMotion(int m);
@@ -52,11 +67,21 @@ public:
 	//ワールド変換行列
 	Matrix  m_TransMatrix;
 
-    //故意に輝かせる際のパラメータ(xyz = rgb)
+    //体全体の輝き度(０が標準、xyz = rgb)
     Vector3 m_HDR;
+
+    //服の色（xyz = rgb)
+    Vector3 m_ClothesColor;
+
+    //輪郭線を描画するかどうか
+    bool    m_OutlineVisible;
+
+    //輪郭線の色(１以上の値は光る、２が最大値)
+    COLORf m_OutlineColor;
 
 private:
 	typedef std::vector<int> BoneNumArray;
+    typedef std::map<int, const char*> Techniques;
 
 	BlendAnimationMesh* m_pAnimeMesh;
 	const bool m_UsePartsMotion;
@@ -69,6 +94,8 @@ private:
 
 	float m_BodyUpMotionSpeed;
 	float m_BodyDownMotionSpeed;
+
+    Techniques m_Techniques;
 
 	void Initialize();
 

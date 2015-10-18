@@ -16,7 +16,28 @@ m_DontBoundBallAtkTimer(0)
 {
 	m_pStateMachine = new TennisStateMachine(this);
 
-    m_Params.maxHP = m_Params.HP = 1;
+    m_Params.maxHP = m_Params.HP = 100;
+
+
+    //•`‰æŽw’è
+    CharacterRenderer::RenderType Types[10]=
+    {
+        CharacterRenderer::RenderType::Skin,
+        CharacterRenderer::RenderType::Clothes,
+        CharacterRenderer::RenderType::Clothes,
+        CharacterRenderer::RenderType::Face,
+        CharacterRenderer::RenderType::Hair,
+        CharacterRenderer::RenderType::Skin,
+        CharacterRenderer::RenderType::Hair,
+        CharacterRenderer::RenderType::Hair,
+        CharacterRenderer::RenderType::Normal,
+        CharacterRenderer::RenderType::Normal
+    };
+
+    for (int i = 0; i < ARRAYSIZE(Types); ++i)
+    {
+        m_Renderer.SetMaterialRenderType(i, Types[i]);
+    }
 }
 
 TennisPlayer::~TennisPlayer()

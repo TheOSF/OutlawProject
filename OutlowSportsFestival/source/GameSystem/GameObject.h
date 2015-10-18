@@ -21,6 +21,7 @@ public:
 		_RoundReset,	//ラウンド終了時に送られるメッセージ
         _GameSet,       //ゲームセット時に送られるメッセージ
         _WinPose,       //勝利ポーズ実行時に呼ばれるメッセージ
+        _LosePose,      //敗北ポーズ実行時に呼ばれるメッセージ
 	};
 
 	GameObjectBase();

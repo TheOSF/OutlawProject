@@ -19,7 +19,7 @@ m_pSource(nullptr)
 
     for (UINT i = 0; i < m_TextureNum; ++i)
     {
-        division = (DWORD)pow(2, (int)i + 0);
+        division = (DWORD)pow(2, (int)i);
 
         m_pWorkTextureSizes[i].x = iexSystem::ScreenWidth / division;
         m_pWorkTextureSizes[i].y = iexSystem::ScreenHeight / division;
@@ -97,14 +97,14 @@ void SmalBufBlurRenderer::Render()
     iexSystem::Device->SetDepthStencilSurface(pSaveDepthStencil);
     pSaveDepthStencil->Release();
 
-    float alpha = 8.5f;
+    float alpha = 0.85f;
 
     //ブラーテクスチャを出力
     for (UINT i = 0; i < m_TextureNum; ++i)
     {
         m_pShader->SetValue("g_Alpha", alpha);
 
-        alpha *= 0.9f;
+        alpha *= 0.85f;
 
         m_pWorkTextures[i]->Render(
             0, 0, iexSystem::ScreenWidth, iexSystem::ScreenHeight,

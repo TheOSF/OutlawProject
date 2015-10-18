@@ -18,9 +18,6 @@ public:
 private:
 
 	TennisPlayer* m_pTennis;
-
-    //ダメージ計算
-    void CalcDamage(DamageBase* pDmg);
 };
 
 #endif

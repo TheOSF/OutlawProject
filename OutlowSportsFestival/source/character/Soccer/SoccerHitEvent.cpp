@@ -18,9 +18,8 @@ bool SoccerHitEvent::Hit(DamageBase* pDmg)
 		return false;
 	}
 
-	//ダメージ計算
-	CalcDamage(pDmg);
-
+    //ダメージ計算
+    chr_func::CalcDamage(m_pSoccer, pDmg->Value);
 
 	//もし体力がなかったら、どんな攻撃であろうと死亡ステートへ
 	if (chr_func::isDie(m_pSoccer))
@@ -54,10 +53,4 @@ bool SoccerHitEvent::Hit(DamageBase* pDmg)
 	}
 
 	return false;
-}
-//ダメージ計算
-void SoccerHitEvent::CalcDamage(DamageBase* pDmg)
-{
-	m_pSoccer->m_Params.HP -= pDmg->Value;
-	m_pSoccer->m_Params.HP = max(m_pSoccer->m_Params.HP, -1);
 }

@@ -70,11 +70,25 @@ void Camera::SetShock(Vector2 power, float frame)
 
 
 //ワールド座標をプロジェクション空間座標に変換する
-bool Camera::WorldToProjection(Vector3* pOut, CrVector3 In)
+bool Camera::WorldToProjection(Vector3* pOut, CrVector3 v)
 {
-	*pOut = Vector3MulMatrixDivW(In, m_VP);
+    const Matrix& m = m_VP;
+    Vector3 p(
+        v.x*m._11 + v.y*m._21 + v.z*m._31 + m._41,
+        v.x*m._12 + v.y*m._22 + v.z*m._32 + m._42,
+        v.x*m._13 + v.y*m._23 + v.z*m._33 + m._43
+        );
+    const float w = v.x*m._14 + v.y*m._24 + v.z*m._34 + m._44;
+    
+    p.x /= w;
+    p.y /= w;
 
-	return true;
+    *pOut = p;
+
+    return
+        p.z > 0 &&
+        p.x < 1 && p.x > -1 &&
+        p.y < 1 && p.y > -1;
 }
 
 //プロジェクション空間座標をワールド座標に変換する

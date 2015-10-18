@@ -368,14 +368,6 @@ inline Vector3 Vector3MulMatrix(const Vector& v, const Matrix& m)
 		);
 }
 
-inline Vector3 Vector3MulMatrixDivW(const Vector& v, const Matrix& m)
-{
-    return Vector3(
-        v.x*m._11 + v.y*m._21 + v.z*m._31 + m._41,
-        v.x*m._12 + v.y*m._22 + v.z*m._32 + m._42,
-        v.x*m._13 + v.y*m._23 + v.z*m._33 + m._43
-        ) / (v.x*m._14 + v.y*m._24 + v.z*m._34 + m._44);
-}
 
 inline Vector3 Vector3MulMatrix3x3(const Vector& v, const Matrix& m)
 {
@@ -970,7 +962,7 @@ public:
 	//------------------------------------------------------
 	//	利用開始・終了
 	//------------------------------------------------------
-	inline UINT Begine( char* name )
+	inline UINT Begine( const char* name )
 	{
 		UINT pass;
 		//	シェーダーの適用
@@ -1106,6 +1098,7 @@ public:
 	//	情報
 	LPD3DXMESH	GetMesh(){ return lpMesh; }
 	Texture2D*	GetTexture( int n ){ return lpTexture[n]; }
+    inline int  GetNumMaterial()const{ return MaterialCount; }
 };
 
 typedef iexMesh IEXMESH, *LPIEXMESH;

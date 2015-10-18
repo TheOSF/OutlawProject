@@ -5,6 +5,8 @@
 #include "../Effect/ParticleRenderer.h"
 #include "../Effect/ParticleMoveObject.h"
 #include "../GameSystem/ResourceManager.h"
+#include "../Sound/Sound.h"
+#include "../Effect/EffectFactory.h"
 
 
 //基本的な更新(座標更新、壁との判定など)をすべて行う
@@ -435,24 +437,17 @@ void chr_func::AddSkillGauge(CharacterBase* p, RATIO value)
         isCanSpecialAttack(p->m_Params.SP))
     {
         //エフェクト
-        ParticleRenderer* r = new ParticleRenderer();
-
-        r->m_Param.color = COLORf(1, 1, 1, 1);
-        r->m_Param.dw_Flag = RS_ADD;
-        r->m_Param.pos = p->m_Params.pos + Vector3(0, 3, 0);
-        r->m_Param.size = Vector2(10, 10);
-        r->m_pTexture = DefResource.Get(Resource::TextureType::Anime_Circle);
-        
-
-        ParticleMoveObject* m = new ParticleMoveObject(
-            r,
+        EffectFactory::CircleAnimation(
+            p->m_Params.pos + Vector3(0, 3, 0),
             Vector3Zero,
             Vector3Zero,
-            60,
-            true,
-            8,4
+            Vector2(10, 10),
+            0xFFFFFFFF,
+            RS_ADD
             );
 
+        //効果音
+      //  Sound::Play(Sound::Scene_Enter);
     }
 }
 
@@ -472,6 +467,18 @@ bool chr_func::isCanSpecialAttack(CharacterBase* p)
     return p->m_Params.SP >= 0.5f;
 }
 
+//キャラクタの体力をダメージによって減少させる
+void chr_func::CalcDamage(CharacterBase* p, float value)
+{
+    //戦闘中以外なら計算しない
+    if (p->GetStateType() != CharacterBase::State::Usual)
+    {
+        return;
+    }
+
+    p->m_Params.HP -= value;
+    p->m_Params.HP = max(p->m_Params.HP, 0);
+}
 
 //引数のスキル値が必殺技を発動できるかどうか
 bool chr_func::isCanSpecialAttack(RATIO value)

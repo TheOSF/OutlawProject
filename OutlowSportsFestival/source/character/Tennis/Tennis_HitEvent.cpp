@@ -23,7 +23,7 @@ bool TennisHitEvent::Hit(DamageBase* pDmg)
 	}
 
     //ダメージ計算
-    CalcDamage(pDmg);
+    chr_func::CalcDamage(m_pTennis, pDmg->Value);
 
 
     //もし体力がなかったら、どんな攻撃であろうと死亡ステートへ
@@ -58,12 +58,4 @@ bool TennisHitEvent::Hit(DamageBase* pDmg)
 	}
 
 	return false;
-}
-
-
-//ダメージ計算
-void TennisHitEvent::CalcDamage(DamageBase* pDmg)
-{
-    m_pTennis->m_Params.HP -= pDmg->Value;
-    m_pTennis->m_Params.HP = max(m_pTennis->m_Params.HP, -1);
 }

@@ -35,6 +35,28 @@ CharacterRenderer::~CharacterRenderer()
 	delete m_pAnimeMesh;
 }
 
+//マテリアルがどの部位かを指定する(描画切り替えのため)
+void CharacterRenderer::SetMaterialRenderType(int MaterialNum, RenderType Type)
+{
+    static const char* Techniques[]=
+    {
+        "CharacterSkin",
+        "DeffLightNoSp",
+        "DeffLightNoSp",
+        "CharacterSkin",
+        "DeffLightNoSp",
+    };
+
+    //if (Type != RenderType::Skin && Type != RenderType::Face)
+    //{
+    //    return;
+    //}
+
+    MyAssert(MaterialNum >= 0 && MaterialNum < m_pAnimeMesh->GetNumMaterial(), "描画方法の指定で存在しないマテリアル番号が指定されました Material=%d", MaterialNum);
+
+    m_Techniques.insert(Techniques::value_type(MaterialNum, Techniques[(int)Type]));
+}
+
 //通常のモーションセット
 void CharacterRenderer::SetMotion(int m)
 {
@@ -156,30 +178,9 @@ void CharacterRenderer::GbufRender(
 
 void CharacterRenderer::MasterRender()
 {
-    typedef std::map<int, char*> Techniques;
-    Techniques tecs;
-
-    char FaceTechnique[] = { "DeffLightNoSp" };
-    char HairTechnique[] = { "DeffLightNoSp" };
-    char BodyTechnique[] = { "DeffLightNoSp" };
-
-
-  //  m_HDR = Vector3(0.08f, 0.05f, 0.00f);
-
-    tecs.insert(Techniques::value_type(0, FaceTechnique));
-    tecs.insert(Techniques::value_type(1, FaceTechnique));
-    tecs.insert(Techniques::value_type(2, FaceTechnique));
-    tecs.insert(Techniques::value_type(3, FaceTechnique));
-    tecs.insert(Techniques::value_type(4, FaceTechnique));
-    tecs.insert(Techniques::value_type(5, FaceTechnique));
-    tecs.insert(Techniques::value_type(6, HairTechnique));
-    tecs.insert(Techniques::value_type(7, HairTechnique));
-    tecs.insert(Techniques::value_type(8, HairTechnique));
-    tecs.insert(Techniques::value_type(9, HairTechnique));
-
     shader->SetValue("g_HDR_Color", m_HDR);
 
-    m_pAnimeMesh->Render(shader, tecs);
+    m_pAnimeMesh->Render(shader, m_Techniques);
 }
 
 void CharacterRenderer::DepthRender(iexShader* pShader, const char* pTec, DepthRenderType type)
@@ -195,4 +196,10 @@ void CharacterRenderer::Initialize()
 	m_BodyUpMotionSpeed = m_BodyDownMotionSpeed = 1;
 	m_BodyUpMotion = m_BodyDownMotion = 0;
 	D3DXMatrixIdentity(&m_TransMatrix);
+
+    //デフォルトの描画テクニックを設定
+    for (int i = m_pAnimeMesh->GetNumMaterial() - 1; i >= 0; --i)
+    {
+   //     SetMaterialRenderType(i, RenderType::Skin);
+    }
 }

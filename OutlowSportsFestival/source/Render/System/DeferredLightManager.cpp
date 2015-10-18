@@ -51,7 +51,7 @@ DeferredLightManager::DeferredLightManager(
     //HDR•`‰æŠÇ—ƒNƒ‰ƒX¶¬
     sprintf_s<MAX_PATH>(work_path, "%s%s", pData_FilePath, "\\Blur.fx");
     m_pSmalBufBlurRenderer = new SmalBufBlurRenderer(
-        8,
+        6,
         work_path
         );
 

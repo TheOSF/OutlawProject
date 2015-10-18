@@ -17,8 +17,6 @@ public:
 
 private:
 	BaseballPlayer* m_pBaseball;
-	//ダメージ計算
-	void CalcDamage(DamageBase* pDmg);
 };
 
 #endif

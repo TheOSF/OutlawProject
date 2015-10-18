@@ -85,7 +85,7 @@ public:
 	void Render();
 	void Render(DWORD flag, float alpha = -1);
 	void Render(iexShader* shader, char* name);
-    void Render(iexShader* shader, std::map<int, char*> tec);
+    void Render(iexShader* shader, const std::map<int, const char*>& tec);
 
 	inline int GetParam(int n){ return Param[n]; }
 	inline void SetParam(int n, int p){ Param[n] = p; }

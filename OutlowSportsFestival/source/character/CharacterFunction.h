@@ -91,6 +91,9 @@ namespace chr_func
 
     //引数のキャラクタが必殺技を発動できるかどうか
     bool isCanSpecialAttack(CharacterBase* p);
+
+    //キャラクタの体力をダメージによって減少させる
+    void CalcDamage(CharacterBase* p, float value);
 }
 
 #endif

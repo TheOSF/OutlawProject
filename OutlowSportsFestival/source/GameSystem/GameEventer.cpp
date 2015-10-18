@@ -388,13 +388,23 @@ void MatchState::MatchPlay::SwitchState(const UINT liveCount, _Client_type_ptr p
         //一人がちステートをセット
         p->SetState(new WinPose(LastDieCharacter, WinCharacter));
 
+        //プレイ終了メッセージを送信
+        DefGameObjMgr.SendMsg(GameObjectBase::MsgType::_GameSet);
+
         return;
     }
     else if (liveCount == 0)
     {
         //引き分けの場合
+        p->SetState(new Draw);
 
-        int a = 0;
+        //カメラを止める
+        DefCamera.SetNewState(new CameraState);
+
+        //プレイ終了メッセージを送信
+        DefGameObjMgr.SendMsg(GameObjectBase::MsgType::_GameSet);
+
+        return;
     }
     else if (++m_Frame > p->m_Param.time)
     {
@@ -416,11 +426,13 @@ void MatchState::MatchPlay::SwitchState(const UINT liveCount, _Client_type_ptr p
             }
         }
 
-
         MyAssert(WinCharacter != nullptr, "タイムアップ時にキャラクタがいませんでした(ありえない!)");
 
         //タイムアップ勝ちステートをセット
-        //   p->SetState(new WinPose(LastDieCharacter, WinCharacter));
+        p->SetState(new TimeUp(WinCharacter));
+
+        //プレイ終了メッセージを送信
+        DefGameObjMgr.SendMsg(GameObjectBase::MsgType::_GameSet);
 
         return;
     }
@@ -450,9 +462,6 @@ MatchState::WinPose::~WinPose()
 
 void MatchState::WinPose::Enter(_Client_type_ptr p)
 {
-    //プレイ終了メッセージを送信
-    DefGameObjMgr.SendMsg(GameObjectBase::MsgType::_GameSet);
-
     DefCamera.SetNewState(new CameraStateCharacterZoom(m_pLastDieCharacter, 0.05f));
 }
 
@@ -476,11 +485,6 @@ void MatchState::WinPose::Execute(_Client_type_ptr p)
         DefGameObjMgr.FreezeOtherObjectUpdate(UpdateList, 120);
     }
 
-    //if (m_Frame == 7)
-    //{
-    //    std::list<LpGameObjectBase> UpdateList;
-    //    DefGameObjMgr.FreezeOtherObjectUpdate(UpdateList, 100);
-    //}
 
     if (m_Frame == 120)
     {
@@ -502,6 +506,107 @@ void MatchState::WinPose::Exit(_Client_type_ptr p)
 
 }
 
+//--------------------------------------------------
+//              タイムアップステート
+//--------------------------------------------------
+
+MatchState::TimeUp::TimeUp(LpCharacterBase pWinCharacter) :
+m_pWinCharacter(pWinCharacter),
+m_Frame(0)
+{
+
+}
+
+void MatchState::TimeUp::Enter(_Client_type_ptr p)
+{
+
+}
+
+void MatchState::TimeUp::Execute(_Client_type_ptr p)
+{
+    ++m_Frame;
+
+    if (m_Frame == 1)
+    {
+        //ゴング音再生
+        Sound::Play(Sound::Gong_End);
+
+        //ＴｉｍｅＵｐ　ＵＩを表示
+        new GameSetUI();
+    }
+
+
+    if (m_Frame == 120)
+    {
+        //勝利ポーズメッセージを送信
+        m_pWinCharacter->Msg(GameObjectBase::MsgType::_WinPose);
+
+        CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
+
+        for (auto& it : ChrMap)
+        {
+            if (it.first != m_pWinCharacter)
+            {
+                it.first->Msg(GameObjectBase::MsgType::_LosePose);
+            }
+        }
+
+        Sound::Play(Sound::Kira_n);
+        DefCamera.SetNewState(new CameraStateCharacterZoom(m_pWinCharacter, 0.05f));
+    }
+
+    if (m_Frame == 280)
+    {
+        p->SetState(new ResetRound());
+    }
+}
+
+void MatchState::TimeUp::Exit(_Client_type_ptr p)
+{
+
+}
+
+
+
+//--------------------------------------------------
+//              引き分けステート
+//--------------------------------------------------
+
+void MatchState::Draw::Enter(_Client_type_ptr p)
+{
+    m_Frame = 0;
+}
+
+void MatchState::Draw::Execute(_Client_type_ptr p)
+{
+    ++m_Frame;
+
+    if (m_Frame == 1)
+    {
+        //ゴング音再生
+        Sound::Play(Sound::Gong_End);
+
+        //ＴｉｍｅＵｐ　ＵＩを表示
+        new GameSetUI();
+    }
+
+
+    if (m_Frame == 120)
+    {
+        //ＤｒａｗＧａｍｅ　ＵＩを表示
+        new GameSetUI();
+    }
+
+    if (m_Frame == 280)
+    {
+        p->SetState(new ResetRound());
+    }
+}
+
+void MatchState::Draw::Exit(_Client_type_ptr p)
+{
+
+}
 
 //--------------------------------------------------
 //            ラウンドリセットステート
@@ -514,7 +619,7 @@ void MatchState::ResetRound::Enter(_Client_type_ptr p)
     //ブラックアウトさせる
     new FadeGameObject(
         COLORf(1, 0, 0, 0),
-        40,
+        20,
         5,
         30
         );
@@ -522,7 +627,7 @@ void MatchState::ResetRound::Enter(_Client_type_ptr p)
 
 void MatchState::ResetRound::Execute(_Client_type_ptr p)
 {
-    if (++m_Frame == 41)
+    if (++m_Frame == 21)
     {
         //リセットメッセージを送信
         DefGameObjMgr.SendMsg(GameObjectBase::MsgType::_RoundReset);

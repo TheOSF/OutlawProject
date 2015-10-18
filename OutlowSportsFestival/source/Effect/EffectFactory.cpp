@@ -56,6 +56,35 @@ void EffectFactory::Counter(CrVector3 pos, float size)
 
 }
 
+//円が大きくなるアニメーション
+void EffectFactory::CircleAnimation(
+    CrVector3   pos,
+    CrVector3   move,
+    CrVector3   power,
+    CrVector2   size,
+    DWORD       color,
+    DWORD       dw_flag
+    )
+{
+    //エフェクト
+    ParticleRenderer* r = new ParticleRenderer();
+
+    r->m_Param.color = COLORf(color);
+    r->m_Param.dw_Flag = dw_flag;
+    r->m_Param.pos = pos;
+    r->m_Param.size = size;
+    r->m_pTexture = DefResource.Get(Resource::TextureType::Anime_Circle);
+
+    ParticleMoveObject* m = new ParticleMoveObject(
+        r,
+        move,
+        power,
+        16,
+        true,
+        4, 4
+        );
+}
+
 
 //パーティクル
 void EffectFactory::Particle(

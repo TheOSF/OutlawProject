@@ -27,7 +27,7 @@ public:
 
 private:
 
-    class Renderer :public ForwardRenderer
+    class Renderer :public UserInterfaceRenderer
     {
     public:
         COLORf m_Color;

@@ -135,5 +135,5 @@ void TennisAttackInfo_UsualAtk::Update(int Frame, LocusHDR* pLocus)
 //UŒ‚‚ª‚ ‚½‚Á‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
 void TennisAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
 {
-
+    chr_func::AddSkillGauge(m_pOwner, pDmg->Value*10.0f);
 }

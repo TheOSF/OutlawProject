@@ -17,8 +17,6 @@ public:
 private:
 	SoccerPlayer* m_pSoccer;
 
-	//ダメージ計算
-	void CalcDamage(DamageBase* pDmg);
 };
 
 #endif

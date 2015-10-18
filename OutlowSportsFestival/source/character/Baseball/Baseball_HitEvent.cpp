@@ -21,9 +21,8 @@ bool BaseballHitEvent::Hit(DamageBase* pDmg)
 		return false;
 	}
 
-	//ダメージ計算
-	CalcDamage(pDmg);
-
+    //ダメージ計算
+    chr_func::CalcDamage(m_pBaseball, pDmg->Value);
 
 	//もし体力がなかったら、どんな攻撃であろうと死亡ステートへ
 	if (chr_func::isDie(m_pBaseball))
@@ -56,9 +55,3 @@ bool BaseballHitEvent::Hit(DamageBase* pDmg)
 	return false;
 }
 
-//ダメージ計算
-void BaseballHitEvent::CalcDamage(DamageBase* pDmg)
-{
-	m_pBaseball->m_Params.HP -= pDmg->Value;
-	m_pBaseball->m_Params.HP = max(m_pBaseball->m_Params.HP, 0);
-}

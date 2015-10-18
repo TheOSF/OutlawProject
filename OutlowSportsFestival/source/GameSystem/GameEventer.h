@@ -146,6 +146,34 @@ namespace MatchState
         void Exit(_Client_type_ptr);
     };
 
+    //タイムアップステート
+    class TimeUp :public GameEventer::State
+    {
+    public:
+        TimeUp(LpCharacterBase pWinCharacter);
+
+    private:
+        UINT             m_Frame;
+        LpCharacterBase  m_pWinCharacter;
+
+        void Enter(_Client_type_ptr);
+        void Execute(_Client_type_ptr);
+        void Exit(_Client_type_ptr);
+    };
+
+
+    //引き分けステート
+    class Draw :public GameEventer::State
+    {
+    private:
+        UINT             m_Frame;
+        LpCharacterBase  m_pWinCharacter;
+
+        void Enter(_Client_type_ptr);
+        void Execute(_Client_type_ptr);
+        void Exit(_Client_type_ptr);
+    };
+
     //ラウンドリセットステート
     class ResetRound :public GameEventer::State
     {

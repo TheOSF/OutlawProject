@@ -7,10 +7,27 @@
 namespace EffectFactory
 {
     //煙アニメーションエフェクト
-    void Smoke(CrVector3 pos, CrVector3 move, float size, DWORD Color,bool Soft = false);
+    void Smoke(
+        CrVector3 pos,
+        CrVector3 move,
+        float size,
+        DWORD Color,
+        bool Soft = false);
 
     //カウンターのアニメーション
-    void Counter(CrVector3 pos, float size);
+    void Counter(
+        CrVector3 pos,
+        float size);
+
+    //円が大きくなるアニメーション
+    void CircleAnimation(
+        CrVector3   pos,
+        CrVector3   move,
+        CrVector3   power,
+        CrVector2   size,
+        DWORD       color,
+        DWORD       dw_flag
+        );
 
     //パーティクル
 	void Particle(
