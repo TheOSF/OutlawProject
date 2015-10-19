@@ -13,20 +13,27 @@ TennisAttackClass::TennisAttackClass(
     m_Timer(0),
     m_ComboCount(-1),
     m_pStateFunc(&TennisAttackClass::State_NextAtk),
-    m_Locus(7),
+    m_Locus(8),
     m_DamageHitCount(0),
     m_HitStopCount(0)
 {
     m_Damage.m_Enable = false;
 
-    m_Locus.m_Division = 10;
-    m_Locus.m_pTexture = DefResource.Get(Resource::TextureType::Locus1);
+    m_Locus.m_Division = 5;
+    //m_Locus.m_pTexture = DefResource.Get(Resource::TextureType::Locus1);
 
-    m_Locus.m_StartParam.Color    = Vector4(1, 1, 1, 1);
-    m_Locus.m_StartParam.HDRColor = Vector4(0, 0, 0, 0);
+    Vector4 EffectColor = CharacterBase::GetPlayerColorF(m_pOwner->m_PlayerInfo.number).toVector4();
+    EffectColor.w = 0.5f;
 
-    m_Locus.m_EndParam.Color      = Vector4(1, 1, 1, 0);
-    m_Locus.m_EndParam.HDRColor   = Vector4(0, 0, 0, 0);
+    m_Locus.m_StartParam.Color = EffectColor;
+    m_Locus.m_StartParam.HDRColor = EffectColor;
+    m_Locus.m_StartParam.Width = 1.2f;
+
+    EffectColor.w = 0;
+
+    m_Locus.m_EndParam.Color = EffectColor;
+    m_Locus.m_EndParam.HDRColor = EffectColor;
+    m_Locus.m_EndParam.Width = 0.1f;
 }
 
 TennisAttackClass::~TennisAttackClass()
@@ -42,6 +49,7 @@ TennisAttackClass::~TennisAttackClass()
 void TennisAttackClass::Update()
 {
     m_pOwner->m_Renderer.Update(1);
+    chr_func::CreateTransMatrix(m_pOwner, m_pOwner->m_ModelSize, &m_pOwner->m_Renderer.m_TransMatrix);
 
     (this->*m_pStateFunc)();
 
@@ -53,7 +61,6 @@ void TennisAttackClass::Update()
         chr_func::UpdateAll(m_pOwner, &HitEvent);
     }
 
-    chr_func::CreateTransMatrix(m_pOwner, m_pOwner->m_ModelSize, &m_pOwner->m_Renderer.m_TransMatrix);
 }
 
 bool TennisAttackClass::isEnd()const

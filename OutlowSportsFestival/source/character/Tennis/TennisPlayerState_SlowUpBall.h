@@ -6,6 +6,7 @@
 #include "../../Library/Bullet/BulletSystem.h"
 #include "../../GameSystem/GameObject.h"
 #include "../../Damage/Damage.h"
+#include "TennisPlayer.h"
 
 //*****************************************************
 //		投げ上げるボールクラス(ボール扱いではない)
@@ -17,7 +18,8 @@ public:
 
     //コンストラクタ
     TennisUpBall(
-        CrVector3  pos
+        CrVector3     pos,
+        TennisPlayer* pTennis
         );
 
     ~TennisUpBall();
@@ -27,17 +29,27 @@ public:
 
     Vector3 GetPos()const;
 
-    bool m_DeleteFlag;
-    bool m_DownFlag;
+    void Destory();    //このボールを消去
+    void DoRealTime(); //スローを無効にする
 
 private:
+    void(TennisUpBall::*m_pStateFunc)();
+    TennisPlayer*           m_pTennis;
+    MeshRenderer*           m_pMeshRenderer;
+    RigidBody*              m_pRigidBody;
+    Vector3                 m_Pos;
+    float                   m_MoveY;
+    int                     m_Timer;
+    bool                    m_SlowFlag;
+    
+    void UsualMeshUpdate();
 
-    MeshRenderer*  m_pMeshRenderer;
-    Vector3        m_Pos;
-    Vector3        m_Move;
-    int            m_Timer;
+    bool isHitFloor()const;
 
-    void MeshUpdate();
+    void State_SlowFly();
+    void State_PhysicMove();
+    void State_CreateFadeOut();
+    void State_Destroy();
 };
 
 

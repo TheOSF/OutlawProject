@@ -27,7 +27,7 @@ void CameraStateGamePlay::Enter(Camera* c)
 void CameraStateGamePlay::Execute(Camera* c)
 {
 
-	const Vector3 first_pos(0, 40, -55);	//適当
+    const Vector3 first_pos(0, 40, -55);	//適当
 	const CharacterManager::CharacterMap& chr_map = DefCharacterMgr.GetCharacterMap();
 
 	//キャラクタがいない場合移動できない

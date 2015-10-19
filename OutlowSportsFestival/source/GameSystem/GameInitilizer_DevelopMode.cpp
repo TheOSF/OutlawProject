@@ -394,7 +394,7 @@ void GameInitializer_DevelopMode::GameCreate()
         GameEventer::Param param;
 
         param.round = 3;
-        param.time = 60 * 60 * 3; //‚R•ª
+        param.time = 60 * 60 * 1; // 1 •ª
        // param.time = 60 * 3;
 
         new GameEventer(param, new MatchState::RoundResetCountdown(), pDirLightColor);
@@ -406,8 +406,7 @@ void GameInitializer_DevelopMode::GameCreate()
         CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
         CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Tennis);
 
-        //CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Tennis);
-        //CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Tennis);
-
+        CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)3, PlayerType::_Player, CharacterType::_Tennis);
     }
 }
