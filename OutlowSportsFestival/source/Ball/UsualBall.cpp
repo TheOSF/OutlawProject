@@ -17,7 +17,7 @@ UsualBall::UsualBall(
     UINT                hit_num         //ヒット数
     ) :
     m_DeleteFrame(180),
-    m_Locus(20),
+    m_Locus(15),
     m_pRigitBody(nullptr),
     m_HitNum(hit_num),
     m_HitCountSave(0),
@@ -223,16 +223,16 @@ void UsualBall::UpdateDamageClass()
 
 void UsualBall::UpdateLocusColor()
 {
-    const DWORD Color = CharacterBase::GetPlayerColor(m_Params.pParent->m_PlayerInfo.number);
+    const COLORf Color = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number);
 
-    m_Locus.m_StartParam.Color = Vector4(
-        float((Color >> 16) & 0xFF)  / 255.f,
-        float((Color >> 8)  & 0xFF)  / 255.f,
-        float( Color        & 0xFF)  / 255.f, 
-        0.5f
-        );
+    m_Locus.m_StartParam.Color = Color.toVector4();
+    m_Locus.m_StartParam.HDRColor = m_Locus.m_StartParam.Color;
+   
+    m_Locus.m_EndParam.Color = m_Locus.m_StartParam.Color;
+    m_Locus.m_EndParam.Color.w = 0;
 
-    m_Locus.m_EndParam.Color = Vector4(1, 1, 1, 0);
+    m_Locus.m_EndParam.HDRColor = m_Locus.m_StartParam.HDRColor;
+    m_Locus.m_EndParam.HDRColor.w = 0;
 }
 
 
@@ -474,13 +474,14 @@ bool UsualBall::StatePhysicMove()
         }
     }
 
-    //軌跡の太さを徐々に減らしていく
+    //軌跡の不透明度を徐々に減らしていく
     {
         //軌跡
         m_Locus.m_StartParam.Color.w *= 0.95f;
+        m_Locus.m_StartParam.HDRColor.w *= 0.95f;
 
         //太さが一定以下なら描画しない
-        if (m_Locus.m_StartParam.Color.w < 0.1f)
+        if (m_Locus.m_StartParam.Color.w < 0.01f)
         {
             m_Locus.m_Visible = false;
         }

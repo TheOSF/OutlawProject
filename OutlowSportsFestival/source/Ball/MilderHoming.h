@@ -12,6 +12,7 @@
 #include "../Library/Bullet/BulletSystem.h"
 
 #include "../character/Baseball/BaseballPlayer.h"
+#include "../utillity/Locus.h"
 
 //*****************************************************
 //		’Ç”ö‹ÊƒNƒ‰ƒX

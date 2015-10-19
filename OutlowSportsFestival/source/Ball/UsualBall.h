@@ -6,7 +6,7 @@
 #include "../GameSystem/ForwardDecl.h"
 #include "../GameSystem/GameSystem.h"
 #include "../Damage/Damage.h"
-#include "../utillity/Locus.h"
+#include "../utillity/LocusHDR.h"
 #include "../Render/LightObject.h"
 #include "../Library/Bullet/BulletSystem.h"
 
@@ -64,7 +64,7 @@ private:
 	LpMeshRenderer		m_pMeshRenderer;
 	DamageCapsure		m_Damage;
     int                 m_DeleteFrame;
-    Locus               m_Locus;
+    LocusHDR            m_Locus;
     Matrix              m_BaseMatrix;
     RigidBody*          m_pRigitBody;
     const UINT          m_HitNum;

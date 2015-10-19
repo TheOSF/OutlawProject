@@ -58,7 +58,7 @@ public:
 	void	SetColor(RATIO a, RATIO r, RATIO g, RATIO b);
 	void	ClampValue();
 	DWORD	toDWORD();
-    Vector4 toVector4();//　注意　rgbaの順番
+    Vector4 toVector4()const;//　注意　rgbaの順番
 };
 
 COLOR	ColorLerp(COLOR col1, COLOR col2, float v);

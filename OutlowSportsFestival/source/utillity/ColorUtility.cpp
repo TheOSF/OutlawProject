@@ -99,7 +99,7 @@ DWORD	COLORf::toDWORD()
 	return D3DCOLOR_COLORVALUE(r, g, b, a);
 }
 
-Vector4 COLORf::toVector4()
+Vector4 COLORf::toVector4()const
 {
     return Vector4(r, g, b, a);
 }

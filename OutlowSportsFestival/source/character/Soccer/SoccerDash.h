@@ -4,12 +4,13 @@
 #include "iextreme.h"
 #include "SoccerPlayer.h"
 #include "../../Damage/Damage.h"
+#include "../../utillity/Locus.h"
 
 
 //****************************************************************
 //		サッカーのダッシュクラス
 //****************************************************************
-//スライディングクラス
+
 class SoccerDash
 {
 public:

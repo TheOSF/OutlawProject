@@ -119,7 +119,7 @@ void TennisState_PlayerControll_Attack::Enter(TennisPlayer* t)
 
     TennisAttackInfo_UsualAtk::Param AtkParam[] = 
     {
-        { 6, 1.0f, 1.5f, DamageBase::Type::_WeekDamage,   15, 22, 0.07f , 5,10, TennisPlayer::_mt_Attack1, 35, 20, 27, 35, 0, 15, D3DXToRadian(8), 8 },
+        { 6, 1.0f, 1.5f, DamageBase::Type::_WeekDamage,   15, 22, 0.05f , 7,10, TennisPlayer::_mt_Attack1, 35, 20, 27, 35, 0, 15, D3DXToRadian(8), 8 },
       //  { 2, 1.0f, 1.5f, DamageBase::Type::_WeekDamage,   5,   8, 0.02f, 1, 5, TennisPlayer::_mt_Attack2, 20,  5, 15, 20, 0, 5,  D3DXToRadian(8), 8 }, 
         { 8, 1.0f, 1.5f, DamageBase::Type::_VanishDamage, 8,  16, 0.05f, 1, 6, TennisPlayer::_mt_Attack3, 40, -1, -1, -1, 0, 8,  D3DXToRadian(8), 8 }, 
     };

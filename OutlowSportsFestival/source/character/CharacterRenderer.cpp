@@ -38,7 +38,7 @@ CharacterRenderer::~CharacterRenderer()
 //マテリアルがどの部位かを指定する(描画切り替えのため)
 void CharacterRenderer::SetMaterialRenderType(int MaterialNum, RenderType Type)
 {
-    static const char* Techniques[]=
+    static const char* Techniques[] =
     {
         "CharacterSkin",
         "DeffLightNoSp",
@@ -47,14 +47,16 @@ void CharacterRenderer::SetMaterialRenderType(int MaterialNum, RenderType Type)
         "DeffLightNoSp",
     };
 
-    //if (Type != RenderType::Skin && Type != RenderType::Face)
-    //{
-    //    return;
-    //}
-
     MyAssert(MaterialNum >= 0 && MaterialNum < m_pAnimeMesh->GetNumMaterial(), "描画方法の指定で存在しないマテリアル番号が指定されました Material=%d", MaterialNum);
 
-    m_Techniques.insert(Techniques::value_type(MaterialNum, Techniques[(int)Type]));
+    if (m_Techniques.count(MaterialNum) > 0)
+    {
+        m_Techniques[MaterialNum] = Techniques[(int)Type];
+    }
+    else
+    {
+        m_Techniques.insert(Techniques::value_type(MaterialNum, Techniques[(int)Type]));
+    }
 }
 
 //通常のモーションセット
@@ -200,6 +202,6 @@ void CharacterRenderer::Initialize()
     //デフォルトの描画テクニックを設定
     for (int i = m_pAnimeMesh->GetNumMaterial() - 1; i >= 0; --i)
     {
-   //     SetMaterialRenderType(i, RenderType::Skin);
+        SetMaterialRenderType(i, RenderType::Normal);
     }
 }
