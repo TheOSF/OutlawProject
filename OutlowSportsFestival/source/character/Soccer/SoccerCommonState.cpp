@@ -178,7 +178,7 @@ void SoccerState_DamageVanish::Enter(SoccerPlayer* s)
 	CharacterDamageVanish::Param Param;
 
 	Param.rotate_speed = Vector3(0.0f, 0.0f, 0.0);
-	Param.move = m_Damage_vec * 0.95f;
+	Param.move = m_Damage_vec;
 	Param.down_frame = 15;
 	Param.down_muteki_frame = 15;
 	Param.move.y = 0.2f;

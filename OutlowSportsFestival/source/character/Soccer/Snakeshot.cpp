@@ -237,8 +237,9 @@ void Snakeshot::UpdateMesh()
 	//メッシュのワールド変換行列を更新する
 
 	Matrix m;
+	float Ballsize = UsualBall::GetBallScale(m_Params.pParent->m_PlayerInfo.chr_type);
 
-	D3DXMatrixScaling(&m, 0.005f, 0.005f, 0.005f);	//大きさはボールによって変える必要がある
+	D3DXMatrixScaling(&m, Ballsize, Ballsize, Ballsize);	//大きさはボールによって変える必要がある
 
 	m._41 = m_Params.pos.x;
 	m._42 = m_Params.pos.y;
