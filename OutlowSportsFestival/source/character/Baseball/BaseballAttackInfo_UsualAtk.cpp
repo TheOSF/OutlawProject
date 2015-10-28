@@ -24,13 +24,12 @@ void BaseballAttackInfo_UsualAtk::DamageParamSet(DamageShpere* pDmg)
 	pDmg->pParent = m_pOwner;
 	pDmg->type = m_Param.DamageType;
 	pDmg->Value = m_Param.DamageValue;
-
 	DamagePosSet(pDmg, m_pOwner);
 }
 
 
 //ダメージ位置をセット
-void BaseballAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, BaseballPlayer* pTennis)
+void BaseballAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, BaseballPlayer* pBaseball)
 {
 	Matrix  BoneMat;
 	Vector3 Forward;
@@ -46,7 +45,7 @@ void BaseballAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, BaseballPlaye
 	pDmg->m_Param.pos = Pos + Forward*m_Param.DamagePosLength;
 
 	// pDmg->vec = pDmg->m_Param.pos - pTennis->m_Params.pos;
-	chr_func::GetFront(pTennis, &pDmg->vec);
+	chr_func::GetFront(pBaseball, &pDmg->vec);
 	pDmg->vec.y = 0;
 
 	m_LocusPos = pDmg->m_Param.pos;

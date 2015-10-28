@@ -20,6 +20,7 @@
 
 #include	"../character/Baseball/BaseballPlayer.h"
 #include	"../character/Baseball/BaseballPlayerState.h"
+#include	"../character/Baseball/Computer/BaseballPlayerState_ComMove.h"
 
 #include    "../character/Amefoot/AmefootPlayer.h"
 #include    "../character/Amefoot/AmefootPlayerState.h"
@@ -77,7 +78,7 @@ static void CreateCharacter(
     info.chr_type = chr;
     info.number = n;
     info.player_type = pl;
-    info.strong_type = (pl == PlayerType::_Player) ? (StrongType::__ErrorType) : (StrongType::__ErrorType);
+    info.strong_type = (pl == PlayerType::_Player) ? (StrongType::__ErrorType) : (StrongType::_Strong);
 
     switch (chr)
     {
@@ -88,8 +89,16 @@ static void CreateCharacter(
 
     case CharacterType::_Baseball:
         pChr = new BaseballPlayer(info);
-        ((BaseballPlayer*)pChr)->SetState(new BaseballState_PlayerControll_Move());
-        break;
+		if (info.player_type == PlayerType::_Player)
+		{
+			((BaseballPlayer*)pChr)->SetState(new BaseballState_PlayerControll_Move());
+			break;
+		}
+		else
+		{
+			((BaseballPlayer*)pChr)->SetState(new BaseballPlayerState_ComMove());
+			break;
+		}
 
     case CharacterType::_Soccer:
         pChr = new SoccerPlayer(info);
@@ -418,11 +427,11 @@ void GameInitializer_DevelopMode::GameCreate()
 
     //ÉLÉÉÉâÉNÉ^çÏê¨
     {
-        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Soccer);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Baseball);
+		CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Baseball);
+		CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Tennis);
 
         CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Tennis);
+		CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Soccer);
 
     }
 }

@@ -26,7 +26,8 @@ namespace baseball_player{
 		_mb_CounterPose=17,
 		_mb_CounterRight=3,
 		_mb_CounterLeft=3,
-		_mb_LosePose,
+		_mb_LosePose=12,
+		_mb_WinPose=11,
 		_mb_Evasion = 5,  // ‰ñ”ğ
 		_mb_Damage_Weak,
 		_mb_Damage_Vanish_Fly,
@@ -34,8 +35,9 @@ namespace baseball_player{
 		_mb_Damage_Vanish_StandUp,
 		_mb_Atk1=15,//@‹ß‹——£UŒ‚
 		_mb_Atk2=2,
-		_mb_Atk3=16
-
+		_mb_Atk3=16,
+		_mb_SpAtk1=13,
+		_mb_SpAtk2 = 14
 
 	};
 

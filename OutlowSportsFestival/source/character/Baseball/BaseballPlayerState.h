@@ -28,6 +28,7 @@ public:
 	//　ステート終了
 	void Exit(BaseballPlayer* b)override;
 public:
+	static bool SwitchGameState(BaseballPlayer* pb);
 
 	static BaseballState* GetPlayerControllMove(BaseballPlayer* pt);
 
@@ -38,6 +39,7 @@ public:
 	//　セッター
 	void SetBatterFlg(BaseballPlayer* b){ batterflg = b->getBatterFlg(); }
 };
+
 
 
 #endif

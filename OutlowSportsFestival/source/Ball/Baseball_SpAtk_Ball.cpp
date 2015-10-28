@@ -1,5 +1,6 @@
 #include "Baseball_SpAtk_Ball.h"
 #include "../character/CharacterBase.h"
+#include "../character/CharacterFunction.h"
 #include "../Render/MeshRenderer.h"
 #include "../Camera/Camera.h"
 #include "../GameSystem/ResourceManager.h"
@@ -7,6 +8,8 @@
 #include "../Collision/Collision.h"
 #include "BallFadeOutRenderer.h"
 #include "../Effect/EffectFactory.h"
+#include "../Effect/ThunderEffect.h"
+
 
 
 Baseball_SpAtk_Ball::Baseball_SpAtk_Ball(
@@ -15,6 +18,7 @@ Baseball_SpAtk_Ball::Baseball_SpAtk_Ball(
 	float				damage_val,		//ダメージ量
 	UINT                hit_num         //ヒット数
 	) :
+
 	m_DeleteFrame(180),
 	m_pRigitBody(nullptr),
 	m_HitNum(hit_num),
@@ -163,6 +167,9 @@ bool Baseball_SpAtk_Ball::isOutofField()const
 void Baseball_SpAtk_Ball::UpdateDamageClass()
 {
 	m_Damage.vec = m_Params.move;
+	m_Damage.vec.Normalize();
+	m_Damage.vec *= 0.5f;
+	m_Damage.vec.y = 0.3f;
 
 	m_Damage.m_Param.pos2 = m_Damage.m_Param.pos1;
 	m_Damage.m_Param.pos1 = m_Params.pos;
@@ -249,10 +256,19 @@ bool Baseball_SpAtk_Ball::StateFlyMove()
 		}
 	}
 
-	//　炎エフェクト
+
+
+	//　雷エフェクト
 	for (int i = 0; i < 5; i++)
 	{
-		EffectFactory::ParticleHDR(7, 30, m_Params.pos - m_Params.move*0.2f*(float)i + Vector3Rand()*0.5f, Vector3(0, 0.15f, 0), Vector2(2, 2), 0x40ff8000);
+		new ThunderEffect
+			(m_Params.pos-m_Params.move*0.2f*(float)i, 
+			m_Params.pos + Vector3Rand() * 5,
+			2.5f,
+			0.1f,
+			50,
+			Vector4(0, 0, 1, 0),
+			15);
 	}
 
 	//ダメージ関連の更新
@@ -263,17 +279,6 @@ bool Baseball_SpAtk_Ball::StateFlyMove()
 			m_HitCountSave = m_Damage.HitCount;
 			m_HitStopFrame = 5; //適当です
 		}
-
-		//ヒット最大値ならダメージ判定のない状態へ移行する
-		//if (m_Damage.HitCount >= (int)m_HitNum)
-		//{
-		//	m_Params.move *= 0.8f;
-		//	m_Params.move.y += 0.2f;
-
-		//	//攻撃判定のない状態にする
-		//	ToNoWork();
-
-		//}
 
 		//ダメージ判定の位置を現在の位置に更新
 		UpdateDamageClass();

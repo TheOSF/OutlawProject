@@ -33,6 +33,7 @@ namespace Sound
 
         Tennis_BallAtk,  //テニスボール打ち音
         BaseBall_kaki_n, //野球(カキーン)
+		BaseBall_SP,     //野球(必殺)
         Golf_Swing,      //旧ゴルフ遠距離攻撃
 
         Cursor_move,  //カーソル移動時

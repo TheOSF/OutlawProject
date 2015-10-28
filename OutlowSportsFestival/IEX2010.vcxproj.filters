@@ -202,6 +202,14 @@
     <ClCompile Include="source\character\Tennis\TennisPlayerState_PoseMotion.cpp" />
     <ClCompile Include="source\Effect\ThunderEffect.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_SlowUpBall.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerShot.cpp" />
+    <ClCompile Include="source\Ball\Baseball_SpAtk_Ball.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballState_Change.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballState_SPAttack_B.cpp" />
+    <ClCompile Include="source\character\Computer\CharacterComputerMove.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputer_move.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballState_PoseMotion.cpp" />
+    <ClCompile Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -363,6 +371,14 @@
     <ClInclude Include="source\character\Tennis\TennisPlayerState_PoseMotion.h" />
     <ClInclude Include="source\Effect\ThunderEffect.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_SlowUpBall.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerShot.h" />
+    <ClInclude Include="source\Ball\Baseball_SpAtk_Ball.h" />
+    <ClInclude Include="source\character\Baseball\BaseballState_Change.h" />
+    <ClInclude Include="source\character\Baseball\BaseballState_SPAttack_B.h" />
+    <ClInclude Include="source\character\Computer\CharacterComputerMove.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerMove.h" />
+    <ClInclude Include="source\character\Baseball\BaseballState_PoseMotion.h" />
+    <ClInclude Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">
