@@ -8,9 +8,12 @@
 #include "BaseballPlayerState_Counter.h"
 #include "BaseballState_SPAttack_B.h"
 #include "BaseballState_SPAttack_P.h"
+#include "BaseballState_PoseMotion.h"
 #include "BaseballState_Change.h"
-
 #include "Baseball_HitEvent.h"
+
+#include "Computer/BaseballPlayerState_ComMove.h"
+
 #include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
 #include "../CharacterManager.h"
@@ -134,7 +137,7 @@ BaseballState* BaseballState_PlayerControll_Move::GetPlayerControllMove(Baseball
 		return new BaseballState_PlayerControll_Move();
 
 	case PlayerType::_Computer:
-		return new BaseballState_PlayerControll_Move();
+		
 		switch (pt->m_PlayerInfo.strong_type)
 		{
 		case StrongType::_Weak:
@@ -142,7 +145,7 @@ BaseballState* BaseballState_PlayerControll_Move::GetPlayerControllMove(Baseball
 		case StrongType::_Usual:
 			//return new 弱い通常移動
 		case StrongType::_Strong:
-			//return new 弱い通常移動
+			return new BaseballPlayerState_ComMove();
 		default:break;
 		}
 	default:break;
@@ -152,7 +155,36 @@ BaseballState* BaseballState_PlayerControll_Move::GetPlayerControllMove(Baseball
 	return nullptr;
 }
 
+bool BaseballState_PlayerControll_Move::SwitchGameState(BaseballPlayer* pb)
+{
+	Vector3 v;
 
+	switch (pb->GetStateType())
+	{
+	case CharacterBase::State::Usual:
+
+		return false;
+
+	case CharacterBase::State::Freeze:
+
+		return true;
+
+	case CharacterBase::State::LosePose:
+		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_LosePose, 0.2f, 1000));
+		return true;
+
+	case CharacterBase::State::WinPose:
+		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_WinPose, 0.2f, 1000));
+
+		return true;
+	default:
+		break;
+	}
+
+	return false;
+
+
+}
 //　ステート開始
 void BaseballState_PlayerControll_Move::Enter(BaseballPlayer* b)
 {
@@ -230,26 +262,33 @@ void BaseballState_PlayerControll_Move::Enter(BaseballPlayer* b)
 
 
 //　ステート実行
-void BaseballState_PlayerControll_Move::Execute(BaseballPlayer* b){
+void BaseballState_PlayerControll_Move::Execute(BaseballPlayer* b)
+{
+	if (SwitchGameState(b) == false)
+	{
+		//　スティックの値を取得
+		Vector2 st = controller::GetStickValue(controller::stick::left, b->m_PlayerInfo.number);
 
-	//　スティックの値を取得
-	Vector2 st = controller::GetStickValue(controller::stick::left, b->m_PlayerInfo.number);
-	
-	//　切り替え
+		//　切り替え
 
-	SetBatterFlg(b);
-	//　実行パターン
-	if (batterflg){
-		//　バッター時
-		Batter(b);
+		SetBatterFlg(b);
+		//　実行パターン
+		if (batterflg){
+			//　バッター時
+			Batter(b);
+		}
+		else{
+			//　投手時
+			Pitcher(b);
+		}
+		//　スティックの値セット
+		m_pMoveClass->SetStickValue(st);
 	}
-	else{
-		//　投手時
-		Pitcher(b);
+	else
+	{
+		//スティックの値セット
+		m_pMoveClass->SetStickValue(Vector2(0, 0));
 	}
-	//　スティックの値セット
-	m_pMoveClass->SetStickValue(st);
-
 
 	//　更新
 	m_pMoveClass->Update();

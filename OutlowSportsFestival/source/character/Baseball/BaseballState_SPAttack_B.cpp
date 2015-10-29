@@ -3,106 +3,30 @@
 #include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
 #include "../CharacterManager.h"
-#include "BaseballAttackInfo_SpAtk.h"
 
+#include "../../Effect/GlavityLocus.h"
+#include "../../Effect/BlurImpact.h"
+#include "../../Effect/ThunderEffect.h"
+#include "../../Camera/Camera.h"
+#include "../../Sound/Sound.h"
 
-//------------プレイヤー操作の攻撃操作クラス--------------
-
-BaseballState_SPAttack_B::PlayerControllEvent::PlayerControllEvent(BaseballPlayer*const pBaseball) :
-m_pBaseball(pBaseball)
-{
-
-}
-
-bool BaseballState_SPAttack_B::PlayerControllEvent::isDoCombo()
-{
-	return controller::GetTRG(controller::button::shikaku, m_pBaseball->m_PlayerInfo.number);
-}
-
-void  BaseballState_SPAttack_B::PlayerControllEvent::AngleControll(RADIAN angle)
-{
-	const CharacterBase* const pTargetCharacter = GetFrontTargetEnemy();
-
-	if (pTargetCharacter != nullptr)
-	{
-		//自動回転
-		chr_func::AngleControll(m_pBaseball, pTargetCharacter->m_Params.pos, angle);
-	}
-	else
-	{
-		const Vector2 Stick = controller::GetStickValue(controller::stick::left, m_pBaseball->m_PlayerInfo.number);
-
-		//スティックが一定以上倒されているかどうか
-		if (Vector2Length(Stick) > 0.25f)
-		{
-			Vector3 Vec(Stick.x, 0, Stick.y);
-
-			//スティック値をカメラ空間に
-			Vec = Vector3MulMatrix3x3(Vec, matView);
-
-			//キャラクタ回転
-			chr_func::AngleControll(m_pBaseball, m_pBaseball->m_Params.pos + Vec, angle);
-		}
-	}
-}
-
-const CharacterBase*  BaseballState_SPAttack_B::PlayerControllEvent::GetFrontTargetEnemy()
-{
-	CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
-
-	const float  AutoDistance = 10.0f;               //自動ができる最大距離
-	const RADIAN AutoMaxAngle = D3DXToRadian(90);   //自動ができる最大角度
-
-	const CharacterBase* pTargetEnemy = nullptr;    //ターゲット保持のポインタ
-	RADIAN MostMinAngle = PI;                       //もっとも狭い角度
-	RADIAN TempAngle;
-
-	Vector3 MyFront;      //自身の前方ベクトル
-	chr_func::GetFront(m_pBaseball, &MyFront);
-
-	auto it = ChrMap.begin();
-
-	while (it != ChrMap.end())
-	{
-		//自身を除外
-		if (m_pBaseball->m_PlayerInfo.number == it->first->m_PlayerInfo.number ||
-			chr_func::isDie(it->first)
-			)
-		{
-			++it;
-			continue;
-		}
-
-		//距離が一定以上のキャラクタを除外する
-		if (Vector3Distance(it->first->m_Params.pos, m_pBaseball->m_Params.pos) > AutoDistance)
-		{
-			it = ChrMap.erase(it);
-			continue;
-		}
-
-		//前ベクトルと敵へのベクトルの角度を計算する
-		TempAngle = Vector3Radian(MyFront, (it->first->m_Params.pos - m_pBaseball->m_Params.pos));
-
-		//角度が一番狭かったら更新
-		if (TempAngle < MostMinAngle)
-		{
-			pTargetEnemy = it->first;
-			MostMinAngle = TempAngle;
-		}
-
-		++it;
-	}
-
-	return pTargetEnemy;
-
-}
 
 //-------------近距離攻撃ステートクラス-------------
 
-BaseballState_SPAttack_B::BaseballState_SPAttack_B(BaseballPlayer* b) :
-m_Attack(b, new PlayerControllEvent(b))
+BaseballState_SPAttack_B::BaseballState_SPAttack_B(BaseballPlayer* b) :timeflg(false)
 {
 
+	m_Damage.m_Enable = false;
+	m_Damage.HitCount = 0;
+	m_Damage.m_Param.pos = Vector3Zero;
+	m_Damage.m_Param.size = 3.0f;
+	m_Damage.pBall = nullptr;
+	m_Damage.pParent = b;
+	m_Damage.type = DamageBase::Type::_WeekDamage;
+	m_Damage.Value = 0.0f;
+	m_Damage.vec = Vector3AxisZ;
+
+	m_Light.Visible = false;
 }
 
 
@@ -114,34 +38,31 @@ BaseballState_SPAttack_B::~BaseballState_SPAttack_B()
 // ステート開始
 void  BaseballState_SPAttack_B::Enter(BaseballPlayer* b)
 {
-	//攻撃クラス作成
-	BaseballAttackInfo_SpAtk* pAtk;
 
-	BaseballAttackInfo_SpAtk::Param AtkParam[] =
-	{
+	m_Timer = 0;
 
-		{ 4, 1.2f, 1.5f, DamageBase::Type::_WeekDamage, 2, 5, 0.07f, 5, 10, baseball_player::_mb_Atk1, 30, 0, 15, D3DXToRadian(8), 8 },
-		{ 6, 1.2f, 1.5f, DamageBase::Type::_WeekDamage, 5, 8, 0.02f, 1, 5, baseball_player::_mb_Atk2, 20, 0, 5, D3DXToRadian(8), 8 },
-		
-	};
+	m_pStateFunc = &BaseballState_SPAttack_B::State_Atk1;
 
-	for (int i = 0; i < (int)ARRAYSIZE(AtkParam); ++i)
-	{
-		pAtk = new BaseballAttackInfo_SpAtk(b);
+	m_pBaseBall = b;
 
-		pAtk->m_Param = AtkParam[i];
-
-		m_Attack.m_AttackInfoArray.push_back(pAtk);
-	}
+	chr_func::XZMoveDown(b, 1);
 }
 
 
 // ステート実行
 void BaseballState_SPAttack_B::Execute(BaseballPlayer* b)
 {
-	m_Attack.Update();
 
-	if (m_Attack.isEnd())
+	(this->*m_pStateFunc)();
+
+	{
+		chr_func::UpdateAll(b, &DamageManager::HitEventBase());
+		b->m_Renderer.Update(1);
+
+		chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
+	}
+
+	if (m_pStateFunc == &BaseballState_SPAttack_B::State_Finish)
 	{
 		b->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(b));
 	}
@@ -151,4 +72,245 @@ void BaseballState_SPAttack_B::Execute(BaseballPlayer* b)
 void BaseballState_SPAttack_B::Exit(BaseballPlayer* b)
 {
 
+}
+
+
+
+void BaseballState_SPAttack_B::State_Atk1()
+{
+	m_Timer++;
+
+	if (!timeflg)
+	{
+		//　発動音再生&The World
+		if (m_Timer == 1)
+		{
+			Sound::Play(Sound::Skill);
+			FreezeGame(20);
+		}
+
+		if (m_Timer >= 21)
+		{
+			timeflg = true;
+			m_Timer = 0;
+		}
+	}
+	else
+	{
+		//　雷エフェクト発動
+		ThunderInvoke(5);
+
+		//　モーション開始
+		if (m_Timer == 1)
+		{
+			Sound::Play(Sound::Swing2);
+			m_pBaseBall->m_Renderer.SetMotion(baseball_player::_mb_Atk1);
+		}
+		//　当たり判定の場所とか
+		if (m_Timer == 3)
+		{
+			m_Damage.m_Enable = true;
+			chr_func::GetFront(m_pBaseBall, &m_Damage.m_Param.pos);
+			m_Damage.vec = m_Damage.m_Param.pos;
+			m_Damage.m_Param.pos *= 3.0f;
+			m_Damage.m_Param.pos += m_pBaseBall->m_Params.pos;
+		}
+		else
+		{
+			m_Damage.m_Enable = false;
+		}
+		//　当たってたら止める
+		if (m_Damage.HitCount > 0 && m_Timer == 12)
+		{
+			FreezeGame(61);
+		}
+
+		if (m_Timer == 20)
+		{
+			//　当たってたら2撃目へ
+			if (m_Damage.HitCount > 0)
+			{
+				m_pStateFunc = &BaseballState_SPAttack_B::State_Atk2;
+			}
+			//　外れたら終了へ
+			else
+			{
+				m_pStateFunc = &BaseballState_SPAttack_B::State_Atk1End;
+			}
+
+			m_Timer = 0;
+		}
+	}
+}
+
+void BaseballState_SPAttack_B::State_Atk1End()
+{
+	const int EndFrame = 20;
+
+	if (++m_Timer > EndFrame)
+	{
+		m_pStateFunc = &BaseballState_SPAttack_B::State_Finish;
+	}
+}
+
+void BaseballState_SPAttack_B::State_Atk2()
+{
+	m_Timer++;
+
+	//　雷エフェクト発動
+	ThunderInvoke(3);
+
+	if (m_Timer == 1)
+	{
+
+		m_pBaseBall->m_Renderer.SetMotion(baseball_player::_mb_SpAtk1);
+	}
+
+	if (m_Timer == 33)
+	{
+		m_pBaseBall->m_Renderer.SetMotion(baseball_player::_mb_SpAtk2);
+	}
+
+
+	if (m_Timer == 56)
+	{
+		m_Damage.m_Enable = true;
+		m_Damage.Value = 50.0f;
+		m_Damage.type = DamageBase::Type::_VanishDamage;
+		m_Damage.HitCount = 0;
+		chr_func::GetFront(m_pBaseBall, &m_Damage.m_Param.pos);
+		m_Damage.vec = m_Damage.m_Param.pos;
+		m_Damage.vec.y = 0.8f;//　飛ぶ角度
+		m_Damage.m_Param.pos *= 3.0f;
+		m_Damage.m_Param.pos += m_pBaseBall->m_Params.pos;
+
+		m_ChrLiveCount = DefCharacterMgr.GetCharacterLiveCount();
+	}
+	else
+	{
+		m_Damage.m_Enable = false;
+	}
+
+	if (m_Damage.HitCount > 0 && m_Timer == 57)
+	{
+		//　カキーン
+		Sound::Play(Sound::BaseBall_SP);
+
+		Vector3 power(0, -0.02f, 0);
+		GlavityLocus* g;
+
+		const Vector4
+			stCol(1, 1, 1, 0.0f),
+			endCol(1, 1, 1, 0);
+
+		const Vector4
+			stHdCol(1, 1, 1, 0.5f),
+			endHdCol(1, 1, 1, 0);
+
+		const Vector3 move = Vector3Normalize(m_Damage.vec)*0.8f;
+
+		Vector3 pos = m_Damage.m_Param.pos + Vector3(0, 3, 0);
+
+
+		//　エフェクト
+		for (int i = 0; i < 30; ++i)
+		{
+			g = new GlavityLocus(
+				pos, move + Vector3Rand() * 0.8f, power, 4, 40 + rand() % 30
+				);
+
+			g->m_BoundRatio = 0.2f;
+			g->m_CheckWall = false;
+
+			g->m_Locus.m_StartParam.Color = stCol;
+			g->m_Locus.m_EndParam.Color = endCol;
+
+			g->m_Locus.m_StartParam.HDRColor = stHdCol;
+			g->m_Locus.m_EndParam.HDRColor = endHdCol;
+
+			g->m_Locus.m_StartParam.Width = 0.05f;
+			g->m_Locus.m_EndParam.Width = 0.00f;
+
+		}
+
+		//　雷
+		for (int i = 0; i < 8; i++)
+		{
+			new ThunderEffect
+				(pos/* - move*0.2f*i,*/,
+				pos + move * 10 + Vector3Rand() * 10, 
+				4.5f,
+				0.1f,
+				10,
+				Vector4(0, 0, 1, 0),
+				15);
+		}
+
+		m_Light.param.color = Vector3(0,0.4f, 0.8f);
+		m_Light.param.pos = pos;
+		m_Light.param.size = 50.0f;
+		m_Light.Visible = true;
+
+
+		//　ブラー
+		new BlurImpactSphere(
+			pos,
+			30,
+			100,
+			10
+			);
+
+		//　画面揺れ
+		DefCamera.SetShock(Vector2(0.5f, 0.5f), 50);
+
+		if (m_ChrLiveCount == DefCharacterMgr.GetCharacterLiveCount())
+		{
+			std::list<LpGameObjectBase> UpdateObjList;
+
+			DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, 20);
+
+		}
+	}
+
+	m_Light.param.size *= 0.9f;
+
+	if (m_Timer == 80)
+	{
+		m_pStateFunc = &BaseballState_SPAttack_B::State_Finish;
+	}
+}
+
+//　The World
+void BaseballState_SPAttack_B::FreezeGame(UINT frame)
+{
+	std::list<LpGameObjectBase> UpdateObjList;
+
+	UpdateObjList.push_back(m_pBaseBall);
+
+	DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, frame);
+}
+
+//　雷エフェクト発動
+void BaseballState_SPAttack_B::ThunderInvoke(UINT point_num)
+{
+	Matrix  BoneMat;
+	Vector3 Forward;
+	Vector3 Pos;
+	Vector3 Thundderpos;
+	m_pBaseBall->m_Renderer.GetWorldBoneMatirx(BoneMat, 8);
+
+	Pos = Vector3(BoneMat._41, BoneMat._42, BoneMat._43);
+
+	Forward = Vector3(BoneMat._31, BoneMat._32, BoneMat._33);
+	Forward.Normalize();
+	Thundderpos = Pos + Forward*0.5f;
+
+	new ThunderEffect
+		(Pos,
+		Thundderpos + Vector3Rand() * 3,
+		1.5f,
+		0.1f,
+		10,
+		Vector4(0, 0, 1, 0),
+		point_num);
 }

@@ -2,6 +2,9 @@
 #include "BaseballPlayerState.h"
 #include "Baseball_HitEvent.h"
 #include "BaseballState_PlayerControll_ShotAttack_P.h"
+
+#include "Computer/BaseballPlayerState_ComMove.h"
+
 #include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
 #include "../CharacterManager.h"
@@ -104,10 +107,18 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 		}
 
 		void AttackEnd()
-		{
-			
-			//攻撃終了時に通常移動モードに戻る
-			m_pBaseball->SetState(new BaseballState_PlayerControll_Move());
+
+		{	//攻撃終了時に通常移動モードに戻る
+			if (m_pBaseball->m_PlayerInfo.player_type == PlayerType::_Player)
+			{
+				//　プレイヤー
+				m_pBaseball->SetState(new BaseballState_PlayerControll_Move());
+			}
+			else
+			{
+				//　コンピューター
+				m_pBaseball->SetState(new BaseballPlayerState_ComMove());
+			}
 		}
 	};
 

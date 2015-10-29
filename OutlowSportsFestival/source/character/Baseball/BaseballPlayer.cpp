@@ -1,5 +1,6 @@
 #include "BaseballPlayer.h"
 #include "BaseballPlayerState.h"
+#include "Computer\/BaseballPlayerState_ComMove.h"
 #include "BaseballState_Change.h"
 #include "../../Damage/Damage.h"
 #include "../../GameSystem/GameController.h"
@@ -15,13 +16,13 @@
 
 //　コンストラクタ
 BaseballPlayer::BaseballPlayer(const CharacterBase::PlayerInfo& info) :
-CharacterBase(info), batterflg(false), m_ModelSize(0.05f), changetime(20),
+CharacterBase(info), batterflg(true), m_ModelSize(0.05f), changetime(20),
 m_Renderer(new  BlendAnimationMesh("DATA\\CHR\\BaseBall\\player_B.iem"))
 {
 	m_pStateMachine = new BaseballStateMachine(this);
 
 	//　体力低下(デバック用)
-	//m_Params.maxHP = m_Params.HP = 10;
+	m_Params.maxHP = m_Params.HP = 50;
 }
 
 //　デストラクタ
@@ -45,8 +46,12 @@ bool BaseballPlayer::Update()
 	// ステート実行
 	m_pStateMachine->state_execute();
 
+	//キャラクタ基本更新
+	BaseUpdate();
+
 	return true;	//常にtrueを返すと消去されない
 }
+
 
 bool  BaseballPlayer::CharacterMsg(MsgType mt)
 {
@@ -64,6 +69,8 @@ bool  BaseballPlayer::CharacterMsg(MsgType mt)
 void BaseballPlayer::Riset()
 {
 	SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(this));
+	
+
 	m_Renderer.SetMotion(baseball_player::_mb_Stand);
 	m_Renderer.Update(0);
 	ResetRound();

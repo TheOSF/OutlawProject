@@ -8,7 +8,7 @@
 #include "../Damage/Damage.h"
 #include "../Render/LightObject.h"
 #include "../Library/Bullet/BulletSystem.h"
-
+#include "../character/Baseball/BaseballPlayer.h"
 //*****************************************************
 //		通常玉クラス
 //*****************************************************
@@ -16,7 +16,7 @@
 class Baseball_SpAtk_Ball :public GameObjectBase, public BallBase
 {
 public:
-
+	
 	//物理パラメータ
 	struct PhysicsParam
 	{

@@ -10,7 +10,7 @@
 //-------------切り替えステートクラス-------------
 
 BaseballState_Change::BaseballState_Change():
-batterflg(true)
+batterflg(false)
 {
 
 }
