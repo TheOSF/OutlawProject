@@ -58,7 +58,7 @@ private:
 	void DamageParamSet(DamageShpere* pDmg);
 
 	//ダメージ位置をセット
-	void DamagePosSet(DamageShpere* pDmg, BaseballPlayer* pTennis);
+	void DamagePosSet(DamageShpere* pDmg, BaseballPlayer* pBaseball);
 
 	//モーションをセット
 	void MotionSet(BaseballPlayer* pTennis);

@@ -19,6 +19,8 @@ m_Renderer(new BlendAnimationMesh("DATA\\CHR\\Soccer\\Player_S.iem"))
 	m_pStateMachine = new SoccerStateMachine(this);
 	m_Renderer.SetMotion(0);
 	SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(this));
+	//　体力低下(デバック用)
+	m_Params.maxHP = m_Params.HP = 60;
 }
 
 SoccerPlayer::~SoccerPlayer()
