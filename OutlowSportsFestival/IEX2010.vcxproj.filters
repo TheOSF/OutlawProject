@@ -208,9 +208,13 @@
     <ClCompile Include="source\character\Baseball\BaseballState_Change.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballState_SPAttack_B.cpp" />
     <ClCompile Include="source\character\Computer\CharacterComputerMove.cpp" />
-    <ClCompile Include="source\character\Soccer\Computer\SoccerComputer_move.cpp" />
     <ClCompile Include="source\Effect\TornadoEffect.cpp" />
     <ClCompile Include="source\Effect\WindBallEffect.cpp" />
+    <ClCompile Include="source\character\Computer\CharacterComputerDoAction.cpp" />
+    <ClCompile Include="source\character\Computer\CharacterComputerReaction.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerAttack.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerMove.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerPlayerState_PoseMotion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -381,6 +385,10 @@
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerMove.h" />
     <ClInclude Include="source\Effect\TornadoEffect.h" />
     <ClInclude Include="source\Effect\WindBallEffect.h" />
+    <ClInclude Include="source\character\Computer\CharacterComputerDoAction.h" />
+    <ClInclude Include="source\character\Computer\CharacterComputerReaction.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerAttack.h" />
+    <ClInclude Include="source\character\Soccer\SoccerPlayerState_PoseMotion.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">
