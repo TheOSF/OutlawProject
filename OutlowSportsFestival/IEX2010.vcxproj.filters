@@ -209,6 +209,8 @@
     <ClCompile Include="source\character\Baseball\BaseballState_SPAttack_B.cpp" />
     <ClCompile Include="source\character\Computer\CharacterComputerMove.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputer_move.cpp" />
+    <ClCompile Include="source\Effect\TornadoEffect.cpp" />
+    <ClCompile Include="source\Effect\WindBallEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -377,6 +379,8 @@
     <ClInclude Include="source\character\Baseball\BaseballState_SPAttack_B.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerMove.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerMove.h" />
+    <ClInclude Include="source\Effect\TornadoEffect.h" />
+    <ClInclude Include="source\Effect\WindBallEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

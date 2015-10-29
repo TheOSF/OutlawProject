@@ -63,7 +63,8 @@ public:
     //引数以外のオブジェクトの更新を引数のフレーム間行わない
     void FreezeOtherObjectUpdate(
         std::list<LpGameObjectBase> UpdateObjList,  //更新を行うオブジェクトリスト
-        UINT OtherFreeze_frame                      //フリーズさせるフレーム
+        UINT OtherFreeze_frame,                     //フリーズさせるフレーム
+        bool FreezeAddGameObject = false            //フリーズ中に追加したゲームオブジェクトをフリーズさせるかどうか
         );
 
 private:
@@ -77,6 +78,7 @@ private:
 	GameObjectMap				m_GameObjectMap;
     UINT                        m_FreezeFrame;
     GameObjectList              m_FreezeUpdateList;
+    bool                        m_FreezeAddGameObject;
 
 	GameObjectManager();
 	~GameObjectManager();
@@ -86,6 +88,8 @@ private:
 
 	bool Add(LpGameObjectBase pObj);
 	bool Erace(LpGameObjectBase pObj);
+
+    bool isFreezeFrame()const;
 };
 
 #define DefGameObjMgr (GameObjectManager::GetInstance())

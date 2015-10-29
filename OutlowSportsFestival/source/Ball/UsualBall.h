@@ -71,6 +71,7 @@ private:
     UINT                m_HitCountSave;
     UINT                m_HitStopFrame;
     Vector3             m_RotateSpeed;
+    int                 m_EffectFrameCount;
 
 	bool isOutofField()const;  //フィールド外に出ているか
 
@@ -82,6 +83,8 @@ private:
     void Counter(CharacterBase* pCounterCharacter)override;
 
     void ToNoWork();           //攻撃判定のない状態にする
+
+    RATIO GetMovePower()const;
 
     bool StateFlyMove();
     bool StatePhysicMove();

@@ -21,6 +21,8 @@
 #include "../../Render/LightObject.h"
 #include "../../Effect/ThunderEffect.h"
 
+
+
 class TennisUtillityClass
 {
 public:
@@ -263,6 +265,36 @@ void TennisState_PlayerControll_Move::Enter(TennisPlayer* t)
 
     //初期のたちモーションセット
     t->m_Renderer.SetMotion(TennisPlayer::_mt_Stand);
+
+
+    //m_Wind = new WindBallEffect(
+    //    3,
+    //    30,
+    //    0.001f,
+    //    4,
+    //    0.2f
+    //    );
+
+
+    //TornadoEffect::Param tp;
+
+    //tp.Length = 10.0f;
+    //tp.LocusWidthStart = 0.1f;
+    //tp.LocusWidthEnd = 0.05f;
+    //tp.maxWidth = 3.0f;
+    //tp.minWidth = 0.5f;
+    //tp.pos = t->m_Params.pos;
+    //tp.RotateSpeed = 0.3f;
+
+    //chr_func::GetRight(t, &tp.right);
+    //chr_func::GetFront(t, &tp.vec);
+
+    //m_Tor = new TornadoEffect(
+    //    tp,
+    //    3,
+    //    25
+    //    );
+
 }
 
 
@@ -316,6 +348,7 @@ void TennisState_PlayerControll_Move::Execute(TennisPlayer* t)
 
     //モデルのワールド変換行列を更新
     chr_func::CreateTransMatrix(t, t->m_ModelSize, &t->m_Renderer.m_TransMatrix);
+
 }
 
 void TennisState_PlayerControll_Move::Exit(TennisPlayer* t)

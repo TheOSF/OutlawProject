@@ -437,7 +437,7 @@ void chr_func::AddSkillGauge(CharacterBase* p, RATIO value)
         isCanSpecialAttack(p->m_Params.SP))
     {
         //エフェクト
-        EffectFactory::CircleAnimation(
+        EffectFactory::CircleAnimationBillbord(
             p->m_Params.pos + Vector3(0, 3, 0),
             Vector3Zero,
             Vector3Zero,

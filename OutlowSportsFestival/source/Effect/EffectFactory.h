@@ -20,13 +20,24 @@ namespace EffectFactory
         float size);
 
     //円が大きくなるアニメーション
-    void CircleAnimation(
+    void CircleAnimationBillbord(
         CrVector3   pos,
         CrVector3   move,
         CrVector3   power,
         CrVector2   size,
         DWORD       color,
         DWORD       dw_flag
+        );
+
+    //円が大きくなるアニメーション
+    void CircleAnimation(
+        CrVector3   pos,
+        CrVector3   vec,
+        CrVector3   move,
+        CrVector3   power,
+        CrVector2   size,
+        DWORD       color,
+        DWORD       hdr_col
         );
 
     //パーティクル

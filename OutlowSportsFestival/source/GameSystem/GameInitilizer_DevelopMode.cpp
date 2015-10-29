@@ -61,9 +61,16 @@
 
 #include "../Effect/ParticleManagerUpdater.h"
 #include "LightEventExecuter.h"
-\
+
 #include "../Stage/StageResourceLoadFaction.h"
 #include "../Stage/StageObjectFactory.h"
+
+#include "../Effect/TornadoEffect.h"
+
+
+
+
+
 
 static void CreateCharacter(
     PlayerNum::Value      n,
@@ -241,13 +248,13 @@ void GameInitializer_DevelopMode::GameCreate()
         }
         else
         {
-            pStageMesh = new iexMesh("DATA\\Stages\\Kasenjiki.IMO");
+            pStageMesh = new iexMesh("DATA\\Stages\\Stage1\\kasenziki\\kasenziki.IMO");
 
             Matrix m;
 
             const float scale = 0.1f;
 
-            MeshRenderer* R = new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColor);
+            MeshRenderer* R = new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColorSpecular);
             MeshCollider* C = new MeshCollider(pStageMesh, new MeshCollider::HitEvent);
 
             pStageMesh->SetScale(scale, scale, scale);
@@ -278,33 +285,35 @@ void GameInitializer_DevelopMode::GameCreate()
             //    Vector3(10, 2, 0),
             //    Vector3(0, 0, 0)
             //    );
-
-            for (int i = 0; i < 5; ++i)
+            
             {
+                for (int i = 0; i < 3; ++i)
+                {
 
-                StageObjFactory::CreateBench(
-                    Vector3((frand() - 0.5f) * 60, 2.0f, (frand() - 0.5f) * 60),
-                    Vector3(frand()*PI, frand()*PI, frand()*PI)
-                    );
+                    StageObjFactory::CreateBench(
+                        Vector3((frand() - 0.5f) * 60, 2.0f, (frand() - 0.5f) * 60),
+                        Vector3(frand()*PI, frand()*PI, frand()*PI)
+                        );
 
-            }
+                }
 
-            for (int i = 0; i < 10; ++i)
-            {
-                StageObjFactory::CreateCone(
-                    Vector3((frand() - 0.5f) * 60, 2.5f, (frand() - 0.5f) * 0),
-                    //Vector3(frand()*PI, frand()*PI, frand()*PI)
-                    Vector3Zero
-                    );
-            }
+                for (int i = 0; i < 10; ++i)
+                {
+                    StageObjFactory::CreateCone(
+                        Vector3((frand() - 0.5f) * 60, 2.5f, (frand() - 0.5f) * 0),
+                        //Vector3(frand()*PI, frand()*PI, frand()*PI)
+                        Vector3Zero
+                        );
+                }
 
-            for (int i = 0; i < 5; ++i)
-            {
-                StageObjFactory::CreatePipe(
-                    Vector3((frand() - 0.5f) * 60, 10.5f, (frand() - 0.5f) * 0),
-                    //Vector3(frand()*PI, frand()*PI, frand()*PI)
-                    Vector3Zero
-                    );
+                //for (int i = 0; i < 5; ++i)
+                //{
+                //    StageObjFactory::CreatePipe(
+                //        Vector3((frand() - 0.5f) * 60, 10.5f, (frand() - 0.5f) * 0),
+                //        //Vector3(frand()*PI, frand()*PI, frand()*PI)
+                //        Vector3Zero
+                //        );
+                //}
             }
         }
 
@@ -403,10 +412,10 @@ void GameInitializer_DevelopMode::GameCreate()
 
     //ƒLƒƒƒ‰ƒNƒ^ì¬
     {
-        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player,   CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Tennis);
 
         CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)3, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Tennis);
     }
 }

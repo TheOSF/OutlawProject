@@ -8,6 +8,7 @@
 #include "BallFadeOutRenderer.h"
 #include "../Effect/ParticleHDRRenderer.h"
 #include "../Effect/ParticleMoveObject.h"
+#include "../Effect/EffectFactory.h"
 
 
 UsualBall::UsualBall(
@@ -23,7 +24,8 @@ UsualBall::UsualBall(
     m_HitCountSave(0),
     m_HitStopFrame(0),
     m_pStateFunc(&UsualBall::StateFlyMove),
-    m_RotateSpeed(0.15f, 0.05f, 0.05f)
+    m_RotateSpeed(0.15f, 0.05f, 0.05f),
+    m_EffectFrameCount(0)
 {
 
     class PhysicUpdateCallBack :public MeshRenderer::PreRenderCallBack
@@ -47,7 +49,7 @@ UsualBall::UsualBall(
         //ダメージ判定のパラメータを代入
         m_Damage.pBall = this;
         m_Damage.pParent = params.pParent;
-        m_Damage.m_Param.width = 1;	//大きさはボールによって異なる?
+        m_Damage.m_Param.width = 2.0f;	//大きさはボールによって異なる?
         m_Damage.type = damage_type;
         m_Damage.Value = damage_val;
         m_Damage.m_Enable = true;
@@ -217,7 +219,20 @@ void UsualBall::UpdateDamageClass()
 	m_Damage.vec = m_Params.move;
 
     m_Damage.m_Param.pos2 = m_Damage.m_Param.pos1;
-	m_Damage.m_Param.pos1 = m_Params.pos;
+
+    {
+        m_Damage.m_Param.pos1 = m_Params.pos;
+
+        if (Vector3Distance(m_Damage.m_Param.pos1, m_Damage.m_Param.pos2) < m_Damage.m_Param.width)
+        {
+            Vector3 v = m_Damage.m_Param.pos2 - m_Damage.m_Param.pos1;
+
+            v.Normalize();
+
+            m_Damage.m_Param.pos2 = m_Damage.m_Param.pos1 + v*m_Damage.m_Param.width;
+        }
+    }
+	
 }
 
 
@@ -226,8 +241,11 @@ void UsualBall::UpdateLocusColor()
     const COLORf Color = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number);
 
     m_Locus.m_StartParam.Color = Color.toVector4();
+    m_Locus.m_StartParam.Color.w = 0.3f;
     m_Locus.m_StartParam.HDRColor = m_Locus.m_StartParam.Color;
    
+    m_Locus.m_StartParam.HDRColor.w = 0.5f;
+
     m_Locus.m_EndParam.Color = m_Locus.m_StartParam.Color;
     m_Locus.m_EndParam.Color.w = 0;
 
@@ -281,6 +299,8 @@ void UsualBall::Counter(CharacterBase* pCounterCharacter)
     m_Damage.type = DamageBase::Type::_VanishDamage;
     m_Damage.Value *= 1.3f; //ダメージを増やす
 
+    //エフェクトカウント設定
+    m_EffectFrameCount = 60;
 }
 
 void UsualBall::ToNoWork()
@@ -318,6 +338,11 @@ void UsualBall::ToNoWork()
         );
 }
 
+RATIO UsualBall::GetMovePower()const
+{
+    const float m = m_Params.move.Length();
+    return min(m / 1.5f, 0.8f);
+}
 
 bool UsualBall::StateFlyMove()
 {
@@ -400,30 +425,22 @@ bool UsualBall::StateFlyMove()
     }
 
     //パーティクル
-    //{
-    //    if (m_Damage.type == DamageBase::Type::_VanishDamage)
-    //    {
-    //        ParticleHDRRenderer* r = new ParticleHDRRenderer();
+    {
+        m_EffectFrameCount = max(m_EffectFrameCount - 1, 0);
 
-    //        r->m_HDRcolor = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number).toDWORD();
-    //        r->m_Param.pos = m_Params.pos + Vector3Rand()*0.2f;
-    //        r->m_Param.dw_Flag = RS_ADD;
-    //        r->m_Param.size = Vector2(1, 1);
-    //        r->m_pTexture = DefResource.Get(Resource::TextureType::Particle);
-    //        r->SetCellUV(4, 4, 1);
-
-    //        ParticleMoveObject* m = 
-    //            new ParticleMoveObject(
-    //            r,
-    //            Vector3Zero,
-    //            Vector3Zero,
-    //            5,
-    //            false,
-    //            1,
-    //            1
-    //            );
-    //    }
-    //}
+        if (m_EffectFrameCount % 3 == 0 && m_EffectFrameCount > 0)
+        {
+            EffectFactory::CircleAnimation(
+                m_Params.pos,
+                m_Params.move,
+                Vector3Zero,
+                Vector3Zero,
+                Vector2(0.3f, 0.3f) * ((float)m_EffectFrameCount*0.15f + 5.0f) * GetMovePower(), 
+                0xFFFFFFFF,
+                CharacterBase::GetPlayerColor(m_Params.pParent->m_PlayerInfo.number)
+                );
+        }
+    }
 
 
     //フィールド外なら更新失敗

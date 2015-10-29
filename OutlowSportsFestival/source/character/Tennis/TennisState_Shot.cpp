@@ -105,7 +105,7 @@ void TennisState_Shot::Execute(TennisPlayer* t)
         if (pTargetCharacter != nullptr)
         {
             //自動回転
-            chr_func::AngleControll(t, pTargetCharacter->m_Params.pos, AngleSpeed*2.0f);
+            chr_func::AngleControll(t, pTargetCharacter->m_Params.pos, AngleSpeed * 2.0f);
         }
         else
         {   
@@ -231,7 +231,7 @@ const CharacterBase* TennisState_Shot::GetFrontTarget(TennisPlayer* t)const
     CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
 
     const CharacterBase* pTargetEnemy = nullptr;    //ターゲット保持のポインタ
-    RADIAN MostMinAngle = D3DXToRadian(33);         //もっとも狭い角度
+    RADIAN MostMinAngle = D3DXToRadian(45);         //もっとも狭い角度
     RADIAN TempAngle;
 
     Vector3 MyFront;      //自身の前方ベクトル

@@ -24,7 +24,8 @@ CharacterDefaultCounter::CharacterDefaultCounter(
     m_pHitEventClass(pHitEventClass),
     m_pNowState(&CharacterDefaultCounter::Pose),
     m_Count(0),
-    m_Stick(0, 0)
+    m_Stick(0, 0),
+    m_pCounterBall(nullptr)
 {
 
 }
@@ -61,8 +62,12 @@ void CharacterDefaultCounter::SetStickValue(CrVector2 stick)
 //  カウンター中のダメージ判定クラス
 //-----------------------------------------------//
 
-CharacterDefaultCounter::HitEventClass_NoBallDamageFileter::HitEventClass_NoBallDamageFileter(DamageManager::HitEventBase* pInHitEvent):
-m_pInHitEvent(pInHitEvent)
+CharacterDefaultCounter::HitEventClass_NoBallDamageFileter::HitEventClass_NoBallDamageFileter(
+    DamageManager::HitEventBase* pInHitEvent,
+    BallBase*                    pCounterBall
+    ):
+m_pInHitEvent(pInHitEvent),
+m_pCounterBall(pCounterBall)
 {
 
 }
@@ -71,7 +76,8 @@ bool CharacterDefaultCounter::HitEventClass_NoBallDamageFileter::Hit(DamageBase*
 {
     //カウンター可能なボールだった場合は処理せずfalseを返す
     if (pDmg->pBall != nullptr &&
-        BallBase::isCanCounter(pDmg->pBall)
+        BallBase::isCanCounter(pDmg->pBall) &&
+        m_pCounterBall == pDmg->pBall
         )
     {
         return false;
@@ -148,7 +154,7 @@ void CharacterDefaultCounter::Pose()
     //基本的な更新
     if (m_Count < m_Param.CanCounterFrame)
     {
-        HitEventClass_NoBallDamageFileter BallDmgFilter(m_pHitEventClass);
+        HitEventClass_NoBallDamageFileter BallDmgFilter(m_pHitEventClass, m_pCounterBall);
 
         chr_func::UpdateAll(m_pOwner, &BallDmgFilter);
     }
@@ -225,7 +231,7 @@ void CharacterDefaultCounter::Move()
 
     //基本的な更新
     {
-        HitEventClass_NoBallDamageFileter BallDmgFilter(m_pHitEventClass);
+        HitEventClass_NoBallDamageFileter BallDmgFilter(m_pHitEventClass, m_pCounterBall);
 
         chr_func::UpdateAll(m_pOwner, &BallDmgFilter);
     }
@@ -286,13 +292,6 @@ void CharacterDefaultCounter::Shot()
             SetAutoCounter();
         }
 
-        //{
-        //    //ボールの設定
-        //    chr_func::GetFront(m_pOwner, &m_pCounterBall->m_Params.move);
-
-        //    m_pCounterBall->m_Params.move *= m_Param.BallSpeed;
-        //}
-
         {
             float m = m_pCounterBall->m_Params.move.Length()*1.1f;
             m = min(m, 2.5f);
@@ -330,7 +329,7 @@ void CharacterDefaultCounter::Shot()
 
     //基本的な更新
     {
-        HitEventClass_NoBallDamageFileter BallDmgFilter(m_pHitEventClass);
+        HitEventClass_NoBallDamageFileter BallDmgFilter(m_pHitEventClass, m_pCounterBall);
 
         DamageManager::HitEventBase* pHitEvent = &BallDmgFilter;
 

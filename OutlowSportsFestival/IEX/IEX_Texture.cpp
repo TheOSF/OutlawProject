@@ -32,13 +32,15 @@ Texture2D* iexTexture::Load( char* filename, int flag )
 
 	no = -1;
 	//	テクスチャの検索
-	for( i=0 ; i<MAX_TEXTURE ; i++ ){
+	for( i=0 ; i<MAX_TEXTURE ; i++ )
+    {
 		if( !TexInfo[i].lpTexture ) continue;
 		//	ファイル名の比較
 		if( lstrcmpi( TexInfo[i].filename, filename ) != 0 ) continue; 
 		no = i;
 		break;
 	}
+
 	//	新規読み込み
 	if( no == -1 ){
 		if( flag == 1 ) fmt = D3DFMT_R8G8B8;

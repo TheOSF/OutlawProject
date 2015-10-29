@@ -254,7 +254,7 @@ void MatchState::MatchPlay::GameStopMgr::Update()
 //ストップさせる(引数：何フレーム後にストップするか、何フレームストップするか)
 void MatchState::MatchPlay::GameStopMgr::SetStop(UINT ep_frame, UINT stop_frame, CharacterBase* pUpdateChr)
 {
-    m_Ep_frame = (int)ep_frame;
+    m_Ep_frame   = (int)ep_frame;
     m_Stop_frame = (int)stop_frame;
     m_pUpdateChr = pUpdateChr;
 }
@@ -304,17 +304,17 @@ void MatchState::MatchPlay::Execute(_Client_type_ptr p)
     //ステート変更関数の呼び出し
     SwitchState(liveCount,p);
 
-    ////前回のフレームとキャラクタ数が違った場合は時間をとめる
-    //if (m_PreLiveCount != liveCount && liveCount > 1)
-    //{
-    //    Sound::Play(Sound::Impact2);
+    //前回のフレームとキャラクタ数が違った場合は時間をとめる
+    if (m_PreLiveCount != liveCount && liveCount > 1)
+    {
+        Sound::Play(Sound::Impact2);
 
-    //    {
-    //        //死んだキャラクタ以外の更新をとめる
-    //        m_GameStopMgr.SetStop(4, 30);
-    //    }
-    //    p->SetLightChange();
-    //}
+        {
+            //死んだキャラクタ以外の更新をとめる
+            m_GameStopMgr.SetStop(4, 30);
+        }
+        p->SetLightChange();
+    }
 
     //生存キャラクタカウンタを更新
     m_PreLiveCount = liveCount;

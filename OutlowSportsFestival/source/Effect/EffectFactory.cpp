@@ -6,6 +6,10 @@
 #include "ParticleMoveObject.h"
 #include "../GameSystem/ResourceManager.h"
 
+#include "AnimationBordRenderer.h"
+
+
+
 void EffectFactory::Smoke(CrVector3 pos, CrVector3 move, float size, DWORD Color, bool Soft)
 {
     ParticleRenderer* r = new ParticleRenderer();
@@ -57,7 +61,7 @@ void EffectFactory::Counter(CrVector3 pos, float size)
 }
 
 //円が大きくなるアニメーション
-void EffectFactory::CircleAnimation(
+void EffectFactory::CircleAnimationBillbord(
     CrVector3   pos,
     CrVector3   move,
     CrVector3   power,
@@ -85,6 +89,59 @@ void EffectFactory::CircleAnimation(
         );
 }
 
+
+//円が大きくなるアニメーション
+void EffectFactory::CircleAnimation(
+    CrVector3   pos,
+    CrVector3   vec,
+    CrVector3   move,
+    CrVector3   power,
+    CrVector2   size,
+    DWORD       color,
+    DWORD       hdr_col
+    )
+{
+    Vector3 tvec(vec);
+
+    AnimationBordRenderer* r = new AnimationBordRenderer(
+        DefResource.Get(Resource::TextureType::Anime_Circle),
+        4,
+        4,
+        16,
+        color,
+        hdr_col
+        );
+
+    r->m_Pos = pos;
+    r->m_CellCount = 0;
+    r->m_Size = size; 
+    
+
+    Vector3Cross(r->m_Right, tvec, Vector3AxisX);
+
+    if (r->m_Right == Vector3Zero)
+    {
+        Vector3Cross(r->m_Right, tvec, Vector3AxisZ);
+    }
+
+    Vector3Cross(r->m_Up, r->m_Right, tvec);
+
+
+    r->m_Right.Normalize();
+    r->m_Up.Normalize();
+
+    AnimationBordGameObj* m = new AnimationBordGameObj(
+        r
+        );
+
+    m->animation_end_delete = true;
+    m->animation_loop = false;
+    m->animation_speed = 1.0f;
+
+    m->move_power = power;
+    m->move_speed = move;
+
+}
 
 //パーティクル
 void EffectFactory::Particle(

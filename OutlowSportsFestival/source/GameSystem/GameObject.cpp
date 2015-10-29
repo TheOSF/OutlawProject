@@ -41,7 +41,7 @@ void GameObjectManager::Release()
 
 void GameObjectManager::Update()
 {
-    if (m_FreezeFrame > 0)
+    if (isFreezeFrame())
     {
         --m_FreezeFrame;
         FreezeUpdate();
@@ -85,11 +85,13 @@ UINT GameObjectManager::SendMsg(GameObjectBase::MsgType mt)
 //引数以外のオブジェクトの更新を引数のフレーム間行わない
 void GameObjectManager::FreezeOtherObjectUpdate(
     std::list<LpGameObjectBase> UpdateObjList,  //更新を行うオブジェクトリスト
-    UINT OtherFreeze_frame                      //フリーズさせるフレーム
+    UINT OtherFreeze_frame,                      //フリーズさせるフレーム
+    bool FreezeAddGameObject            //フリーズ中に追加したゲームオブジェクトをフリーズさせるかどうか
     )
 {
     m_FreezeUpdateList = UpdateObjList;
     m_FreezeFrame = OtherFreeze_frame;
+    m_FreezeAddGameObject = FreezeAddGameObject;
 }
 
 bool GameObjectManager::Add(LpGameObjectBase pObj)
@@ -101,11 +103,23 @@ bool GameObjectManager::Add(LpGameObjectBase pObj)
 
 	m_GameObjectMap.insert(GameObjectMap::value_type(pObj, pObj));
 
+    //フリーズ中の更新オブジェクトの追加
+    if (isFreezeFrame() && m_FreezeAddGameObject)
+    {
+        m_FreezeUpdateList.push_back(pObj);
+    }
+
 	return true;
 }
 
+bool GameObjectManager::isFreezeFrame()const
+{
+    return m_FreezeFrame > 0;
+}
+
 GameObjectManager::GameObjectManager():
-m_FreezeFrame(0)
+m_FreezeFrame(0),
+m_FreezeAddGameObject(false)
 {
 
 }
