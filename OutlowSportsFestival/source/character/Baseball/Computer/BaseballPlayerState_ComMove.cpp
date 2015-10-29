@@ -369,5 +369,5 @@ Vector3 ComBaseballMoveControllClass::GetMoveTargetPos()
 		return targets[i].pos;
 	}
 	
-	//return Vector3Zero;
+	return Vector3Zero;
 }

@@ -17,7 +17,7 @@
 
 BaseballState_PlayerControll_Counter::BaseballState_PlayerControll_Counter(int size)
 {
-	areasize = size;
+	areasize = (float)size;
 }
 
 // ステート開始
