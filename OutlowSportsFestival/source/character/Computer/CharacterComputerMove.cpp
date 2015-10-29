@@ -95,7 +95,7 @@ Vector2 CharacterComputerMove::StateMoveFront(CharacterBase* cb)
 
 	Vector3 v = m_MoveTargetPos - cb->m_Params.pos;
 
-	if (v.Length() < 1.0f)
+	if (v.Length() < 3.0f)
 	{
 		v = Vector3Zero;
 		movemode = Stop;
@@ -140,7 +140,7 @@ Vector2 CharacterComputerMove::StateMoveDistance(CharacterBase* cb)
 }
 Vector2 CharacterComputerMove::StateStop(CharacterBase* cb)
 {
-	const int NextMove = rand() % 20;
+	const int NextMove = rand() % 5;
 	++m_Count;
 	m_MoveTargetPos = GetMoveTargetPos();
 
@@ -183,10 +183,7 @@ Vector3 CharacterComputerMove::GetMoveTargetPos()
 	
 	CharacterBase* pTarget = nullptr;
 
-	//テニス　＝　遠距離が有利なので、
-	//全キャラクタからもっとも遠い場所を算出するのがBest
 
-	//弱い場合、近い距離もたまに出しちゃう
 
 	struct TargetInfo
 	{
@@ -207,7 +204,7 @@ Vector3 CharacterComputerMove::GetMoveTargetPos()
 		{
 			continue;
 		}
-		//最も体力が高い敵をターゲットに
+		//最も近い敵をターゲットに
 		if (it->first->m_Params.HP > MostTaugh)
 		{
 			pTarget = it->first;

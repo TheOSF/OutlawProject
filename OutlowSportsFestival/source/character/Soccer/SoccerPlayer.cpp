@@ -38,6 +38,9 @@ bool SoccerPlayer::Update()
 	//ステート実行
 	m_pStateMachine->state_execute();
 
+	//キャラクタ基本更新
+	BaseUpdate();
+
 	return true;	//常にtrueを返すと消去されない
 }
 

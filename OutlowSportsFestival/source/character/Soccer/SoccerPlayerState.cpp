@@ -1,6 +1,7 @@
 #include "SoccerPlayerState.h"
 #include "SoccerCommonState.h"
 #include "SoccerHitEvent.h"
+#include "SoccerPlayerState_PoseMotion.h"
 #include "SoccerRolling.h"
 #include "Snakeshot.h"
 #include "../../Effect/EffectFactory.h"
@@ -9,11 +10,11 @@
 
 #include "../CharacterDefaultCounterClass.h"
 #include "../../GameSystem/GameController.h"
-#include "../../Ball/MilderHoming.h"
 #include "../CharacterManager.h"
 #include "../CharacterFunction.h"
 #include "../CharacterBase.h"
 #include "../../Sound/Sound.h"
+#include "../../Camera/Camera.h"
 
 class SoccerUtillityClass
 {
@@ -73,6 +74,70 @@ SoccerState* SoccerState_PlayerControll_Move::GetPlayerControllMove(
 	assert("通常ステートが作成できないキャラクタタイプです SoccerState_PlayerControll_Move::GetPlayerControllMove" && 0);
 	return nullptr;
 }
+bool SoccerState_PlayerControll_Move::SwitchGameState(SoccerPlayer* ps)
+{
+	Vector3 v;
+
+	switch (ps->GetStateType())
+	{
+	case CharacterBase::State::Usual:
+
+		return false;
+
+	case CharacterBase::State::Freeze:
+
+		return true;
+
+	case CharacterBase::State::LosePose:
+		ps->SetState(new SoccerState_PoseMotion(SoccerPlayer::_ms_Lose, 0.2f, 1000));
+		return true;
+
+	case CharacterBase::State::WinPose:
+		ps->SetState(new SoccerState_PoseMotion(SoccerPlayer::_ms_Win, 0.2f, 1000));
+
+		return true;
+	default:
+		break;
+	}
+
+	return false;
+
+
+}
+void SoccerState_PlayerControll_Move::ActionStateSwitch(SoccerPlayer*s)
+{
+	float movelen = s->m_Params.move.Length();
+	// [×] で ローリング
+	if (controller::GetTRG(controller::button::batu, s->m_PlayerInfo.number))
+	{
+		s->SetState(new SoccerState_Rolling(new SoccerUtillityClass::PlayerRollingControll(s), false));
+	}
+	// [□] で 格闘
+	if (controller::GetTRG(controller::button::shikaku, s->m_PlayerInfo.number))
+	{
+		s->SetState(new SoccerState_PlayerControll_Attack(s));
+	}
+	// [△] で ショット
+	if (controller::GetTRG(controller::button::sankaku, s->m_PlayerInfo.number))
+	{
+		s->SetState(new SoccerState_PlayerControll_Shot);
+	}
+	// [〇] で 必殺技
+	if (controller::GetTRG(controller::button::maru, s->m_PlayerInfo.number))
+	{
+		s->SetState(new SoccerState_PlayerControll_Finisher);
+	}
+	// [R1] で カウンター
+	if (controller::GetTRG(controller::button::_R1, s->m_PlayerInfo.number))
+	{
+		s->SetState(new SoccerState_PlayerControll_Counter());
+	}
+	// [L1] で 固有技(ダッシュ)
+	if (controller::GetPush(controller::button::_L1, s->m_PlayerInfo.number) && movelen>0.18f)
+	{
+		s->SetState(new SoccerState_PlayerControll_Dash());
+	}
+}
 //-------------移動ステートクラス-------------
 void SoccerState_PlayerControll_Move::Enter(SoccerPlayer* s)
 {
@@ -118,42 +183,33 @@ void SoccerState_PlayerControll_Move::Enter(SoccerPlayer* s)
 }
 void SoccerState_PlayerControll_Move::Execute(SoccerPlayer* s)
 {
-	float movelen = s->m_Params.move.Length();
-	Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
+	if (SwitchGameState(s) == false)
+	{
+		//各アクションへ移行可能
+		ActionStateSwitch(s);
+		Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
+		Vector3 st_vec3;
+
+		//ビュー空間に変換
+		st_vec3 = DefCamera.GetRight()*st.x + DefCamera.GetForward()*st.y;
+		st.x = st_vec3.x;
+		st.y = st_vec3.z;
+
+		//スティックの値セット
+		m_pMoveClass->SetStickValue(st);
+
+	}
+	else
+	{
+		//スティックの値セット
+		m_pMoveClass->SetStickValue(Vector2(0, 0));
+	}
 	
-	// [×] で ローリング
-	if (controller::GetTRG(controller::button::batu, s->m_PlayerInfo.number))
-	{
-        s->SetState(new SoccerState_Rolling(new SoccerUtillityClass::PlayerRollingControll(s), false));
-	}
-	// [□] で 格闘
-	if (controller::GetTRG(controller::button::shikaku, s->m_PlayerInfo.number))
-	{
-		s->SetState(new SoccerState_PlayerControll_Attack(s));
-	}
-	// [△] で ショット
-	if (controller::GetTRG(controller::button::sankaku, s->m_PlayerInfo.number))
-	{
-		s->SetState(new SoccerState_PlayerControll_Shot);
-	}
-	// [〇] で 必殺技
-	if (controller::GetTRG(controller::button::maru, s->m_PlayerInfo.number))
-	{
-		s->SetState(new SoccerState_PlayerControll_Finisher);
-	}
-	// [R1] で カウンター
-	if (controller::GetTRG(controller::button::_R1, s->m_PlayerInfo.number))
-	{
-		s->SetState(new SoccerState_PlayerControll_Counter());
-	}
-	// [L1] で 固有技(ダッシュ)
-	if (controller::GetPush(controller::button::_L1, s->m_PlayerInfo.number) && movelen>0.18f)
-	{
-		s->SetState(new SoccerState_PlayerControll_Dash());
-	}
-	m_pMoveClass->SetStickValue(st);
+	//更新
 	m_pMoveClass->Update();
 
+
+	//モデルのワールド変換行列を更新
 	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
 }
 void SoccerState_PlayerControll_Move::Exit(SoccerPlayer* s)
@@ -431,6 +487,8 @@ void SoccerState_PlayerControll_Attack::Exit(SoccerPlayer* s)
 {
 	
 }
+
+//-------------射撃攻撃ステートクラス-------------
 void SoccerState_PlayerControll_Shot::Enter(SoccerPlayer* s)
 {
 	class SoccerShotEvent :public CharacterShotAttack::Event

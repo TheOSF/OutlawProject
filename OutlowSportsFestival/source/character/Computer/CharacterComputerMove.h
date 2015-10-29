@@ -5,7 +5,7 @@
 
 class CharacterComputerMove
 {
-private:
+public:
 	struct Param
 	{
 		RATIO   BallCounter;     //ボール対処率
@@ -17,6 +17,10 @@ private:
 		RATIO   ActionFrequence; //行動の頻度
 		RATIO   NamePlay;        //なめプレイ度
 	};
+
+	static void GetParams(Param& out, StrongType::Value st);
+
+private:
 	//分岐用enum
 	enum MoveMode
 	{
@@ -24,11 +28,10 @@ private:
 		Forward,
 		Distance
 	};
+
 	MoveMode movemode;
 
 	Param m_cParam;
-	void(CharacterComputerMove::*m_pStateFunc)();
-
 	int       m_Count;
 	Vector3   m_MoveTargetPos;
 
@@ -37,9 +40,8 @@ public:
 
 	CharacterComputerMove(CharacterBase* cb);
 	~CharacterComputerMove();
-	Vector2 Move(CharacterBase* cb);
 
-	void GetParams(Param& out, StrongType::Value st);
+
 
 	Vector2 StateMoveFront(CharacterBase* cb);
 	Vector2 StateMoveDistance(CharacterBase* cb);

@@ -30,9 +30,11 @@ class SoccerState_PlayerControll_Move :public SoccerState
 {
 private:
 	CharacterUsualMove*		m_pMoveClass;
+	void ActionStateSwitch(SoccerPlayer* s);
 public:
 
 	static SoccerState* GetPlayerControllMove(SoccerPlayer* ps);
+	static bool SwitchGameState(SoccerPlayer* ps);
 	void Enter(SoccerPlayer* s);
 	void Execute(SoccerPlayer* s);
 	void Exit(SoccerPlayer* s);

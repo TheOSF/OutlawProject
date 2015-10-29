@@ -3,9 +3,11 @@
 #include "../SoccerPlayer.h"
 #include "../../../GameSystem/ForwardDecl.h"
 #include "../../../character/Computer/CharacterComputerMove.h"
+#include "../../../character/Computer/CharacterComputerDoAction.h"
+#include "../../../character/Computer/CharacterComputerReaction.h"
 
 //****************************************************
-//	サッカープレイヤーのコンピュータ操作クラスヘッダー
+//	サッカープレイヤーのコンピュータ移動操作クラスヘッダー
 //****************************************************
 
 
@@ -21,4 +23,5 @@ public:
 private:
 	CharacterUsualMove*		m_pMoveClass;
 	CharacterComputerMove*  m_pMoveControllClass;
+	CharacterComputerDoAction*  m_pDoActionClass;
 };
