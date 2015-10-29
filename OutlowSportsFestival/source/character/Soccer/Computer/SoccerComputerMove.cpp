@@ -105,5 +105,6 @@ void SoccerState_ComputerControll_Move::Execute(SoccerPlayer* s)
 void SoccerState_ComputerControll_Move::Exit(SoccerPlayer* t)
 {
 	delete m_pMoveClass;
-	delete m_pMoveControllClass;
+	delete m_pMoveControllClass; 
+	delete m_pDoActionClass;
 }

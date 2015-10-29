@@ -383,7 +383,6 @@
     <ClInclude Include="source\character\Baseball\BaseballState_SPAttack_B.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerMove.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerMove.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="source\character\Soccer\SoccerPlayerState_PoseMotion.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerAttack.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerDoAction.h" />
@@ -398,10 +397,5 @@
     <CustomBuild Include="DATA\Shader\3DEx.fx">
       <Filter>シェーダー</Filter>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="IEX2010.rc">
-      <Filter>リソース ファイル</Filter>
-    </ResourceCompile>
   </ItemGroup>
 </Project>

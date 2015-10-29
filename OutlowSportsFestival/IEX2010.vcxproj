@@ -284,7 +284,6 @@
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
     <ClInclude Include="IEX\iextreme.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerDoAction.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerReaction.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerAttack.h" />
@@ -460,9 +459,6 @@
       </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Outputs)</Outputs>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="IEX2010.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
