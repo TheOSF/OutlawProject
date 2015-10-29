@@ -1,3 +1,6 @@
 OutlowSportsFestival/DATA
 OutlowSportsFestival/Debug
-OutlowSportsFestival/IEX2010.exe
+OutlowSportsFestival/Release
+OutlowSportsFestival/*.exe
+OutlowSportsFestival/*.sdf
+OutlowSportsFestival/*.suo
