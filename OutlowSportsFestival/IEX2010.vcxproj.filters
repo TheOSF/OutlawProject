@@ -215,6 +215,9 @@
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerAttack.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerMove.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerPlayerState_PoseMotion.cpp" />
+    <ClCompile Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballState_PoseMotion.cpp" />
+    <ClCompile Include="source\utillity\WindEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -389,6 +392,9 @@
     <ClInclude Include="source\character\Computer\CharacterComputerReaction.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerAttack.h" />
     <ClInclude Include="source\character\Soccer\SoccerPlayerState_PoseMotion.h" />
+    <ClInclude Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.h" />
+    <ClInclude Include="source\character\Baseball\BaseballState_PoseMotion.h" />
+    <ClInclude Include="source\utillity\WindEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

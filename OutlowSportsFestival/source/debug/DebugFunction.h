@@ -77,6 +77,7 @@ if (!(expr)){\
 	sprintf_s<600>(ti, "　%s　の行番号　%d　でエラーが発生しました \n %s \n式(%s) \n実行を続けますか？", __FILE__, __LINE__, t, #expr); \
 	MessageBeep(MB_OK); \
 	MessageBoxA(0, ti, "MyAssertError!!!", MB_YESNO); \
+    _asm int 3 \
 }\
 }
 

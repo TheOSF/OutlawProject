@@ -148,7 +148,8 @@ void SoccerState_ComputerControll_Shot::Execute(SoccerPlayer* s)
 	if (!m_pShotClass->Update())
 	{
 		s->SetState(new SoccerState_ComputerControll_Move);
-	}
+    }
+
 	//基本的な更新
 	SoccerHitEvent HitEvent(s);
 	chr_func::UpdateAll(s, &HitEvent);
