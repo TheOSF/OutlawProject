@@ -301,7 +301,7 @@ void UsualBall::Counter(CharacterBase* pCounterCharacter)
     m_Damage.Value += 1.0f; //ダメージを増やす
 
     //エフェクトカウント設定
-    m_EffectFrameCount = 30;
+    m_EffectFrameCount = 45;
 
 
     //EffectFactory::CircleAnimationBillbord(
@@ -448,7 +448,7 @@ bool UsualBall::StateFlyMove()
                 m_Params.move,
                 Vector3Zero,
                 Vector3Zero,
-                Vector2(23.f, 23.f)*EffectScale*((float)m_EffectFrameCount / 30.0f),
+                Vector2(23.f, 23.f)*EffectScale*((float)m_EffectFrameCount / 45.0f),
                 0xFFFFFFFF,
                 CharacterBase::GetPlayerColor(m_Params.pParent->m_PlayerInfo.number)
                 );
