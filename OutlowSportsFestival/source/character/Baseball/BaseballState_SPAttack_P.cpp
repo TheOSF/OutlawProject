@@ -11,86 +11,6 @@
 #include "../CharacterEvasionClass.h"
 #include "../../Sound/Sound.h"
 
-//
-//void  BaseballState_SPAttack_P::PlayerControllEvent::AngleControll(RADIAN angle)
-//{
-//	const CharacterBase* const pTargetCharacter = GetFrontTargetEnemy();
-//
-//	if (pTargetCharacter != nullptr)
-//	{
-//		//自動回転
-//		chr_func::AngleControll(m_pBaseball, pTargetCharacter->m_Params.pos, angle);
-//	}
-//	else
-//	{
-//		const Vector2 Stick = controller::GetStickValue(controller::stick::left, m_pBaseball->m_PlayerInfo.number);
-//
-//		//スティックが一定以上倒されているかどうか
-//		if (Vector2Length(Stick) > 0.25f)
-//		{
-//			Vector3 Vec(Stick.x, 0, Stick.y);
-//
-//			//スティック値をカメラ空間に
-//			Vec = Vector3MulMatrix3x3(Vec, matView);
-//
-//			//キャラクタ回転
-//			chr_func::AngleControll(m_pBaseball, m_pBaseball->m_Params.pos + Vec, angle);
-//		}
-//	}
-//}
-//
-//const CharacterBase*  BaseballState_SPAttack_P::PlayerControllEvent::GetFrontTargetEnemy()
-//{
-//	CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
-//
-//	const float  AutoDistance = 10.0f;               //自動ができる最大距離
-//	const RADIAN AutoMaxAngle = D3DXToRadian(90);   //自動ができる最大角度
-//
-//	const CharacterBase* pTargetEnemy = nullptr;    //ターゲット保持のポインタ
-//	RADIAN MostMinAngle = PI;                       //もっとも狭い角度
-//	RADIAN TempAngle;
-//
-//	Vector3 MyFront;      //自身の前方ベクトル
-//	chr_func::GetFront(m_pBaseball, &MyFront);
-//
-//	auto it = ChrMap.begin();
-//
-//	while (it != ChrMap.end())
-//	{
-//		//自身を除外
-//		if (m_pBaseball->m_PlayerInfo.number == it->first->m_PlayerInfo.number ||
-//			chr_func::isDie(it->first)
-//			)
-//		{
-//			++it;
-//			continue;
-//		}
-//
-//		//距離が一定以上のキャラクタを除外する
-//		if (Vector3Distance(it->first->m_Params.pos, m_pBaseball->m_Params.pos) > AutoDistance)
-//		{
-//			it = ChrMap.erase(it);
-//			continue;
-//		}
-//
-//		//前ベクトルと敵へのベクトルの角度を計算する
-//		TempAngle = Vector3Radian(MyFront, (it->first->m_Params.pos - m_pBaseball->m_Params.pos));
-//
-//		//角度が一番狭かったら更新
-//		if (TempAngle < MostMinAngle)
-//		{
-//			pTargetEnemy = it->first;
-//			MostMinAngle = TempAngle;
-//		}
-//
-//		++it;
-//	}
-//
-//	return pTargetEnemy;
-//
-//}
-
-
 //　コンストラクタ
 BaseballState_SPAttack_P::BaseballState_SPAttack_P() :
 m_Timer(0),
@@ -133,7 +53,13 @@ void BaseballState_SPAttack_P::Execute(BaseballPlayer* b){
 		// スティックの値セット
 		m_pSpAttack_P->SetStickValue(
 			controller::GetStickValue(controller::stick::left, b->m_PlayerInfo.number));
-
+		target = nullptr;
+		target = CalcTarget();
+		//ターゲットがいたら
+		if (target != nullptr)
+		{
+			chr_func::AngleControll(b, target->m_Params.pos);
+		}
 		// 更新
 		if (m_pSpAttack_P->Update() == false)
 		{
@@ -152,6 +78,7 @@ void BaseballState_SPAttack_P::Exit(BaseballPlayer* b){
 CharacterShotAttack* BaseballState_SPAttack_P::CreateSpAttack_P(BaseballPlayer* b){
 	class SpAttackEvent :public CharacterShotAttack::Event{
 		BaseballPlayer* m_pBaseball;//　野球
+	
 	public:
 		//　コンストラクタ
 		SpAttackEvent(BaseballPlayer* pBaseball) :
@@ -172,8 +99,9 @@ CharacterShotAttack* BaseballState_SPAttack_P::CreateSpAttack_P(BaseballPlayer* 
 		// ダメージ判定開始 & ボール発射
 		void Shot()
 		{
+		
 			BallBase::Params param;
-
+			
 			chr_func::GetFront(m_pBaseball, &param.move);
 			param.move *= 10.0f;
 			param.pos = m_pBaseball->m_Params.pos;
@@ -181,7 +109,8 @@ CharacterShotAttack* BaseballState_SPAttack_P::CreateSpAttack_P(BaseballPlayer* 
 			param.pParent = m_pBaseball;
 			param.type = BallBase::Type::_BaseballSpecialAtk;
 
-			new Baseball_SpAtk_Ball(param, DamageBase::Type::_VanishDamage, 1);
+			//　威力とか
+			new Baseball_SpAtk_Ball(param, DamageBase::Type::_VanishDamage, 50);
 		}
 
 		//　遠距離攻撃開始
@@ -195,6 +124,7 @@ CharacterShotAttack* BaseballState_SPAttack_P::CreateSpAttack_P(BaseballPlayer* 
 			//攻撃終了時に通常移動モードに戻る
 			m_pBaseball->SetState(new BaseballState_PlayerControll_Move());
 		}
+	
 	};
 
 	CharacterShotAttack::AttackParams atk;
@@ -222,3 +152,52 @@ void BaseballState_SPAttack_P::FreezeGame(UINT frame)
 	DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, frame);
 }
 
+
+//　ターゲット選定
+CharacterBase* BaseballState_SPAttack_P::CalcTarget()const
+{
+	Vector3 v1, v2;
+
+	const float HomingAngle = PI / 8;
+	float MostNear = 1000;
+	float TempLen;
+	CharacterBase* pTarget = nullptr;
+
+	//　map代入
+	const CharacterManager::CharacterMap& chr_map =
+		DefCharacterMgr.GetCharacterMap();
+
+
+	for (auto it = chr_map.begin(); it != chr_map.end(); ++it)
+	{
+
+		//　死んでるor自分ならcontinue
+		if (chr_func::isDie(it->first) ||
+			it->first->m_PlayerInfo.number == m_pBaseBall->m_PlayerInfo.number)
+		{
+			continue;
+		}
+
+		//　視野角計算
+		chr_func::GetFront(m_pBaseBall, &v1);
+
+		v2 = it->first->m_Params.pos - m_pBaseBall->m_Params.pos;
+		v2.y = 0;
+
+		//角度外なら適していない
+		if (Vector3Radian(v1, v2) > HomingAngle)
+		{
+			continue;
+		}
+
+		TempLen = v2.Length();
+
+		if (MostNear > TempLen)
+		{
+			MostNear = TempLen;
+			pTarget = it->first;
+		}
+	}
+
+	return pTarget;
+}

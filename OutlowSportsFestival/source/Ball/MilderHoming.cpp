@@ -105,9 +105,6 @@ bool MilderHoming::Msg(MsgType mt)
 
 void MilderHoming::State_TargetDecision()
 {
-    //ターゲット選択してState_ToTagetMoveに移行
-    //もしターゲットがなければState_NoWorkに移行
-
 
     //ターゲット取得
     m_pTarget = CalcTarget();

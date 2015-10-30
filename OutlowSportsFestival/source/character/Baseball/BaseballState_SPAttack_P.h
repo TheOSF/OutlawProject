@@ -8,26 +8,12 @@
 class CharacterShotAttack;
 class BaseballState_SPAttack_P : public BaseballState
 {
-//public:
-//	//攻撃操作クラス
-//	class PlayerControllEvent :public BaseballAttackClass::ControllEvent
-//	{
-//	public:
-//		PlayerControllEvent(BaseballPlayer*const pBaseball);
-//
-//		void AngleControll(RADIAN angle);
-//
-//	private:
-//		BaseballPlayer*const m_pBaseball;
-//
-//		const CharacterBase* GetFrontTargetEnemy();
-//	};
-//
+
 private:
 	CharacterShotAttack* CreateSpAttack_P(BaseballPlayer* b);
 	CharacterShotAttack* m_pSpAttack_P;
-	BaseballPlayer*        m_pBaseBall;
-
+	BaseballPlayer*      m_pBaseBall;
+	CharacterBase*		 target;
 	int                     m_Timer;
 	bool					timeflg;
 
@@ -46,6 +32,10 @@ public:
 	// ステート終了
 	void Exit(BaseballPlayer* b)override;
 
-	void FreezeGame(UINT frame); //　The World
+	//　The World
+	void FreezeGame(UINT frame); 
+
+	//　ターゲット選定
+	CharacterBase* CalcTarget()const;
 };
 
