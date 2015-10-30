@@ -67,7 +67,7 @@
 
 #include "../Effect/TornadoEffect.h"
 
-
+#include "../Stage/StageCarEmitter.h"
 
 
 
@@ -327,6 +327,10 @@ void GameInitializer_DevelopMode::GameCreate()
             Vector3(0, 0, 0),
             Vector3(0, 0, 0)
             );
+
+
+        //車エミッターを追加
+        new StageCarEmitter(0);
     }
 
     {
@@ -390,10 +394,10 @@ void GameInitializer_DevelopMode::GameCreate()
 
             A->param.color = Vector3(0.37f, 0.26f, 0.26f);
           //  A->param.color = Vector3(0.26f, 0.26f, 0.26f);
-            A->param.Occlusion.SamplingSize = 0.025f;
+            A->param.Occlusion.SamplingSize = 0.1f;
             A->param.Occlusion.Enable = false;
 
-       //     new DebugControllGameObject(&A->param.color, 0, 0.01f, "AmbColor", 'A');
+            new DebugControllGameObject(&A->param.color, 0, 0.01f, "AmbColor", 'A');
             new StaticGameObjectTemplate<AmbientLight>(A);
         }
     }
@@ -412,10 +416,10 @@ void GameInitializer_DevelopMode::GameCreate()
 
     //キャラクタ作成
     {
-        CreateCharacter((PlayerNum::Value)0, PlayerType::_Computer,   CharacterType::_Soccer);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Tennis);
 
-        CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Baseball);
-        CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Baseball);
     }
 }

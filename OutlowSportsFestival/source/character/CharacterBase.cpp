@@ -66,7 +66,7 @@ COLORf CharacterBase::GetPlayerColorF(PlayerNum::Value number)
 
     switch ((int)number)
     {
-    case 0: ret = COLORf(1,1,0.125f,0); break;
+    case 0: ret = COLORf(1,1,0.145f,0); break;
     case 1: ret = COLORf(1,0,1,1); break;
     case 2: ret = COLORf(1,1,1,0); break;
     case 3: ret = COLORf(1,0,1,0); break;

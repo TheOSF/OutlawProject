@@ -93,25 +93,15 @@ bool DamageCapsure::HitCheckSphere(const SphereParam* sp)
         return false;
     }
 
-    Vector3 v1 = sp->pos - m_Param.pos1;
-    Vector3 v2 = m_Param.pos2 - m_Param.pos1;
 
-    float v2l = v2.Length();
-
-    v2 /= v2l;
-
-    float l = Vector3Dot(v1, v2);
-
-    if (l < 0)
-    {
-        l = 0;
-    } 
-    else if (l > v2l)
-    {
-        l = v2l;
-    }
-
-    return Vector3Distance(sp->pos, m_Param.pos1 + v2*l) < sp->size;
+    return
+        isHitSphereCapsure(
+            sp->pos,
+            sp->size,
+            m_Param.pos1,
+            m_Param.pos2,
+            m_Param.width
+        );
 }
 
 bool DamageCapsure::HitCheckCapsure(const CapsureParam* cp)

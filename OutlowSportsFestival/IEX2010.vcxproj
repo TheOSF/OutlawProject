@@ -268,7 +268,9 @@
     <ClCompile Include="source\Sound\Sound.cpp" />
     <ClCompile Include="source\Stage\HitStageObject.cpp" />
     <ClCompile Include="source\Stage\PhysicsMeshObject.cpp" />
+    <ClCompile Include="source\Stage\StageCarEmitter.cpp" />
     <ClCompile Include="source\Stage\StageEdit.cpp" />
+    <ClCompile Include="source\Stage\StageObjectCar.cpp" />
     <ClCompile Include="source\Stage\StageObjectFactory.cpp" />
     <ClCompile Include="source\Stage\StagePhysicMoveObject.cpp" />
     <ClCompile Include="source\Stage\StageResourceLoadFaction.cpp" />
@@ -436,7 +438,9 @@
     <ClInclude Include="source\Sound\Sound.h" />
     <ClInclude Include="source\Stage\HitStageObject.h" />
     <ClInclude Include="source\Stage\PhysicsMeshObject.h" />
+    <ClInclude Include="source\Stage\StageCarEmitter.h" />
     <ClInclude Include="source\Stage\StageEdit.h" />
+    <ClInclude Include="source\Stage\StageObjectCar.h" />
     <ClInclude Include="source\Stage\StageObjectFactory.h" />
     <ClInclude Include="source\Stage\StagePhysicMoveObject.h" />
     <ClInclude Include="source\Stage\StageResourceLoadFaction.h" />

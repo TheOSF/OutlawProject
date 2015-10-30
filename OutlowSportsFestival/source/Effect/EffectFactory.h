@@ -14,6 +14,15 @@ namespace EffectFactory
         DWORD Color,
         bool Soft = false);
 
+    //煙エフェクト
+    void SmokeParticle(
+        CrVector3 pos,
+        CrVector3 move,
+        UINT   live_frame,
+        float size,
+        DWORD Color,
+        bool Soft = false);
+
     //カウンターのアニメーション
     void Counter(
         CrVector3 pos,

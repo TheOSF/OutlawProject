@@ -127,7 +127,6 @@ AmbientLight::AmbientLight()
     param.color = Vector3(0, 0.2f, 0);
     param.Occlusion.Enable = false;
     param.Occlusion.SamplingSize = 2.5f;
-
 }
 
 
@@ -135,6 +134,7 @@ void AmbientLight::Render(LightRenderer* pLightRenderer)
 {
     DeferredLightBufRenderer::AmbientParam temp = param;
 
+   // param.Occlusion.Enable = GetKeyState('O');
 
     pLightRenderer->AmbientLight(temp);
 

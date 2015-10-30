@@ -213,10 +213,10 @@ void BaseballState_SPAttack_B::State_Atk2()
 
 
 		//　エフェクト
-		for (int i = 0; i < 30; ++i)
+		for (int i = 0; i < 60; ++i)
 		{
 			g = new GlavityLocus(
-				pos, move + Vector3Rand() * 0.8f, power, 4, 40 + rand() % 30
+				pos, move*1.5f + Vector3Rand() * 0.8f, power, 4, 40 + rand() % 30
 				);
 
 			g->m_BoundRatio = 0.2f;
@@ -228,7 +228,7 @@ void BaseballState_SPAttack_B::State_Atk2()
 			g->m_Locus.m_StartParam.HDRColor = stHdCol;
 			g->m_Locus.m_EndParam.HDRColor = endHdCol;
 
-			g->m_Locus.m_StartParam.Width = 0.05f;
+			g->m_Locus.m_StartParam.Width = 0.1f;
 			g->m_Locus.m_EndParam.Width = 0.00f;
 
 		}

@@ -11,6 +11,7 @@
 #include "../CharacterManager.h"
 #include "TennisPlayerState_UsualMove.h"
 
+#include "../../Effect/EffectFactory.h"
 #include "../../Effect/HitEffectObject.h"
 #include "../../Sound/Sound.h"
 
@@ -188,7 +189,6 @@ void TennisState_Shot::Execute(TennisPlayer* t)
                     0,
                     10.0f
                     );
-
             }
 
             //è„Ç…è„Ç∞ÇΩÉ{Å[ÉãÇè¡ãé

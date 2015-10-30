@@ -19,7 +19,6 @@
 #include "TennisPlayerState_PoseMotion.h"
 
 #include "../../Render/LightObject.h"
-#include "../../Effect/ThunderEffect.h"
 
 
 

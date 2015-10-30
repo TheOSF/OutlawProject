@@ -82,7 +82,6 @@ bool StagePhysicMoveObject::Update()
     {
         HitEvent.vec.Normalize();
 
-
         //エフェクト
         new HitEffectObject(
             sp.pos,
@@ -97,7 +96,8 @@ bool StagePhysicMoveObject::Update()
 
         btVector3 p(HitEvent.vec.x, HitEvent.vec.y, HitEvent.vec.z);
        
-        
+        m_pRigidBody->pRigidBody->activate(false);
+
         m_pRigidBody->pRigidBody->setLinearVelocity(
             p
             );
@@ -107,7 +107,7 @@ bool StagePhysicMoveObject::Update()
             );
 
         
-        m_HitCount = 10;
+        m_HitCount = 60;
     }
 
 

@@ -61,17 +61,18 @@ public:
 private:
 
     bool(UsualBall::*m_pStateFunc)();
-	LpMeshRenderer		m_pMeshRenderer;
-	DamageCapsure		m_Damage;
-    int                 m_DeleteFrame;
-    LocusHDR            m_Locus;
-    Matrix              m_BaseMatrix;
-    RigidBody*          m_pRigitBody;
-    const UINT          m_HitNum;
-    UINT                m_HitCountSave;
-    UINT                m_HitStopFrame;
-    Vector3             m_RotateSpeed;
-    int                 m_EffectFrameCount;
+	LpMeshRenderer		        m_pMeshRenderer;
+	DamageCapsure		        m_Damage;
+    int                         m_DeleteFrame;
+    LocusHDR                    m_Locus;
+    Matrix                      m_BaseMatrix;
+    RigidBody*                  m_pRigitBody;
+    const UINT                  m_HitNum;
+    UINT                        m_HitCountSave;
+    UINT                        m_HitStopFrame;
+    Vector3                     m_RotateSpeed;
+    int                         m_EffectFrameCount;
+    const CharacterType::Value  m_FirstParentType;
 
 	bool isOutofField()const;  //フィールド外に出ているか
 

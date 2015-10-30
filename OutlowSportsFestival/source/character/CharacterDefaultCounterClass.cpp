@@ -318,7 +318,11 @@ void CharacterDefaultCounter::Shot()
 
         //カウンター音再生
         Sound::Play(Sound::AtkHit2);
+
+        //若干前に進む
+        chr_func::AddMoveFront(m_pOwner, 0.2f, 1.0f);
     }
+
 
     //時間で終了ステートへ
     if (m_Count > m_Param.AfterShotFrame)
@@ -339,15 +343,9 @@ void CharacterDefaultCounter::Shot()
         }
 
         //打ち終わっているのでスピードダウン
-        chr_func::XZMoveDown(m_pOwner, 0.1f);
+    //    chr_func::XZMoveDown(m_pOwner, 0.1f);
 
         chr_func::UpdateAll(m_pOwner, &BallDmgFilter);
-    }
-
-
-    //基本的な更新
-    {
-        chr_func::UpdateAll(m_pOwner, m_pHitEventClass);
     }
 
 }

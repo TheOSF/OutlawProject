@@ -25,7 +25,8 @@ UsualBall::UsualBall(
     m_HitStopFrame(0),
     m_pStateFunc(&UsualBall::StateFlyMove),
     m_RotateSpeed(0.15f, 0.05f, 0.05f),
-    m_EffectFrameCount(0)
+    m_EffectFrameCount(0),
+    m_FirstParentType(params.pParent->m_PlayerInfo.chr_type)
 {
 
     class PhysicUpdateCallBack :public MeshRenderer::PreRenderCallBack
@@ -85,7 +86,7 @@ UsualBall::UsualBall(
     {
         //軌跡の設定
         m_Locus.m_Division = 0;
-        m_Locus.m_StartParam.Width = 0.4f;
+        m_Locus.m_StartParam.Width = 3.6f * GetBallScale(params.pParent->m_PlayerInfo.chr_type);
         m_Locus.m_EndParam.Width = 0.1f;
 
         UpdateLocusColor();
@@ -297,10 +298,21 @@ void UsualBall::Counter(CharacterBase* pCounterCharacter)
     UpdateLocusColor();
 
     m_Damage.type = DamageBase::Type::_VanishDamage;
-    m_Damage.Value *= 1.3f; //ダメージを増やす
+    m_Damage.Value += 1.0f; //ダメージを増やす
 
     //エフェクトカウント設定
-    m_EffectFrameCount = 60;
+    m_EffectFrameCount = 30;
+
+
+    //EffectFactory::CircleAnimationBillbord(
+    //    m_Params.pos,
+    //    Vector3Zero,
+    //    Vector3Zero,
+    //    Vector2(8, 10), 
+    //    0xFFFFFFFF,
+    //    RS_ADD
+    //    );
+
 }
 
 void UsualBall::ToNoWork()
@@ -403,7 +415,6 @@ bool UsualBall::StateFlyMove()
     //メッシュ更新
     {
         Matrix m = m_pMeshRenderer->GetMatrix();
-
         
         m._41 = m._42 = m._43 = 0.0f;
         
@@ -426,16 +437,18 @@ bool UsualBall::StateFlyMove()
 
     //パーティクル
     {
+        const float EffectScale = UsualBall::GetBallScale(m_FirstParentType);
+
         m_EffectFrameCount = max(m_EffectFrameCount - 1, 0);
 
-        if (m_EffectFrameCount % 3 == 0 && m_EffectFrameCount > 0)
+        if (m_EffectFrameCount % 2 == 0 && m_EffectFrameCount > 0)
         {
             EffectFactory::CircleAnimation(
                 m_Params.pos,
                 m_Params.move,
                 Vector3Zero,
                 Vector3Zero,
-                Vector2(0.3f, 0.3f) * ((float)m_EffectFrameCount*0.15f + 5.0f) * GetMovePower(), 
+                Vector2(23.f, 23.f)*EffectScale*((float)m_EffectFrameCount / 30.0f),
                 0xFFFFFFFF,
                 CharacterBase::GetPlayerColor(m_Params.pParent->m_PlayerInfo.number)
                 );

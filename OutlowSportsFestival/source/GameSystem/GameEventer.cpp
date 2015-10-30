@@ -307,7 +307,7 @@ void MatchState::MatchPlay::Execute(_Client_type_ptr p)
     //前回のフレームとキャラクタ数が違った場合は時間をとめる
     if (m_PreLiveCount != liveCount && liveCount > 1)
     {
-        Sound::Play(Sound::Impact2);
+       // Sound::Play(Sound::);
 
         {
             //死んだキャラクタ以外の更新をとめる

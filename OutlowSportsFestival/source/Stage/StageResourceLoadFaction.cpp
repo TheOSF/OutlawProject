@@ -22,8 +22,15 @@ void StageResourceLoadFaction::LoadStage1Object()
     //バス
     DefResource.Regist(
         Resource::MeshType::Bus,
-        new iexMesh("DATA\\Stages\\Stage1\\Bus\\Bus.imo")
+        new iexMesh("DATA\\Stages\\Stage1\\Cars\\Bus.imo")
         );
+
+    //車(赤
+    DefResource.Regist(
+        Resource::MeshType::Car1,
+        new iexMesh("DATA\\Stages\\Stage1\\Cars\\Car.imo")
+        );
+
 
     //鉄パイプ
     DefResource.Regist(

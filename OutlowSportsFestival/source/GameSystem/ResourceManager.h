@@ -26,6 +26,8 @@ public:
 
         //ステージ１
         Bus,
+        Car1,
+
         Cone,
         Bench,
         Pipe,

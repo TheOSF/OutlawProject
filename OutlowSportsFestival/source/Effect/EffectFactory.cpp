@@ -34,6 +34,26 @@ void EffectFactory::Smoke(CrVector3 pos, CrVector3 move, float size, DWORD Color
         );
 }
 
+//煙エフェクト
+void EffectFactory::SmokeParticle(
+    CrVector3 pos,
+    CrVector3 move,
+    UINT   live_frame,
+    float size,
+    DWORD Color,
+    bool Soft)
+{
+    Particle(
+        15,
+        live_frame,
+        pos,
+        move,
+        Vector2(size, size), 
+        Color,
+        Soft,
+        RS_ADD
+        );
+}
 
 void EffectFactory::Counter(CrVector3 pos, float size)
 {

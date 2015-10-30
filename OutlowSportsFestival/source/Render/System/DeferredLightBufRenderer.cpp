@@ -447,6 +447,8 @@ void DeferredLightBufRenderer::LightRenderer::SpotLight(SpotLightParam& param)
     m_pMgr->m_pShader->SetValue("g_LightSize", param.size);
     m_pMgr->m_pShader->SetValue("g_LightVec", Vector3MulMatrix3x3(Vector3Normalize(param.target - param.origin), m_pMgr->m_ViewMatrix));
     m_pMgr->m_pShader->SetValue("g_LightMaxAngle", 1 / (1 - (Vector3Normalize(Vector3(param.size, Length, 0)).y)));
+    m_pMgr->m_pShader->SetValue("g_LightLength", Length);
+    
 
     if (param.Shadow.visible)
     {
