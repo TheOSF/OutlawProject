@@ -218,6 +218,11 @@
     <ClCompile Include="source\utillity\WindEffect.cpp" />
     <ClCompile Include="source\Stage\StageObjectCar.cpp" />
     <ClCompile Include="source\Stage\StageCarEmitter.cpp" />
+    <ClCompile Include="Input\InputManager.cpp" />
+    <ClCompile Include="Input\InputDevice.cpp" />
+    <ClCompile Include="Input\InputEffect.cpp" />
+    <ClCompile Include="Input\GamePad\GamePad.cpp" />
+    <ClCompile Include="Input\GamePad\GamePadManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -397,6 +402,16 @@
     <ClInclude Include="source\utillity\WindEffect.h" />
     <ClInclude Include="source\Stage\StageObjectCar.h" />
     <ClInclude Include="source\Stage\StageCarEmitter.h" />
+    <ClInclude Include="Input\InputManager.h" />
+    <ClInclude Include="Input\InputDevice.h" />
+    <ClInclude Include="Input\UtilFunc.h" />
+    <ClInclude Include="Input\InputEffect.h" />
+    <ClInclude Include="Input\InputError.h" />
+    <ClInclude Include="source\utillity\String.h" />
+    <ClInclude Include="Input\GamePad\GamePad.h" />
+    <ClInclude Include="Input\GamePad\GamePadSet.h" />
+    <ClInclude Include="Input\GamePad\GamePadIndex.h" />
+    <ClInclude Include="Input\GamePad\GamePadManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

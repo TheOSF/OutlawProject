@@ -69,8 +69,8 @@ bool Framework::Update()
 	dwGameFrame++;	//	ゲームフレーム数更新
 
 	//	更新処理
-	for (int i = 0; i < 4; i++)
-		KEY_SetInfo(i);
+	/*for (int i = 0; i < 4; i++)
+		KEY_SetInfo(i);*/
 	if( scene != NULL ) scene->Update();
 
 	return true;

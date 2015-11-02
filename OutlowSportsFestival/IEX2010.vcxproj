@@ -124,6 +124,26 @@
     <ClCompile Include="IEX\IEX_System.cpp" />
     <ClCompile Include="IEX\IEX_Texture.cpp" />
     <ClCompile Include="IEX\IEX_View.cpp" />
+    <ClCompile Include="Input\GamePad\GamePad.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Input\GamePad\GamePadManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Input\InputDevice.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Input\InputEffect.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Input\InputManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="source\character\Baseball\BaseballState_PoseMotion.cpp" />
     <ClCompile Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.cpp" />
     <ClCompile Include="source\character\Computer\CharacterComputerDoAction.cpp" />
@@ -288,6 +308,42 @@
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
     <ClInclude Include="IEX\iextreme.h" />
+    <ClInclude Include="Input\GamePad\GamePad.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Input\GamePad\GamePadIndex.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Input\GamePad\GamePadManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Input\GamePad\GamePadSet.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Input\InputDevice.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Input\InputEffect.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Input\InputError.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Input\InputManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Input\UtilFunc.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="source\character\Baseball\BaseballState_PoseMotion.h" />
     <ClInclude Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerDoAction.h" />
@@ -460,6 +516,7 @@
     <ClInclude Include="source\utillity\Singleton.h" />
     <ClInclude Include="source\utillity\StateTemplate.h" />
     <ClInclude Include="source\utillity\StaticGameObjectTemplate.h" />
+    <ClInclude Include="source\utillity\String.h" />
     <ClInclude Include="source\utillity\WindEffect.h" />
   </ItemGroup>
   <ItemGroup>

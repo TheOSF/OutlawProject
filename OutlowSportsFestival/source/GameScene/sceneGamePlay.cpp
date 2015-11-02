@@ -21,6 +21,9 @@
 #include "../Effect/ParticleManager.h"
 #include "../Sound/Sound.h"
 
+// input
+#include "../../Input/GamePad/GamePadManager.h"
+
 
 //*****************************************************************************************************************************
 //
@@ -35,6 +38,7 @@
 //	初期化
 //
 //*****************************************************************************************************************************
+std::vector<InputDevice*> g_InputDevices;
 
 
 bool sceneGamePlay::Initialize()
@@ -56,7 +60,6 @@ bool sceneGamePlay::Initialize()
     {
         Sound::Initialize();
     }
-    
 
 	return true;
 }
@@ -110,8 +113,18 @@ void	sceneGamePlay::Update()
     {
         // Bullet Physics
         DefBulletSystem.DebugDrawWorld();
-
     }
+
+
+	// ゲームパッド
+	GamePadManager::Update();
+
+	if (GamePadManager::GetState(0, GamePadIndex_LeftPad_Up) == 3)
+	{
+		GamePadManager::Vibration(0, 0, DI_SECONDS*5, 10000);
+	}
+
+
 }
 
 //*****************************************************************************************************************************
