@@ -373,13 +373,13 @@ BOOL iex3DObj::CreateFromIEM( char* path, LPIEMFILE lpIem )
 		sprintf( temp, "%s%s", path, lpIem->Texture[i] );
 		lpTexture[i] = iexTexture::Load( temp );
 
-        sprintf(temp, "%s%s_T.%s", path, Name,ext);
+        sprintf(temp, "%s%s_N.%s", path, Name,ext);
 		lpNormal[i] = iexTexture::Load( temp );
 
         sprintf(temp, "%s%s_S.%s", path, Name, ext);
 		lpSpecular[i] = iexTexture::Load( temp );
 
-        sprintf(temp, "%s%s_ST.%s", path, Name, ext);
+        sprintf(temp, "%s%s_H.%s", path, Name, ext);
 		lpHeight[i] = iexTexture::Load( temp );
 	}
 

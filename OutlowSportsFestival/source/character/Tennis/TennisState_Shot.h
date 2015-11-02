@@ -33,7 +33,6 @@ public:
 
 private:
     int                  m_Timer;
-    PhysicallyMoveBall*  m_pUpBall;
     ControllClass*       m_pControllClass;
 
     const CharacterBase* GetFrontTarget(TennisPlayer* t)const;

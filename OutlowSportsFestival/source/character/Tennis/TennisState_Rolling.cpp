@@ -45,7 +45,7 @@ void TennisState_Rolling::Execute(TennisPlayer* t)
     //モーションセット
     if (m_Timer == 1)
     {
-        t->m_Renderer.SetMotion(TennisPlayer::_mt_Guard);
+        t->m_Renderer.SetMotion(TennisPlayer::_mt_Rolling);
     }
 
     //移動方向をコントロール

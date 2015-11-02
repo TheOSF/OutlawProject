@@ -20,7 +20,7 @@ public:
         float     length,
         float     width,
         Vector3   color,
-        UINT      particle_level = 0,
+        UINT      particle_level = 1,
         float     LightSize = 20.0f,
         UINT      frame = 8
         );

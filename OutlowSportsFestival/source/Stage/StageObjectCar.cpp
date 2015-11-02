@@ -9,7 +9,8 @@ StageObjectCar::StageObjectCar(
     CarType   type,  //車タイプ
     bool      light  //ヘッドライト(on off)
     ):
-    m_Speed(Speed),
+    m_TargetSpeed(Speed),
+    m_MoveSpeed(Speed),
     m_GoalPos(goal),
     m_LiveFlg(true),
     m_Angle(0)
@@ -146,6 +147,12 @@ StageObjectCar::~StageObjectCar()
 
 bool StageObjectCar::Update()
 {
+    //当たっていた場合の処理
+    if (m_Damage.HitCount > 0)
+    {
+        AttackSucces();
+    }
+
     //移動
     Move();
 
@@ -186,16 +193,24 @@ bool StageObjectCar::Msg(MsgType mt)
     return false;
 }
 
+void  StageObjectCar::AttackSucces()
+{
+    m_Damage.HitCount = 0;
+    m_MoveSpeed *= 0.35f;
+}
+
 void  StageObjectCar::Move()
 {
     Matrix t = m_pCarMesh->GetMatrix();
 
     Vector3 v = m_GoalPos - Vector3(t._41, t._42, t._43);
 
-    if (v.Length() > m_Speed)
+    m_MoveSpeed += (m_TargetSpeed - m_MoveSpeed)*0.03f;
+
+    if (v.Length() > m_MoveSpeed)
     {
         v.Normalize();
-        v *= m_Speed;
+        v *= m_MoveSpeed;
     }
 
     t._41 += v.x;

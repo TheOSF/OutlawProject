@@ -18,16 +18,15 @@
 #include "../UI/GameSetUI.h"
 
 #include "../Sound/Sound.h"
+#include "MatchLightManager.h"
 
 
 //----------------------------------------------------
 //  試合遷移メッセージを送信するクラス
 //----------------------------------------------------
 
-GameEventer::GameEventer(const Param& p, State* pInitState, LPVECTOR3 pControllDirColor) :
-m_Param(p),
-m_pControllDirColor(pControllDirColor),
-m_InitDirColor(*pControllDirColor)
+GameEventer::GameEventer(const Param& p, State* pInitState) :
+m_Param(p)
 {
     m_Param.round_count = 1;
 
@@ -51,14 +50,17 @@ void GameEventer::SetState(State* pState)
 
 void GameEventer::SetLightChange()
 {
-    *m_pControllDirColor = Vector3Zero;
+    DefMatchLightManager.LightChangeAndBack(
+        3,
+        30,
+        10,
+        Vector3(0.3f, 0.3f, 0.3f)
+        );
 }
 
 bool GameEventer::Update()
 {
 	m_pStateMachine->state_execute();
-
-    *m_pControllDirColor += (m_InitDirColor - *m_pControllDirColor)*0.05f;
 
 	return true;
 }
@@ -483,6 +485,13 @@ void MatchState::WinPose::Execute(_Client_type_ptr p)
    //     UpdateList.push_back(m_pLastDieCharacter);
       
         DefGameObjMgr.FreezeOtherObjectUpdate(UpdateList, 120);
+
+        DefMatchLightManager.LightChangeAndBack(
+            3,
+            100,
+            10,
+            Vector3(0.8f, 0.8f, 0.8f)
+            );
     }
 
 

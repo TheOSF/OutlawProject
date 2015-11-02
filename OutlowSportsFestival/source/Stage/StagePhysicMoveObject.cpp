@@ -14,15 +14,40 @@ StagePhysicMoveObject::StagePhysicMoveObject(
     m_pRigidBody(pRigidBody),
     m_HitScale(HitScale),
     m_Scale(Scale),
-    m_HitCount(0)
+    m_HitCount(0),
+    m_Destroy(false)
 {
-
+    MeshUpdate();
 }
 
 StagePhysicMoveObject::~StagePhysicMoveObject()
 {
     delete m_pRenderMesh;
     DefBulletSystem.RemoveRigidBody(m_pRigidBody);
+}
+
+void StagePhysicMoveObject::MeshUpdate()
+{
+    Matrix M;
+    m_pRigidBody->Get_TransMatrix(M);
+
+    {
+        M._11 *= m_Scale.x;
+        M._12 *= m_Scale.x;
+        M._13 *= m_Scale.x;
+
+        M._21 *= m_Scale.y;
+        M._22 *= m_Scale.y;
+        M._23 *= m_Scale.y;
+
+        M._31 *= m_Scale.z;
+        M._32 *= m_Scale.z;
+        M._33 *= m_Scale.z;
+
+        m_pRenderMesh->SetMatrix(M);
+
+    }
+
 }
 
 bool StagePhysicMoveObject::Update()
@@ -52,22 +77,7 @@ bool StagePhysicMoveObject::Update()
 
     m_pRigidBody->Get_TransMatrix(M);
 
-    {
-        M._11 *= m_Scale.x;
-        M._12 *= m_Scale.x;
-        M._13 *= m_Scale.x;
-
-        M._21 *= m_Scale.y;
-        M._22 *= m_Scale.y;
-        M._23 *= m_Scale.y;
-
-        M._31 *= m_Scale.z;
-        M._32 *= m_Scale.z;
-        M._33 *= m_Scale.z;
-
-        m_pRenderMesh->SetMatrix(M);
-
-    }
+    MeshUpdate();
 
     SphereParam sp;
     HitCheckObj HitEvent;
@@ -110,8 +120,12 @@ bool StagePhysicMoveObject::Update()
         m_HitCount = 60;
     }
 
+    if (m_Destroy == false)
+    {
+        m_Destroy = Vector3(M._41, M._42, M._43).Length() > 150.0f;
+    }
 
-    return Vector3(M._41, M._42, M._43).Length() < 200.0f;
+    return !m_Destroy;
 }
 
 bool StagePhysicMoveObject::Msg(GameObjectBase::MsgType type)

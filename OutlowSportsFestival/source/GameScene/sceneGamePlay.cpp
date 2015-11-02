@@ -10,6 +10,7 @@
 #include    "../Ball/Ball.h"
 #include    "../GameSystem/ResourceManager.h"
 #include    "../Collision/Collision.h"
+#include    "../GameSystem/MatchLightManager.h"
 
 // Bullet
 #include "../Library/Bullet/BulletSystem.h"
@@ -78,6 +79,7 @@ sceneGamePlay::~sceneGamePlay()
 	DefCamera.Release();
 	DefCollisionMgr.Release();
     DefResource.Release();
+    DefMatchLightManager.Release();
 
     {// Bullet
         DefBulletSystem.ReleaseBulletPhysics();
@@ -95,8 +97,13 @@ void	sceneGamePlay::Update()
     //カメラ更新
 	DefCamera.Update();
 
-    //全ゲームオブジェクト更新
-    DefGameObjMgr.Update();
+
+    if (!GetKeyState('M'))
+    {
+        //全ゲームオブジェクト更新
+        DefGameObjMgr.Update();
+
+    }
     
     //キャラクタ押しのける
     DefCharacterMgr.CheckCharacterSpace();
@@ -105,6 +112,9 @@ void	sceneGamePlay::Update()
     DefDamageMgr.DebugDraw();
     DefDamageMgr.m_DebugDrawVisible = GetKeyState('P') != 0;
 
+    //ライト更新
+    DefMatchLightManager.Update();
+
     //デバッグ用描画切り替え
     if (GetKeyState('L'))
     {
@@ -112,6 +122,7 @@ void	sceneGamePlay::Update()
         DefBulletSystem.DebugDrawWorld();
 
     }
+    
 }
 
 //*****************************************************************************************************************************

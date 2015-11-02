@@ -7,7 +7,8 @@
 #include "../GameSystem/ResourceManager.h"
 
 #include "AnimationBordRenderer.h"
-
+#include "HitEffectObject.h"
+#include "../character/CharacterBase.h"
 
 
 void EffectFactory::Smoke(CrVector3 pos, CrVector3 move, float size, DWORD Color, bool Soft)
@@ -229,4 +230,26 @@ void EffectFactory::ParticleHDR(
 		1,
 		1
 		);
+}
+
+
+//死亡時のエフェクト
+void EffectFactory::DieEffect(
+    CharacterBase* pDieCharacter,
+    CrVector3 Pos,
+    CrVector3 Damage_Vec
+    )
+{
+    COLORf EffectColor(CharacterBase::GetPlayerColor(pDieCharacter->m_PlayerInfo.number));
+
+    //ヒットエフェクト作成
+    new HitEffectObject(
+        Pos,
+        Damage_Vec,
+        0.05f,
+        0.15f,
+        Vector3(EffectColor.r, EffectColor.g, EffectColor.b)*4.0f,
+        5,
+        50
+        );
 }

@@ -4,6 +4,7 @@
 #include "../../Render/MeshRenderer.h"
 #include "../../Ball/UsualBall.h"
 #include "../../Ball/BallFadeOutRenderer.h"
+#include "TennisPlayerState_UsualMove.h"
 
 //*****************************************************
 //		投げ上げるボールクラス
@@ -14,11 +15,12 @@ TennisUpBall::TennisUpBall(
     TennisPlayer* pTennis
     ) :
     m_Pos(pos),
-    m_MoveY(1),
+    m_MoveY(0.32f),
     m_SlowFlag(true),
     m_Timer(0),
     m_pTennis(pTennis),
-    m_pRigidBody(nullptr)
+    m_pRigidBody(nullptr),
+    m_pStateFunc(&TennisUpBall::State_SlowFly)
 {
     {
         iexMesh* pMesh = nullptr;
@@ -97,7 +99,6 @@ void TennisUpBall::State_SlowFly()
 
     const float SlowValue = 0.1f;
     const float Glavity = -0.01f;
-
 
     //スローする条件
     if (m_SlowFlag &&
@@ -234,7 +235,7 @@ TennisState_SlowUpBall::TennisState_SlowUpBall(
 
 TennisState_SlowUpBall::~TennisState_SlowUpBall()
 {
-
+    delete m_pControllClass;
 }
 
 
@@ -247,13 +248,24 @@ void TennisState_SlowUpBall::Execute(TennisPlayer* t)
 {
     const int SlowFrame = 3;
     const int CanSwitchFrame  = SlowFrame + 2;
-    const int DontSwitchFrame = DontSwitchFrame + 30;
+    const int DontSwitchFrame = CanSwitchFrame + 60;
+    const int EndFrame = 100;
 
+    //カウンター更新
+    ++m_Timer;
+
+    //移動値の現象
+    {
+        chr_func::XZMoveDown(t, 0.1f);
+    }
+
+    //派生アクションの入力更新
     if (m_Timer >= CanSwitchFrame && m_Timer <= DontSwitchFrame)
     {
         m_pControllClass->SwitchState(this);
     }
 
+    //ボールを投げる
     if (m_Timer == SlowFrame)
     {
         new TennisUpBall(
@@ -262,6 +274,13 @@ void TennisState_SlowUpBall::Execute(TennisPlayer* t)
             );
     }
 
+    //時間経過で通常移動ステートへ
+    if (m_Timer >= EndFrame)
+    {
+        t->SetState(TennisState_PlayerControll_Move::GetPlayerControllMove(t));
+    }
+
+    //基本的な更新↓
     TennisHitEvent HitEvent(t);
 
     chr_func::UpdateAll(t, &HitEvent);

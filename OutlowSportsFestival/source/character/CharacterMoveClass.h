@@ -17,10 +17,13 @@ class CharacterUsualMove
 public:
 	struct Params
 	{
+        Params();
+
 		float Acceleration;	//加速度
 		float DownSpeed;	//減速する速度
 		float MaxSpeed;		//最大速度
 		float TurnSpeed;	//角度変化スピード
+        int   RunEndFrame;  //走り終了モーションの長さ
 	};
 
 	class MoveEvent
@@ -29,8 +32,9 @@ public:
 		virtual~MoveEvent(){}
 		virtual void Update(bool isRun,RATIO speed_ratio) = 0;	//毎フレーム実行される関数
 		virtual void RunStart() = 0;			//走り開始時に呼ばれる関数
-		virtual void StandStart() = 0;			//棒立ち開始時に呼ばれる関数
-	};
+        virtual void StandStart() = 0;			//棒立ち開始時に呼ばれる関数
+        virtual void RunEnd(){}
+    };
 
 	CharacterUsualMove(
 		CharacterBase*					pParent,	//操るキャラクタのポインタ
@@ -46,13 +50,19 @@ public:
 private:
 	typedef DamageManager::HitEventBase HitEventBase;
 
+    void(CharacterUsualMove::*m_pStateFunc)();
 	CharacterBase*	m_pParent;
 	MoveEvent*		m_pMoveEvent;
 	HitEventBase*	m_pHitEventBase;
 	Params			m_Params;
 	Vector2			m_StickValue;
-	bool			m_isRun;
-    bool            m_Init;
+    int             m_FrameCounter;
+
+
+    void State_Init();
+    void State_Stand();
+    void State_Run();
+    void State_Runend();
 };
 
 #endif

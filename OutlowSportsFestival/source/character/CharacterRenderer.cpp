@@ -42,7 +42,7 @@ void CharacterRenderer::SetMaterialRenderType(int MaterialNum, RenderType Type)
     {
         "CharacterSkin",
         "DeffLightNoSp",
-        "DeffLightNoSp",
+        "CharacterClothes",
         "CharacterSkin",
         "DeffLightNoSp",
     };
@@ -181,6 +181,7 @@ void CharacterRenderer::GbufRender(
 void CharacterRenderer::MasterRender()
 {
     shader->SetValue("g_HDR_Color", m_HDR);
+    shader->SetValue("g_Color", D3DXVECTOR4(m_ClothesColor.x, m_ClothesColor.y, m_ClothesColor.z, 1.0f));
 
     m_pAnimeMesh->Render(shader, m_Techniques);
 }

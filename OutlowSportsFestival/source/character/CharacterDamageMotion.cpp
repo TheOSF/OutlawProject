@@ -66,12 +66,40 @@ void CharacterDamageMotion::Update()
         Sound::Play(Sound::Damage3);
 	}
 
-	//無敵フレーム判定
-	if (m_Timer > m_Params.NoDamageFrame)
-	{
-		//ダメージ判定
-		chr_func::DamageCheck(m_pCharacter, m_pHitEvent);
-	}
+    //若干キャラクタ座標を揺らす(食らっているのを強調するため)
+    {
+        m_Pos = m_pCharacter->m_Params.pos;
+
+        if (m_Timer < 15)
+        {
+            m_pCharacter->m_Params.pos += Vector3Rand()*0.25f;
+        }
+    }
+
+    //キャラクタを若干光らせるパラメータを送る
+    {
+        m_pEvent->SetLight(pow(1 - min(((float)m_Timer / 15.0f), 1), 2)*0.25f);
+    }
+
+    //イベントクラス更新
+    m_pEvent->Update((m_Timer < m_Params.hitStopFrame) ? (0.2f) : (1.0f));
+
+    //終了判定
+    if (m_End == false &&
+        m_Params.AllFrame <= m_Timer)
+    {
+        m_End = true;
+        m_pEvent->End();
+    }
+
+
+
+    //無敵フレーム判定
+    if (m_Timer > m_Params.NoDamageFrame)
+    {
+        //ダメージ判定
+        chr_func::DamageCheck(m_pCharacter, m_pHitEvent);
+    }
 
     //ヒットバック処理
     if (m_Params.hitStopFrame == m_Timer)
@@ -100,31 +128,5 @@ void CharacterDamageMotion::Update()
         //床との接触判定
         chr_func::CheckGround(m_pCharacter);
 
-    }
-
-    //若干キャラクタ座標を揺らす(食らっているのを強調するため)
-    {
-        m_Pos = m_pCharacter->m_Params.pos;
-
-        if (m_Timer < 15)
-        {
-            m_pCharacter->m_Params.pos += Vector3Rand()*0.25f;
-        }
-    }
-
-    //キャラクタを若干光らせるパラメータを送る
-    {
-        m_pEvent->SetLight(pow(1 - min(((float)m_Timer / 15.0f), 1), 2)*0.25f);
-    }
-
-    //イベントクラス更新
-    m_pEvent->Update((m_Timer < m_Params.hitStopFrame) ? (0.2f) : (1.0f));
-
-    //終了判定
-    if (m_End == false &&
-        m_Params.AllFrame <= m_Timer)
-    {
-        m_End = true;
-        m_pEvent->End();
     }
 }

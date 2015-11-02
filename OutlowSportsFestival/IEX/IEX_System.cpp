@@ -120,9 +120,12 @@ void iexSystem::GetScreenRect( DWORD mode, RECT& rc )
 	case SCREEN800:	 rc.right = 800;  rc.bottom = 600;	break;
 	case SCREEN1024: rc.right = 1024; rc.bottom = 768;	break;
 	case SCREEN720p: rc.right = 1280; rc.bottom = 720;	break;
-
-    case SCREEN1900: rc.right = 1900; rc.bottom = 1024;	break;
-
+   
+    case SCREEN900p: rc.right = 1600; rc.bottom = 900;	break;
+    case SCREEN1080p: rc.right = 1920; rc.bottom = 1080;	break;
+    
+    case SCREEN1360x1080p: rc.right = 1360; rc.bottom = 1080;	break;
+        
 	default:
 			rc.right = (mode>>16);
 			rc.bottom = (mode&0xFFFF);

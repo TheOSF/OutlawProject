@@ -69,8 +69,10 @@
 
 #include "../Stage/StageCarEmitter.h"
 
+#include "MatchLightManager.h"
+#include "../Stage/RiverObject.h"
 
-
+#include "../Stage/StageEdit.h"
 
 static void CreateCharacter(
     PlayerNum::Value      n,
@@ -254,7 +256,9 @@ void GameInitializer_DevelopMode::GameCreate()
 
             const float scale = 0.1f;
 
-            MeshRenderer* R = new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColorSpecular);
+            MeshRenderer* R = new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColorSpecular,MeshRenderer::GbufRenderType::UseNormal);
+            //MeshRenderer* R = new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColorSpecular);
+
             MeshCollider* C = new MeshCollider(pStageMesh, new MeshCollider::HitEvent);
 
             pStageMesh->SetScale(scale, scale, scale);
@@ -277,46 +281,6 @@ void GameInitializer_DevelopMode::GameCreate()
                 );
         }
 
-
-        {
-            //テスト用にオブジェクトを配置
-            
-            //StageObjFactory::CreateBench(
-            //    Vector3(10, 2, 0),
-            //    Vector3(0, 0, 0)
-            //    );
-            
-            {
-                for (int i = 0; i < 3; ++i)
-                {
-
-                    StageObjFactory::CreateBench(
-                        Vector3((frand() - 0.5f) * 60, 2.0f, (frand() - 0.5f) * 60),
-                        Vector3(frand()*PI, frand()*PI, frand()*PI)
-                        );
-
-                }
-
-                for (int i = 0; i < 10; ++i)
-                {
-                    StageObjFactory::CreateCone(
-                        Vector3((frand() - 0.5f) * 60, 2.5f, (frand() - 0.5f) * 0),
-                        //Vector3(frand()*PI, frand()*PI, frand()*PI)
-                        Vector3Zero
-                        );
-                }
-
-                //for (int i = 0; i < 5; ++i)
-                //{
-                //    StageObjFactory::CreatePipe(
-                //        Vector3((frand() - 0.5f) * 60, 10.5f, (frand() - 0.5f) * 0),
-                //        //Vector3(frand()*PI, frand()*PI, frand()*PI)
-                //        Vector3Zero
-                //        );
-                //}
-            }
-        }
-
         //土台のステージを物理エンジンに登録
         DefBulletSystem.AddRigidMesh(
             pStageMesh,
@@ -331,6 +295,15 @@ void GameInitializer_DevelopMode::GameCreate()
 
         //車エミッターを追加
         new StageCarEmitter(0);
+
+
+        ////川を追加
+        //new RiverObject(
+        //    Vector3(0, 2, 0),
+        //    Vector3(10,10,10),
+        //    Vector3(0, 0, 0),
+        //    Vector2(0.01f, 0.0f)
+        //    );
     }
 
     {
@@ -340,7 +313,7 @@ void GameInitializer_DevelopMode::GameCreate()
 
     {
         //パーティクルアップデーター生成
-        new ParticleManagerUpdater();
+     //   new ParticleManagerUpdater();
     }
 
     if (0)
@@ -356,8 +329,6 @@ void GameInitializer_DevelopMode::GameCreate()
 
         new StaticGameObjectTemplate<DamageShpere>(d);
     }
-
-    Vector3 *pDirLightColor = nullptr;
 
     {
         //ライティング設定
@@ -383,9 +354,10 @@ void GameInitializer_DevelopMode::GameCreate()
             D->param.Shadow.origin = D->param.vec*-50.0f;
             D->param.Shadow.Size = 120;
 
-            pDirLightColor = &D->param.color;
 
-        //    new DebugControllGameObject(&D->param.color, 0, 0.01f, "DirColor", 'D');
+            DefMatchLightManager.AddManageLightValue(&D->param.color);
+
+            new DebugControllGameObject(&D->param.color, 0, 0.01f, "DirColor", 'D');
             new StaticGameObjectTemplate<DirLight>(D);
         }
 
@@ -397,28 +369,42 @@ void GameInitializer_DevelopMode::GameCreate()
             A->param.Occlusion.SamplingSize = 0.1f;
             A->param.Occlusion.Enable = false;
 
+
+            DefMatchLightManager.AddManageLightValue(&A->param.color);
+
             new DebugControllGameObject(&A->param.color, 0, 0.01f, "AmbColor", 'A');
             new StaticGameObjectTemplate<AmbientLight>(A);
         }
     }
-   
+
 
     {
         GameEventer::Param param;
 
         param.round = 3;
         param.time = 60 * 60 * 1; // 1 分
-       // param.time = 60 * 3;
+        // param.time = 60 * 3;
 
-        new GameEventer(param, new MatchState::RoundResetCountdown(), pDirLightColor);
+        new GameEventer(param, new MatchState::RoundResetCountdown());
     }
 
+
+    if (false)
+    {
+        //ステージエディット
+        new StageEditer();
+    }
+    else
+    {
+        //読み込み
+        StageEditer::Load("DATA\\Stages\\Stage1\\StageObjData.txt");
+    }
 
     //キャラクタ作成
     {
         CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
         CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Tennis);
-
+    
         CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Tennis);
         CreateCharacter((PlayerNum::Value)3, PlayerType::_Player, CharacterType::_Tennis);
     }

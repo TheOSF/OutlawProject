@@ -46,10 +46,10 @@ void EffekseerEffectManager::LoadEffect(EffectID id, const EFK_CHAR* file)
 	// 読み込み
 	Effect* pEffect = Effect::Create(m_pManager, file);
 
-	MyAssertW(
-		pEffect != nullptr,
-		L"ファイル : %s の読み込みに失敗しました。\n", (const wchar_t*)file
-		);
+	//MyAssertW(
+	//	pEffect != nullptr,
+	//	L"ファイル : %s の読み込みに失敗しました。\n", (const wchar_t*)file
+	//	);
 
 	// 登録
 	m_Effects.insert(

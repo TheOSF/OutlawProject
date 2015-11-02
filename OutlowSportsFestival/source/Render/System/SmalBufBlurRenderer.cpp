@@ -1,8 +1,8 @@
 #include "SmalBufBlurRenderer.h"
 
 
-SmalBufBlurRenderer::SmalBufBlurRenderer(UINT level, const char* ShaderFile) :
-m_TextureNum(level),
+SmalBufBlurRenderer::SmalBufBlurRenderer(const char* ShaderFile) :
+m_TextureNum(6),
 m_pSource(nullptr)
 {
     DWORD division;
@@ -14,33 +14,27 @@ m_pSource(nullptr)
 
     m_pWorkTextures = new iex2DObj*[m_TextureNum];
     m_pWorkTextureSizes = new DWORD2[m_TextureNum];
-    m_pDepthStencils = new Surface*[m_TextureNum];
-
 
     for (UINT i = 0; i < m_TextureNum; ++i)
     {
-        division = (DWORD)pow(2, (int)i);
+        division = (DWORD)pow(2, (int)i + 1);
 
         m_pWorkTextureSizes[i].x = iexSystem::ScreenWidth / division;
         m_pWorkTextureSizes[i].y = iexSystem::ScreenHeight / division;
-
-        iexSystem::Device->CreateDepthStencilSurface(
-            m_pWorkTextureSizes[i].x,
-            m_pWorkTextureSizes[i].y,
-            D3DFMT_D16,
-            D3DMULTISAMPLE_NONE,
-            0,
-            FALSE,
-            &m_pDepthStencils[i],
-            NULL
-            );
 
         m_pWorkTextures[i] = new iex2DObj(
             m_pWorkTextureSizes[i].x,
             m_pWorkTextureSizes[i].y,
             IEX2D_RENDERTARGET
             );
+
+        sprintf(path, "%s%d", "AddTexture", (int)(i + 1));
+
+        m_pShader->m_pShader->SetTexture(path, m_pWorkTextures[i]->GetTexture());
     }
+
+    
+    
 }
 
 SmalBufBlurRenderer::~SmalBufBlurRenderer()
@@ -54,7 +48,6 @@ SmalBufBlurRenderer::~SmalBufBlurRenderer()
     
     delete[] m_pWorkTextures;
     delete[] m_pWorkTextureSizes;
-    delete[] m_pDepthStencils;
 }
 
 void SmalBufBlurRenderer::SetSourceTexture(iex2DObj* texture)
@@ -80,6 +73,10 @@ void SmalBufBlurRenderer::Render()
     iexSystem::Device->GetDepthStencilSurface(&pSaveDepthStencil);
 
 
+    iexSystem::Device->SetDepthStencilSurface(NULL);
+
+
+
     RenderToParentTexture();
 
     //作業用テクスチャにブラー結果を出力
@@ -94,27 +91,45 @@ void SmalBufBlurRenderer::Render()
     iexSystem::Device->SetRenderTarget(0, pSaveSurface);
     pSaveSurface->Release();
 
+
+    float alpha = 1.2f;
+    float mul_alpha = 0.9f;
+
+    m_pShader->SetValue("g_Alpha", alpha);
+    m_pShader->SetValue("g_MulAlpha", mul_alpha);
+
+
+    iexPolygon::RectPlus(
+        0,
+        0,
+        iexSystem::ScreenWidth,
+        iexSystem::ScreenHeight,
+        m_pShader,
+        "add",
+        0xFFFFFFFF
+        );
+
+
     iexSystem::Device->SetDepthStencilSurface(pSaveDepthStencil);
     pSaveDepthStencil->Release();
 
-    float alpha = 0.9f;
+    ////ブラーテクスチャを出力
+    //for (UINT i = 0; i < m_TextureNum; ++i)
+    //{
+    //    m_pShader->SetValue("g_Alpha", alpha);
 
-    //ブラーテクスチャを出力
-    for (UINT i = 0; i < m_TextureNum; ++i)
-    {
-        m_pShader->SetValue("g_Alpha", alpha);
+    //    alpha *= 0.9f;
 
-        alpha *= 0.85f;
+    //    m_pWorkTextures[i]->Render(
+    //        0, 0, iexSystem::ScreenWidth, iexSystem::ScreenHeight,
+    //        0, 0, m_pWorkTextureSizes[i].x, m_pWorkTextureSizes[i].y,
+    //        m_pShader,
+    //        "add"
+    //        );
+    //}
 
-        m_pWorkTextures[i]->Render(
-            0, 0, iexSystem::ScreenWidth, iexSystem::ScreenHeight,
-            0, 0, m_pWorkTextureSizes[i].x, m_pWorkTextureSizes[i].y,
-            m_pShader,
-            "add"
-            );
-    }
 
-    
+
 }
 
 
@@ -130,8 +145,6 @@ void SmalBufBlurRenderer::RenderToParentTexture()
     SetViewport.MaxZ = 1;
 
     iexSystem::Device->SetViewport(&SetViewport);
-
-    iexSystem::Device->SetDepthStencilSurface(m_pDepthStencils[0]);
 
     m_pWorkTextures[0]->RenderTarget(0);
 
@@ -167,8 +180,6 @@ void SmalBufBlurRenderer::RenderToTexture(UINT from, UINT to)
     SetViewport.MaxZ = 1;
 
     iexSystem::Device->SetViewport(&SetViewport);
-
-    iexSystem::Device->SetDepthStencilSurface(m_pDepthStencils[to]);
 
     m_pWorkTextures[to]->RenderTarget(0);
 

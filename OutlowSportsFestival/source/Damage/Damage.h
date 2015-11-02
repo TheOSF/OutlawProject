@@ -38,7 +38,7 @@ public:
 		_UpDamage,		//上に吹き飛ぶ(バレーとか)追撃可能
 	};
 
-	LpCharacterBase	pParent;	//このダメージ判定の元のキャラクタ
+	LpCharacterBase	pParent;	//このダメージ判定の元のキャラクタ(親がキャラクタでない場合はnullptrが入っている)
 	LpBallBase		pBall;		//この判定についているボール(ボールでなければnull)
 	Type			type;		//このダメージのタイプ
 	float			Value;		//値

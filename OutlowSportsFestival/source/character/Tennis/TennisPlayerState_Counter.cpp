@@ -73,13 +73,13 @@ void TennisState_PlayerControll_Counter::Enter(TennisPlayer* t)
     //カウンターパラメータ設定
     CharacterDefaultCounter::Param param;
 
-    param.AfterShotFrame = 6;
+    param.AfterShotFrame = 18;
     param.CanCounterFrame = 30;
     param.CatchAriaSize = 8;
     param.ControllRadian = D3DXToRadian(33);
     param.FailedFrame = 20;
     param.PoseFrame = 24;
-    param.ShotFrame = 6;
+    param.ShotFrame = 8;
     param.BallSpeed = 0.85f;
 
 	// カウンタークラス作成
@@ -101,7 +101,7 @@ void TennisState_PlayerControll_Counter::Execute(TennisPlayer* t)
 	m_pCounter->Update();
 
 	//モデルのワールド変換行列を更新
-	chr_func::CreateTransMatrix(t, 0.05f, &t->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(t, t->m_ModelSize, &t->m_Renderer.m_TransMatrix);
 
     //モデル更新
     t->m_Renderer.Update(1);

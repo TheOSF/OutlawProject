@@ -664,6 +664,156 @@ RigidBody* BulletSystem::AddRigidCone(
     return pRigidBody;
 }
 
+// Coneをワールドに追加
+RigidBody* BulletSystem::AddRigidBoxAndCone(
+    float mass,
+    RigidBody::CollisionTypes collisionType,
+    const Vector3& pos,
+    const Vector3& angle,
+    float radius,
+    float height,
+    float friction,
+    float restitution,
+    const Vector3&velocity,
+    const Vector3&Inertia
+    )
+{
+
+    btTransform transform;
+    transform.setIdentity();
+
+    // 座標設定
+    transform.setOrigin(
+        btVector3(pos.x, pos.y, pos.z)
+        );
+
+    // 回転設定
+    transform.setRotation(
+        btQuaternion(-angle.x, angle.y, angle.z)
+        );
+
+    btCompoundShape* pbtCollisionShape = new btCompoundShape();
+
+    {
+        // ConeShape生成
+        btCollisionShape* pbtCollisionShapeChild1 = new btConeShape(
+            radius,
+            height
+            );
+
+        btTransform tr;
+
+        tr.setIdentity();
+
+        pbtCollisionShape->addChildShape(
+            tr,
+            pbtCollisionShapeChild1
+            );
+
+        // ConeShape生成
+        btCollisionShape* pbtCollisionShapeChild2 = new btBoxShape(
+            btVector3(radius*0.9f, height*0.03f, radius*0.9f)
+            );
+
+        tr.setOrigin(btVector3(0, -height*0.5f, 0));
+
+        pbtCollisionShape->addChildShape(
+            tr,
+            pbtCollisionShapeChild2
+            );
+
+
+    }
+
+    // 慣性モーメントの計算
+    btVector3 localInertia;
+    pbtCollisionShape->calculateLocalInertia(mass, localInertia);
+
+    localInertia += btVector3(Inertia.x, Inertia.y, Inertia.z);
+
+
+    // btRigidBody生成
+    btRigidBody::btRigidBodyConstructionInfo rigidBodyInfo(
+        mass,
+        new btDefaultMotionState(transform),
+        pbtCollisionShape,
+        localInertia
+        );
+
+    // 反発係数
+    rigidBodyInfo.m_restitution = restitution;
+
+    // 摩擦
+    rigidBodyInfo.m_friction = friction;
+
+    btRigidBody* pbtRigidBody = new btRigidBody(rigidBodyInfo);
+
+
+    int maskType = 0;
+    switch (collisionType)
+    {
+    case RigidBody::ct_dynamic:
+        //----------------------------------
+        // 動的剛体
+        //----------------------------------
+
+        // マスクタイプ設定
+        maskType = RigidBody::ct_dynamic | RigidBody::ct_kinematic | RigidBody::ct_static;
+
+        // 移動速度
+        pbtRigidBody->setLinearVelocity(
+            btVector3(velocity.x, velocity.y, velocity.z)
+            );
+
+        // 回転速度
+        pbtRigidBody->setAngularVelocity(btVector3(0, 0, 0));
+        break;
+
+    case RigidBody::ct_static:
+        //----------------------------------
+        // 静的剛体
+        //----------------------------------
+
+        // マスクタイプ設定
+        maskType = RigidBody::ct_dynamic;
+        break;
+
+
+    case RigidBody::ct_kinematic:
+        //----------------------------------
+        // キネマティック剛体
+        //----------------------------------
+
+        // マスクタイプ設定
+        maskType = RigidBody::ct_dynamic;
+
+        // キネマティック剛体に設定
+        pbtRigidBody->setCollisionFlags(
+            pbtRigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT
+            );
+        pbtRigidBody->setActivationState(DISABLE_DEACTIVATION);
+        break;
+
+    default:
+        break;
+    }
+
+    // ワールドに追加
+    m_pDyamicsWorld->addRigidBody(pbtRigidBody, (short)collisionType, (short)maskType);
+
+    // RigidBody生成
+    RigidBody* pRigidBody = new RigidBody(
+        collisionType,
+        pbtCollisionShape,
+        pbtRigidBody
+        );
+
+    // リストに追加
+    m_RigidBodyList.insert(pRigidBody);
+
+    return pRigidBody;
+}
+
 
 // Capsureをワールドに追加
 RigidBody* BulletSystem::AddRigidCapsure(

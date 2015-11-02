@@ -12,7 +12,7 @@
 char*	AppTitle = "Outlaw Sports Festival";
 
 BOOL	bFullScreen = FALSE;
-DWORD	ScreenMode = SCREEN720p;
+DWORD	ScreenMode = SCREEN900p;
 
 Framework*	MainFrame = NULL;
 
@@ -30,7 +30,7 @@ BOOL	InitApp( HWND hWnd )
 	//	システムの初期化
 	SYSTEM_Initialize();
 	//	メインフレームワーク生成
-    MainFrame = new Framework(FPS_60);
+    MainFrame = new Framework(FPS_FLEX);
 	//	初期シーン登録
 	MainFrame->ChangeScene(new sceneGamePlay());
 

@@ -37,4 +37,13 @@ void StageResourceLoadFaction::LoadStage1Object()
         Resource::MeshType::Pipe,
         new iexMesh("DATA\\Stages\\Stage1\\Pipe.imo")
         );
+
+
+    //êÏ
+    DefResource.Regist(
+        Resource::MeshType::River,
+        new iexMesh("DATA\\Stages\\Stage1\\river\\sea.imo")
+        );
+
+
 }

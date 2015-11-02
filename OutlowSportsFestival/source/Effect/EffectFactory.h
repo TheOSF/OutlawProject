@@ -1,4 +1,5 @@
 #pragma once
+#include "../GameSystem/ForwardDecl.h"
 
 //---------------------------------------------//
 // 　　　エフェクト出現関数集
@@ -70,4 +71,12 @@ namespace EffectFactory
 		CrVector2 size,
 		DWORD     Color
 		);
+
+
+    //死亡時のエフェクト
+    void DieEffect(
+        CharacterBase* pDieCharacter,
+        CrVector3 Pos,
+        CrVector3 Damage_Vec
+        );
 }

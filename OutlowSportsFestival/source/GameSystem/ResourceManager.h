@@ -32,7 +32,7 @@ public:
         Bench,
         Pipe,
 
-
+        River,
 
         _MaxType
     };
@@ -50,7 +50,6 @@ public:
         Anime_Circle,
         Anime_Smoke,
         Anime_Counter,
-
 
         _MaxType
     };

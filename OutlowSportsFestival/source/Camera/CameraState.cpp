@@ -71,7 +71,7 @@ void CameraStateGamePlay::Execute(Camera* c)
 
 		//カメラ注視点からの距離を求める
 		float rlen = Vector3Length(chrpos - center);
-		rlen += 17;	//ちょっと大きめに引くため
+		rlen += 12;	//ちょっと大きめに引くため
 
 		if (dRightLen < rlen)dRightLen = rlen;	//最大なら更新
 	}

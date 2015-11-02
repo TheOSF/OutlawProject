@@ -243,9 +243,9 @@ void BlendAnimationMesh::Render(iexShader* shader, const std::map<int, const cha
             shader->BeginePass(p);
             //	テクスチャ指定
             shader->SetTexture(lpTexture[it.first]);
-            shader->SetValue("ToonMap", lpNormal[it.first]);
+            shader->SetValue("NormalMap", lpNormal[it.first]);
             shader->SetValue("SpecularMap", lpSpecular[it.first]);
-            //	shader->SetValue( "ToonSpMap", lpHeight[it.first] );
+            shader->SetValue("HeightMap", lpHeight[it.first]);
             shader->CommitChanges();
             //	材質グループ描画
             lpMesh->DrawSubset(it.first);
@@ -489,13 +489,13 @@ BOOL BlendAnimationMesh::CreateFromIEM(char* path, LPIEMFILE lpIem)
         sprintf(temp, "%s%s", path, lpIem->Texture[i]);
         lpTexture[i] = iexTexture::Load(temp);
 
-        sprintf(temp, "%s%s_T.%s", path, Name, ext);
+        sprintf(temp, "%s%s_N.%s", path, Name, ext);
         lpNormal[i] = iexTexture::Load(temp);
 
         sprintf(temp, "%s%s_S.%s", path, Name, ext);
         lpSpecular[i] = iexTexture::Load(temp);
 
-        sprintf(temp, "%s%s_ST.%s", path, Name, ext);
+        sprintf(temp, "%s%s_H.%s", path, Name, ext);
         lpHeight[i] = iexTexture::Load(temp);
     }
 

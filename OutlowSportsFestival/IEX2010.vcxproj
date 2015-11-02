@@ -87,7 +87,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>./IEX/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./IEX/;./SOURCE/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>
@@ -105,6 +105,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -243,6 +244,7 @@
     <ClCompile Include="source\GameSystem\GameInitilizer_DevelopMode.cpp" />
     <ClCompile Include="source\GameSystem\GameObject.cpp" />
     <ClCompile Include="source\GameSystem\LightEventExecuter.cpp" />
+    <ClCompile Include="source\GameSystem\MatchLightManager.cpp" />
     <ClCompile Include="source\GameSystem\ResourceManager.cpp" />
     <ClCompile Include="source\IexSystem\Framework.cpp" />
     <ClCompile Include="source\IexSystem\System.cpp" />
@@ -268,6 +270,7 @@
     <ClCompile Include="source\Sound\Sound.cpp" />
     <ClCompile Include="source\Stage\HitStageObject.cpp" />
     <ClCompile Include="source\Stage\PhysicsMeshObject.cpp" />
+    <ClCompile Include="source\Stage\RiverObject.cpp" />
     <ClCompile Include="source\Stage\StageCarEmitter.cpp" />
     <ClCompile Include="source\Stage\StageEdit.cpp" />
     <ClCompile Include="source\Stage\StageObjectCar.cpp" />
@@ -414,6 +417,7 @@
     <ClInclude Include="source\GameSystem\GameObject.h" />
     <ClInclude Include="source\GameSystem\GameSystem.h" />
     <ClInclude Include="source\GameSystem\LightEventExecuter.h" />
+    <ClInclude Include="source\GameSystem\MatchLightManager.h" />
     <ClInclude Include="source\GameSystem\ResourceManager.h" />
     <ClInclude Include="source\IexSystem\Framework.h" />
     <ClInclude Include="source\IexSystem\Scene.h" />
@@ -438,6 +442,7 @@
     <ClInclude Include="source\Sound\Sound.h" />
     <ClInclude Include="source\Stage\HitStageObject.h" />
     <ClInclude Include="source\Stage\PhysicsMeshObject.h" />
+    <ClInclude Include="source\Stage\RiverObject.h" />
     <ClInclude Include="source\Stage\StageCarEmitter.h" />
     <ClInclude Include="source\Stage\StageEdit.h" />
     <ClInclude Include="source\Stage\StageObjectCar.h" />

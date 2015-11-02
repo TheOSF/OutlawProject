@@ -1,5 +1,4 @@
 #include "StageObjectFactory.h"
-#include "StagePhysicMoveObject.h"
 #include "../GameSystem/ResourceManager.h"
 #include "../debug/DebugDraw.h"
 
@@ -74,34 +73,58 @@ public:
     }
 };
 
+class ConeBoxCreater
+{
+public:
+    float mass;
+    Vector3 pos, angle, Inertia;
+    float radius;
+    float height;
+    float friction;
+    float restitution;
+
+    RigidBody* Create()
+    {
+        RigidBody* ret = DefBulletSystem.AddRigidBoxAndCone(
+            mass,
+            RigidBody::CollisionTypes::ct_dynamic,
+            pos, angle, radius, height, friction, restitution,
+            Vector3Zero
+            );
+
+        return ret;
+    }
+};
 
 
 
 //-----------------------------------------------------------------//
 
-void StageObjFactory::CreateCone(CrVector3 pos, CrVector3 angle)
+StagePhysicMoveObject* StageObjFactory::CreateCone(CrVector3 pos, CrVector3 angle)
 {
-    ConeCreater c;
+    const float sizeRatio = 0.8f;
+
+    ConeBoxCreater c;
 
     c.angle = angle;
     c.friction = 5.0f;
-    c.height = 3.8f;
+    c.height = 3.8f*sizeRatio;
     c.mass = 5.0f;
     c.pos = pos;
-    c.radius = 1.25f;
+    c.radius = 1.25f*sizeRatio;
     c.restitution = 0.2f;
-    c.Inertia = Vector3(0, -1.5f, 0);
+    c.Inertia = Vector3(0, -1.5f, 0)*sizeRatio;
 
 
-    new StagePhysicMoveObject(
+    return new StagePhysicMoveObject(
         new MeshRenderer(DefResource.Get(Resource::MeshType::Cone), false, MeshRenderer::RenderType::UseColorSpecular),
         c.Create(),
-        Vector3(1, 1, 1)*0.05f,
-        2.0f
+        Vector3(1, 1, 1)*0.05f*sizeRatio,
+        2.0f*sizeRatio
         );
 }
 
-void StageObjFactory::CreatePipe(CrVector3 pos, CrVector3 angle)
+StagePhysicMoveObject* StageObjFactory::CreatePipe(CrVector3 pos, CrVector3 angle)
 {
     BoxCreater c;
 
@@ -113,7 +136,7 @@ void StageObjFactory::CreatePipe(CrVector3 pos, CrVector3 angle)
     c.restitution = 0.2f;
     c.Inertia = Vector3(0, 0, 0);
 
-    new StagePhysicMoveObject(
+    return new StagePhysicMoveObject(
         new MeshRenderer(DefResource.Get(Resource::MeshType::Pipe), false, MeshRenderer::RenderType::UseColorSpecular),
         c.Create(),
         Vector3(2.5f, 1, 2.5f)*0.1f,
@@ -122,24 +145,26 @@ void StageObjFactory::CreatePipe(CrVector3 pos, CrVector3 angle)
 
 }
 
-void StageObjFactory::CreateBench(CrVector3 pos, CrVector3 angle)
+StagePhysicMoveObject* StageObjFactory::CreateBench(CrVector3 pos, CrVector3 angle)
 {
+    const float sizeRatio = 0.85f;
+
     BoxCreater c;
 
      
     c.angle = angle;
     c.friction = 5.0f;
-    c.scale = Vector3(4.3f, 0.65f, 0.8f);
+    c.scale = Vector3(4.3f, 0.65f*1.3f, 0.8f)*sizeRatio;
     c.mass = 30.0f;
     c.pos = pos;
     c.restitution = 0.2f;
-    c.Inertia = Vector3(0, 1, 0);
+    c.Inertia = Vector3(0, 1, 0)*sizeRatio;
 
 
-    new StagePhysicMoveObject(
+    return new StagePhysicMoveObject(
         new MeshRenderer(DefResource.Get(Resource::MeshType::Bench), false, MeshRenderer::RenderType::UseColorSpecular),
         c.Create(),
-        Vector3(1, 1, 1)*0.05f,
-        2.0f
+        Vector3(1, 1.3f, 1)*0.05f*sizeRatio,
+        2.0f*sizeRatio
         );
 }

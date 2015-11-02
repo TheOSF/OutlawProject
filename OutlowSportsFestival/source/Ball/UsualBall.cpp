@@ -178,8 +178,8 @@ UsualBall::PhysicsParam UsualBall::GetBallPhysics(
 {
     PhysicsParam params[]=
     {
-        { 0.5f, 100.0f, 0.4f, 0.2f },
-        { 0.5f, 100.0f, 0.4f, 0.2f },
+        { 0.5f, 100.0f, 0.36f, 0.2f },
+        { 0.5f, 100.0f, 0.36f, 0.2f },
         { 0.5f, 100.0f, 0.55f, 0.2f },
         { 0.5f, 100.0f, 0.5f, 0.2f },
         { 0.5f, 100.0f, 0.5f, 0.2f },

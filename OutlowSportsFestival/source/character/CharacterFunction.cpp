@@ -319,8 +319,8 @@ bool chr_func::CheckWall(CharacterBase* p)
     float RotateCheckVec[]=
     {
         0,
-        PI / 2, 
-        -PI / 2,
+        PI / 3, 
+        -PI / 3,
 
         PI / 4,
         -PI / 4,
@@ -337,7 +337,7 @@ bool chr_func::CheckWall(CharacterBase* p)
     for (int i = 0; i < (int)ARRAYSIZE(RotateCheckVec); ++i)
     {
         pos = p->m_Params.pos;
-        pos.y += 1.0f;
+        pos.y += 2.0f;
         vec = Vector3RotateAxis(Vector3AxisY, RotateCheckVec[i], CheckVec);
         dist = 100;
 

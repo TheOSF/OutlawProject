@@ -22,6 +22,8 @@ public:
 
     ~StagePhysicMoveObject();
 
+    bool  m_Destroy;
+
 private:
 
     MeshRenderer*       m_pRenderMesh;
@@ -30,6 +32,7 @@ private:
     const float         m_HitScale;
     int                 m_HitCount;
 
+    void MeshUpdate();
     bool Update();
     bool Msg(GameObjectBase::MsgType type);
 };

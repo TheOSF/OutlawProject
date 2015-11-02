@@ -6,7 +6,7 @@
 class SmalBufBlurRenderer
 {
 public:
-    SmalBufBlurRenderer(UINT level,const char* ShaderFile);
+    SmalBufBlurRenderer(const char* ShaderFile);
     ~SmalBufBlurRenderer();
 
     void SetSourceTexture(iex2DObj* texture);
@@ -24,7 +24,6 @@ public:
     const UINT     m_TextureNum;
     iex2DObj**     m_pWorkTextures;
     DWORD2*        m_pWorkTextureSizes;
-    Surface**      m_pDepthStencils;
     iex2DObj*      m_pSource;
 
     void RenderToParentTexture();

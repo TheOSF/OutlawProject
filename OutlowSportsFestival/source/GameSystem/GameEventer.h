@@ -26,7 +26,7 @@ public:
 
 	Param          m_Param;
     
-    GameEventer(const Param& p, State* pInitState, LPVECTOR3 pControllDirColor);
+    GameEventer(const Param& p, State* pInitState);
 	~GameEventer();
 	
 	void SetState(State* pState);
@@ -35,8 +35,6 @@ public:
 private:
 
 	StateMachine*  m_pStateMachine;
-    Vector3* const m_pControllDirColor;
-    const Vector3  m_InitDirColor;
 
 
 	bool Update();

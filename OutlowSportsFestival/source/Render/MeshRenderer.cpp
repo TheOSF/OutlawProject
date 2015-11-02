@@ -8,11 +8,13 @@ MeshRenderer::MeshRenderer(
 	LPIEXMESH	pMesh,
 	bool		MeshDelete,
     RenderType  type,
+    GbufRenderType    gbuf_Type,
     PreRenderCallBack* pCallBack
 	) :
 	m_pMesh(pMesh),
 	m_MeshDelete(MeshDelete),
     m_RenderType(type),
+    m_Gbuf_Type(gbuf_Type),
     m_HDR(0,0,0),
     m_pCallBack(pCallBack)
 {
@@ -40,8 +42,40 @@ void MeshRenderer::GbufRender(
     )
 {
     char str[256];
-    pSetter->NoTexture(str,256);
 
+
+    //if (GetKeyState('J'))
+    //{
+    //    m_Gbuf_Type = GbufRenderType::NoTexture;
+    //}
+    //else
+    //{
+    //    m_Gbuf_Type = GbufRenderType::UseNormal;
+    //}
+
+    switch (m_Gbuf_Type)
+    {
+    case GbufRenderType::NoTexture:
+        pSetter->NoTexture(str, 256);
+
+        break;
+
+    case GbufRenderType::UseNormal:
+        pSetter->UseNormal(str, 256);
+
+        break;
+
+    case GbufRenderType::UseNormalHeight:
+        pSetter->UseNormalHeight(str, 256);
+
+        break;
+
+    default:
+        MyAssert(false,"‘Î‰‚µ‚Ä‚¢‚È‚¢GbufRenderType‚ª“n‚³‚ê‚Ü‚µ‚½");
+        break;
+    }
+
+    
     m_pCallBack->Execute(this, PreRenderCallBack::GbufRender);
 
     m_pMesh->TransMatrix = m_TransMatrix;

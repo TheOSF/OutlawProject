@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../GameSystem/GameObject.h"
-
+#include "StagePhysicMoveObject.h"
 
 //-------------------------------------------------//
 //   ステージエディット　クラス
@@ -17,13 +17,28 @@ public:
     bool Update();
     bool Msg(MsgType mt);
 
-    bool Load(const char* file_path);
-
+    bool LoadAndEdit(const char* FilePath);
+    
+    static bool Load(const char* FilePath);
 private:
+    struct SetObjInfo
+    {
+        int type;
+        Vector3 pos, angle;
+    };
 
-    Vector3  m_Setpos, m_SetAngle;
+    typedef std::list<SetObjInfo> SetObjList;
 
-    void Write();
+    StagePhysicMoveObject*(*m_pCreateFunc)(CrVector3 pos, CrVector3 angle);
+   
+    StagePhysicMoveObject* m_pDrawObject;
+    Vector3                m_Setpos, m_SetAngle;
+    int                    m_SetFuncIndex;
+    bool                   m_Enable;
+    SetObjList             m_SetObjList;
+
+    void Write(const char* file_path);
+    void CursorControll();
+    void Switch(bool plus);
     
 };
-

@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include <typeinfo>
-
+#include <time.h>
+#include <chrono>
 
 GameObjectManager*	GameObjectManager::m_pInstance = nullptr;
 
@@ -170,6 +171,47 @@ void GameObjectManager::FreezeUpdate()
 
 }
 
+//#define _UPDATE_SPEED_CHECK
+
+#ifdef _UPDATE_SPEED_CHECK
+
+
+
+void GameObjectManager::UsualUpdate()
+{
+    GameObjectMap::iterator it = m_GameObjectMap.begin();
+
+    auto All_time = std::chrono::system_clock::now();
+
+    MyDebugString("\n\n---------------GameObjectの更新開始---------------- \n\n");
+
+    while (it != m_GameObjectMap.end())
+    {
+        auto Func_time = std::chrono::system_clock::now();
+
+        if (it->second->Update() == false)
+        {
+#ifdef _DEBUG
+            it->second->m_ManagerDelete = true;
+#endif
+            delete it->second;
+            it = m_GameObjectMap.erase(it);
+
+            continue;
+        }
+
+        MyDebugString("--%s = %d  \n", typeid(*it->first).name(), 
+            (int)(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - Func_time).count()));
+
+        ++it;
+    }
+
+    MyDebugString("--\n-- 総更新更新時間 %d  ", (int)(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - All_time).count()));
+    MyDebugString("\n--\n---------------END---------------- \n\n");
+}
+
+#else
+
 void GameObjectManager::UsualUpdate()
 {
     GameObjectMap::iterator it = m_GameObjectMap.begin();
@@ -189,3 +231,5 @@ void GameObjectManager::UsualUpdate()
         ++it;
     }
 }
+
+#endif

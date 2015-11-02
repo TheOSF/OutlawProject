@@ -215,9 +215,9 @@ void iexMesh::Render( iexShader* shader, char* name )
 		{
 			//	テクスチャ指定
 			shader->SetTexture( lpTexture[i] );
-			shader->SetValue( "ToonMap", lpNormal[i] );
+			shader->SetValue( "NormalMap", lpNormal[i] );
 			shader->SetValue( "SpecularMap", lpSpecular[i] );
-		//	shader->SetValue( "ToonSpMap", lpHeight[i] );
+			shader->SetValue( "HeightMap", lpHeight[i] );
 			shader->CommitChanges();
 			//	材質グループ描画
 			lpMesh->DrawSubset( i );
@@ -704,13 +704,13 @@ BOOL iexMesh::LoadIMO( LPSTR filename )
         sprintf(temp, "%s%s", workpath, imo.Texture[i]);
         lpTexture[i] = iexTexture::Load(temp);
 
-        sprintf(temp, "%s%s_T.%s", workpath, Name, ext);
+        sprintf(temp, "%s%s_N.%s", workpath, Name, ext);
         lpNormal[i] = iexTexture::Load(temp);
 
         sprintf(temp, "%s%s_S.%s", workpath, Name, ext);
         lpSpecular[i] = iexTexture::Load(temp);
 
-        sprintf(temp, "%s%s_ST.%s", workpath, Name, ext);
+        sprintf(temp, "%s%s_H.%s", workpath, Name, ext);
         lpHeight[i] = iexTexture::Load(temp);
     }
 
@@ -785,7 +785,7 @@ BOOL	iexMesh::LoadX( LPSTR filename )
 			sprintf( temp, "%s%s", workpath, d3dxMaterial[i].pTextureFilename );
 			lpTexture[i] = iexTexture::Load( temp );
 
-			sprintf( temp, "%s%sT", workpath, d3dxMaterial[i].pTextureFilename );
+			sprintf( temp, "%s%sN", workpath, d3dxMaterial[i].pTextureFilename );
 			lpNormal[i] = iexTexture::Load( temp );
 
 			sprintf( temp, "%s%sS", workpath, d3dxMaterial[i].pTextureFilename );

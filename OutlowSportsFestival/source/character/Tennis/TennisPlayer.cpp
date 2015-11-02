@@ -4,14 +4,48 @@
 #include "../CharacterFunction.h"
 #include "TennisPlayerState_UsualMove.h"
 
+/*
+enum MotionType
+{
+    _mt_Stand = 0,
+    _mt_Run = 1,
+
+    _mt_Attack1 = 2,
+    _mt_Shot = 5,
+    _mt_CounterRight = 3,
+    _mt_CounterLeft = 4,
+    _mt_Smash = 5,
+    _mt_Guard = 6,
+    _mt_Rolling = 7,
+    _mt_BoundSmash = 3,
+    _mt_Damage_Weak = 20,
+
+    _mt_Damage_Vanish_Fly = 9,
+    _mt_Damage_Vanish_Down = 10,
+    _mt_Damage_Vanish_StandUp = 11,
+
+    _mt_WinPose = 13,
+    _mt_LosePose = 14,
+
+    _mt_Attack2 = 16,
+    _mt_Attack3 = 17,
+
+    _mt_CounterPose = 18,
+    _mt_Hakushu = 21,
+
+};
+
+*/
+
+
 //*************************************************************
 //		テニスプレイヤークラス
 //*************************************************************
 
 TennisPlayer::TennisPlayer(const CharacterBase::PlayerInfo& info) :
 CharacterBase(info),
-m_Renderer(new BlendAnimationMesh("DATA\\CHR\\Tennis_player\\Player_T.iem")),
-m_ModelSize(0.05f),
+m_Renderer(new BlendAnimationMesh("DATA\\CHR\\SanoTennis\\tennis.iem")),
+m_ModelSize(0.055f),
 m_DontBoundBallAtkTimer(0)
 {
 	m_pStateMachine = new TennisStateMachine(this);
@@ -20,24 +54,24 @@ m_DontBoundBallAtkTimer(0)
 
 
     //描画指定
-    CharacterRenderer::RenderType Types[10]=
+    CharacterRenderer::RenderType Types[3]=
     {
-        CharacterRenderer::RenderType::Skin,
-        CharacterRenderer::RenderType::Clothes,
-        CharacterRenderer::RenderType::Clothes,
         CharacterRenderer::RenderType::Face,
-        CharacterRenderer::RenderType::Hair,
         CharacterRenderer::RenderType::Skin,
-        CharacterRenderer::RenderType::Hair,
-        CharacterRenderer::RenderType::Hair,
-        CharacterRenderer::RenderType::Normal,
-        CharacterRenderer::RenderType::Normal
+        CharacterRenderer::RenderType::Clothes,
     };
 
     for (int i = 0; i < ARRAYSIZE(Types); ++i)
     {
         m_Renderer.SetMaterialRenderType(i, Types[i]);
     }
+
+    //服の色
+    {
+        COLORf col = GetPlayerColorF(m_PlayerInfo.number);
+        m_Renderer.m_ClothesColor = Vector3(col.r, col.g, col.b);
+    }
+     
 }
 
 TennisPlayer::~TennisPlayer()

@@ -20,6 +20,13 @@ public:
         UseColorSpecularLightMap,
     };
 
+    enum class GbufRenderType
+    {
+        NoTexture,
+        UseNormal,
+        UseNormalHeight
+    };
+
     class PreRenderCallBack
     {
     public:
@@ -34,9 +41,10 @@ public:
     };
 
     MeshRenderer(
-        LPIEXMESH	pMesh,		//描画するメッシュのポインタ
-        bool		MeshDelete,	//第一引数のメッシュをdeleteするかどうか
-        RenderType  type,
+        LPIEXMESH	      pMesh,		//描画するメッシュのポインタ
+        bool		      MeshDelete,	//第一引数のメッシュをdeleteするかどうか
+        RenderType        render_Type,
+        GbufRenderType    gbuf_Type  = GbufRenderType::NoTexture,
         PreRenderCallBack* pCallBack = nullptr
 		);
 
@@ -61,10 +69,11 @@ public:
     //故意に輝かせる際のパラメータ(xyz = rgb)
     Vector3 m_HDR;
 private:
-    Matrix              m_TransMatrix;
-	bool		const	m_MeshDelete;
-    RenderType  const   m_RenderType;
-    PreRenderCallBack*  m_pCallBack;
+    Matrix               m_TransMatrix;
+	bool		const	 m_MeshDelete;
+    RenderType  const    m_RenderType;
+    GbufRenderType       m_Gbuf_Type;
+    PreRenderCallBack*   m_pCallBack;
 };
 
 #endif

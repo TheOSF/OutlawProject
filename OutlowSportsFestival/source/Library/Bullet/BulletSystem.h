@@ -153,6 +153,21 @@ public:
         const Vector3&localInertia = Vector3Zero
         );
 
+    // Coneをワールドに追加
+    RigidBody* AddRigidBoxAndCone(
+        float mass,
+        RigidBody::CollisionTypes collisionType,
+        const Vector3& pos,
+        const Vector3& angle,
+        float radius,
+        float height,
+        float friction,
+        float restitution,
+        const Vector3&velocity,
+        const Vector3&localInertia = Vector3Zero
+        );
+
+
     // Capsureをワールドに追加
     RigidBody* AddRigidCapsure(
         float mass,

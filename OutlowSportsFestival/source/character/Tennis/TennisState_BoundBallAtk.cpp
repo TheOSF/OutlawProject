@@ -135,8 +135,7 @@ TennisBoundBall::TennisBoundBall(
         m_pBallRenderer = new MeshRenderer(
             pBallMesh,
             false,
-            MeshRenderer::RenderType::UseColor,
-            nullptr
+            MeshRenderer::RenderType::UseColor
             );
 
         UpdateMesh();

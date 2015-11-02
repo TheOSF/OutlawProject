@@ -113,15 +113,10 @@ if (!(expr)){\
 
 #else
 
+#define MyAssert(expr,str,...)
 #define MyMemoryLeakCheck
-
 #define MyDebugString(str,...)
-#define MyDebugStringA(str,...)
-#define MyDebugStringW(str,...)
-
 #define MessageBoxPlus(str,...)
-#define MessageBoxPlusA(str,...)
-#define MessageBoxPlusW(str,...)
 
 
 #endif	

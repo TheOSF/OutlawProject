@@ -85,7 +85,9 @@ class iexShader;
 #define	SCREEN720p	11
 #define	SCREEN800p	12
 
-#define SCREEN1900  3
+#define SCREEN900p  3
+#define SCREEN1080p  4
+#define SCREEN1360x1080p  5
 
 class iexSystem {
 private:
@@ -946,13 +948,15 @@ public:
 //*****************************************************************************************************************************
 class	iexShader {
 private:
-	LPD3DXEFFECT    m_pShader;			// シェーダー
+	
 	
 	D3DXHANDLE		m_hmWVP;			// 射影変換行列
 	D3DXHANDLE		m_htexDecale;		// テクスチャ
 
 protected:
 public:
+    LPD3DXEFFECT    m_pShader;			// シェーダー
+
 	//------------------------------------------------------
 	//	初期化・解放
 	//------------------------------------------------------

@@ -218,6 +218,8 @@
     <ClCompile Include="source\utillity\WindEffect.cpp" />
     <ClCompile Include="source\Stage\StageObjectCar.cpp" />
     <ClCompile Include="source\Stage\StageCarEmitter.cpp" />
+    <ClCompile Include="source\GameSystem\MatchLightManager.cpp" />
+    <ClCompile Include="source\Stage\RiverObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -397,6 +399,8 @@
     <ClInclude Include="source\utillity\WindEffect.h" />
     <ClInclude Include="source\Stage\StageObjectCar.h" />
     <ClInclude Include="source\Stage\StageCarEmitter.h" />
+    <ClInclude Include="source\GameSystem\MatchLightManager.h" />
+    <ClInclude Include="source\Stage\RiverObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

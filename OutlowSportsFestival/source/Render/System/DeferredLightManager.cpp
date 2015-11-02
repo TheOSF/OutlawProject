@@ -51,7 +51,7 @@ DeferredLightManager::DeferredLightManager(
     //HDR描画管理クラス生成
     sprintf_s<MAX_PATH>(work_path, "%s%s", pData_FilePath, "\\Blur.fx");
     m_pSmalBufBlurRenderer = new SmalBufBlurRenderer(
-        6,
+        //4,
         work_path
         );
 
@@ -121,7 +121,7 @@ void DeferredLightManager::Render(
     m_pColorTexture->RenderTarget(0);
     for (DWORD i = 1; i < 4; ++i)
     {
-        iexSystem::Device->SetRenderTarget(1, 0);
+        iexSystem::Device->SetRenderTarget(i, 0);
     }
 
     //高輝度部分をブラー処理し、カラーテクスチャに出力

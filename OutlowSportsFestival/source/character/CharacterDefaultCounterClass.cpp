@@ -10,6 +10,7 @@
 #include "../Sound/Sound.h"
 
 #include "CharacterManager.h"
+#include "../Ball/UsualBall.h"
 
 
 CharacterDefaultCounter::CharacterDefaultCounter(
@@ -300,6 +301,12 @@ void CharacterDefaultCounter::Shot()
             chr_func::GetFront(m_pOwner, &m_pCounterBall->m_Params.move);
 
             m_pCounterBall->m_Params.move *= m;
+        }
+
+
+        {
+            m_pCounterBall->m_Params.pos = m_pOwner->m_Params.pos;
+            m_pCounterBall->m_Params.pos.y = UsualBall::UsualBallShotY;
         }
 
         //ボール側のカウンター処理
