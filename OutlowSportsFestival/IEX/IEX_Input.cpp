@@ -401,7 +401,7 @@ void iexInput::SetInfo()
 int	iexInput::Get(KEYCODE key)
 {
 	//if( GetForegroundWindow() != iexSystem::Window ) return 0;
-
+	return 0;
 	switch (key)
 	{
 	case KEY_AXISX:		return PadAxisX;
