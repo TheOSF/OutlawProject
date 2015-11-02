@@ -3,6 +3,9 @@
 #include	"../GameScene/SceneGamePlay.h"
 #include	"../debug/DebugFunction.h"
 
+#include "../../Input/GamePad/GamePadManager.h"
+
+
 //*****************************************************************************************************************************
 //
 //
@@ -25,7 +28,10 @@ BOOL	InitApp( HWND hWnd )
 	//	IEXシステム初期化
 	IEX_Initialize( hWnd, bFullScreen, ScreenMode );
 	IEX_InitAudio();
-	IEX_InitInput();
+	//IEX_InitInput();
+
+	// 初期化
+	GamePadManager::Initialize(hWnd);
 
 	//	システムの初期化
 	SYSTEM_Initialize();
@@ -128,7 +134,12 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	iexParticle::Release();
 	SYSTEM_Release();
 	iexSystem::CloseDebugWindow();
-	IEX_ReleaseInput(); 
+	//IEX_ReleaseInput(); 
+
+	// 解放
+	GamePadManager::Release();
+
+
 	IEX_ReleaseAudio();
 	IEX_Release();
 

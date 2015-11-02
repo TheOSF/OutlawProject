@@ -34,6 +34,7 @@ public:
 
     bool Update()
     {
+
         float Key = KEY(KEY_AXISX2, 0)*0.001f*Speed;
 
         if (Flg != 0 && !GetKeyState(Flg))return true;
