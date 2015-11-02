@@ -11,6 +11,7 @@
 #include "../../Effect/GlavityLocus.h"
 #include "../../Effect/EffectFactory.h"
 
+#include "../../GameSystem/GameController.h"
 
 TennisState_DamageMotion_Die::TennisState_DamageMotion_Die(
     TennisPlayer* pTennis,
@@ -131,6 +132,14 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
     DefCamera.SetShock(
         Vector2(1, 1)*0.22f, 
         20
+        );
+
+
+    //ƒRƒ“ƒgƒ[ƒ‰‚ðU“®
+    controller::SetVibration(
+        8000,
+        0.5f,
+        m_pTennis->m_PlayerInfo.number
         );
 }
 

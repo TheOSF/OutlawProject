@@ -73,7 +73,12 @@ namespace controller
 	Vector2 GetStickValue(stick::stick_type x, CONTROLLER_NUM num);
 
 	//指定したコントローラーを振動させる
-	void SetVibration(RATIO power, int frame, CONTROLLER_NUM num);
+    void SetVibration(
+        DWORD power,       //-10000～10000
+        float second,
+        CONTROLLER_NUM num,
+        int pattern = 0     //とりあえず０でおｋ
+        );
 }
 
 //デフォルトのbuttonセットを設定する

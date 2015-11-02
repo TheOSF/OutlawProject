@@ -73,6 +73,7 @@
 #include "../Stage/RiverObject.h"
 
 #include "../Stage/StageEdit.h"
+#include "../../Input/GamePad/GamePadManager.h"
 
 static void CreateCharacter(
     PlayerNum::Value      n,
@@ -398,6 +399,12 @@ void GameInitializer_DevelopMode::GameCreate()
     {
         //“Ç‚İ‚İ
         StageEditer::Load("DATA\\Stages\\Stage1\\StageObjData.txt");
+    }
+
+
+
+    {
+        
     }
 
     //ƒLƒƒƒ‰ƒNƒ^ì¬

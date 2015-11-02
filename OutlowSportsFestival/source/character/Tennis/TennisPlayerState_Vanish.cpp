@@ -7,6 +7,8 @@
 #include "../../Effect/SoccerSpecialHitEffect.h"
 #include "../../Effect/BlurImpact.h"
 
+#include "../../GameSystem/GameController.h"
+
 
 TennisState_DamageVanish::TennisState_DamageVanish(
     TennisPlayer* pTennis,
@@ -116,12 +118,6 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
         2
         );
     
-    //new SoccerSpecialHitEffect(
-    //    m_pTennis->m_Params.pos + Vector3Normalize(m_Damage_vec) * 8, 
-    //       m_Damage_vec,
-    //       Vector3(1.0f, 1.0f, 1.0f),
-    //       10
-    //    );
 
     //ブラーエフェクト
     new BlurImpactSphere(
@@ -129,6 +125,14 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
         25,
         10,
         30
+        );
+
+
+    //コントローラを振動
+    controller::SetVibration(
+        8000,
+        0.2f,
+        m_pTennis->m_PlayerInfo.number
         );
 }
 

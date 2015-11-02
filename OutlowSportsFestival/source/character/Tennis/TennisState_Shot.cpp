@@ -14,6 +14,7 @@
 #include "../../Effect/EffectFactory.h"
 #include "../../Effect/HitEffectObject.h"
 #include "../../Sound/Sound.h"
+#include "../../GameSystem/GameController.h"
 
 
 TennisState_Shot::TennisState_Shot(
@@ -109,6 +110,13 @@ void TennisState_Shot::Execute(TennisPlayer* t)
         new UsualBall(param, DamageBase::Type::_WeekDamage, 50);
 
 
+        //コントローラを振動
+        controller::SetVibration(
+            5000,
+            0.15f,
+            t->m_PlayerInfo.number
+            );
+
         //エフェクト
         {
             COLORf EffectColor(CharacterBase::GetPlayerColor(t->m_PlayerInfo.number));
@@ -135,7 +143,6 @@ void TennisState_Shot::Execute(TennisPlayer* t)
                 0,
                 10.0f
                 );
-
         }
     }
 
@@ -197,5 +204,6 @@ const CharacterBase* TennisState_Shot::GetFrontTarget(TennisPlayer* t)const
 
         ++it;
     }
+
     return pTargetEnemy;
 }

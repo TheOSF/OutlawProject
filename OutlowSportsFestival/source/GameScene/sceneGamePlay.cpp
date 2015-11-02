@@ -21,6 +21,7 @@
 
 #include "../Effect/ParticleManager.h"
 #include "../Sound/Sound.h"
+#include "../../Input/GamePad/GamePadManager.h"
 
 
 //*****************************************************************************************************************************
@@ -94,6 +95,9 @@ sceneGamePlay::~sceneGamePlay()
 //*****************************************************************************************************************************
 void	sceneGamePlay::Update()
 {
+    //コントローラ更新
+    GamePadManager::Update();
+
     //カメラ更新
 	DefCamera.Update();
 

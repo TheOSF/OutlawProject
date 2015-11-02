@@ -11,6 +11,7 @@
 
 #include "CharacterManager.h"
 #include "../Ball/UsualBall.h"
+#include "../GameSystem/GameController.h"
 
 
 CharacterDefaultCounter::CharacterDefaultCounter(
@@ -280,6 +281,7 @@ void CharacterDefaultCounter::Shot()
     //ボール打ち返すぜ！
     if (m_Count == 1)
     {
+
         //スティックによる角度調整
         if (m_pCounterBall->m_Params.pParent == m_pOwner)
         {
@@ -325,6 +327,13 @@ void CharacterDefaultCounter::Shot()
 
         //カウンター音再生
         Sound::Play(Sound::AtkHit2);
+
+        //コントローラを振動
+        controller::SetVibration(
+            10000,
+            0.10f,
+            m_pOwner->m_PlayerInfo.number
+            );
 
         //若干前に進む
         chr_func::AddMoveFront(m_pOwner, 0.2f, 1.0f);

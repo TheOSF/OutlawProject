@@ -20,7 +20,6 @@
 // コンストラクタ
 RigidBody::RigidBody() :
 collisionType(ct_nothing),
-pCollisionShape(nullptr),
 pRigidBody(nullptr),
 pTriangleMeshes(nullptr)
 {
@@ -34,11 +33,11 @@ RigidBody::RigidBody(
 	btRigidBody*        pRigidBody
 	) :
 	collisionType(collisionType),
-	pCollisionShape(pCollisionShape),
 	pRigidBody(pRigidBody),
 	pTriangleMeshes(nullptr)
 {
-
+    CollisionShapes.fill(nullptr);
+    CollisionShapes.at(0) = pCollisionShape;
 }
 
 
@@ -50,18 +49,22 @@ RigidBody::RigidBody(
 	btTriangleMesh*   pTriangleMeshes
 	) :
 	collisionType(collisionType),
-	pCollisionShape(pCollisionShape),
 	pRigidBody(pRigidBody),
 	pTriangleMeshes(pTriangleMeshes)
 {
-
+    CollisionShapes.fill(nullptr);
+    CollisionShapes.at(0) = pCollisionShape;
 }
 
 
 // デストラクタ
 RigidBody::~RigidBody()
 {
-	safe_delete(pCollisionShape);
+    for (auto& it : CollisionShapes)
+    {
+        delete it;
+    }
+
 	safe_delete(pRigidBody);
 	safe_array_delete(pTriangleMeshes);
 }
@@ -694,36 +697,39 @@ RigidBody* BulletSystem::AddRigidBoxAndCone(
 
     btCompoundShape* pbtCollisionShape = new btCompoundShape();
 
-    {
-        // ConeShape生成
-        btCollisionShape* pbtCollisionShapeChild1 = new btConeShape(
-            radius,
-            height
-            );
 
-        btTransform tr;
+    // ConeShape生成
+    btCollisionShape* pbtCollisionShapeChild1 = new btConeShape(
+        radius,
+        height
+        );
 
-        tr.setIdentity();
+    btTransform tr;
 
-        pbtCollisionShape->addChildShape(
-            tr,
-            pbtCollisionShapeChild1
-            );
+    tr.setIdentity();
 
-        // ConeShape生成
-        btCollisionShape* pbtCollisionShapeChild2 = new btBoxShape(
-            btVector3(radius*0.9f, height*0.03f, radius*0.9f)
-            );
-
-        tr.setOrigin(btVector3(0, -height*0.5f, 0));
-
-        pbtCollisionShape->addChildShape(
-            tr,
-            pbtCollisionShapeChild2
-            );
+    pbtCollisionShape->addChildShape(
+        tr,
+        pbtCollisionShapeChild1
+        );
 
 
-    }
+
+    // ConeShape生成
+    btCollisionShape* pbtCollisionShapeChild2 = new btBoxShape(
+        btVector3(radius*0.9f, height*0.03f, radius*0.9f)
+        );
+
+    tr.setOrigin(btVector3(0, -height*0.5f, 0));
+
+    pbtCollisionShape->addChildShape(
+        tr,
+        pbtCollisionShapeChild2
+        );
+   
+
+
+
 
     // 慣性モーメントの計算
     btVector3 localInertia;
@@ -807,6 +813,9 @@ RigidBody* BulletSystem::AddRigidBoxAndCone(
         pbtCollisionShape,
         pbtRigidBody
         );
+
+    pRigidBody->CollisionShapes.at(1) = pbtCollisionShapeChild1;
+    pRigidBody->CollisionShapes.at(2) = pbtCollisionShapeChild2;
 
     // リストに追加
     m_RigidBodyList.insert(pRigidBody);

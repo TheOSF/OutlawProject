@@ -4,7 +4,7 @@
 #include "../CharacterFunction.h"
 #include "../../Effect/HitEffectObject.h"
 #include "../../Effect/BlurImpact.h"
-
+#include "../../GameSystem/GameController.h"
 
 TennisState_DamageMotion_Weak::TennisState_DamageMotion_Weak(
 	TennisPlayer*  pTennis,
@@ -91,6 +91,7 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
             );
 
     }
+
     //ブラーエフェクト
     new BlurImpactSphere(
         m_pTennis->m_Params.pos + Vector3(0, 3, 0),
@@ -98,6 +99,15 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
         15,
         30
         );
+
+
+    //コントローラを振動
+    controller::SetVibration(
+        5000,
+        0.15f,
+        m_pTennis->m_PlayerInfo.number
+        );
+
 }
 
 void TennisState_DamageMotion_Weak::Execute(TennisPlayer* t)

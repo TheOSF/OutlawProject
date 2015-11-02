@@ -15,6 +15,7 @@
 #include <btBulletDynamicsCommon.h>
 #include "../../utillity/Singleton.h"
 #include <unordered_set>
+#include <array>
 
 #if defined(DEBUG)||defined(_DEBUG)
 
@@ -45,8 +46,8 @@ struct RigidBody
 		ct_kinematic = (1 << 3), // キネマティックオブジェクト
 	};
 
+    std::array<btCollisionShape*,4>  CollisionShapes;  // CollisionShape
 	CollisionTypes        collisionType;       // コリジョンタイプ
-	btCollisionShape*  pCollisionShape;  // CollisionShape
 	btRigidBody*         pRigidBody;         // RigidBody
 	btTriangleMesh*    pTriangleMeshes; // TriangleMeshes ※配列として扱う
 

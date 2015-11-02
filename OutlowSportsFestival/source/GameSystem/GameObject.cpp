@@ -52,6 +52,7 @@ void GameObjectManager::Update()
         UsualUpdate();
     }
 
+#if 0
     //デバッグ用
 
     if (KEY(KEY_ENTER, 0) == 3)
@@ -66,6 +67,7 @@ void GameObjectManager::Update()
 
         MyDebugString("\n-----総数 = %d -------\n\n", (int)m_GameObjectMap.size());
     }
+#endif
 }
 
 //全オブジェクトにメッセージを送信

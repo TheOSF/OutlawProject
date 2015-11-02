@@ -73,9 +73,9 @@ void TennisState_PlayerControll_Counter::Enter(TennisPlayer* t)
     //カウンターパラメータ設定
     CharacterDefaultCounter::Param param;
 
-    param.AfterShotFrame = 18;
+    param.AfterShotFrame = 13;
     param.CanCounterFrame = 30;
-    param.CatchAriaSize = 8;
+    param.CatchAriaSize = 16;
     param.ControllRadian = D3DXToRadian(33);
     param.FailedFrame = 20;
     param.PoseFrame = 24;

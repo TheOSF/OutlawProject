@@ -72,7 +72,7 @@ Vector2 controller::GetStickValue(stick::stick_type x, CONTROLLER_NUM num)
 
 
 // 指定したコントローラーを振動させる
-void controller::SetVibration(RATIO power, int frame, CONTROLLER_NUM num)
+void controller::SetVibration(DWORD power, float second,  CONTROLLER_NUM num, int pattern)
 {
-	GamePadManager::Vibration(num, 0, (u8)frame, (DWORD)power);
+    GamePadManager::Vibration(num, pattern, (DWORD)(second*(float)DI_SECONDS), power);
 }

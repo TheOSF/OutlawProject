@@ -2,6 +2,8 @@
 #include "../CharacterFunction.h"
 #include "../../Sound/Sound.h"
 
+#include "../../GameSystem/GameController.h"
+
 TennisAttackInfo_UsualAtk::TennisAttackInfo_UsualAtk(
     TennisPlayer* pOwner
     ):
@@ -136,4 +138,11 @@ void TennisAttackInfo_UsualAtk::Update(int Frame, LocusHDR* pLocus)
 void TennisAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
 {
     chr_func::AddSkillGauge(m_pOwner, pDmg->Value*10.0f);
+
+    //ƒRƒ“ƒgƒ[ƒ‰‚ðU“®
+    controller::SetVibration(
+        5000,
+        0.15f,
+        m_pOwner->m_PlayerInfo.number
+        );
 }
