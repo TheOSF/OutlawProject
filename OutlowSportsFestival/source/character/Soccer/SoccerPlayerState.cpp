@@ -598,6 +598,7 @@ void SoccerState_PlayerControll_Shot::Exit(SoccerPlayer* s)
 {
 	delete m_pShotClass;
 }
+//-------------カウンターステートクラス-------------
 void SoccerState_PlayerControll_Counter::Enter(SoccerPlayer* s)
 {
 	//カウンターイベントクラス

@@ -52,6 +52,10 @@ void SoccerState_ComputerControll_Shot::Enter(SoccerPlayer* s)
 
 		bool Hit(DamageBase* pDmg)
 		{
+			if (pDmg->pParent == nullptr)
+			{
+				return false;
+			}
 			//当たった時に呼ばれる関数(戻り値：当たったかどうか)
 			//自分の作っているダメージだった場合は何もしない
 			if (pDmg->pParent->m_PlayerInfo.number == m_pSoccer->m_PlayerInfo.number)
@@ -144,7 +148,10 @@ void SoccerState_ComputerControll_Shot::Execute(SoccerPlayer* s)
 
 		++it;
 	}
-
+	if (pTargetEnemy != nullptr)
+	{
+		chr_func::AngleControll(s, pTargetEnemy->m_Params.pos, 0.3f);
+	}
 	if (!m_pShotClass->Update())
 	{
 		s->SetState(new SoccerState_ComputerControll_Move);
@@ -153,12 +160,12 @@ void SoccerState_ComputerControll_Shot::Execute(SoccerPlayer* s)
 	//基本的な更新
 	SoccerHitEvent HitEvent(s);
 	chr_func::UpdateAll(s, &HitEvent);
-	chr_func::AngleControll(s, pTargetEnemy->m_Params.pos, 0.3f);
+	
 	//モデル関連の更新
 	s->m_Renderer.Update(1);
 	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
 }
 void SoccerState_ComputerControll_Shot::Exit(SoccerPlayer* s)
 {
-
+	delete m_pShotClass;
 }

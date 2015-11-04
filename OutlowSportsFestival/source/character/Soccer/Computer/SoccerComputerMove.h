@@ -24,4 +24,5 @@ private:
 	CharacterUsualMove*		m_pMoveClass;
 	CharacterComputerMove*  m_pMoveControllClass;
 	CharacterComputerDoAction*  m_pDoActionClass;
+	CharacterComputerReaction*  m_pReactionClass;
 };

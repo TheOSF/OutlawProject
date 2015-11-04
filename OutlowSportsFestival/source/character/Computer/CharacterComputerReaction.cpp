@@ -6,27 +6,31 @@
 CharacterComputerReaction::CharacterComputerReaction(
 	CharacterBase*					pParent,	//操るキャラクタのポインタ
 	const CharacterComputerMove::Param&	param,		//移動パラメータ構造体
-	ActionEvent*						pActionEvent,	//移動イベントに反応するクラス
-	DamageManager::HitEventBase*	pHitEventBase//ダメージを受けた時に反応するクラス
+	ActionEvent*						pActionEvent	//移動イベントに反応するクラス
 	) :
-	m_cCharacter(pParent), m_Params(param), m_ActionEvent(pActionEvent), m_pHitEventBase(pHitEventBase)
+	m_cCharacter(pParent), m_Params(param), m_ActionEvent(pActionEvent)
 {
-
-
 }
 CharacterComputerReaction::~CharacterComputerReaction()
 {
-
+	delete m_ActionEvent;
 }
 void CharacterComputerReaction::Update()
 {
 	SphereParam sp;
 	sp.pos = m_cCharacter->m_Params.pos;
+	sp.size = 10.0f;
+
+	CharacterComputerReactionHitEvent hitevent(m_cCharacter);
 	//反応レーダー展開
-	//DefDamageMgr.HitCheckSphere(sp, m_pHitEventBase->Hit());
+	DefDamageMgr.HitCheckSphere(sp, hitevent);
 
 
 	//反応する
-	m_ActionEvent->Reaction();
+	if (hitevent.HitDamage)
+	{
+		hit = hitevent.hittype;
+		m_ActionEvent->Reaction(hit);
+	}
 		
 }

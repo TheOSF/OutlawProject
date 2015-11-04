@@ -218,6 +218,9 @@
     <ClCompile Include="source\utillity\WindEffect.cpp" />
     <ClCompile Include="source\Stage\StageObjectCar.cpp" />
     <ClCompile Include="source\Stage\StageCarEmitter.cpp" />
+    <ClCompile Include="source\character\Computer\CharacterComputerReactionHitEvent.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerCounter.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerRolling.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -397,6 +400,9 @@
     <ClInclude Include="source\utillity\WindEffect.h" />
     <ClInclude Include="source\Stage\StageObjectCar.h" />
     <ClInclude Include="source\Stage\StageCarEmitter.h" />
+    <ClInclude Include="source\character\Computer\CharacterComputerReactionHitEvent.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerCounter.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerRolling.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

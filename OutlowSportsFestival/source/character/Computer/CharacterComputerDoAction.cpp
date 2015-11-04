@@ -16,14 +16,14 @@ CharacterComputerDoAction::CharacterComputerDoAction(
 }
 CharacterComputerDoAction::~CharacterComputerDoAction()
 {
-
+	delete m_ActionEvent;
+	delete m_pHitEventBase;
 }
 void CharacterComputerDoAction::Update()
 {
 	SphereParam sp;
 	sp.pos = m_cCharacter->m_Params.pos;
 
-	//DefDamageMgr.HitCheckSphere(sp, );
 
 	//UŒ‚‚·‚é‚È‚ç‚Î
 	if (rand()%50==0)

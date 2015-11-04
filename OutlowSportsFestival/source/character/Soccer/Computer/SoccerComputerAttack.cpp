@@ -28,8 +28,10 @@ void SoccerState_ComputerControll_Attack::ComputerControllEvent::AngleControll(R
 
 	
 	//自動回転
-	chr_func::AngleControll(m_pSoccer, pTargetCharacter->m_Params.pos, angle);
-
+	if (pTargetCharacter != nullptr)
+	{
+		chr_func::AngleControll(m_pSoccer, pTargetCharacter->m_Params.pos, 0.7f);
+	}
 }
 const CharacterBase* SoccerState_ComputerControll_Attack::ComputerControllEvent::GetFrontTargetEnemy()
 {
@@ -39,6 +41,7 @@ const CharacterBase* SoccerState_ComputerControll_Attack::ComputerControllEvent:
 	const RADIAN AutoMaxAngle = D3DXToRadian(90);   //自動ができる最大角度
 
 	const CharacterBase* pTargetEnemy = nullptr;    //ターゲット保持のポインタ
+
 	RADIAN MostMinAngle = PI;                       //もっとも狭い角度
 	RADIAN TempAngle;
 
@@ -69,7 +72,7 @@ const CharacterBase* SoccerState_ComputerControll_Attack::ComputerControllEvent:
 		TempAngle = Vector3Radian(MyFront, (it->first->m_Params.pos - m_pSoccer->m_Params.pos));
 
 		//角度が一番狭かったら更新
-		if (TempAngle < MostMinAngle)
+		if (TempAngle <= MostMinAngle)
 		{
 			pTargetEnemy = it->first;
 			MostMinAngle = TempAngle;
@@ -77,7 +80,8 @@ const CharacterBase* SoccerState_ComputerControll_Attack::ComputerControllEvent:
 
 		++it;
 	}
-	chr_func::AngleControll(m_pSoccer, pTargetEnemy->m_Params.pos,0.7f);
+
+	
 	return pTargetEnemy;
 
 }

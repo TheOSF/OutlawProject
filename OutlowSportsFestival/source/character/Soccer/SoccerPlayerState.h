@@ -39,7 +39,7 @@ public:
 	void Execute(SoccerPlayer* s);
 	void Exit(SoccerPlayer* s);
 };
-//プレイヤー操作の回避クラス
+//プレイヤー操作のスライディングクラス
 class SoccerState_PlayerControll_Sliding :public SoccerState
 {
 	//攻撃操作クラス
