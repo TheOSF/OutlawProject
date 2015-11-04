@@ -41,7 +41,7 @@ void CharacterRenderer::SetMaterialRenderType(int MaterialNum, RenderType Type)
     static const char* Techniques[] =
     {
         "CharacterSkin",
-        "DeffLightNoSp",
+        "CharacterHair",
         "CharacterClothes",
         "CharacterSkin",
         "DeffLightNoSp",

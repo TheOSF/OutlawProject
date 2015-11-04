@@ -52,7 +52,7 @@ void StageCarEmitter::State_Stop()
 
 void StageCarEmitter::ApperCar(bool right)
 {
-    Vector3 pos(80, 2.4f, 30), goal(-80, 2.4f, 30);
+    Vector3 pos(130, 2.4f, 30), goal(-130, 2.4f, 30);
 
     if (right)
     {
@@ -62,6 +62,7 @@ void StageCarEmitter::ApperCar(bool right)
 
         goal = tmp;
         
+        pos.z = goal.z = 37.0f;
     }
 
 /*
@@ -79,7 +80,7 @@ void StageCarEmitter::ApperCar(bool right)
         goal,
         0.8f,
         StageObjectCar::CarType::Car1,
-        false
+        true
         );
 }
 

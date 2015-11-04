@@ -47,3 +47,41 @@ void StageResourceLoadFaction::LoadStage1Object()
 
 
 }
+
+//ステージ１のメッシュをリソースから削除
+void StageResourceLoadFaction::ReleaseStage1Object()
+{
+    //プレスチックコーン
+    DefResource.Erace(
+        Resource::MeshType::Cone
+        );
+
+
+    //青いベンチ
+    DefResource.Erace(
+        Resource::MeshType::Bench
+        );
+
+
+    //バス
+    DefResource.Erace(
+        Resource::MeshType::Bus
+        );
+
+    //車(赤
+    DefResource.Erace(
+        Resource::MeshType::Car1
+        );
+
+
+    //鉄パイプ
+    DefResource.Erace(
+        Resource::MeshType::Pipe
+        );
+
+
+    //川
+    DefResource.Erace(
+        Resource::MeshType::River
+        );
+}

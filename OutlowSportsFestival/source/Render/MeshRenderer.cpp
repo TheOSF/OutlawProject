@@ -43,16 +43,6 @@ void MeshRenderer::GbufRender(
 {
     char str[256];
 
-
-    //if (GetKeyState('J'))
-    //{
-    //    m_Gbuf_Type = GbufRenderType::NoTexture;
-    //}
-    //else
-    //{
-    //    m_Gbuf_Type = GbufRenderType::UseNormal;
-    //}
-
     switch (m_Gbuf_Type)
     {
     case GbufRenderType::NoTexture:
@@ -111,6 +101,7 @@ void MeshRenderer::MasterRender()
 
 void MeshRenderer::DepthRender(iexShader* pShader, const char* pTec, DepthRenderType type)
 {
+
     if (type != DepthRenderType::DirLight)
     {
         return;

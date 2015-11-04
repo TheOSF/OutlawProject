@@ -116,7 +116,7 @@ bool StageEditer::LoadAndEdit(const char* file_path)
     Vector3 pos, angle;
     int id = 0;
     
-    fopen_s(&fp, file_path, "rt");
+    fopen_s(&fp, file_path, "r");
 
     if (fp == 0)
     {
@@ -127,7 +127,7 @@ bool StageEditer::LoadAndEdit(const char* file_path)
 
     for (;;)
     {
-        fscanf(fp, "%d", id);
+        fscanf(fp, "%d", &id);
 
         if (id == -1)
         {

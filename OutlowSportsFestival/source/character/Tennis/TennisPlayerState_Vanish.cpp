@@ -83,10 +83,36 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
                 );
         }
 
+        void HitWall()
+        {
+            //壁に当たったモーションをセット
+            m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Damage_Vanish_HitWallAndDown);
+        }
 
+        void HitFloor()
+        {
+            //床に当たったモーションをセット
+            m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Damage_Vanish_HitFloor);
+        }
+
+        void HitFloorAndStandUp()
+        {
+            //立ち上がりモーションをセット
+            m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Damage_Vanish_HitFloorAndStandUp);
+        }
+
+        void HitWallUpdate()
+        {
+            //モデルのアニメーション更新
+            m_pTennis->m_Renderer.Update(1);
+
+            //ワールド変換行列を計算
+            chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
+        }
     private:
         TennisPlayer*  m_pTennis;
     };
+
 
     //ダメージモーションパラメーターを作成する
     CharacterDamageVanish::Param Param;

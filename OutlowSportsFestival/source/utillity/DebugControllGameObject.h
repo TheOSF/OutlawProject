@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../GameSystem/GameObject.h"
+#include "../GameSystem/GameController.h"
 
 //-------------------------------------------------------------
 //  デバッグ用　値を変更するクラス
@@ -34,8 +35,8 @@ public:
 
     bool Update()
     {
-
-        float Key = KEY(KEY_AXISX2, 0)*0.001f*Speed;
+        
+        float Key = controller::GetStickValue(controller::stick::right,0).x*Speed;
 
         if (Flg != 0 && !GetKeyState(Flg))return true;
 

@@ -170,11 +170,13 @@ void DeferredLightManager::TextureRender()
         }
 
         //•`‰æ
+
         tex[i]->Render(
             x, y, sizeX, sizeY,
             0, 0,
-            1280,
-            720
+
+            (i == 4) ? (1024) : (1280),
+            (i == 4) ? (1024) : (720)
             );
 
         x += sizeX;

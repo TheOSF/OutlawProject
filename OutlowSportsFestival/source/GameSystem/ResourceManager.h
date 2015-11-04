@@ -65,6 +65,9 @@ public:
     void Regist(MeshType type, LPIEXMESH p); 
     void Regist(TextureType type, LPIEX2DOBJ p);
 
+    //--削除する(登録されているデータをクリア)
+    void Erace(MeshType type);
+    void Erace(TextureType type);
 private:
 
     static Resource* m_pInstance;

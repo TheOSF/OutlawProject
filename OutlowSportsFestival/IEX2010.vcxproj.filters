@@ -220,6 +220,13 @@
     <ClCompile Include="source\Stage\StageCarEmitter.cpp" />
     <ClCompile Include="source\GameSystem\MatchLightManager.cpp" />
     <ClCompile Include="source\Stage\RiverObject.cpp" />
+    <ClCompile Include="Input\GamePad\GamePad.cpp" />
+    <ClCompile Include="Input\GamePad\GamePadManager.cpp" />
+    <ClCompile Include="Input\InputDevice.cpp" />
+    <ClCompile Include="Input\InputEffect.cpp" />
+    <ClCompile Include="Input\InputManager.cpp" />
+    <ClCompile Include="source\Stage\Kasenziki_Manager.cpp" />
+    <ClCompile Include="source\Stage\StageObjectBus.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -401,6 +408,18 @@
     <ClInclude Include="source\Stage\StageCarEmitter.h" />
     <ClInclude Include="source\GameSystem\MatchLightManager.h" />
     <ClInclude Include="source\Stage\RiverObject.h" />
+    <ClInclude Include="Input\GamePad\GamePad.h" />
+    <ClInclude Include="Input\GamePad\GamePadIndex.h" />
+    <ClInclude Include="Input\GamePad\GamePadManager.h" />
+    <ClInclude Include="Input\GamePad\GamePadSet.h" />
+    <ClInclude Include="Input\InputDevice.h" />
+    <ClInclude Include="Input\InputEffect.h" />
+    <ClInclude Include="Input\InputError.h" />
+    <ClInclude Include="Input\InputManager.h" />
+    <ClInclude Include="Input\UtilFunc.h" />
+    <ClInclude Include="source\utillity\String.h" />
+    <ClInclude Include="source\Stage\Kasenziki_Manager.h" />
+    <ClInclude Include="source\Stage\StageObjectBus.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

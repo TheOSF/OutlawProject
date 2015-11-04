@@ -50,30 +50,10 @@
 #include "../GameSystem/GameInitializer.h"
 #include "../GameSystem/GameInitilizer_DevelopMode.h"
 
-#include "../utillity/StaticGameObjectTemplate.h"
-#include "../utillity/DebugControllGameObject.h"
-
-#include "../Stage/HitStageObject.h"
-
-#include "../Effect/ParticleRenderer.h"
-#include "../Render/BlurObject.h"
-#include "../Effect/StageSmokeEmitter.h"
-
-#include "../Effect/ParticleManagerUpdater.h"
-#include "LightEventExecuter.h"
-
-#include "../Stage/StageResourceLoadFaction.h"
-#include "../Stage/StageObjectFactory.h"
-
-#include "../Effect/TornadoEffect.h"
-
-#include "../Stage/StageCarEmitter.h"
-
-#include "MatchLightManager.h"
-#include "../Stage/RiverObject.h"
-
-#include "../Stage/StageEdit.h"
 #include "../../Input/GamePad/GamePadManager.h"
+#include "../Stage/Kasenziki_Manager.h"
+
+
 
 static void CreateCharacter(
     PlayerNum::Value      n,
@@ -140,7 +120,6 @@ GameInitializer_DevelopMode::~GameInitializer_DevelopMode()
 
 void GameInitializer_DevelopMode::GameCreate()
 {
-    iexMesh* pStageMesh;
 
     //	環境設定
     iexLight::SetAmbient(0x404040);
@@ -231,151 +210,10 @@ void GameInitializer_DevelopMode::GameCreate()
             );
     }
 
-    {
-        //ステージ１のメッシュをリソースに登録
-        StageResourceLoadFaction::LoadStage1Object();
-    }
-
-    //描画デバイス呼び出し
-    {
-        //ステージ作成
-        if (false)
-        {
-            pStageMesh = new iexMesh("DATA\\STAGE\\Stage.IMO");
-
-            //当たり判定のあるステージにする
-            new HitStageObject(
-                new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColor),
-                new MeshCollider(pStageMesh, new MeshCollider::HitEvent)
-                );
-        }
-        else
-        {
-            pStageMesh = new iexMesh("DATA\\Stages\\Stage1\\kasenziki\\kasenziki.IMO");
-
-            Matrix m;
-
-            const float scale = 0.1f;
-
-            MeshRenderer* R = new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColorSpecular,MeshRenderer::GbufRenderType::UseNormal);
-            //MeshRenderer* R = new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColorSpecular);
-
-            MeshCollider* C = new MeshCollider(pStageMesh, new MeshCollider::HitEvent);
-
-            pStageMesh->SetScale(scale, scale, scale);
-            pStageMesh->SetAngle(0, PI, PI);
-
-            D3DXMatrixScaling(&m, scale, scale, scale);
-            {
-                Matrix s;
-                D3DXMatrixRotationY(&s, PI);
-                m *= s;
-            }
-
-            R->SetMatrix(m);
-            C->SetWorldMatrix(m);
-
-            //当たり判定のあるステージにする
-            new HitStageObject(
-                R,
-                C
-                );
-        }
-
-        //土台のステージを物理エンジンに登録
-        DefBulletSystem.AddRigidMesh(
-            pStageMesh,
-            0,
-            RigidBody::ct_static,
-            0.5f,
-            0.5f,
-            Vector3(0, 0, 0),
-            Vector3(0, 0, 0)
-            );
-
-
-        //車エミッターを追加
-        new StageCarEmitter(0);
-
-
-        ////川を追加
-        //new RiverObject(
-        //    Vector3(0, 2, 0),
-        //    Vector3(10,10,10),
-        //    Vector3(0, 0, 0),
-        //    Vector2(0.01f, 0.0f)
-        //    );
-    }
 
     {
         //エフェクト読み込み
         EffectResource::Load();
-    }
-
-    {
-        //パーティクルアップデーター生成
-     //   new ParticleManagerUpdater();
-    }
-
-    if (0)
-    {
-        //デバッグ用ダメージクラス
-
-        DamageShpere* d = new DamageShpere();
-
-        d->type = DamageBase::Type::_WeekDamage;
-        d->m_Param.pos.y = 2.5f;
-        d->vec.x = 0.25f;
-        d->Value = 25;
-
-        new StaticGameObjectTemplate<DamageShpere>(d);
-    }
-
-    {
-        //ライティング設定
-        {
-            HemiLight* H = new HemiLight;
-
-            H->param.GroundColor = Vector3(0, 0, 0);
-            H->param.SkyColor = Vector3(0, 0, 0);
-            H->param.Up = Vector3(0, 1, 0);
-
-            new StaticGameObjectTemplate<HemiLight>(H);
-        }
-
-        {
-            DirLight* D = new DirLight;
-
-            D->param.color = Vector3(0.3f, 0.2f, 0.2f);
-         //   D->param.color = Vector3(0.2f, 0.2f, 0.2f);
-            D->param.vec = Vector3Normalize(Vector3(0.8f, -1, 0.2f));
-            D->param.Shadow.visible = true;
-            D->param.Shadow.Near = 5;
-            D->param.Shadow.Far = 150;
-            D->param.Shadow.origin = D->param.vec*-50.0f;
-            D->param.Shadow.Size = 120;
-
-
-            DefMatchLightManager.AddManageLightValue(&D->param.color);
-
-            new DebugControllGameObject(&D->param.color, 0, 0.01f, "DirColor", 'D');
-            new StaticGameObjectTemplate<DirLight>(D);
-        }
-
-        {
-            AmbientLight* A = new AmbientLight;
-
-            A->param.color = Vector3(0.37f, 0.26f, 0.26f);
-          //  A->param.color = Vector3(0.26f, 0.26f, 0.26f);
-            A->param.Occlusion.SamplingSize = 0.1f;
-            A->param.Occlusion.Enable = false;
-
-
-            DefMatchLightManager.AddManageLightValue(&A->param.color);
-
-            new DebugControllGameObject(&A->param.color, 0, 0.01f, "AmbColor", 'A');
-            new StaticGameObjectTemplate<AmbientLight>(A);
-        }
     }
 
 
@@ -390,29 +228,18 @@ void GameInitializer_DevelopMode::GameCreate()
     }
 
 
-    if (false)
     {
-        //ステージエディット
-        new StageEditer();
-    }
-    else
-    {
-        //読み込み
-        StageEditer::Load("DATA\\Stages\\Stage1\\StageObjData.txt");
+        Kasennziki_Manager* p = new Kasennziki_Manager(3);
+        p->CreateStage();
     }
 
-
-
-    {
-        
-    }
 
     //キャラクタ作成
     {
         CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
         CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Tennis);
     
-        CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)3, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Tennis);
     }
 }

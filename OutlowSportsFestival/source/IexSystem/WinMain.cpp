@@ -28,10 +28,14 @@ BOOL	InitApp( HWND hWnd )
 	//	IEXシステム初期化
 	IEX_Initialize( hWnd, bFullScreen, ScreenMode );
 	IEX_InitAudio();
-	//IEX_InitInput();
 
-	// 初期化
+    // 初期化
+#ifdef OUTLAW2_CONTROLL_TYPE_KEY_BORD
+	IEX_InitInput();
+#else
 	GamePadManager::Initialize(hWnd);
+#endif
+
 
 	//	システムの初期化
 	SYSTEM_Initialize();
@@ -134,11 +138,13 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	iexParticle::Release();
 	SYSTEM_Release();
 	iexSystem::CloseDebugWindow();
-	//IEX_ReleaseInput(); 
 
-	// 解放
-	GamePadManager::Release();
-
+    // 解放
+#ifdef OUTLAW2_CONTROLL_TYPE_KEY_BORD
+    IEX_ReleaseInput();
+#else
+    GamePadManager::Release();
+#endif
 
 	IEX_ReleaseAudio();
 	IEX_Release();

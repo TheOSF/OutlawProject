@@ -9,12 +9,21 @@ const float BallBase::UsualBallShotY = 2.9f;
 
 BallBase::BallBase()
 {
+#ifndef _DEBUG
 	MyAssert(DefBallMgr.AddBall(this), "ボール登録に失敗しました");
+#else
+    DefBallMgr.AddBall(this);
+#endif
 }
 
 BallBase::~BallBase()
 {
-	MyAssert(DefBallMgr.EraceBall(this), "ボール削除に失敗しました");
+#ifndef _DEBUG
+    MyAssert(DefBallMgr.EraceBall(this), "ボール削除に失敗しました");
+#else
+    DefBallMgr.EraceBall(this);
+#endif
+	
 }
 
 bool BallBase::isCanCounter(const BallBase* pBall)

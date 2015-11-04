@@ -15,8 +15,8 @@
 //------------------------------------------------------
 BlendAnimationMesh::BlendAnimationMesh(char* filename)
 {
-
-	MyAssert(LoadObject(filename), "読み込みに失敗しました。ファイル名 %s \n", filename);
+    bLoad = LoadObject(filename);
+    MyAssert(bLoad, "読み込みに失敗しました。ファイル名 %s \n", filename);
 
 	for (int i = 0; i<16; i++) Param[i] = 0;
 

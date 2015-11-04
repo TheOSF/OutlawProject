@@ -48,6 +48,22 @@ void Resource::Regist(TextureType type, LPIEX2DOBJ p)
     m_pTextureArray[(int)type] = p;
 }
 
+void Resource::Erace(MeshType type)
+{
+    MyAssert(m_pMeshArray[(int)type] != nullptr, "空のリソースに対してEraceが命令されました type=%d", (int)type);
+
+    delete m_pMeshArray[(int)type];
+    m_pMeshArray[(int)type] = nullptr;
+}
+
+void Resource::Erace(TextureType type)
+{
+    MyAssert(m_pTextureArray[(int)type] != nullptr, "空のリソースに対してEraceが命令されました type=%d", (int)type);
+
+    delete m_pTextureArray[(int)type];
+    m_pTextureArray[(int)type] = nullptr;
+}
+
 Resource::Resource()
 {
     for (int i = 0; i < (int)MeshType::_MaxType; ++i)

@@ -93,15 +93,17 @@ BOOL iexSystem::Initialize( HWND hWnd, BOOL bFullScreen, DWORD ScreenMode )
 		if( FAILED( lpD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING|D3DCREATE_MULTITHREADED, &d3dpp, &Device ) ) ) return FALSE;
 	}
 
+    //	グローバルパラメータ設定
+    ScreenFormat = d3dpp.BackBufferFormat;
+    ScreenWidth = d3dpp.BackBufferWidth;
+    ScreenHeight = d3dpp.BackBufferHeight;
+
 	//	システム初期化
 	IEX_InitText();
 	iexRenderState::Initialize();
 	iexTexture::Initialize();
 
-	//	グローバルパラメータ設定
-	ScreenFormat = d3dpp.BackBufferFormat;
-	ScreenWidth  = d3dpp.BackBufferWidth;
-	ScreenHeight = d3dpp.BackBufferHeight;
+
 
 	Window = hWnd;
 

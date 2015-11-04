@@ -10,7 +10,11 @@ GameObjectBase::GameObjectBase()
 :m_ManagerDelete(false)
 #endif
 {
+#ifdef _DEBUG
 	MyAssert(DefGameObjMgr.Add(this), "“o˜^Ž¸”s");
+#else
+    DefGameObjMgr.Add(this);
+#endif
 }
 
 GameObjectBase::~GameObjectBase()

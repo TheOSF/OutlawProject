@@ -130,7 +130,7 @@ StagePhysicMoveObject* StageObjFactory::CreatePipe(CrVector3 pos, CrVector3 angl
 
     c.angle = angle;
     c.friction = 5.0f;
-    c.scale = Vector3(0.35f, 5.5f, 0.35f);
+    c.scale = Vector3(0.35f, 5.1f, 0.35f);
     c.mass = 100.0f;
     c.pos = pos;
     c.restitution = 0.2f;

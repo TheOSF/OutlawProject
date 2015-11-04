@@ -401,13 +401,16 @@ void iexInput::SetInfo()
 int	iexInput::Get(KEYCODE key)
 {
 	//if( GetForegroundWindow() != iexSystem::Window ) return 0;
-	return 0;
+	//return 0;
 	switch (key)
 	{
 	case KEY_AXISX:		return PadAxisX;
 	case KEY_AXISY:		return PadAxisY;
 	case KEY_AXISX2:	return PadAxisX2;
 	case KEY_AXISY2:	return PadAxisY2;
+
+    default:
+        break;
 	}
 	return KeyInfo[key];
 }
@@ -425,6 +428,8 @@ static iexInput*	input[4];
 //*****************************************************************************************************************************
 //		キー情報関連
 //*****************************************************************************************************************************
+
+#ifdef OUTLAW2_CONTROLL_TYPE_KEY_BORD
 
 void KEY_PadAsign(PADSET& padset, int n){ input[n]->PadAsign(padset); }
 void KEY_Asign(KEYSET& keyset, int n){ input[n]->Asign(keyset); }
@@ -445,6 +450,30 @@ int KEY_GetAxisX(int n) { return input[n]->Get(KEY_AXISX); }
 int KEY_GetAxisY(int n) { return input[n]->Get(KEY_AXISY); }
 int KEY_GetAxisX2(int n){ return input[n]->Get(KEY_AXISX2); }
 int KEY_GetAxisY2(int n){ return input[n]->Get(KEY_AXISY2); }
+#else
+
+void KEY_PadAsign(PADSET& padset, int n){  }
+void KEY_Asign(KEYSET& keyset, int n){  }
+
+
+void KEY_Vibration(u32 gain, float period, int n){  }
+
+
+//------------------------------------------------------
+//		キー状態設定・取得
+//------------------------------------------------------
+//	キー状態設定
+void KEY_SetInfo(int n){  }
+//	キー状態取得
+int	KEY_Get(KEYCODE key, int n){ return 0; }
+//	軸取得
+int KEY_GetAxisX(int n) { return 0; }
+int KEY_GetAxisY(int n) { return 0; }
+int KEY_GetAxisX2(int n){ return 0; }
+int KEY_GetAxisY2(int n){ return 0; }
+
+#endif
+
 
 //*****************************************************************************************************************************
 //	入力関連初期化・解放

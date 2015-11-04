@@ -301,8 +301,33 @@ void DeferredLightBufRenderer::LightRenderer::SpotLightUseShadow(SpotLightParam&
         &D3DXVECTOR3(0, 1, 0)
         );
 
+    ////プロジェクション行列計算
+    //D3DXMatrixPerspectiveLH(
+    //    &Proj,
+    //    param.size * 2, 
+    //    param.size * 2,
+    //    0.5f,
+    //    Vector3Length(param.target - param.origin)*1.1f
+    //    );
+
     //プロジェクション行列計算
-    D3DXMatrixOrthoLH(&Proj, param.size * 4, param.size * 4, 1, Vector3Length(param.target - param.origin) * 2);
+    //D3DXMatrixPerspectiveLH(
+    //    &Proj,
+    //    0.5f,
+    //    0.5f,
+    //    0.5f,
+    //    Vector3Length(param.target - param.origin)*1.1f
+    //    );
+
+    //D3DXMatrixPerspectiveFovLH(
+    //    &Proj,
+    //    D3DXToRadian(45),
+    //    1,
+    //    0.1f,
+    //    100.0f
+    //    );
+
+    D3DXMatrixOrthoLH(&Proj, param.size , param.size , 0.01f, Vector3Length(param.target - param.origin) * 1.1f);
     View *= Proj;
     //ビュープロジェクション行列を算出し、エフェクトにセット
 

@@ -11,18 +11,26 @@ RendererManager* RendererManager::m_pInstance = nullptr;
 
 DeferredRenderer::DeferredRenderer()
 {
+#ifdef _DEBUG
 	MyAssert(
 		DefRendererMgr.AddDeferredRenderer(this),
 		"DeferredRenderer‚Ì’Ç‰Á‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
+#else
+    DefRendererMgr.AddDeferredRenderer(this);
+#endif
 }
 
 
 
 DeferredRenderer::~DeferredRenderer()
 {
+#ifdef _DEBUG
 	MyAssert(
 		DefRendererMgr.EraceDeferredRenderer(this),
 		"DeferredRenderer‚Ìíœ‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
+#else 
+    DefRendererMgr.EraceDeferredRenderer(this);
+#endif
 }
 
 
@@ -30,81 +38,122 @@ DeferredRenderer::~DeferredRenderer()
 ForwardRenderer::ForwardRenderer() :
 m_SortZ(1000)
 {
+#ifdef _DEBUG
 	MyAssert(
 		DefRendererMgr.AddForwardRenderer(this),
 		"ForwardRenderer‚Ì’Ç‰Á‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
+#else
+    DefRendererMgr.AddForwardRenderer(this);
+#endif
 }
 
 ForwardRenderer::~ForwardRenderer()
 {
+#ifdef _DEBUG
 	MyAssert(
 		DefRendererMgr.EraceForwardRenderer(this),
 		"ForwardRenderer‚Ìíœ‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
+
+#else
+    DefRendererMgr.EraceForwardRenderer(this);
+#endif
 }
 
 
 UserInterfaceRenderer::UserInterfaceRenderer():
 m_SortZ(0)
 {
+#ifdef _DEBUG
     MyAssert(
         DefRendererMgr.AddUIRenderer(this),
         "UserInterfaceRenderer‚Ì’Ç‰Á‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
+#else
+    DefRendererMgr.AddUIRenderer(this);
+#endif
 }
 
 UserInterfaceRenderer::~UserInterfaceRenderer()
 {
+#ifdef _DEBUG
     MyAssert(
         DefRendererMgr.EraceUIRenderer(this),
         "UserInterfaceRenderer‚Ìíœ‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
+#else
+    DefRendererMgr.EraceUIRenderer(this);
+#endif
 }
 
 LightObject::LightObject() :
 Visible(true)
 {
-
+#ifdef _DEBUG
     MyAssert(
     DefRendererMgr.AddLightObject(this),
         "LightObject‚Ì’Ç‰Á‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
+
+#else
+    DefRendererMgr.AddLightObject(this);
+#endif
 }
 
 LightObject::~LightObject()
 {
-
+#ifdef _DEBUG
     MyAssert(
         DefRendererMgr.EraceLightObject(this),
         "LightObject‚Ìíœ‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
+
+#else
+    DefRendererMgr.EraceLightObject(this);
+#endif
 }
 
 
 ForwardHDRRenderer::ForwardHDRRenderer()
 {
+#ifdef _DEBUG
     MyAssert(
         DefRendererMgr.AddForwardHDRRenderer(this),
         "ForwardHDRRenderer‚Ì’Ç‰Á‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
+
+#else
+    DefRendererMgr.AddForwardHDRRenderer(this);
+#endif
 }
 
 ForwardHDRRenderer::~ForwardHDRRenderer()
 {
-
+#ifdef _DEBUG
     MyAssert(
         DefRendererMgr.EraceForwardHDRRenderer(this),
         "ForwardHDRRenderer‚Ìíœ‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
+#else
+    DefRendererMgr.EraceForwardHDRRenderer(this);
+#endif
 }
 
 
 PostEffectRenderer::PostEffectRenderer()
 {
+#ifdef _DEBUG
     MyAssert(
         DefRendererMgr.AddPostEffectRenderer(this),
         "PostEffectRenderer‚Ì’Ç‰Á‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
+#else
+    DefRendererMgr.AddPostEffectRenderer(this);
+#endif
 }
 
 PostEffectRenderer::~PostEffectRenderer()
 {
-
+#ifdef _DEBUG
     MyAssert(
         DefRendererMgr.EracePostEffectRenderer(this),
         "PostEffectRenderer‚Ìíœ‚ÉŽ¸”s‚µ‚Ü‚µ‚½");
+
+#else
+    DefRendererMgr.EracePostEffectRenderer(this);
+#endif
 }
 
 //*************************************************
@@ -308,6 +357,7 @@ void RendererManager::Render()
     VP = matView;
     VP *= matProjection;
 
+    shader->SetValue("g_V_mat", matView);
     shader->SetValue("g_VP_mat", VP);
 
     m_DeferredLightManager.SetViewParam(matView, matProjection, Vector3Zero);

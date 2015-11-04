@@ -8,11 +8,10 @@
 #include "../Camera/Camera.h"
 
 CharacterDamageVanish::CharacterDamageVanish(
-    CharacterBase*    pCharacter,//吹き飛ぶキャラクタ
-    const Param&      param, //吹きとびパラメーター
-    Event*            pEvent, //イベントクラスへのポインタ(デストラクタでdeleteする)
-    DamageManager::HitEventBase* pHitEvent,
-    bool              first_slow
+    CharacterBase*    pCharacter,   //吹き飛ぶキャラクタ
+    const Param&      param,        //吹きとびパラメーター
+    Event*            pEvent,       //イベントクラスへのポインタ(デストラクタでdeleteする)
+    DamageManager::HitEventBase* pHitEvent
     ) :
     m_pCharacter(pCharacter),
     m_pEvent(pEvent),
@@ -140,16 +139,15 @@ void CharacterDamageVanish::Flying()
             CollisionManager::RayType::_Usual
             ) != nullptr)
         {
+            m_Count = 0;
             vec.y = 0;
             vec.Normalize();
-            m_Param.move = Vector3Refrect(m_pCharacter->m_Params.move, vec);
 
-            {
-                m_Param.move *= 0.25f;
-                m_Param.move.y += 0.5f;
-            }
+            chr_func::AngleControll(m_pCharacter, m_pCharacter->m_Params.pos);
 
-            m_pStateFunc = &CharacterDamageVanish::Initialize;
+            m_pCharacter->m_Params.move = Vector3Zero;
+
+            m_pStateFunc = &CharacterDamageVanish::HitWallAndDown;
             m_WallHit = true;
 
             DefCamera.SetShock(Vector2(0.3f, 0.3f), 15);
@@ -218,6 +216,9 @@ void CharacterDamageVanish::StandUping()
     m_pEvent->StandUping();
 
 
+    //起き上がり途中は他のアクションでキャンセル可能
+    m_pEvent->CanActionUpdate();
+
     //ステート移行
     if (m_Count > m_Param.standup_frame)
     {
@@ -225,9 +226,6 @@ void CharacterDamageVanish::StandUping()
         m_pStateFunc = &CharacterDamageVanish::End;
         m_Count = 0;
     }
-
-
-
 
     //移動更新
     if (m_Count > m_Param.standup_muteki_frame)
@@ -257,4 +255,92 @@ void CharacterDamageVanish::End()
         chr_func::UpdateAll(m_pCharacter, m_pHitEvent);
     }
 
+}
+
+void CharacterDamageVanish::HitWallAndDown()
+{
+    const int DownFrame = 18;
+
+    if (m_Count == 0)
+    {
+        m_Count = 1;
+        m_pEvent->HitWall();
+    }
+
+    //落下フレームなら
+    if (m_Count >= DownFrame)
+    {
+        //重力加算
+        chr_func::UpdateMoveY(m_pCharacter);
+
+        //床に当たっていたなら
+        if (chr_func::isTouchGround(m_pCharacter))
+        {
+            m_Count = 0;
+            m_pStateFunc = &CharacterDamageVanish::HitFloorAndStandUp;
+        }
+    }
+    else
+    {
+        ++m_Count;
+    }
+
+    //位置を更新
+    chr_func::PositionUpdate(m_pCharacter);
+
+    //壁との接触判定
+    chr_func::CheckWall(m_pCharacter);
+
+    //床との接触判定
+    chr_func::CheckGround(m_pCharacter);
+
+    //あたり判定を取る
+    chr_func::DamageCheck(m_pCharacter, &DamageManager::HitEventBase());
+
+
+    //イベント更新
+    m_pEvent->HitWallUpdate();
+}
+
+
+
+void CharacterDamageVanish::HitFloorAndStandUp()
+{
+    const int StandUpStart = 10;
+    const int StandUpEnd = 50;
+
+    //床に当たったイベント
+    if (m_Count == 0)
+    {
+        m_pEvent->HitFloor();
+    }
+
+    //立ち上がりイベント
+    if (m_Count == StandUpStart)
+    {
+        m_pEvent->HitFloorAndStandUp();
+    }
+
+    //立ち上がり終了イベント
+    if (m_Count == StandUpEnd)
+    {
+        m_pEvent->End();
+    }
+
+    //カウンター更新
+    if (m_Count <= StandUpEnd)
+    {
+        ++m_Count;
+    }
+
+    //起き上がり途中は他のアクションでキャンセル可能
+    m_pEvent->CanActionUpdate();
+    
+    //移動更新
+    {
+        chr_func::UpdateAll(m_pCharacter, m_pHitEvent);
+    }
+
+    //イベント更新
+    m_pEvent->HitWallUpdate();
 }

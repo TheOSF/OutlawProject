@@ -83,7 +83,31 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
             //カメラ写すフラグをfalseに
             m_pTennis->m_Params.camera_draw = false;
         }
+        void HitWall()
+        {
+            //壁に当たったモーションをセット
+            m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Damage_Vanish_HitWallAndDown);
+        }
 
+        void HitFloor()
+        {
+            //床に当たったモーションをセット
+            m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Damage_Vanish_HitFloor);
+        }
+
+        void HitFloorAndStandUp()
+        {
+            //何もしない(立ち上がらない
+        }
+
+        void HitWallUpdate()
+        {
+            //モデルのアニメーション更新
+            m_pTennis->m_Renderer.Update(1);
+
+            //ワールド変換行列を計算
+            chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
+        }
     private:
         TennisPlayer*  m_pTennis;
     };
@@ -109,8 +133,7 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
         m_pTennis,
         Param,
         new TennisEvent(t),
-        new DamageManager::HitEventBase(),
-        true
+        new DamageManager::HitEventBase()
         );
 
     //死亡エフェクト

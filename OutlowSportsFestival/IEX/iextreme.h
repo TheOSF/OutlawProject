@@ -25,6 +25,20 @@
 
 #include	"../source/debug/DebugFunction.h"
 
+
+//“ü—Í•û–@Ø‚è‘Ö‚¦
+
+#if FALSE
+
+#define OUTLAW2_CONTROLL_TYPE_KEY_BORD
+
+#else
+
+#define OUTLAW2_CONTROLL_TYPE_CONTROLLER
+
+#endif
+
+
 //*****************************************************************************
 //
 //		•Ï”Œ^’è‹`

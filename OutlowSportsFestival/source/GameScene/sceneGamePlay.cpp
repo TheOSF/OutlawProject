@@ -95,8 +95,6 @@ sceneGamePlay::~sceneGamePlay()
 //*****************************************************************************************************************************
 void	sceneGamePlay::Update()
 {
-    //コントローラ更新
-    GamePadManager::Update();
 
     //カメラ更新
 	DefCamera.Update();

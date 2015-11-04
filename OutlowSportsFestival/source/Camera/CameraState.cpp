@@ -9,8 +9,11 @@
 CameraStateGamePlay::CameraStateGamePlay(bool pos_reset)
 {
 
-    m_PosSpeed = 0.04f;
-    m_TargetSpeed = 0.02f;
+    //m_PosSpeed = 0.04f;
+    //m_TargetSpeed = 0.02f;
+
+    m_PosSpeed = 0.06f;
+    m_TargetSpeed = 0.06f;
 
     if (pos_reset)
     {
@@ -55,7 +58,7 @@ void CameraStateGamePlay::Execute(Camera* c)
 	{
 		center /= (float)livecnt;
 	}
-	center.z -= 4;	//若干手前に
+	center.z -= 6.0f;	//若干手前に
 
 	//カメラのターゲットを補間
     c->m_Target += (center - c->m_Target)*m_TargetSpeed;
@@ -99,6 +102,87 @@ void CameraStateGamePlay::Execute(Camera* c)
     m_PosSpeed = 0.04f;
     m_TargetSpeed = 0.02f;
 }
+
+//
+//void CameraStateGamePlay::Execute(Camera* c)
+//{
+//
+//    const Vector3 first_pos(0, 50, -55);	//適当
+//    const CharacterManager::CharacterMap& chr_map = DefCharacterMgr.GetCharacterMap();
+//
+//    //キャラクタがいない場合移動できない
+//    if (chr_map.empty())
+//    {
+//        return;
+//    }
+//
+//    Vector3 center(0, 0, 0);
+//    const float viewangle = PI / 4.5f;	//カメラの視野角
+//    float dRightLen = 0;
+//    
+//    
+//    {
+//        //注視点を計算
+//        Vector3 MinPos(1000, 1000, 1000), MaxPos(-1000, -1000, -1000);
+//
+//        for (auto& it : chr_map)
+//        {
+//            const Vector3& p = it.first->m_Params.pos;
+//
+//            if (p.x < MinPos.x)MinPos.x = p.x;
+//            if (p.y < MinPos.y)MinPos.y = p.y;
+//            if (p.z < MinPos.z)MinPos.z = p.z;
+//
+//            if (p.x > MaxPos.x)MaxPos.x = p.x;
+//            if (p.y > MaxPos.y)MaxPos.y = p.y;
+//            if (p.z > MaxPos.z)MaxPos.z = p.z;
+//        }
+//
+//        center = (MinPos + MaxPos)*0.5f;
+//    }
+//
+//    //カメラのターゲットを補間
+//    c->m_Target += (center - c->m_Target)*m_TargetSpeed;
+//
+//
+//    //どれだけカメラを引くかを算出する
+//    for (auto it = chr_map.begin();
+//        it != chr_map.end();
+//        ++it)
+//    {
+//        if (it->first->m_Params.camera_draw == false)continue;
+//        CrVector3 chrpos = it->first->m_Params.pos;
+//
+//        //カメラ注視点からの距離を求める
+//        float rlen = Vector3Length(chrpos - center);
+//      //  rlen += 12;	//ちょっと大きめに引くため
+//
+//        if (dRightLen < rlen)dRightLen = rlen;	//最大なら更新
+//    }
+//
+//    Vector3 mVec = first_pos - center;
+//    Vector3 moveTarget;
+//    mVec.Normalize();
+//
+//    //視野角のtanから目標を視野に入れるための後方距離を算出
+//    float b = dRightLen / tanf(viewangle);
+//
+//    //移動目標を計算
+//    moveTarget = center + mVec*b;
+//
+//    //補間する
+//    c->m_Position += (moveTarget - c->m_Position)*m_PosSpeed;
+//
+//#ifdef _DEBUG
+//    if (GetKeyState('Q') & 0x80)
+//    {
+//        c->SetNewState(new CameraStateFreeMove());
+//    }
+//#endif
+//
+//    m_PosSpeed = 0.04f;
+//    m_TargetSpeed = 0.02f;
+//}
 
 void CameraStateGamePlay::Exit(Camera* c)
 {

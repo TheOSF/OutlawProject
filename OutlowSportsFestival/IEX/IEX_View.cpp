@@ -73,7 +73,16 @@ void iexView::SetViewport()
 	Viewport.Height = iexSystem::ScreenHeight;
 	Viewport.MaxZ = 1.0f;
 	Viewport.MinZ = 0.0f;
-	Aspect = (float)Viewport.Width / (float)Viewport.Height;
+
+    if ((float)Viewport.Height != 0)
+    {
+        Aspect = (float)Viewport.Width / (float)Viewport.Height;
+    }
+    else
+    {
+        Aspect = 0;
+    }
+	
 }
 
 void iexView::SetViewport( int x, int y, int w, int h )
@@ -85,7 +94,14 @@ void iexView::SetViewport( int x, int y, int w, int h )
 	Viewport.MaxZ = 1.0f;
 	Viewport.MinZ = 0.0f;
 
-	Aspect = (float)w / (float)h;
+    if ((float)h != 0)
+    {
+        Aspect = (float)w / (float)h;
+    }
+    else
+    {
+        Aspect = 0;
+    }
 }
 
 //*****************************************************************************
@@ -125,6 +141,8 @@ void iexView::Activate()
 
 	//	投影行列設定
 	PerspectiveLH( matProj, FovY, Aspect, Near, Far );
+
+
 
 	//	グローバルへの適用
 	::matProjection = matProj;

@@ -14,8 +14,9 @@
 //------------------------------------------------------
 iex3DObj::iex3DObj( char* filename )
 {
+    bLoad = LoadObject(filename);
 
-	MyAssert(LoadObject(filename), "iex3DObjの読み込みに失敗しました。ファイル名 %s \n", filename);
+    MyAssert(bLoad, "iex3DObjの読み込みに失敗しました。ファイル名 %s \n", filename);
 
 	for( int i=0 ; i<16 ; i++ ) Param[i] = 0;
 

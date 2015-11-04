@@ -69,6 +69,7 @@ void Sound::Initialize()
 
 void Sound::Play(Type type, RATIO volume , bool loop)
 {
+    return;  //Ç±ÇÍÅIÅI
 
     IEX_PlaySound(
         (int)type,

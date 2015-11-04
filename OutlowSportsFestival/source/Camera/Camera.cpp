@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "CameraState.h"
+#include "../IexSystem/System.h"
 
 Camera* Camera::m_pInstance = nullptr;
 
@@ -40,6 +41,7 @@ void Camera::Update()
 
 	UpdateMatrix(temp_pos, temp_target);
 
+    shader->SetValue("g_CameraPos", temp_pos);
 }
 
 //‰æ–ÊÁ‹

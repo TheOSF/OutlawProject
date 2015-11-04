@@ -54,7 +54,7 @@ void GameEventer::SetLightChange()
         3,
         30,
         10,
-        Vector3(0.3f, 0.3f, 0.3f)
+        Vector3(0.6f, 0.6f, 0.6f)
         );
 }
 

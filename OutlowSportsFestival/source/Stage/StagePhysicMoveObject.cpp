@@ -130,5 +130,10 @@ bool StagePhysicMoveObject::Update()
 
 bool StagePhysicMoveObject::Msg(GameObjectBase::MsgType type)
 {
+    if (type == GameObjectBase::MsgType::_RoundReset)
+    {
+        m_Destroy = true;
+    }
+
     return false;
 }
