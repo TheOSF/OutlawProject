@@ -149,7 +149,10 @@
     <ClCompile Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.cpp" />
     <ClCompile Include="source\character\Computer\CharacterComputerDoAction.cpp" />
     <ClCompile Include="source\character\Computer\CharacterComputerReaction.cpp" />
+    <ClCompile Include="source\character\Computer\CharacterComputerReactionHitEvent.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerAttack.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerCounter.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerRolling.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerShot.cpp" />
     <ClCompile Include="source\Ball\Ball.cpp" />
     <ClCompile Include="source\Ball\BallFadeOutRenderer.cpp" />
@@ -353,7 +356,10 @@
     <ClInclude Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerDoAction.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerReaction.h" />
+    <ClInclude Include="source\character\Computer\CharacterComputerReactionHitEvent.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerAttack.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerCounter.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerRolling.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerShot.h" />
     <ClInclude Include="source\Ball\Ball.h" />
     <ClInclude Include="source\Ball\BallFadeOutRenderer.h" />

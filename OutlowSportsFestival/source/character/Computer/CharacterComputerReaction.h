@@ -2,6 +2,8 @@
 #include "../CharacterBase.h"
 #include "../CharacterRenderer.h"
 #include "../CharacterStateTemplate.h"
+
+#include "CharacterComputerReactionHitEvent.h"
 #include "CharacterComputerMove.h"
 #include "../../Damage/Damage.h"
 
@@ -20,13 +22,12 @@ public:
 	{
 	public:
 		virtual~ActionEvent() {}
-		virtual void Reaction() = 0;			//攻撃開始時に呼ばれる関数
+		virtual void Reaction(CharacterComputerReactionHitEvent::HitType hittype) = 0;			//攻撃開始時に呼ばれる関数
 	};
 	CharacterComputerReaction(
 		CharacterBase*					pParent,	//操るキャラクタのポインタ
 		const CharacterComputerMove::Param&	param,		//移動パラメータ構造体
-		ActionEvent*						ActionEvent,	//移動イベントに反応するクラス
-		DamageManager::HitEventBase*	pHitEventBase//ダメージを受けた時に反応するクラス
+		ActionEvent*						ActionEvent	//移動イベントに反応するクラス
 		);
 
 	~CharacterComputerReaction();
@@ -36,6 +37,6 @@ private:
 
 	CharacterBase*	                  m_cCharacter;
 	ActionEvent*  	                  m_ActionEvent;
-	HitEventBase*	                  m_pHitEventBase;
 	CharacterComputerMove::Param	  m_Params;
+	CharacterComputerReactionHitEvent::HitType hit;
 };
