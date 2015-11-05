@@ -119,10 +119,12 @@ void Kasennziki_Manager::CreateStage()
         if (m_NightRound == 1)
         {
             SetNightLight();
+            SetNightObject();
         }
         else
         {
             SetSunsetLight();
+            SetSunsetObject();
         }
     }
 
