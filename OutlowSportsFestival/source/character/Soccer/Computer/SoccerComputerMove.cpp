@@ -7,6 +7,7 @@
 #include "SoccerComputerShot.h"
 #include "SoccerComputerCounter.h"
 #include "SoccerComputerRolling.h"
+#include "../SoccerPlayerState_PoseMotion.h"
 #include "../../CharacterManager.h"
 #include "../../../Camera/Camera.h"
 #include "../SoccerHitEvent.h"
@@ -19,14 +20,12 @@ public:
 	{
 	public:
 		SoccerPlayer*const cs;
-
 		ComputerRollingControll(SoccerPlayer* ps) :cs(cs) {}
 
 
 		Vector3 GetVec()override
 		{
 			Vector2 stick = Vector2(1, 1);
-			//Vector2 stick = chr_func::GetRight(cs,);
 			Vector3 vec(stick.x, 0, stick.y);
 
 			if (vec.Length() < 0.25f)
@@ -42,6 +41,37 @@ public:
 	};
 
 };
+
+bool SoccerState_ComputerControll_Move::SwitchGameState(SoccerPlayer* ps)
+{
+	Vector3 v;
+
+	switch (ps->GetStateType())
+	{
+	case CharacterBase::State::Usual:
+
+		return false;
+
+	case CharacterBase::State::Freeze:
+
+		return true;
+
+	case CharacterBase::State::LosePose:
+		ps->SetState(new SoccerState_PoseMotion(SoccerPlayer::_ms_Lose, 0.2f, 1000));
+		return true;
+
+	case CharacterBase::State::WinPose:
+		ps->SetState(new SoccerState_PoseMotion(SoccerPlayer::_ms_Win, 0.2f, 1000));
+
+		return true;
+	default:
+		break;
+	}
+
+	return false;
+
+
+}
 
 //ステート開始
 void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
@@ -159,8 +189,11 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 
 void SoccerState_ComputerControll_Move::Execute(SoccerPlayer* s)
 {
-	//スティック値をセット
-	m_pMoveClass->SetStickValue(m_pMoveControllClass->SwitchAction(s));
+	if (SwitchGameState(s) == false)
+	{
+		//スティック値をセット
+		m_pMoveClass->SetStickValue(m_pMoveControllClass->SwitchAction(s));
+	}
 
 	//更新
 	m_pMoveClass->Update();

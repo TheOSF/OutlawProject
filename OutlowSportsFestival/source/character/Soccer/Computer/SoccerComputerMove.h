@@ -20,6 +20,8 @@ public:
 	void Enter(SoccerPlayer* s)override;
 	void Execute(SoccerPlayer* s)override;
 	void Exit(SoccerPlayer* s)override;
+
+	static bool SwitchGameState(SoccerPlayer* ps);
 private:
 	CharacterUsualMove*		m_pMoveClass;
 	CharacterComputerMove*  m_pMoveControllClass;
