@@ -95,6 +95,7 @@ void SmalBufBlurRenderer::Render()
     float alpha = 1.2f;
     float mul_alpha = 0.9f;
 
+
     m_pShader->SetValue("g_Alpha", alpha);
     m_pShader->SetValue("g_MulAlpha", mul_alpha);
 

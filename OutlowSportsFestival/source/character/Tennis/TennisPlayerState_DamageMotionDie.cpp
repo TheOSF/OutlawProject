@@ -1,7 +1,6 @@
 #include "TennisPlayerState_DamageMotionDie.h"
 #include "Tennis_HitEvent.h"
 #include "../CharacterFunction.h"
-#include "../../Effect/BlurImpact.h"
 
 #include "../../Effect/HitEffectObject.h"
 #include "../../Ball/Ball.h"
@@ -139,22 +138,7 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
     //死亡エフェクト
     EffectFactory::DieEffect(
         t,
-        m_pTennis->m_Params.pos + Vector3(0, 3, 0) + m_Damage_vec*3.5f,
         m_Damage_vec
-        );
-
-    //ブラーエフェクト
-    new BlurImpactSphere(
-        m_pTennis->m_Params.pos + Vector3(0, BallBase::UsualBallShotY, 0),
-        20,
-        50,
-        15
-        );
-
-    //カメラショック
-    DefCamera.SetShock(
-        Vector2(1, 1)*0.22f, 
-        20
         );
 
 

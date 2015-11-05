@@ -295,6 +295,7 @@
     <ClCompile Include="source\Stage\Kasenziki_Manager.cpp" />
     <ClCompile Include="source\Stage\PhysicsMeshObject.cpp" />
     <ClCompile Include="source\Stage\RiverObject.cpp" />
+    <ClCompile Include="source\Stage\SkyObject.cpp" />
     <ClCompile Include="source\Stage\StageCarEmitter.cpp" />
     <ClCompile Include="source\Stage\StageEdit.cpp" />
     <ClCompile Include="source\Stage\StageObjectBus.cpp" />
@@ -508,6 +509,7 @@
     <ClInclude Include="source\Stage\Kasenziki_Manager.h" />
     <ClInclude Include="source\Stage\PhysicsMeshObject.h" />
     <ClInclude Include="source\Stage\RiverObject.h" />
+    <ClInclude Include="source\Stage\SkyObject.h" />
     <ClInclude Include="source\Stage\StageCarEmitter.h" />
     <ClInclude Include="source\Stage\StageEdit.h" />
     <ClInclude Include="source\Stage\StageObjectBus.h" />

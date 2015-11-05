@@ -62,7 +62,7 @@ public:
 	CharacterRenderer	m_Renderer;
 	const float         m_ModelSize;
 
-	void SetState(TennisState* state);
+    void SetState(TennisState* state, bool Important = false);
 
 	bool Update();
     bool CharacterMsg(MsgType mt);

@@ -10,14 +10,15 @@
 #include "../GameSystem/MatchLightManager.h"
 #include "StageEdit.h"
 #include "RiverObject.h"
-
+#include "SkyObject.h"
 
 const char* Kasennziki_Manager::StageObjFileName = "DATA\\Stages\\Stage1\\StageObjData.txt";
 
 Kasennziki_Manager::Kasennziki_Manager(UINT night_round) :
 m_NightRound(night_round),
 m_RoundCount(1),
-m_DeleyFrame(0)
+m_DeleyFrame(0),
+m_pSkyObject(nullptr)
 {
     //リソースにまとめて登録
     StageResourceLoadFaction::LoadStage1Object();
@@ -101,7 +102,8 @@ void Kasennziki_Manager::CreateStage()
             Vector3(0, 0, 0)
             );
     }
-    
+
+   
 
     //夕焼け時のオブジェクトをセット
     if (false)
@@ -113,14 +115,19 @@ void Kasennziki_Manager::CreateStage()
     }
     else
     {
-        //通常のセット
-        SetSunsetObject();
+        //ライティングセット
+        if (m_NightRound == 1)
+        {
+            SetNightLight();
+        }
+        else
+        {
+            SetSunsetLight();
+        }
     }
 
 
-    //夕焼け時のライティングセット
-    SetSunsetLight();
-    //SetNightLight();
+    
 
     //車メーカーをセット
     new StageCarEmitter(0);
@@ -132,6 +139,7 @@ void Kasennziki_Manager::CreateStage()
         Vector3(0, 0, 0),
         Vector2(0.001f, 0.0f)
         );
+
 }
 
 
@@ -161,12 +169,25 @@ void Kasennziki_Manager::RoundReset()
 
 void Kasennziki_Manager::SetSunsetObject()
 {
+    //空を追加
+    if (m_pSkyObject == nullptr)
+    {
+        m_pSkyObject = new SkyObject("DATA\\Stages\\Stage1\\Sky\\Sky.imo");
+    }
+
     //読み込み
     StageEditer::Load(StageObjFileName);
 }
 
 void Kasennziki_Manager::SetNightObject()
 {
+    //空を削除
+    if (m_pSkyObject != nullptr)
+    {
+        m_pSkyObject->m_DeleteFlg = true;
+        m_pSkyObject = nullptr;
+    }
+
     //読み込み
     StageEditer::Load(StageObjFileName);
 }
@@ -215,20 +236,20 @@ void Kasennziki_Manager::SetNightLight()
     {
         m_pSpotLight[0]->Visible = true;
 
-        m_pSpotLight[0]->param.origin = Vector3(0, 10, 45);
-        m_pSpotLight[0]->param.target = Vector3(0, -2, -20);
+        m_pSpotLight[0]->param.origin = Vector3(0, 10, 55);
+        m_pSpotLight[0]->param.target = Vector3(0, -2, -30);
         m_pSpotLight[0]->param.color = Vector3(1.0f, 1.0f, 1.0f)*2.0f;
-        m_pSpotLight[0]->param.size = 20;
+        m_pSpotLight[0]->param.size = 45;
         m_pSpotLight[0]->param.Shadow.visible = true;
     }
 
     {
         m_pSpotLight[1]->Visible = true;
                      
-        m_pSpotLight[1]->param.origin = Vector3(0, 10, -45);
-        m_pSpotLight[1]->param.target = Vector3(0, -2, 20);
+        m_pSpotLight[1]->param.origin = Vector3(0, 10, -55);
+        m_pSpotLight[1]->param.target = Vector3(0, -2, 30);
         m_pSpotLight[1]->param.color = Vector3(1.0f, 1.0f, 1.0f)*2.0f;
-        m_pSpotLight[1]->param.size = 20;
+        m_pSpotLight[1]->param.size = 45;
         m_pSpotLight[1]->param.Shadow.visible = true;
     }
 

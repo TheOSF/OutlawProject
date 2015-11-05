@@ -76,7 +76,6 @@ namespace EffectFactory
     //死亡時のエフェクト
     void DieEffect(
         CharacterBase* pDieCharacter,
-        CrVector3 Pos,
-        CrVector3 Damage_Vec
+        CrVector3      Damage_Vec
         );
 }

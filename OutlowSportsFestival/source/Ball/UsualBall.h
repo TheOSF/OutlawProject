@@ -77,7 +77,7 @@ private:
 	bool isOutofField()const;  //フィールド外に出ているか
 
 	void UpdateDamageClass();  //ダメージ判定の位置を現在の位置に更新
-    void UpdateLocusColor();   //軌跡の色を現在の親キャラクタの色に設定
+    void UpdateColor();   //色を現在の親キャラクタの色に設定
     bool UpdateWallCheck(Vector3& outNewMove);    //壁との判定を取り、接触していたなら移動値を反射してステート移行をする
     void AddLocusPoint();      //軌跡のポイントを現在のパラメータで一点追加する
 

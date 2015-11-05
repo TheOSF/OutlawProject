@@ -29,7 +29,7 @@ bool TennisHitEvent::Hit(DamageBase* pDmg)
     //もし体力がなかったら、どんな攻撃であろうと死亡ステートへ
     if (chr_func::isDie(m_pTennis))
     {
-        m_pTennis->SetState(new TennisState_DamageMotion_Die(m_pTennis, pDmg->vec));
+        m_pTennis->SetState(new TennisState_DamageMotion_Die(m_pTennis, pDmg->vec), true);
         return true;
     }
 
@@ -39,13 +39,13 @@ bool TennisHitEvent::Hit(DamageBase* pDmg)
 	{
 	case DamageBase::Type::_WeekDamage:
 		//弱攻撃
-		m_pTennis->SetState(new TennisState_DamageMotion_Weak(m_pTennis, pDmg->vec));
+        m_pTennis->SetState(new TennisState_DamageMotion_Weak(m_pTennis, pDmg->vec), true);
 		return true;
 	
 	//未作成
 	case DamageBase::Type::_VanishDamage:
 		//吹き飛びダメージ
-        m_pTennis->SetState(new TennisState_DamageVanish(m_pTennis, pDmg->vec));
+        m_pTennis->SetState(new TennisState_DamageVanish(m_pTennis, pDmg->vec), true);
 		return true;
         /*
 	case DamageBase::Type::_UpDamage:

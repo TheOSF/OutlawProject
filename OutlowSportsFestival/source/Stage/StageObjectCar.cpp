@@ -109,10 +109,10 @@ StageObjectCar::StageObjectCar(
 
         if (light)
         {
-            m_Light.param.color = Vector3(1, 1, 0)*5.0f;
+            m_Light.param.color = Vector3(1, 1, 1)*5.0f;
             m_Light.param.Shadow.visible = false;
             m_Light.param.Shadow.pDepthRenderer = DefRendererMgr.GetDepthRenderer();
-            m_Light.param.size = 15.0f;
+            m_Light.param.size = 30.0f;
 
             LightPosUpdate();
         }
@@ -123,7 +123,7 @@ StageObjectCar::StageObjectCar(
         //ƒ_ƒ[ƒW”»’èì¬
         m_Damage.HitCount = 0;
         m_Damage.m_Enable = true;
-        m_Damage.m_Param.width = 4.0f;
+        m_Damage.m_Param.width = 10.0f;
         m_Damage.pBall = nullptr;
         m_Damage.pParent = nullptr; 
         m_Damage.type = DamageBase::Type::_VanishDamage;
@@ -260,7 +260,7 @@ void  StageObjectCar::LightPosUpdate()
 {
     const Matrix& t = m_pCarMesh->GetMatrix();
 
-    Vector3 pos(0, 5, 10.0f), target(0, 5, 100.0f);
+    Vector3 pos(0, 5, 10.0f), target(0, 5, 200.0f);
 
     pos = Vector3MulMatrix(pos, t);
     target = Vector3MulMatrix(target, t);

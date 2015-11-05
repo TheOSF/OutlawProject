@@ -38,7 +38,8 @@ public:
         int                AngleControllEndFrame;
         RADIAN             AngleControllValue;
 
-        int                LocusBoneNum;
+        int                LocusBoneNum1;
+        int                LocusBoneNum2;
     };
 
     Param m_Param;

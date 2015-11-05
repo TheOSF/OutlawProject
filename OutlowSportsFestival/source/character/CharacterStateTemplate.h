@@ -31,11 +31,13 @@ private:
 	_Client_type_ptr		m_pClient;
 	_MyState_ptr			m_pState;
 	_MyState_ptr			m_pNextState;
+    bool                    m_NextImportant;
 public:
-	ChrStateMachine(_Client_type_ptr Client) :
-		m_pState(0),
-		m_pNextState(0),
-		m_pClient(Client)
+    ChrStateMachine(_Client_type_ptr Client) :
+        m_pState(0),
+        m_pNextState(0),
+        m_pClient(Client),
+        m_NextImportant(false)
 	{
 	}
 	virtual~ChrStateMachine()
@@ -48,13 +50,22 @@ public:
 		if (m_pNextState)delete m_pNextState;
 	}
 public:
-	void set_state(_MyState_ptr const Newstate)
+    void set_state(_MyState_ptr const Newstate, bool Important = false)
 	{
+        //重要なステートの場合
+        if (m_NextImportant)
+        {
+            delete Newstate;
+            return;
+        }
+
 		if (m_pNextState)
 		{
 			delete m_pNextState;
 		}
+
 		m_pNextState = Newstate;
+        m_NextImportant = Important;
 	}
 	void state_execute()
 	{
@@ -68,6 +79,7 @@ public:
 			m_pNextState->Enter(m_pClient);
 			m_pState = m_pNextState;
 			m_pNextState = nullptr;
+            m_NextImportant = false;
 		}
 		if (m_pState)
 		{

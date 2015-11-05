@@ -73,7 +73,7 @@ UsualBall::UsualBall(
             false,
             MeshRenderer::RenderType::UseColorSpecular
             );
-        
+
         D3DXMatrixScaling(&m, MeshScale, MeshScale, MeshScale);
 
         m._41 = m_Params.pos.x;
@@ -83,14 +83,17 @@ UsualBall::UsualBall(
         m_pMeshRenderer->SetMatrix(m);
     }
 
+
     {
         //軌跡の設定
         m_Locus.m_Division = 0;
         m_Locus.m_StartParam.Width = 3.6f * GetBallScale(params.pParent->m_PlayerInfo.chr_type);
         m_Locus.m_EndParam.Width = 0.1f;
 
-        UpdateLocusColor();
+        UpdateColor();
     }
+
+  
 
 }
 
@@ -237,7 +240,7 @@ void UsualBall::UpdateDamageClass()
 }
 
 
-void UsualBall::UpdateLocusColor()
+void UsualBall::UpdateColor()
 {
     const COLORf Color = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number);
 
@@ -252,6 +255,15 @@ void UsualBall::UpdateLocusColor()
 
     m_Locus.m_EndParam.HDRColor = m_Locus.m_StartParam.HDRColor;
     m_Locus.m_EndParam.HDRColor.w = 0;
+
+
+    {
+        //メッシュを光らせる
+        COLORf Color = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number);
+
+        m_pMeshRenderer->m_HDR = Vector3(1,1,1) * 0.1f;
+
+    }
 }
 
 
@@ -295,7 +307,7 @@ void UsualBall::Counter(CharacterBase* pCounterCharacter)
 {
     m_Damage.pParent = m_Params.pParent = pCounterCharacter;
 
-    UpdateLocusColor();
+    UpdateColor();
 
     m_Damage.type = DamageBase::Type::_VanishDamage;
     m_Damage.Value += 1.0f; //ダメージを増やす
@@ -502,7 +514,7 @@ bool UsualBall::StatePhysicMove()
             //自身で開放しないようにnullに設定しておく
             m_pRigitBody = nullptr;
         }
-    }
+}
 
     //軌跡の不透明度を徐々に減らしていく
     {
@@ -521,6 +533,16 @@ bool UsualBall::StatePhysicMove()
             //軌跡の点を追加
             AddLocusPoint();
         }
+    }
+
+    //光値を減少
+    {
+        m_pMeshRenderer->m_HDR *= 0.92f;
+    }
+
+    //スケールを0.75倍に…？
+    {
+        
     }
 
     //フィールド外,もしくは消滅タイマーが０　なら更新失敗

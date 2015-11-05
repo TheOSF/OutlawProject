@@ -10,6 +10,9 @@
 #include "HitEffectObject.h"
 #include "../character/CharacterBase.h"
 
+#include "Effect/BlurImpact.h"
+
+#include "../Camera/Camera.h"
 
 void EffectFactory::Smoke(CrVector3 pos, CrVector3 move, float size, DWORD Color, bool Soft)
 {
@@ -236,20 +239,33 @@ void EffectFactory::ParticleHDR(
 //死亡時のエフェクト
 void EffectFactory::DieEffect(
     CharacterBase* pDieCharacter,
-    CrVector3 Pos,
-    CrVector3 Damage_Vec
+    CrVector3      Damage_Vec
     )
 {
     COLORf EffectColor(CharacterBase::GetPlayerColor(pDieCharacter->m_PlayerInfo.number));
 
     //ヒットエフェクト作成
     new HitEffectObject(
-        Pos,
+        pDieCharacter->m_Params.pos + Vector3(0, 3, 0) + Damage_Vec*3.5f,
         Damage_Vec,
         0.05f,
         0.15f,
-        Vector3(EffectColor.r, EffectColor.g, EffectColor.b)*4.0f,
+        Vector3(1,1,1)*4.0f,
         5,
         50
+        );
+
+    //ブラーエフェクト
+    new BlurImpactSphere(
+        pDieCharacter->m_Params.pos + Vector3(0, 3, 0),
+        20,
+        50,
+        15
+        );
+
+    //カメラショック
+    DefCamera.SetShock(
+        Vector2(1, 1)*0.22f,
+        20
         );
 }

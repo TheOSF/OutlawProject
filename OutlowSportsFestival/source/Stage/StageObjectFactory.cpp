@@ -108,7 +108,7 @@ StagePhysicMoveObject* StageObjFactory::CreateCone(CrVector3 pos, CrVector3 angl
 
     c.angle = angle;
     c.friction = 5.0f;
-    c.height = 3.8f*sizeRatio;
+    c.height = 3.6f*sizeRatio;
     c.mass = 5.0f;
     c.pos = pos;
     c.radius = 1.25f*sizeRatio;
@@ -151,10 +151,9 @@ StagePhysicMoveObject* StageObjFactory::CreateBench(CrVector3 pos, CrVector3 ang
 
     BoxCreater c;
 
-     
     c.angle = angle;
     c.friction = 5.0f;
-    c.scale = Vector3(4.3f, 0.65f*1.3f, 0.8f)*sizeRatio;
+    c.scale = Vector3(4.3f, 0.9f, 0.9f)*sizeRatio;
     c.mass = 30.0f;
     c.pos = pos;
     c.restitution = 0.2f;

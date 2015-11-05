@@ -36,16 +36,17 @@ void TennisAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, TennisPlayer* p
 {
     Matrix  BoneMat;
     Vector3 Forward;
-    Vector3 Pos;
+    Vector3 Pos1, Pos2;
 
-    m_pOwner->m_Renderer.GetWorldBoneMatirx(BoneMat, m_Param.LocusBoneNum);
-    
-    Pos     = Vector3(BoneMat._41, BoneMat._42, BoneMat._43);
-    
-    Forward = Vector3(BoneMat._31, BoneMat._32, BoneMat._33);
-    Forward.Normalize();
+    m_pOwner->m_Renderer.GetWorldBoneMatirx(BoneMat, m_Param.LocusBoneNum1);
 
-    pDmg->m_Param.pos = Pos + Forward*m_Param.DamagePosLength;
+    Pos1 = Vector3(BoneMat._41, BoneMat._42, BoneMat._43);
+
+    m_pOwner->m_Renderer.GetWorldBoneMatirx(BoneMat, m_Param.LocusBoneNum2);
+
+    Pos2 = Vector3(BoneMat._41, BoneMat._42, BoneMat._43);
+
+    pDmg->m_Param.pos = Pos2;
 
     chr_func::GetFront(pTennis, &pDmg->vec);
     pDmg->vec *= 0.5f;
@@ -55,8 +56,8 @@ void TennisAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, TennisPlayer* p
         pDmg->vec.y = 0.2f;
     }
 
-    m_LocusPos = pDmg->m_Param.pos;
-    m_LocusVec = Forward;
+    m_LocusPos = (Pos2 + Pos1)*0.5f;
+    m_LocusVec = Vector3Normalize(Pos2 - Pos1);
 }
 
 
@@ -123,7 +124,7 @@ bool TennisAttackInfo_UsualAtk::isDamageEnable(int Frame)
 //–ˆƒtƒŒ[ƒ€ŒÄ‚Î‚ê‚é
 void TennisAttackInfo_UsualAtk::Update(int Frame, LocusHDR* pLocus)
 {
-   // pLocus->AddPoint(m_LocusPos, m_LocusVec);
+    pLocus->AddPoint(m_LocusPos, m_LocusVec);
 
     chr_func::XZMoveDown(m_pOwner, 0.1f);
 

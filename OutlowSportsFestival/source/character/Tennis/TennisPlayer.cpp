@@ -79,10 +79,10 @@ TennisPlayer::~TennisPlayer()
 	delete m_pStateMachine;
 }
 
-void TennisPlayer::SetState(TennisState* state)
+void TennisPlayer::SetState(TennisState* state, bool Important)
 {
 	//新しいステートをセット
-	m_pStateMachine->set_state(state);
+    m_pStateMachine->set_state(state, Important);
 }
 
 

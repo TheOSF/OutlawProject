@@ -209,7 +209,7 @@ bool HitEffectObject::Update()
     UpdateMatrix();
 
     m_Renderer.m_HDR_Color = m_Color * (1 - m_T);
-    m_Renderer.m_HDR_Color *= 0.1f;
+    m_Renderer.m_HDR_Color *= 0.7f;
 
     m_Light.param.color *= 0.9f;
 

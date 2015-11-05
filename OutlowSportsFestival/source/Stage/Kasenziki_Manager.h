@@ -2,7 +2,7 @@
 
 #include "../GameSystem/GameObject.h"
 #include "../Render/LightObject.h"
-
+#include "SkyObject.h"
 //------------------------------------------------------//
 // 河川敷の管理を行うオブジェクト
 //------------------------------------------------------//
@@ -41,7 +41,7 @@ private:
     DirLight       m_DirLight;
     AmbientLight   m_AmbientLight;
     SpotLight*     m_pSpotLight[_NumSpotLight];
-
+    SkyObject*     m_pSkyObject;
     UINT           m_DeleyFrame;
 
 

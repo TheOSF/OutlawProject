@@ -52,7 +52,7 @@
 
 #include "../../Input/GamePad/GamePadManager.h"
 #include "../Stage/Kasenziki_Manager.h"
-
+#include "../character/Soccer/Computer/SoccerComputerMove.h"
 
 
 static void CreateCharacter(
@@ -73,7 +73,7 @@ static void CreateCharacter(
     {
     case CharacterType::_Tennis:
         pChr = new TennisPlayer(info);
-        ((TennisPlayer*)pChr)->SetState(new TennisState_PlayerControll_Move());
+        ((TennisPlayer*)pChr)->SetState(TennisState_PlayerControll_Move::GetPlayerControllMove((TennisPlayer*)pChr));
         break;
 
     case CharacterType::_Baseball:
@@ -83,7 +83,7 @@ static void CreateCharacter(
 
     case CharacterType::_Soccer:
         pChr = new SoccerPlayer(info);
-        ((SoccerPlayer*)pChr)->SetState(new SoccerState_PlayerControll_Move());
+        ((SoccerPlayer*)pChr)->SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove((SoccerPlayer*)pChr));
         break;
 
     case CharacterType::_Americanfootball:
@@ -229,7 +229,7 @@ void GameInitializer_DevelopMode::GameCreate()
 
 
     {
-        Kasennziki_Manager* p = new Kasennziki_Manager(3);
+        Kasennziki_Manager* p = new Kasennziki_Manager(100);
         p->CreateStage();
     }
 
@@ -237,9 +237,9 @@ void GameInitializer_DevelopMode::GameCreate()
     //ƒLƒƒƒ‰ƒNƒ^ì¬
     {
         CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Tennis);
     
-        CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Soccer);
-        CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Soccer);
+        CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Tennis);
     }
 }
