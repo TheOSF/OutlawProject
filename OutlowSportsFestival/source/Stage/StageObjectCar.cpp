@@ -123,7 +123,7 @@ StageObjectCar::StageObjectCar(
         //ƒ_ƒ[ƒW”»’èì¬
         m_Damage.HitCount = 0;
         m_Damage.m_Enable = true;
-        m_Damage.m_Param.width = 10.0f;
+        m_Damage.m_Param.width = 3.0f;
         m_Damage.pBall = nullptr;
         m_Damage.pParent = nullptr; 
         m_Damage.type = DamageBase::Type::_VanishDamage;

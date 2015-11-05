@@ -127,6 +127,9 @@ void CharacterDefaultCounter::Pose()
     //カウンター可能なフレームなら
     if (m_Count < m_Param.CanCounterFrame)
     {
+
+
+
         //ボール検知
         if (DefBallMgr.GetCounterBall(
             &m_pCounterBall,

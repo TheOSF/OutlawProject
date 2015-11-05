@@ -166,7 +166,6 @@
     <ClCompile Include="source\Effect\ParticleManager.cpp" />
     <ClCompile Include="source\Effect\ParticleManagerUpdater.cpp" />
     <ClCompile Include="source\UI\FightUI.cpp" />
-    <ClCompile Include="source\Sound\Sound.cpp" />
     <ClCompile Include="source\Stage\StagePhysicMoveObject.cpp" />
     <ClCompile Include="source\utillity\LocusBlur.cpp" />
     <ClCompile Include="source\Ball\Ball.cpp" />
@@ -231,6 +230,7 @@
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerCounter.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerRolling.cpp" />
     <ClCompile Include="source\Stage\SkyObject.cpp" />
+    <ClCompile Include="source\Sound\Sound.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -351,7 +351,6 @@
     <ClInclude Include="source\Effect\ParticleManager.h" />
     <ClInclude Include="source\Effect\ParticleManagerUpdater.h" />
     <ClInclude Include="source\UI\FightUI.h" />
-    <ClInclude Include="source\Sound\Sound.h" />
     <ClInclude Include="source\Stage\StagePhysicMoveObject.h" />
     <ClInclude Include="source\utillity\LocusBlur.h" />
     <ClInclude Include="source\GameSystem\LightEventExecuter.h" />
@@ -428,6 +427,7 @@
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerCounter.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerRolling.h" />
     <ClInclude Include="source\Stage\SkyObject.h" />
+    <ClInclude Include="source\Sound\Sound.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

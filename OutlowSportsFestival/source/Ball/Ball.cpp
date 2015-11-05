@@ -9,7 +9,7 @@ const float BallBase::UsualBallShotY = 2.9f;
 
 BallBase::BallBase()
 {
-#ifndef _DEBUG
+#if defined(_DEBUG)
 	MyAssert(DefBallMgr.AddBall(this), "ボール登録に失敗しました");
 #else
     DefBallMgr.AddBall(this);
@@ -18,7 +18,7 @@ BallBase::BallBase()
 
 BallBase::~BallBase()
 {
-#ifndef _DEBUG
+#if defined(_DEBUG)
     MyAssert(DefBallMgr.EraceBall(this), "ボール削除に失敗しました");
 #else
     DefBallMgr.EraceBall(this);
@@ -61,6 +61,13 @@ BallManager::BallMap* BallManager::GetBallMap()
 	return &m_BallMap;
 }
 
+#define MyDebugStringC(str,...)\
+{\
+    char temp[512]; \
+    sprintf_s<512>(temp, str, __VA_ARGS__); \
+    OutputDebugString(temp); \
+}
+
 //もっともカウンターするのに適したボールを得る
 bool BallManager::GetCounterBall(
 	BallBase**	ppOut,			//戻り値として返却するボール
@@ -80,11 +87,13 @@ bool BallManager::GetCounterBall(
 	Vector3 move_pos;
 	Vector3 len;
 
+
 	for (
 		auto it = m_BallMap.begin();
 		it != m_BallMap.end();
 		++it)
 	{
+
 		if (!BallBase::isCanCounter(it->second))
 		{
 			continue;
