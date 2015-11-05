@@ -287,7 +287,7 @@ void BaseballState_SPAttack_B::FreezeGame(UINT frame)
 
 	UpdateObjList.push_back(m_pBaseBall);
 
-	DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, frame);
+	DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, frame,true);
 }
 
 //　雷エフェクト発動

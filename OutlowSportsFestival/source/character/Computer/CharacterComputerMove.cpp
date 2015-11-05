@@ -179,6 +179,7 @@ Vector2 CharacterComputerMove::SwitchAction(CharacterBase* cb)
 Vector3 CharacterComputerMove::GetMoveTargetPos()
 {
 	Vector3 ret;
+	Vector3 nearTarget = Vector3Zero;
 	float MostTaugh = 0;
 	
 	CharacterBase* pTarget = nullptr;
@@ -204,7 +205,7 @@ Vector3 CharacterComputerMove::GetMoveTargetPos()
 		{
 			continue;
 		}
-		//最も近い敵をターゲットに
+		//最も体力の高い敵をターゲットに
 		if (it->first->m_Params.HP > MostTaugh)
 		{
 			pTarget = it->first;
@@ -216,5 +217,56 @@ Vector3 CharacterComputerMove::GetMoveTargetPos()
 	{
 		return Vector3Zero;
 	}
+
+	//　一番近いキャラが一定距離以下かつ元のターゲットより近いなら近いやつをターゲットに
+	nearTarget = NearCheak();
+	Vector3 v = nearTarget - m_cCharacter->m_Params.pos;
+	Vector3 v2 = pTarget->m_Params.pos - m_cCharacter->m_Params.pos;
+
+	if (v.Length() < 4.5f && v.Length() <= v2.Length())
+	{
+		return nearTarget;
+	}
+
 	return pTarget->m_Params.pos;
+}
+
+//　近いやつ
+Vector3 CharacterComputerMove::NearCheak()
+{
+	Vector3 v1, v2;
+
+	const float HomingAngle = PI / 4;
+	float MostNear = 1000;
+	float TempLen;
+	Vector3 pTarget = Vector3Zero;
+
+	//　map代入
+	const CharacterManager::CharacterMap& chr_map =
+		DefCharacterMgr.GetCharacterMap();
+
+
+	for (auto it = chr_map.begin(); it != chr_map.end(); ++it)
+	{
+
+		//　死んでるor自分ならcontinue
+		if (chr_func::isDie(it->first) ||
+			it->first->m_PlayerInfo.number == m_cCharacter->m_PlayerInfo.number)
+		{
+			continue;
+		}		
+
+		v2 = it->first->m_Params.pos - m_cCharacter->m_Params.pos;
+		v2.y = 0;
+
+		TempLen = v2.Length();
+
+		if (MostNear > TempLen)
+		{
+			MostNear = TempLen;
+			pTarget = it->first->m_Params.pos;
+		}
+	}
+
+	return pTarget;
 }

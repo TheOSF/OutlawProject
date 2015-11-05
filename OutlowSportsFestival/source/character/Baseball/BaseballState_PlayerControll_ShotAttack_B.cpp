@@ -76,9 +76,60 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 	const int ShotFrame = 30;//打つフレーム
 	const int CancelStart = 10;//キャンセル行動可能なフレーム
 	const int AfterAction = 33;//ショット後のアクションが可能になるフレーム
-
+	const CharacterBase* pTargetEnemy = nullptr;    //ターゲット保持のポインタ
 	//カウント更新
 	++m_Timer;
+
+	//　Comなら
+	if (b->m_PlayerInfo.player_type == PlayerType::_Computer)
+	{
+		//ターゲット選定＆向き補正
+
+		CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
+
+		const float  AutoDistance = 400.0f;               //自動ができる最大距離
+		const RADIAN AutoMaxAngle = D3DXToRadian(90);   //自動ができる最大角度
+
+		
+		RADIAN MostMinAngle = PI;                       //もっとも狭い角度
+		RADIAN TempAngle;
+
+		Vector3 MyFront;      //自身の前方ベクトル
+		chr_func::GetFront(b, &MyFront);
+
+		auto it = ChrMap.begin();
+
+		while (it != ChrMap.end())
+		{
+			//自身を除外
+			if (b->m_PlayerInfo.number == it->first->m_PlayerInfo.number ||
+				chr_func::isDie(it->first)
+				)
+			{
+				++it;
+				continue;
+			}
+
+			//距離が一定以上のキャラクタを除外する
+			if (Vector3Distance(it->first->m_Params.pos, b->m_Params.pos) > AutoDistance)
+			{
+				it = ChrMap.erase(it);
+				continue;
+			}
+
+			//前ベクトルと敵へのベクトルの角度を計算する
+			TempAngle = Vector3Radian(MyFront, (it->first->m_Params.pos - b->m_Params.pos));
+
+			//角度が一番狭かったら更新
+			if (TempAngle < MostMinAngle)
+			{
+				pTargetEnemy = it->first;
+				MostMinAngle = TempAngle;
+			}
+
+			++it;
+		}
+	}
 
 	//打ちキャンセル
 	if (m_Timer > CancelStart && m_Timer < ShotFrame - 3)
@@ -99,13 +150,21 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 	//方向補正
 	if (m_Timer < ShotFrame)
 	{
-		const CharacterBase* const pTargetCharacter = GetFrontTarget(b);
+	
 		const float AngleSpeed = D3DXToRadian(3);
 
-		if (pTargetCharacter != nullptr)
+		if (pTargetEnemy != nullptr)
 		{
-			//自動回転
-			chr_func::AngleControll(b, pTargetCharacter->m_Params.pos, AngleSpeed*2.0f);
+			if (b->m_PlayerInfo.player_type == PlayerType::_Computer)
+			{
+				//自動回転
+				chr_func::AngleControll(b, pTargetEnemy->m_Params.pos, AngleSpeed*2.0f);
+			}
+			else{
+				const CharacterBase* const pTargetCharacter = GetFrontTarget(b);
+				//自動回転
+				chr_func::AngleControll(b, pTargetCharacter->m_Params.pos, AngleSpeed*2.0f);
+			}
 		}
 		else
 		{

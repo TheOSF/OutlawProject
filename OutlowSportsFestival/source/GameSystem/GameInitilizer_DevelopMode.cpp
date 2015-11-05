@@ -34,6 +34,9 @@
 
 #include    "../Effect/EffectResourceLoad.h"
 
+//　野球
+#include   "../character/Baseball/Computer/BaseballPlayerState_ComMove.h"
+#include	"../character/Soccer/Computer/SoccerComputerMove.h"
 // Effekseer
 #include "../Library/Effekseer/EffekseerSystem.h"
 #include "../Library/Effekseer/EffekseerEffectManager.h"
@@ -95,12 +98,26 @@ static void CreateCharacter(
 
     case CharacterType::_Baseball:
         pChr = new BaseballPlayer(info);
-        ((BaseballPlayer*)pChr)->SetState(new BaseballState_PlayerControll_Move());
+		if (info.player_type == PlayerType::_Player)
+		{
+			((BaseballPlayer*)pChr)->SetState(new BaseballState_PlayerControll_Move());
+		}
+		else
+		{
+			((BaseballPlayer*)pChr)->SetState(new BaseballPlayerState_ComMove());
+		}
         break;
 
     case CharacterType::_Soccer:
         pChr = new SoccerPlayer(info);
-        ((SoccerPlayer*)pChr)->SetState(new SoccerState_PlayerControll_Move());
+		if (info.player_type == PlayerType::_Player)
+		{
+		  ((SoccerPlayer*)pChr)->SetState(new SoccerState_PlayerControll_Move());
+		}
+		else
+		{
+			((SoccerPlayer*)pChr)->SetState(new SoccerState_ComputerControll_Move());
+		}
         break;
 
     case CharacterType::_Americanfootball:
@@ -416,10 +433,10 @@ void GameInitializer_DevelopMode::GameCreate()
 
     //キャラクタ作成
     {
-        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Baseball);
+        CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Baseball);
 
-        CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)3, PlayerType::_Player, CharacterType::_Tennis);
+		CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Baseball);
+		CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Baseball);
     }
 }
