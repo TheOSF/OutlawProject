@@ -5,7 +5,7 @@
 #include "../../Ball/PhysicallyMoveBall.h"
 
 //****************************************************
-//	テニス_遠距離攻撃クラス
+//	野球遠距離攻撃クラス
 //****************************************************
 class BaseballState_PlayerControll_ShotAttack_B :public BaseballState
 {
@@ -30,6 +30,8 @@ public:
 	void Execute(BaseballPlayer* b)override;
 	void Exit(BaseballPlayer* b)override;
 
+public:
+	const CharacterBase* ComExcute(BaseballPlayer* b)const;
 private:
 	int                  m_Timer;
 	PhysicallyMoveBall*  m_pUpBall;

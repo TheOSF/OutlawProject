@@ -53,13 +53,17 @@ void BaseballState_SPAttack_P::Execute(BaseballPlayer* b){
 		// スティックの値セット
 		m_pSpAttack_P->SetStickValue(
 			controller::GetStickValue(controller::stick::left, b->m_PlayerInfo.number));
+
 		target = nullptr;
 		target = CalcTarget();
+		const float AngleSpeed = D3DXToRadian(3);
+
 		//ターゲットがいたら
 		if (target != nullptr)
 		{
-			chr_func::AngleControll(b, target->m_Params.pos);
+			chr_func::AngleControll(b, target->m_Params.pos, AngleSpeed*2.0f);
 		}
+
 		// 更新
 		if (m_pSpAttack_P->Update() == false)
 		{
@@ -103,7 +107,7 @@ CharacterShotAttack* BaseballState_SPAttack_P::CreateSpAttack_P(BaseballPlayer* 
 			BallBase::Params param;
 			
 			chr_func::GetFront(m_pBaseball, &param.move);
-			param.move *= 10.0f;
+			param.move *= 9.0f;
 			param.pos = m_pBaseball->m_Params.pos;
 			param.pos.y = BallBase::UsualBallShotY;
 			param.pParent = m_pBaseball;

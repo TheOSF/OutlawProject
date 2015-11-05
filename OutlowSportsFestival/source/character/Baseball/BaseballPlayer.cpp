@@ -22,7 +22,7 @@ m_Renderer(new  BlendAnimationMesh("DATA\\CHR\\BaseBall\\player_B.iem"))
 	m_pStateMachine = new BaseballStateMachine(this);
 
 	//　体力低下(デバック用)
-	m_Params.maxHP = m_Params.HP = 50;
+	m_Params.maxHP = m_Params.HP = 100;
 }
 
 //　デストラクタ

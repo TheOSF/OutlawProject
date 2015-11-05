@@ -16,6 +16,18 @@ m_pBaseball(pBaseball)
 
 bool Baseball_PlayerControll_Attack_B::PlayerControllEvent::isDoCombo()
 {
+	//　コンピューターなら
+	if (m_pBaseball->m_PlayerInfo.player_type == PlayerType::_Computer)
+	{
+		if (rand() % 100 > 60)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 	return controller::GetTRG(controller::button::shikaku, m_pBaseball->m_PlayerInfo.number);
 }
 
@@ -23,25 +35,40 @@ void  Baseball_PlayerControll_Attack_B::PlayerControllEvent::AngleControll(RADIA
 {
 	const CharacterBase* const pTargetCharacter = GetFrontTargetEnemy();
 
-	if (pTargetCharacter != nullptr)
+	if (pTargetCharacter == nullptr)
+	{
+		return;
+	}
+	
+	//　コンピューターなら
+	if (m_pBaseball->m_PlayerInfo.player_type == PlayerType::_Computer)
 	{
 		//自動回転
 		chr_func::AngleControll(m_pBaseball, pTargetCharacter->m_Params.pos, angle);
 	}
+	//　プレイヤーなら
 	else
 	{
-		const Vector2 Stick = controller::GetStickValue(controller::stick::left, m_pBaseball->m_PlayerInfo.number);
-
-		//スティックが一定以上倒されているかどうか
-		if (Vector2Length(Stick) > 0.25f)
+		if (pTargetCharacter != nullptr)
 		{
-			Vector3 Vec(Stick.x, 0, Stick.y);
+			//自動回転
+			chr_func::AngleControll(m_pBaseball, pTargetCharacter->m_Params.pos, angle);
+		}
+		else
+		{
+			const Vector2 Stick = controller::GetStickValue(controller::stick::left, m_pBaseball->m_PlayerInfo.number);
 
-			//スティック値をカメラ空間に
-			Vec = Vector3MulMatrix3x3(Vec, matView);
+			//スティックが一定以上倒されているかどうか
+			if (Vector2Length(Stick) > 0.25f)
+			{
+				Vector3 Vec(Stick.x, 0, Stick.y);
 
-			//キャラクタ回転
-			chr_func::AngleControll(m_pBaseball, m_pBaseball->m_Params.pos + Vec, angle);
+				//スティック値をカメラ空間に
+				Vec = Vector3MulMatrix3x3(Vec, matView);
+
+				//キャラクタ回転
+				chr_func::AngleControll(m_pBaseball, m_pBaseball->m_Params.pos + Vec, angle);
+			}
 		}
 	}
 }
@@ -84,7 +111,7 @@ const CharacterBase*  Baseball_PlayerControll_Attack_B::PlayerControllEvent::Get
 		TempAngle = Vector3Radian(MyFront, (it->first->m_Params.pos - m_pBaseball->m_Params.pos));
 
 		//角度が一番狭かったら更新
-		if (TempAngle < MostMinAngle)
+		if (TempAngle <= MostMinAngle)
 		{
 			pTargetEnemy = it->first;
 			MostMinAngle = TempAngle;
@@ -92,6 +119,16 @@ const CharacterBase*  Baseball_PlayerControll_Attack_B::PlayerControllEvent::Get
 
 		++it;
 	}
+
+	
+	//　コンピュータなら
+	if (pTargetEnemy != nullptr&&
+		m_pBaseball->m_PlayerInfo.player_type == PlayerType::_Computer)
+	{
+		//自動回転
+		chr_func::AngleControll(m_pBaseball, pTargetEnemy->m_Params.pos, 0.7f);
+	}
+
 
 	return pTargetEnemy;
 

@@ -26,6 +26,8 @@ public:
 	//　ステート終了
 	void Exit(BaseballPlayer* b)override;
 
+public:
+	void ComExcute(BaseballPlayer* b);
 };
 
 #endif

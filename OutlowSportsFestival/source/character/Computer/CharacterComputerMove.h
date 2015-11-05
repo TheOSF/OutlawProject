@@ -50,4 +50,5 @@ public:
 	Vector2 SwitchAction(CharacterBase* cb);
 
 	Vector3 GetMoveTargetPos();
+	Vector3 NearCheak();//@ˆê”Ô‹ß‚¢‚â‚Â‚ğŒ©‚Â‚¯‚é
 };

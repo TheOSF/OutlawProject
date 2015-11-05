@@ -32,6 +32,7 @@ void CharacterComputerDoAction::Update()
 		m_ActionEvent->Attack(GetMoveTargetLength());
 	}
 }
+
 float CharacterComputerDoAction::GetMoveTargetLength()
 {
 	Vector3 ret;

@@ -2,9 +2,11 @@
 #define __BASEBALL_PLAYER_STATE_H__
 
 #include "BaseballPlayer.h"
+#include "BaseballState_PlayerControll_ShotAttack_B.h"
 
 #include "../CharacterMoveClass.h"
 #include "../CharacterShotAttackClass.h"
+#include "../CharacterCounterClass.h"
 //****************************************************
 //	野球プレイヤーの操作クラスヘッダー
 //****************************************************
@@ -41,5 +43,18 @@ public:
 };
 
 
+class PlayerShotControllClass_B :public BaseballState_PlayerControll_ShotAttack_B::ControllClass
+{
+	BaseballPlayer* const   m_pBaseball;
+public:
+	PlayerShotControllClass_B(BaseballPlayer* pBaseball) :
+		m_pBaseball(pBaseball){}
+
+	Vector3 GetVec();
+
+	bool DoOtherAction();
+
+	bool DoShotAfterAction();
+};
 
 #endif

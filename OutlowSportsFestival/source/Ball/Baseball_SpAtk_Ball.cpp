@@ -132,12 +132,12 @@ Baseball_SpAtk_Ball::PhysicsParam Baseball_SpAtk_Ball::GetBallPhysics(
 {
 	PhysicsParam params[] =
 	{
-		{ 0.5f, 0.8f, 0.5f, 0.2f },
-		{ 0.5f, 0.8f, 0.5f, 0.2f },
-		{ 0.5f, 0.8f, 0.5f, 0.2f },
-		{ 0.5f, 0.8f, 0.5f, 0.2f },
-		{ 0.5f, 0.8f, 0.5f, 0.2f },
-		{ 0.5f, 0.8f, 0.5f, 0.2f },
+		{ 0.5f, 100.0f, 0.4f, 0.2f },
+		{ 0.5f, 100.0f, 0.4f, 0.2f },
+		{ 0.5f, 100.0f, 0.55f, 0.2f },
+		{ 0.5f, 100.0f, 0.5f, 0.2f },
+		{ 0.5f, 100.0f, 0.5f, 0.2f },
+		{ 0.5f, 100.0f, 0.5f, 0.2f },
 	};
 
 	MyAssert((int)type >= 0 && (int)type < (int)ARRAYSIZE(params), "存在しないタイプのキャラクタタイプがBaseBall_SpAtk_Ball::GetBallPhysicsに渡されました　type= %d ", (int)type);
@@ -170,7 +170,7 @@ void Baseball_SpAtk_Ball::UpdateDamageClass()
 	m_Damage.vec.Normalize();
 	m_Damage.vec *= 0.5f;
 	m_Damage.vec.y = 0.3f;
-
+	m_Damage.m_Param.width = 2.0f;
 	m_Damage.m_Param.pos2 = m_Damage.m_Param.pos1;
 	m_Damage.m_Param.pos1 = m_Params.pos;
 }
@@ -242,6 +242,7 @@ void Baseball_SpAtk_Ball::ToNoWork()
 
 bool Baseball_SpAtk_Ball::StateFlyMove()
 {
+
 	//移動更新
 	{
 		//ヒットストップフレームなら移動更新をしない
@@ -286,17 +287,19 @@ bool Baseball_SpAtk_Ball::StateFlyMove()
 
 	//ステージとのあたり判定
 	{
-		//もし壁に当たっていたらダメージ判定のない状態へ移行する
-		Vector3 NewMoveVec(0, 0, 0);
+		////もし壁に当たっていたらダメージ判定のない状態へ移行する
+		//Vector3 NewMoveVec(0, 0, 0);
 
-		if (UpdateWallCheck(NewMoveVec))
-		{
-			//新しい移動値をセット
-			m_Params.move = NewMoveVec;
+		//if (UpdateWallCheck(NewMoveVec))
+		//{
+		//	//新しい移動値をセット
+		//	m_Params.move = NewMoveVec;
 
-			//攻撃判定のない状態にする
-			ToNoWork();
-		}
+		//	//攻撃判定のない状態にする
+		//	ToNoWork();
+		//}
+
+	
 	}
 
 	//メッシュ更新
