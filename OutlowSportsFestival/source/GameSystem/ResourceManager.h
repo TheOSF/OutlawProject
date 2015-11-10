@@ -50,7 +50,7 @@ public:
         Anime_Circle,
         Anime_Smoke,
         Anime_Counter,
-
+		Anime_Change,
         _MaxType
     };
 

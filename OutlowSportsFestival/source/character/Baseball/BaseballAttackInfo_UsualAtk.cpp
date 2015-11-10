@@ -2,6 +2,9 @@
 #include "../CharacterFunction.h"
 #include "../../Sound/Sound.h"
 
+#include "../../GameSystem/GameController.h"
+
+
 BaseballAttackInfo_UsualAtk::BaseballAttackInfo_UsualAtk(
 	BaseballPlayer* pOwner
 	) :
@@ -119,4 +122,17 @@ void BaseballAttackInfo_UsualAtk::Update(int Frame, LocusHDR* pLocus)
 	{
 		chr_func::AddMoveFront(m_pOwner, m_Param.MoveSpeed, 1000);
 	}
+}
+
+//UŒ‚‚ª‚ ‚½‚Á‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
+void BaseballAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
+{
+	chr_func::AddSkillGauge(m_pOwner, pDmg->Value*10.0f);
+
+	//ƒRƒ“ƒgƒ[ƒ‰‚ðU“®
+	controller::SetVibration(
+		5000,
+		0.15f,
+		m_pOwner->m_PlayerInfo.number
+		);
 }

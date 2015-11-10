@@ -35,7 +35,7 @@ void BaseballState_Change::Execute(BaseballPlayer* b)
 	if (b->getChangeTime() >= 20)
 	{
 		//　エフェクト
-		EffectFactory::Counter(Vector3(b->m_Params.pos.x, b->m_Params.pos.y + 2.0f, b->m_Params.pos.z), 10.0f);
+		EffectFactory::Change(Vector3(b->m_Params.pos.x, b->m_Params.pos.y + 2.0f, b->m_Params.pos.z), 10.0f);
 		//　効果音
 		Sound::Play(Sound::Change);
 		if (batterflg)

@@ -8,6 +8,9 @@
 
 #include "../../Camera/Camera.h"
 
+#include "../../Effect/EffectFactory.h"
+
+#include "../../GameSystem/GameController.h"
 BaseballState_DamageMotion_Die::BaseballState_DamageMotion_Die(
 	BaseballPlayer* pBaseball,
 	const Vector3& Damage_vec  //ダメージを受けた方向
@@ -129,6 +132,18 @@ void BaseballState_DamageMotion_Die::Enter(BaseballPlayer* b)
 	DefCamera.SetShock(
 		Vector2(1, 1)*0.22f,
 		20
+		);
+
+	//死亡エフェクト
+	EffectFactory::DieEffect(
+		b,
+		m_Damage_vec
+		);
+	//コントローラを振動
+	controller::SetVibration(
+		8000,
+		0.5f,
+		m_pBaseball->m_PlayerInfo.number
 		);
 }
 

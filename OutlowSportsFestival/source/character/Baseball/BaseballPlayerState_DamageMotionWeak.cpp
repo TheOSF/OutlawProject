@@ -4,6 +4,8 @@
 #include "../CharacterFunction.h"
 #include "../../Effect/HitEffectObject.h"
 #include "../../Effect/BlurImpact.h"
+#include "../../GameSystem/GameController.h"
+
 BaseballState_DamageMotion_Weak::BaseballState_DamageMotion_Weak(
 	BaseballPlayer* pBaseball,
 	const Vector3& Damage_vec  //ダメージを受けた方向
@@ -76,6 +78,12 @@ void BaseballState_DamageMotion_Weak::Enter(BaseballPlayer* t)
 		10,
 		15,
 		30
+		);
+	//コントローラを振動
+	controller::SetVibration(
+		5000,
+		0.15f,
+		m_pBaseball->m_PlayerInfo.number
 		);
 }
 

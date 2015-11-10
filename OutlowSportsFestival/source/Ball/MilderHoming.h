@@ -54,9 +54,10 @@ public:
     Matrix              m_BaseMatrix;
     RigidBody*          m_pRigitBody;
     Locus            m_Locus;
-
+	int                         m_EffectFrameCount;
     BallBase			m_BallBase;
     CharacterBase*      m_pTarget;
+	const CharacterType::Value  m_FirstParentType;
 
     void(MilderHoming::*m_pStatefunc)();
 

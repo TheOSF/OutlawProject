@@ -5,7 +5,7 @@
 
 #include "../../Effect/HitEffectObject.h"
 #include "../../Effect/BlurImpact.h"
-
+#include "../../GameSystem/GameController.h"
 
 BaseballState_DamageVanish::BaseballState_DamageVanish(
 	BaseballPlayer* pBaseball,
@@ -121,6 +121,13 @@ void BaseballState_DamageVanish::Enter(BaseballPlayer* b)
 		10,
 		30
 		);
+	//ƒRƒ“ƒgƒ[ƒ‰‚ðU“®
+	controller::SetVibration(
+		5000,
+		0.15f,
+		m_pBaseball->m_PlayerInfo.number
+		);
+
 }
 
 void BaseballState_DamageVanish::Execute(BaseballPlayer* b)

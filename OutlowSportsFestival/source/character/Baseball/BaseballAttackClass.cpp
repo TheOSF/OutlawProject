@@ -14,6 +14,8 @@ BaseballAttackClass::BaseballAttackClass(
 	m_Timer(0),
 	m_ComboCount(-1),
 	m_pStateFunc(&BaseballAttackClass::State_NextAtk),
+	m_DamageHitCount(0),
+	m_HitStopCount(0),
 	m_Locus(7)
 {
 	m_Damage.m_Enable = false;
@@ -76,6 +78,14 @@ void BaseballAttackClass::State_Attack()
 		pNowAtk->DamagePosSet(&m_Damage, m_pOwner);
 	}
 
+	//攻撃ヒット関数の呼び出し
+	if (m_DamageHitCount != m_Damage.HitCount)
+	{
+		m_DamageHitCount = m_Damage.HitCount;
+		pNowAtk->HitAttack(&m_Damage);
+		
+		//    m_HitStopCount = 5;
+	}
 	//角度更新
 	RADIAN ControllRadian = 0;
 

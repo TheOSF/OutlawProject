@@ -9,6 +9,8 @@
 #include "character/CharacterManager.h"
 #include "Ball/BallFadeOutRenderer.h"
 
+#include "../Effect/EffectFactory.h"
+
 //　最大加速度
 #define MaxAcceleration 1.0f
 
@@ -23,6 +25,8 @@ MilderHoming::MilderHoming(
     m_Locus(30),
 	frontflg(true),
 	bp(b),
+	m_EffectFrameCount(0),
+	m_FirstParentType(params.pParent->m_PlayerInfo.chr_type),
     m_pRigitBody(nullptr)
 {
     LPIEXMESH		pBallMesh;
@@ -125,8 +129,6 @@ void MilderHoming::State_TargetDecision()
 
 void MilderHoming::State_ToTagetMove()
 {
-    //ターゲットに向かって移動し、もしターゲットが死んでいたら再度
-    //State_TargetDecisionに移行
 
     //もしターゲットが死んでいたら再度State_TargetDecisionに移行
     if (chr_func::isDie(m_pTarget))
@@ -207,6 +209,7 @@ void MilderHoming::State_Normal()
 	//m_Params.move *= 0.7f;
 	m_Params.pos += m_Params.move;
 
+
 }
 
 void MilderHoming::State_Delete()
@@ -234,6 +237,26 @@ void MilderHoming::Cheak()
 	if (isOutofField())
 	{
 		m_pStatefunc = &MilderHoming::State_Delete;
+	}
+
+	//パーティクル
+	{
+		const float EffectScale = UsualBall::GetBallScale(m_FirstParentType);
+
+		m_EffectFrameCount = max(m_EffectFrameCount - 1, 0);
+
+		if (m_EffectFrameCount % 2 == 0 && m_EffectFrameCount > 0)
+		{
+			EffectFactory::CircleAnimation(
+				m_Params.pos,
+				m_Params.move,
+				Vector3Zero,
+				Vector3Zero,
+				Vector2(23.f, 23.f)*EffectScale*((float)m_EffectFrameCount / 45.0f),
+				0xFFFFFFFF,
+				CharacterBase::GetPlayerColor(m_Params.pParent->m_PlayerInfo.number)
+				);
+		}
 	}
 }
 
@@ -320,7 +343,10 @@ void MilderHoming::Counter(CharacterBase* pCounterCharacter)
 
 	//　カウンターされたら吹き飛ぶ&ダメージ1.3倍
 	m_Damage.type = DamageBase::Type::_VanishDamage;
-	m_Damage.Value *= 1.3f; //ダメージを増やす
+	m_Damage.Value += 1.0f; //ダメージを増やす
+
+	//エフェクトカウント設定
+	m_EffectFrameCount = 45;
 
     m_pStatefunc = &MilderHoming::State_TargetDecision;
 }

@@ -27,7 +27,7 @@ bool BaseballHitEvent::Hit(DamageBase* pDmg)
 	//もし体力がなかったら、どんな攻撃であろうと死亡ステートへ
 	if (chr_func::isDie(m_pBaseball))
 	{
-		m_pBaseball->SetState(new BaseballState_DamageMotion_Die(m_pBaseball, pDmg->vec));
+		m_pBaseball->SetState(new BaseballState_DamageMotion_Die(m_pBaseball, pDmg->vec), true);
 		return true;
 	}
 
@@ -36,12 +36,12 @@ bool BaseballHitEvent::Hit(DamageBase* pDmg)
 	{
 	case DamageBase::Type::_WeekDamage:
 		//弱攻撃
-		m_pBaseball->SetState(new BaseballState_DamageMotion_Weak(m_pBaseball, pDmg->vec));
+		m_pBaseball->SetState(new BaseballState_DamageMotion_Weak(m_pBaseball, pDmg->vec), true);
 		return true;
 
 		//吹っ飛び
 		case DamageBase::Type::_VanishDamage:
-			m_pBaseball->SetState(new BaseballState_DamageVanish(m_pBaseball, pDmg->vec));
+			m_pBaseball->SetState(new BaseballState_DamageVanish(m_pBaseball, pDmg->vec), true);
 		return true;
 		case DamageBase::Type::_UpDamage:
 		////上に吹き飛び

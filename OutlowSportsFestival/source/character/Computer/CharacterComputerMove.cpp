@@ -94,7 +94,6 @@ Vector2 CharacterComputerMove::StateMoveFront(CharacterBase* cb)
 	m_MoveTargetPos = GetMoveTargetPos();
 
 	Vector3 v = m_MoveTargetPos - cb->m_Params.pos;
-
 	if (v.Length() < 3.0f)
 	{
 		v = Vector3Zero;
@@ -107,6 +106,7 @@ Vector2 CharacterComputerMove::StateMoveDistance(CharacterBase* cb)
 {
 	++m_Count;
 	const float Bestlen = 12.0f + rand()%10; //そのキャラのベスト距離(今は固定)
+
 
 	//目標に到達していたらとまる
 	if (Vector3Distance(m_MoveTargetPos, m_cCharacter->m_Params.pos) > Bestlen)
@@ -160,6 +160,7 @@ Vector2 CharacterComputerMove::StateStop(CharacterBase* cb)
 }
 Vector2 CharacterComputerMove::SwitchAction(CharacterBase* cb)
 {
+	
 	Vector2 xz;
 	switch (movemode)
 	{
@@ -175,6 +176,7 @@ Vector2 CharacterComputerMove::SwitchAction(CharacterBase* cb)
 	}
 	return xz;
 }
+
 
 Vector3 CharacterComputerMove::GetMoveTargetPos()
 {
@@ -218,55 +220,93 @@ Vector3 CharacterComputerMove::GetMoveTargetPos()
 		return Vector3Zero;
 	}
 
-	//　一番近いキャラが一定距離以下かつ元のターゲットより近いなら近いやつをターゲットに
-	nearTarget = NearCheak();
-	Vector3 v = nearTarget - m_cCharacter->m_Params.pos;
-	Vector3 v2 = pTarget->m_Params.pos - m_cCharacter->m_Params.pos;
-
-	if (v.Length() < 4.5f && v.Length() <= v2.Length())
-	{
-		return nearTarget;
-	}
 
 	return pTarget->m_Params.pos;
 }
 
-//　近いやつ
-Vector3 CharacterComputerMove::NearCheak()
+//******************************
+//　野球
+//******************************
+
+Vector2 CharacterComputerMove::SwitcAction_Baseball(CharacterBase* cb, bool flg)
 {
-	Vector3 v1, v2;
 
-	const float HomingAngle = PI / 4;
-	float MostNear = 1000;
-	float TempLen;
-	Vector3 pTarget = Vector3Zero;
-
-	//　map代入
-	const CharacterManager::CharacterMap& chr_map =
-		DefCharacterMgr.GetCharacterMap();
-
-
-	for (auto it = chr_map.begin(); it != chr_map.end(); ++it)
+	Vector2 xz;
+	switch (movemode)
 	{
+	case Stop:
+		xz = StateStop_Baseball(cb,flg);
+		break;
+	case Forward:
+		xz = StateMoveFront(cb);
+		break;
+	case Distance:
+		xz = StateMoveDistance(cb);
+		break;
+	case Distance_B:
+		xz = StateMoveDistance_Baseball (cb);
+		break;
+	}
+	return xz;
+}
+Vector2 CharacterComputerMove::StateStop_Baseball(CharacterBase* cb,bool flg)
+{
+	const int NextMove = rand() % 5;
+	++m_Count;
+	m_MoveTargetPos = GetMoveTargetPos();
 
-		//　死んでるor自分ならcontinue
-		if (chr_func::isDie(it->first) ||
-			it->first->m_PlayerInfo.number == m_cCharacter->m_PlayerInfo.number)
+	if (m_Count > NextMove)
+	{
+		if (Vector3Distance(m_MoveTargetPos, m_cCharacter->m_Params.pos) > 20.0f)
 		{
-			continue;
-		}		
-
-		v2 = it->first->m_Params.pos - m_cCharacter->m_Params.pos;
-		v2.y = 0;
-
-		TempLen = v2.Length();
-
-		if (MostNear > TempLen)
+			movemode = Forward;
+		}
+		else
 		{
-			MostNear = TempLen;
-			pTarget = it->first->m_Params.pos;
+			//　遠くに
+			if (flg && cb->m_PlayerInfo.chr_type == CharacterType::_Baseball)
+			{
+				movemode = Distance_B;
+			}
+			//　ちょっと遠く
+			else
+			{
+				movemode = Distance;
+			}
 		}
 	}
 
-	return pTarget;
+	return Vector2Normalize(Vector2(0, 0));
+}
+
+Vector2 CharacterComputerMove::StateMoveDistance_Baseball(CharacterBase* cb)
+{
+	
+	++m_Count;
+	const float Bestlen = 35.0f + rand() % 5; //そのキャラのベスト距離(今は固定)
+
+	//目標に到達していたらとまる
+	if (Vector3Distance(m_MoveTargetPos, m_cCharacter->m_Params.pos) > Bestlen)
+	{
+		m_Count = (int)(m_cParam.RunStop * 100.0f);
+		movemode = Forward;
+		m_Count = 0;
+	}
+
+
+	//目標に到達できない or 新目標があればそこに変更する
+	if (m_Count > 180)
+	{
+		movemode = Stop;
+		m_Count = 0;
+	}
+
+
+	//目標に向かって移動
+	m_MoveTargetPos = GetMoveTargetPos();
+
+	Vector3 v = cb->m_Params.pos - m_MoveTargetPos;
+
+
+	return Vector2Normalize(Vector2(v.x, v.z));
 }

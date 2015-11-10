@@ -1,5 +1,6 @@
 #include "BaseballState_PlayerControll_ShotAttack_B.h"
 #include "BaseballPlayerState.h"
+#include "BaseballState_PlayerControll_Evasion.h"
 #include "Baseball_HitEvent.h"
 #include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
@@ -13,7 +14,7 @@
 
 #include "../../Effect/HitEffectObject.h"
 #include "../../Sound/Sound.h"
-
+#include "../../GameSystem/GameController.h"
 
 BaseballState_PlayerControll_ShotAttack_B::BaseballState_PlayerControll_ShotAttack_B(
 	ControllClass*       pControllClass //終了時にdeleteする
@@ -30,6 +31,7 @@ BaseballState_PlayerControll_ShotAttack_B::~BaseballState_PlayerControll_ShotAtt
 
 void  BaseballState_PlayerControll_ShotAttack_B::Enter(BaseballPlayer* b)
 {
+
 	//カウント初期化
 	m_Timer = 0;
 
@@ -68,6 +70,8 @@ void  BaseballState_PlayerControll_ShotAttack_B::Enter(BaseballPlayer* b)
 		//打ち上げ中はあたり判定なし
 		m_pUpBall->m_Damage.m_Enable = false;
 	}
+
+
 }
 
 void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
@@ -76,68 +80,40 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 	const int ShotFrame = 30;//打つフレーム
 	const int CancelStart = 10;//キャンセル行動可能なフレーム
 	const int AfterAction = 33;//ショット後のアクションが可能になるフレーム
-	const CharacterBase* pTargetEnemy = nullptr;    //ターゲット保持のポインタ
-	//カウント更新
-	++m_Timer;
+	pTargetEnemy = nullptr;    //ターゲット保持のポインタ
 
 	//　Comなら
 	if (b->m_PlayerInfo.player_type == PlayerType::_Computer)
 	{
-		//ターゲット選定＆向き補正
-
-		CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
-
-		const float  AutoDistance = 400.0f;               //自動ができる最大距離
-		const RADIAN AutoMaxAngle = D3DXToRadian(90);   //自動ができる最大角度
-
-		
-		RADIAN MostMinAngle = PI;                       //もっとも狭い角度
-		RADIAN TempAngle;
-
-		Vector3 MyFront;      //自身の前方ベクトル
-		chr_func::GetFront(b, &MyFront);
-
-		auto it = ChrMap.begin();
-
-		while (it != ChrMap.end())
-		{
-			//自身を除外
-			if (b->m_PlayerInfo.number == it->first->m_PlayerInfo.number ||
-				chr_func::isDie(it->first)
-				)
-			{
-				++it;
-				continue;
-			}
-
-			//距離が一定以上のキャラクタを除外する
-			if (Vector3Distance(it->first->m_Params.pos, b->m_Params.pos) > AutoDistance)
-			{
-				it = ChrMap.erase(it);
-				continue;
-			}
-
-			//前ベクトルと敵へのベクトルの角度を計算する
-			TempAngle = Vector3Radian(MyFront, (it->first->m_Params.pos - b->m_Params.pos));
-
-			//角度が一番狭かったら更新
-			if (TempAngle < MostMinAngle)
-			{
-				pTargetEnemy = it->first;
-				MostMinAngle = TempAngle;
-			}
-
-			++it;
-		}
+		ComExcute(b);
 	}
+
+	//カウント更新
+	++m_Timer;
+
 
 	//打ちキャンセル
 	if (m_Timer > CancelStart && m_Timer < ShotFrame - 3)
 	{
-		if (m_pControllClass->DoOtherAction())
+		//　Comならこっち
+		if (b->m_PlayerInfo.player_type == PlayerType::_Computer)
 		{
-			m_pUpBall->m_Damage.m_Enable = true;
-			m_pUpBall->m_Params.type = BallBase::Type::_CantCounter;
+			//　ターゲットいなかったら
+			if (pTargetEnemy == nullptr ){
+				if (m_pControllClass->DoOtherAction_Com())
+				{
+					m_pUpBall->m_Damage.m_Enable = true;
+					m_pUpBall->m_Params.type = BallBase::Type::_CantCounter;
+				}
+			}
+		}
+		else
+		{
+			if (m_pControllClass->DoOtherAction())
+			{
+				m_pUpBall->m_Damage.m_Enable = true;
+				m_pUpBall->m_Params.type = BallBase::Type::_CantCounter;
+			}
 		}
 	}
 
@@ -150,26 +126,32 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 	//方向補正
 	if (m_Timer < ShotFrame)
 	{
-	
+		const CharacterBase* const pTargetCharacter = GetFrontTarget(b);
 		const float AngleSpeed = D3DXToRadian(3);
 
-		if (pTargetEnemy != nullptr)
+		//　Comならこっち
+		if (b->m_PlayerInfo.player_type == PlayerType::_Computer)
 		{
-			if (b->m_PlayerInfo.player_type == PlayerType::_Computer)
+			if (pTargetEnemy != nullptr)
 			{
 				//自動回転
 				chr_func::AngleControll(b, pTargetEnemy->m_Params.pos, AngleSpeed*2.0f);
+
 			}
-			else{
-				const CharacterBase* const pTargetCharacter = GetFrontTarget(b);
+		}
+		//　プレイヤー
+		else
+		{
+			if (pTargetCharacter != nullptr)
+			{
 				//自動回転
 				chr_func::AngleControll(b, pTargetCharacter->m_Params.pos, AngleSpeed*2.0f);
 			}
-		}
-		else
-		{
-			Vector3 vec = m_pControllClass->GetVec();
-			chr_func::AngleControll(b, b->m_Params.pos + vec, AngleSpeed);
+			else
+			{
+				Vector3 vec = m_pControllClass->GetVec();
+				chr_func::AngleControll(b, b->m_Params.pos + vec, AngleSpeed);
+			}
 		}
 	}
 
@@ -220,6 +202,12 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 			//生成
 			new UsualBall(param, DamageBase::Type::_WeekDamage, 8);
 
+			//コントローラを振動
+			controller::SetVibration(
+				5000,
+				0.15f,
+				b->m_PlayerInfo.number
+				);
 
 			//エフェクト
 			{
@@ -307,3 +295,58 @@ const CharacterBase*  BaseballState_PlayerControll_ShotAttack_B::GetFrontTarget(
 	}
 	return pTargetEnemy;
 }
+
+void BaseballState_PlayerControll_ShotAttack_B::ComExcute(BaseballPlayer* b)
+{
+	//ターゲット選定＆向き補正
+
+	CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
+
+	const float  AutoDistance = 400.0f;               //自動ができる最大距離
+	const RADIAN AutoMaxAngle = D3DXToRadian(90);   //自動ができる最大角度
+
+
+	RADIAN MostMinAngle = PI;                       //もっとも狭い角度
+	RADIAN TempAngle;
+
+	Vector3 MyFront;      //自身の前方ベクトル
+	chr_func::GetFront(b, &MyFront);
+
+	auto it = ChrMap.begin();
+
+	while (it != ChrMap.end())
+	{
+		//自身を除外
+		if (b->m_PlayerInfo.number == it->first->m_PlayerInfo.number ||
+			chr_func::isDie(it->first)
+			)
+		{
+			++it;
+			continue;
+		}
+
+		//距離が一定以上のキャラクタを除外する
+		if (Vector3Distance(it->first->m_Params.pos, b->m_Params.pos) > AutoDistance)
+		{
+			it = ChrMap.erase(it);
+			continue;
+		}
+
+		//前ベクトルと敵へのベクトルの角度を計算する
+		TempAngle = Vector3Radian(MyFront, (it->first->m_Params.pos - b->m_Params.pos));
+
+		//角度が一番狭かったら更新
+		if (TempAngle < MostMinAngle)
+		{
+			pTargetEnemy = it->first;
+			MostMinAngle = TempAngle;
+		}
+
+		++it;
+	}
+}
+
+//float BaseballState_PlayerControll_ShotAttack_B::TargetLen(Vector3 v1, Vector3 v2)
+//{
+//	
+//}

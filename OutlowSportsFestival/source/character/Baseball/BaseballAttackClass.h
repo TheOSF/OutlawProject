@@ -57,6 +57,9 @@ public:
 
 		//–ˆƒtƒŒ[ƒ€ŒÄ‚Î‚ê‚é
 		virtual void Update(int Frame, LocusHDR* pLocus) = 0;
+
+		//UŒ‚‚ª‚ ‚½‚Á‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
+		virtual void HitAttack(DamageShpere* pDmg) = 0;
 	};
 
 	typedef std::vector<AttackInfo*> AttackInfoArray;
@@ -86,6 +89,8 @@ private:
 	int                   m_ComboCount;
 	bool                  m_DoCombo;
 	LocusHDR              m_Locus;
+	int                   m_DamageHitCount;
+	int                   m_HitStopCount;
 
 	void(BaseballAttackClass::*m_pStateFunc)();
 

@@ -84,6 +84,32 @@ void EffectFactory::Counter(CrVector3 pos, float size)
 
 }
 
+//　切り替え
+void EffectFactory::Change(CrVector3 pos, float size)
+{
+	ParticleHDRRenderer* r = new ParticleHDRRenderer();
+
+	r->m_pTexture = DefResource.Get(Resource::TextureType::Anime_Change);
+	r->m_Param.pos = pos;
+	r->m_Param.color = COLORf(0x40FFFFFF);
+	r->m_HDRcolor = 0xA0FFFFFF;
+	r->m_Param.dw_Flag = RS_COPY;
+	r->m_Param.size = Vector2(size, size);
+	r->m_Zenable = false;
+
+	ParticleMoveObject* m =
+		new ParticleMoveObject(
+		r,
+		Vector3Zero,
+		Vector3Zero,
+		32,
+		true,
+		8,
+		4
+		);
+
+}
+
 //円が大きくなるアニメーション
 void EffectFactory::CircleAnimationBillbord(
     CrVector3   pos,

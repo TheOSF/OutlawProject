@@ -16,6 +16,7 @@
 #include "../CharacterCounterClass.h"
 
 #include "Sound/Sound.h"
+#include "../../GameSystem/GameController.h"
 
 //***************************************
 //　遠距離(投手)
@@ -31,6 +32,9 @@ BaseballState_PlayerControll_ShotAttack_P::BaseballState_PlayerControll_ShotAtta
 void BaseballState_PlayerControll_ShotAttack_P::Enter(BaseballPlayer* b){
 	// 遠距離(ピッチャー)クラス作成
 	m_pShotAttackClass_P = this->CreateShotAttackClass_P(b);
+	//　Comなら
+	ComExcute(b);
+
 }
 
 
@@ -40,9 +44,7 @@ void BaseballState_PlayerControll_ShotAttack_P::Execute(BaseballPlayer* b){
 	m_pShotAttackClass_P->SetStickValue(
 		controller::GetStickValue(controller::stick::left, b->m_PlayerInfo.number));
 
-	//　Comなら
-	ComExcute(b);
-
+	
 	// 更新
 	if (m_pShotAttackClass_P->Update() == false)
 	{
@@ -99,6 +101,12 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 			param.type = BallBase::Type::_Milder;
 			//生成
 			new MilderHoming(param,5,m_pBaseball);
+			//コントローラを振動
+			controller::SetVibration(
+				5000,
+				0.15f,
+				m_pBaseball->m_PlayerInfo.number
+				);
 		}
 
 		//　遠距離攻撃開始

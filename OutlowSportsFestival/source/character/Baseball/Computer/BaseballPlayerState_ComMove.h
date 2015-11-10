@@ -54,11 +54,12 @@ public:
 	void doMove(BaseballPlayer* b);
 	//@UŒ‚
 	void doAction(BaseballPlayer* b);
-
+	//@”½‰(”½Ëor‰ñ”ğ)
+	void doReaction(BaseballPlayer* b);
 private:
 	CharacterUsualMove*		m_pMoveClass;
 	CharacterComputerMove*      m_pMoveControllClass;
 	CharacterComputerDoAction*  m_pDoActionClass;
-	
+	CharacterComputerReaction*  m_pReactionClass;
 };
 

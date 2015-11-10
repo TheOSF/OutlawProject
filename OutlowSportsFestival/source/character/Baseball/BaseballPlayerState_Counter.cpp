@@ -83,7 +83,7 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
 	param.CatchAriaSize = areasize;
 	param.ControllRadian = D3DXToRadian(33);
 	param.FailedFrame = 20;
-	param.PoseFrame = 10;
+	param.PoseFrame = 24;
 	param.ShotFrame = 6;
 	param.BallSpeed = 0.85f;
 
