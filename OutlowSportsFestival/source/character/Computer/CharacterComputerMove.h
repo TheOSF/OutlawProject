@@ -26,7 +26,8 @@ private:
 	{
 		Stop, 
 		Forward,
-		Distance
+		Distance,
+		Distance_B
 	};
 
 	MoveMode movemode;
@@ -41,14 +42,19 @@ public:
 	CharacterComputerMove(CharacterBase* cb);
 	~CharacterComputerMove();
 
-
-
-	Vector2 StateMoveFront(CharacterBase* cb);
-	Vector2 StateMoveDistance(CharacterBase* cb);
-	Vector2 StateStop(CharacterBase* cb);
-
+	Vector2 StateMoveFront(CharacterBase* cb);//　ターゲットに前進
+	Vector2 StateMoveDistance(CharacterBase* cb);//　ターゲットとの距離をとる
+	Vector2 StateStop(CharacterBase* cb);//　立ち止まる
+	
 	Vector2 SwitchAction(CharacterBase* cb);
-
 	Vector3 GetMoveTargetPos();
-	Vector3 NearCheak();//　一番近いやつを見つける
+
+//　野球専用
+public:
+
+	Vector2 SwitcAction_Baseball(CharacterBase* cb, bool flg = false);
+	Vector2 StateStop_Baseball(CharacterBase* cb, bool flg = false);//　立ち止まる
+	Vector2 StateMoveDistance_Baseball(CharacterBase* cb);//　ターゲットとの距離をとる
+	
+	
 };

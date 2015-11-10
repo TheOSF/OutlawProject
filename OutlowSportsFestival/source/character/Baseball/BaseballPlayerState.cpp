@@ -103,6 +103,16 @@ bool PlayerShotControllClass_B::DoOtherAction()
 	return false;
 }
 
+//　コンピューター
+bool PlayerShotControllClass_B::DoOtherAction_Com()
+{
+	BaseballPlayer * const b = m_pBaseball;
+
+	b->SetState(new BaseballState_Rolling(new BallBall_Utillity::PlayerRollingControll(b)));
+	return true;
+
+}
+
 bool PlayerShotControllClass_B::DoShotAfterAction()
 {
 	BaseballPlayer * const b = m_pBaseball;

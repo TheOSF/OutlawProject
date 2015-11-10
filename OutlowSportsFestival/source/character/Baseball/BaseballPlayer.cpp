@@ -32,10 +32,10 @@ BaseballPlayer::~BaseballPlayer()
 }
 
 //　ステートセット
-void BaseballPlayer::SetState(BaseballState* state)
+void BaseballPlayer::SetState(BaseballState* state, bool Important)
 {
 	//　新しいステートをセット
-	m_pStateMachine->set_state(state);
+	m_pStateMachine->set_state(state,Important);
 }
 
 //　更新
@@ -70,7 +70,6 @@ void BaseballPlayer::Riset()
 {
 	SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(this));
 	
-
 	m_Renderer.SetMotion(baseball_player::_mb_Stand);
 	m_Renderer.Update(0);
 	ResetRound();

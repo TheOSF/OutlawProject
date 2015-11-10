@@ -29,6 +29,9 @@ namespace EffectFactory
     void Counter(
         CrVector3 pos,
         float size);
+	//　切り替え
+	void Change(CrVector3 pos,
+		float size);
 
     //円が大きくなるアニメーション
     void CircleAnimationBillbord(

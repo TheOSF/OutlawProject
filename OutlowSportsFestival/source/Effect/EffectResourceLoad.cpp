@@ -56,6 +56,11 @@ void EffectResource::Load()
         new iex2DObj("DATA\\Effect\\Counter2.png")
         );
 
+	//カウンターアニメーションエフェクト
+	DefResource.Regist(
+		Resource::TextureType::Anime_Change,
+		new iex2DObj("DATA\\Effect\\explode.png")
+		);
     
     //サッカー必殺技、ヒットエフェクト
     DefResource.Regist(

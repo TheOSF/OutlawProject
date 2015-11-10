@@ -66,7 +66,7 @@ public:
 	const float m_ModelSize;
 
 
-	void SetState(BaseballState* state);
+	void SetState(BaseballState* state, bool Important = false);
 	bool Update();
     bool CharacterMsg(MsgType mt);
 public:

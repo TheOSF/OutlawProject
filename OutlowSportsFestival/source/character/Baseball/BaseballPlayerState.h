@@ -53,7 +53,7 @@ public:
 	Vector3 GetVec();
 
 	bool DoOtherAction();
-
+	bool DoOtherAction_Com();
 	bool DoShotAfterAction();
 };
 
