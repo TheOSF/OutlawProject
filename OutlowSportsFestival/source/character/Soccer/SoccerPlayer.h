@@ -54,7 +54,7 @@ public:
 	CharacterRenderer	m_Renderer;
 	const float m_ModelSize;
 
-	void SetState(SoccerState* state);
+	void SetState(SoccerState* state, bool Important=false);
 	bool Update();
     bool CharacterMsg(MsgType mt);
 
