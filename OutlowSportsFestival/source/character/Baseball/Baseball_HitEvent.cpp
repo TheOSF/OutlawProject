@@ -5,6 +5,11 @@
 #include "../CharacterFunction.h"
 
 
+
+#include "../CharacterHitEventFunc.h"  //ひるみ分岐関数を使用するため
+
+
+
 BaseballHitEvent::BaseballHitEvent(BaseballPlayer* pt) :
 m_pBaseball(pt)
 {
@@ -13,45 +18,40 @@ m_pBaseball(pt)
 
 bool BaseballHitEvent::Hit(DamageBase* pDmg)
 {
+    Vector3 DamageVec = Vector3Zero;
 
-	//自分の作っているダメージだった場合は何もしない
-	if (pDmg->pParent != nullptr &&
-		pDmg->pParent->m_PlayerInfo.number == m_pBaseball->m_PlayerInfo.number)
-	{
-		return false;
-	}
+    //ひるみ分岐
+    switch (CharacterHitEventFunc::CheckDamage(pDmg, m_pBaseball, &DamageVec))
+    {
+    case CharacterHitEventFunc::SetType::Die:
+        //死亡ステートへ
+        m_pBaseball->SetState(new BaseballState_DamageMotion_Die(m_pBaseball, DamageVec), true);
+        break;
 
-    //ダメージ計算
-    chr_func::CalcDamage(m_pBaseball, pDmg->Value);
 
-	//もし体力がなかったら、どんな攻撃であろうと死亡ステートへ
-	if (chr_func::isDie(m_pBaseball))
-	{
-		m_pBaseball->SetState(new BaseballState_DamageMotion_Die(m_pBaseball, pDmg->vec), true);
-		return true;
-	}
+    case CharacterHitEventFunc::SetType::Weak_Hit:
+        //弱ひるみステートへ
+        m_pBaseball->SetState(new BaseballState_DamageMotion_Weak(m_pBaseball, DamageVec), true);
+        break;
 
-	//当たった時にそのダメージの種類から、それぞれのステートに派生させる
-	switch (pDmg->type)
-	{
-	case DamageBase::Type::_WeekDamage:
-		//弱攻撃
-		m_pBaseball->SetState(new BaseballState_DamageMotion_Weak(m_pBaseball, pDmg->vec), true);
-		return true;
 
-		//吹っ飛び
-		case DamageBase::Type::_VanishDamage:
-			m_pBaseball->SetState(new BaseballState_DamageVanish(m_pBaseball, pDmg->vec), true);
-		return true;
-		case DamageBase::Type::_UpDamage:
-		////上に吹き飛び
-		//m_pTennis->SetState(new TennisState_(m_pTennis));
-		//return true;
-		
+    case CharacterHitEventFunc::SetType::Vanish_Hit:
+        //吹き飛びステートへ
+        m_pBaseball->SetState(new BaseballState_DamageVanish(m_pBaseball, DamageVec), true);
+        break;
 
-	default:break;
-	}
 
-	return false;
+
+    case CharacterHitEventFunc::SetType::_None:
+        //何もしない(自身のダメージだった場合
+        return false;
+
+    default:
+        MyAssert(false, "ひるみ分岐ができていません");
+        return false;
+    }
+
+
+    return true;
 }
 
