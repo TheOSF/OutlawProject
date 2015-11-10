@@ -87,7 +87,7 @@ bool TennisSpecialBall::isOutofField()const
 
 void TennisSpecialBall::UpdateDamageClass()
 {
-    m_Damage.vec = m_Params.move;
+    m_Damage.m_Vec = m_Params.move;
     m_Damage.m_Param.pos = m_Params.pos;
 }
 

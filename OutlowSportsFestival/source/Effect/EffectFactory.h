@@ -1,5 +1,6 @@
 #pragma once
 #include "../GameSystem/ForwardDecl.h"
+#include "../utillity/ColorUtility.h"
 
 //---------------------------------------------//
 // 　　　エフェクト出現関数集
@@ -77,5 +78,19 @@ namespace EffectFactory
     void DieEffect(
         CharacterBase* pDieCharacter,
         CrVector3      Damage_Vec
+        );
+
+
+    //軌跡パーティクル
+    void LocusParticle(
+        CrVector3 pos,
+        CrVector3 move,
+        CrVector3 power,
+        float     width,
+        UINT      length,
+        COLORf    color,
+        COLORf    HDRcolor,
+        UINT      live_frame,
+        RATIO     bound = 0.2f
         );
 }

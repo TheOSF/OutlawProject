@@ -24,7 +24,7 @@ BaseballState_SPAttack_B::BaseballState_SPAttack_B(BaseballPlayer* b) :timeflg(f
 	m_Damage.pParent = b;
 	m_Damage.type = DamageBase::Type::_WeekDamage;
 	m_Damage.Value = 0.0f;
-	m_Damage.vec = Vector3AxisZ;
+	m_Damage.m_Vec = Vector3AxisZ;
 
 	m_Light.Visible = false;
 }
@@ -111,7 +111,7 @@ void BaseballState_SPAttack_B::State_Atk1()
 		{
 			m_Damage.m_Enable = true;
 			chr_func::GetFront(m_pBaseBall, &m_Damage.m_Param.pos);
-			m_Damage.vec = m_Damage.m_Param.pos;
+			m_Damage.m_Vec = m_Damage.m_Param.pos;
 			m_Damage.m_Param.pos *= 3.0f;
 			m_Damage.m_Param.pos += m_pBaseBall->m_Params.pos;
 		}
@@ -179,8 +179,8 @@ void BaseballState_SPAttack_B::State_Atk2()
 		m_Damage.type = DamageBase::Type::_VanishDamage;
 		m_Damage.HitCount = 0;
 		chr_func::GetFront(m_pBaseBall, &m_Damage.m_Param.pos);
-		m_Damage.vec = m_Damage.m_Param.pos;
-		m_Damage.vec.y = 0.8f;//　飛ぶ角度
+        m_Damage.m_Vec = m_Damage.m_Param.pos;
+        m_Damage.m_Vec.y = 0.8f;//　飛ぶ角度
 		m_Damage.m_Param.pos *= 3.0f;
 		m_Damage.m_Param.pos += m_pBaseBall->m_Params.pos;
 
@@ -207,7 +207,7 @@ void BaseballState_SPAttack_B::State_Atk2()
 			stHdCol(1, 1, 1, 0.5f),
 			endHdCol(1, 1, 1, 0);
 
-		const Vector3 move = Vector3Normalize(m_Damage.vec)*0.8f;
+        const Vector3 move = Vector3Normalize(m_Damage.m_Vec)*0.8f;
 
 		Vector3 pos = m_Damage.m_Param.pos + Vector3(0, 3, 0);
 
@@ -287,7 +287,7 @@ void BaseballState_SPAttack_B::FreezeGame(UINT frame)
 
 	UpdateObjList.push_back(m_pBaseBall);
 
-	DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, frame,true);
+    DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, frame, true);
 }
 
 //　雷エフェクト発動

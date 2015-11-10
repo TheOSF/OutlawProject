@@ -15,8 +15,6 @@ public:
 	{
 		int AllFrame;       // 全フレーム
 		int NoDamageFrame;	//無敵フレーム
-		int hitStopFrame;	//ヒットストップフレーム
-		float hitBack;		//ヒットバック距離
 		Vector3 damage_vec;	//ダメージの方向
 	};
 

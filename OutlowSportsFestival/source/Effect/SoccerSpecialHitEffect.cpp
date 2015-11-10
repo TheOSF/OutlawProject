@@ -4,171 +4,182 @@
 #include "ParticleMoveObject.h"
 #include "../GameSystem/ResourceManager.h"
 #include "HitEffectObject.h"
+#include "AnimationBordRenderer.h"
+#include "EffectFactory.h"
+#include "GlavityLocus.h"
 
-SoccerSpecialHitEffect::SoccerSpecialHitEffect(
-    CrVector3 pos,
-    CrVector3 vec,
-    Vector3   color,
-    UINT      level
+SoccerSpecialHit::SoccerSpecialHit(
+    CharacterBase* pOwner,//親キャラクタへのポインタ
+    CrVector3      pos,   //出現座標
+    CrVector3      vec,   //方向
+    RATIO          level  //エフェクトのクオリティ(０～１)
     ) :
-    m_Renderer(DefResource.Get(Resource::MeshType::Soccer_Special_Hit), false),
-    m_Color(color),
-    m_T(0),
-    m_Particle_level(level),
+    m_pOwner(pOwner),
     m_Pos(pos),
     m_Vec(vec),
-    m_Timer(0)
+    m_Level(level),
+    m_Count(0),
+    m_pStateFunc(&SoccerSpecialHit::State_Init)
 {
-    InitMatrix(pos, vec, 1, 1);
-
-    m_Renderer.m_Color.SetColor(0, 0, 0, 0);
-
-    //ライト
-    m_Light.param.color = color*0;
-    m_Light.param.pos = pos;
-    m_Light.param.size = 50.0f;
+    //球ブラーoff
+    m_BlurSphere.Enable = false;
 }
 
-SoccerSpecialHitEffect::~SoccerSpecialHitEffect()
+SoccerSpecialHit::~SoccerSpecialHit()
 {
 
 }
 
-void SoccerSpecialHitEffect::InitMatrix(
-    CrVector3 pos,
-    CrVector3 vec,
-    float     length,
-    float     width
-    )
+bool SoccerSpecialHit::Update()
 {
-    Matrix m;
-    const float DefaultScale = 0.015f;
-    Vector3 r, u(0,1,0), f(vec);
+    //現在のステートを実行
+    (this->*m_pStateFunc)();
 
-    Vector3Cross(r, u, f);
-
-    r.Normalize();
-    u.Normalize();
-    f.Normalize();
-
-    f *= width*DefaultScale;
-    r *= width*DefaultScale;
-    u *= length*DefaultScale;
-
-    D3DXMatrixTranslation(&m, pos.x, pos.y, pos.z);
-
-    m._11 = r.x;
-    m._12 = r.y;
-    m._13 = r.z;
-
-    m._21 = u.x;
-    m._22 = u.y;
-    m._23 = u.z;
-
-    m._31 = f.x;
-    m._32 = f.y;
-    m._33 = f.z;
-
-    m_Renderer.SetMatrix(m);
-
+    //終了ステートでなければtrueを返す
+    return m_pStateFunc != &SoccerSpecialHit::State_Finish;
 }
 
-void SoccerSpecialHitEffect::SetParticle(
-    CrVector3 pos,
-    CrVector3 vec,
-    Vector3   color
-    )
+bool SoccerSpecialHit::Msg(MsgType mt)
 {
-    ParticleRenderer* Renderer;
-    ParticleMoveObject* MoveObj;
-
-    const int numParticle = 10 * (int)(1 + m_Particle_level);
-
-    COLORf Colorf(1, color.x, color.y, color.z);
-    LPIEX2DOBJ pTexture = DefResource.Get(Resource::TextureType::Particle);
-
-    Vector3 moveVec = Vector3Normalize(vec)*0.6f;
-
-    for (int i = 0; i < numParticle; ++i)
-    {
-        Renderer = new ParticleRenderer();
-
-        Renderer->m_Param.color = Colorf;
-        Renderer->m_Param.dw_Flag = RS_ADD;
-        Renderer->m_Param.pos = pos;
-        Renderer->m_Param.size.x = 0.2f;
-        Renderer->m_Param.size.y = 0.2f;
-        Renderer->SetCellUV(4, 4, 0);
-        Renderer->m_pTexture = pTexture;
-
-        MoveObj = new ParticleMoveObject(
-            Renderer,
-            moveVec + Vector3Rand()*0.4f,
-            Vector3Zero,
-            25,
-            false,
-            0,
-            0
-            );
-    }
-}
-
-void SoccerSpecialHitEffect::UpdateMatrix()
-{
-    Matrix m = m_Renderer.GetMatrix();
-    const float UpScale = 0;
-    const float WidthUp = 0;
-
-    m._11 *= 1 + UpScale*WidthUp;
-    m._12 *= 1 + UpScale*WidthUp;
-    m._13 *= 1 + UpScale*WidthUp;
-
-    m._21 *= 1 + UpScale;
-    m._22 *= 1 + UpScale;
-    m._23 *= 1 + UpScale;
-
-    m._31 *= 1 + UpScale*WidthUp;
-    m._32 *= 1 + UpScale*WidthUp;
-    m._33 *= 1 + UpScale*WidthUp;
-
-    m_Renderer.SetMatrix(m);
-}
-
-bool SoccerSpecialHitEffect::Update()
-{
-    const float Speed = 1 / 60.0f;
-    m_T += Speed;
-
-    UpdateMatrix();
-
-    m_Renderer.m_HDR_Color = m_Color * (1 - m_T);
-
-    m_Light.param.color *= 0.9f;
-
-
-    if (++m_Timer == 15)
-    {
-     /*   SetParticle(
-            m_Pos, m_Vec, m_Color
-            );*/
-
-        //ヒットエフェクト作成
-        new HitEffectObject(
-            m_Pos + Vector3(0, 3, 0),
-            m_Vec,
-            0.1f,
-            0.2f,
-            m_Color,
-            0,
-            20,
-            9
-            );
-    }
-
-    return m_T < 1.0f;
-}
-
-bool SoccerSpecialHitEffect::Msg(MsgType mt)
-{
+    //特にすることなし
     return false;
+}
+
+void SoccerSpecialHit::EffectApper(int n)
+{
+    for (int i = 0; i < n; ++i)
+    {
+        Vector3 tvec(Vector3Normalize(Vector3Rand()));
+
+        AnimationBordRenderer* r = new AnimationBordRenderer(
+            DefResource.Get(Resource::TextureType::Anime_Circle),
+            4,
+            4,
+            16,
+            0x80FFFFFF,
+            0x80FFFFFF
+            );
+
+        r->m_Pos = m_Pos;
+        r->m_CellCount = 0;
+        r->m_Size = Vector2(2, 2);
+
+
+        Vector3Cross(r->m_Right, tvec, Vector3AxisX);
+
+        if (r->m_Right == Vector3Zero)
+        {
+            Vector3Cross(r->m_Right, tvec, Vector3AxisZ);
+        }
+
+        Vector3Cross(r->m_Up, r->m_Right, tvec);
+
+
+        r->m_Right.Normalize();
+        r->m_Up.Normalize();
+
+        AnimationBordGameObj* m = new AnimationBordGameObj(
+            r
+            );
+
+        m->animation_end_delete = true;
+        m->animation_loop = false;
+        m->animation_speed = 1.0f;
+
+        m->move_power = Vector3Zero;
+        m->move_speed = Vector3Zero;
+
+        m->scale_speed = Vector2(1, 1)*1.2f;
+    }
+}
+
+void SoccerSpecialHit::Particle(int n)
+{
+    Vector3 power(0, -0.02f, 0);
+    COLORf Color(0.1f, 1, 1, 1), HdrColor(0.5f, 1, 1, 1);
+
+    for (int i = 0; i < n; ++i)
+    {
+        EffectFactory::LocusParticle(
+            m_Pos,
+            Vector3Rand()*2.0f, 
+            power,
+            0.05f,
+            4,
+            Color,
+            HdrColor,
+            120,
+            0.5f
+            );
+    }
+}
+
+//--------------------------State_Func-----------------------------//
+
+void SoccerSpecialHit::State_Init()
+{
+    //初期化ステート
+    
+    {
+        m_BlurSphere.Enable = true;
+        m_BlurSphere.m_Pos = m_Pos;
+        m_BlurSphere.m_Power = 50.0f;
+        m_BlurSphere.m_Size = 20.0f;
+    }
+
+
+    //ブラー縮小ステートへ
+    m_pStateFunc = &SoccerSpecialHit::State_BlurToSmal;
+}
+
+void SoccerSpecialHit::State_BlurToSmal()
+{
+    //ブラー範囲縮小
+    {
+        const float smal_val = 0.85f;
+
+        m_BlurSphere.m_Size *= smal_val;
+    }
+
+
+    //ブラーサイズが一定以下なら
+    if (m_BlurSphere.m_Size < 1.0f)
+    {
+        //ブラー拡大ステートへ
+        m_pStateFunc = &SoccerSpecialHit::State_Impact;
+        m_BlurSphere.m_Size = 20.0f;
+        m_BlurSphere.m_Power = 150.0f;
+
+        //効果音
+        //Sound::Play(
+
+
+        //エフェクト
+        EffectApper(8);
+        Particle(10);
+    }
+    
+}
+
+void SoccerSpecialHit::State_Impact()
+{
+
+    //パワーを弱める
+    {
+        const float smal_val = 0.9f;
+
+        m_BlurSphere.m_Power *= smal_val;
+    }
+
+
+    //パワー　一定以下で終了
+    if (m_BlurSphere.m_Power < 1.f)
+    {
+        m_pStateFunc = &SoccerSpecialHit::State_Finish;
+    }
+}
+
+void SoccerSpecialHit::State_Finish()
+{
+    m_BlurSphere.Enable = false;
 }

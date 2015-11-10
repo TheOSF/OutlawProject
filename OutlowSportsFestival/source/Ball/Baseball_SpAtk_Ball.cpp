@@ -166,10 +166,10 @@ bool Baseball_SpAtk_Ball::isOutofField()const
 
 void Baseball_SpAtk_Ball::UpdateDamageClass()
 {
-	m_Damage.vec = m_Params.move;
-	m_Damage.vec.Normalize();
-	m_Damage.vec *= 0.5f;
-	m_Damage.vec.y = 0.3f;
+	m_Damage.m_Vec = m_Params.move;
+    m_Damage.m_Vec.Normalize();
+    m_Damage.m_Vec *= 0.5f;
+    m_Damage.m_Vec.y = 0.3f;
 	m_Damage.m_Param.width = 2.0f;
 	m_Damage.m_Param.pos2 = m_Damage.m_Param.pos1;
 	m_Damage.m_Param.pos1 = m_Params.pos;

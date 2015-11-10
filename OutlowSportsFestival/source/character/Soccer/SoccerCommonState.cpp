@@ -59,8 +59,6 @@ void SoccerState_SmallDamage::Enter(SoccerPlayer* s)
 
 	Param.AllFrame = 40;
 	Param.damage_vec = m_Damage_vec;
-	Param.hitBack = 0.5f;
-	Param.hitStopFrame = 5;
 	
 	Param.NoDamageFrame = 10;
 

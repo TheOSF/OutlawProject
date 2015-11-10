@@ -78,7 +78,7 @@ static void CreateCharacter(
 
     case CharacterType::_Baseball:
         pChr = new BaseballPlayer(info);
-        ((BaseballPlayer*)pChr)->SetState(new BaseballState_PlayerControll_Move());
+        ((BaseballPlayer*)pChr)->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove((BaseballPlayer*)pChr));
         break;
 
     case CharacterType::_Soccer:
@@ -91,15 +91,15 @@ static void CreateCharacter(
 
         break;
 
-    case CharacterType::_Lacrosse:
-        pChr = new LacrossePlayer(info);
-        ((LacrossePlayer*)pChr)->SetState(new LacrosseState_PlayerControllMove());
-        break;
+    //case CharacterType::_Lacrosse:
+    //    pChr = new LacrossePlayer(info);
+    //    ((LacrossePlayer*)pChr)->SetState(new LacrosseState_PlayerControllMove());
+    //    break;
 
-    case CharacterType::_Volleyball:
-        pChr = new VolleyBallPlayer(info);
-        ((VolleyBallPlayer*)pChr)->SetState(new VolleyBallState_PlayerControll_Move());
-        break;
+    //case CharacterType::_Volleyball:
+    //    pChr = new VolleyBallPlayer(info);
+    //    ((VolleyBallPlayer*)pChr)->SetState(new VolleyBallState_PlayerControll_Move());
+    //    break;
     }
 
     pChr->m_Params.pos = DefCharacterMgr.GetRoundStartPos(n);
@@ -229,7 +229,7 @@ void GameInitializer_DevelopMode::GameCreate()
 
 
     {
-        Kasennziki_Manager* p = new Kasennziki_Manager(100);
+        Kasennziki_Manager* p = new Kasennziki_Manager(3);
         p->CreateStage();
     }
 
@@ -237,7 +237,7 @@ void GameInitializer_DevelopMode::GameCreate()
     //ƒLƒƒƒ‰ƒNƒ^ì¬
     {
         CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Baseball);
+        CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Baseball);
     
         CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Soccer);
         CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Soccer);

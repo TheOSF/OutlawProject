@@ -91,7 +91,7 @@ void chr_func::XZMoveDown(CharacterBase*p, float t)
 //‚w‚y•ûŒü‚ÌˆÚ“®—Ê‚ªmax_speed‚ð’´‚¦‚Ä‚¢‚½‚çAmax_speed‚ÉÝ’è‚·‚é
 void chr_func::SetMaxXZspeed(CharacterBase*p, float max_speed)
 {
-	const float l = sqrtf(p->m_Params.move.x*p->m_Params.move.x + p->m_Params.move.z*p->m_Params.move.z);
+    const float l = Vector3XZLength(p->m_Params.move);
 
 	if (l > max_speed)
 	{

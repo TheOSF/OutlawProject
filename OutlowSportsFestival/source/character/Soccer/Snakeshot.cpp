@@ -229,7 +229,7 @@ bool Snakeshot::isOutofField()const
 }
 void Snakeshot::UpdateDamageClass()
 {
-	m_Damage.vec = m_Params.move;
+	m_Damage.m_Vec = m_Params.move;
 	m_Damage.m_Param.pos = m_Params.pos;
 }
 void Snakeshot::UpdateMesh()

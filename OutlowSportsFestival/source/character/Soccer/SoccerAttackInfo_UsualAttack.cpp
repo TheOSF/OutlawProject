@@ -44,11 +44,11 @@ void SoccerAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, SoccerPlayer* p
 	Forward = Vector3(BoneMat._31, BoneMat._32, BoneMat._33);
 	Forward.Normalize();
 
-	pDmg->m_Param.pos = Pos + Forward*m_Param.DamagePosLength;
+	pDmg->m_Param.pos = Pos + Forward * m_Param.DamagePosLength;
 
 	// pDmg->vec = pDmg->m_Param.pos - pTennis->m_Params.pos;
-	chr_func::GetFront(pTennis, &pDmg->vec);
-	pDmg->vec.y = 0;
+	chr_func::GetFront(pTennis, &pDmg->m_Vec);
+    pDmg->m_Vec.y = 0;
 
 	m_LocusPos = pDmg->m_Param.pos;
 	m_LocusVec = Forward;

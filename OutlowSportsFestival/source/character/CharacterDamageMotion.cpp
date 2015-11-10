@@ -56,6 +56,12 @@ void CharacterDamageMotion::Update()
 			m_pCharacter->m_Params.pos - m_Params.damage_vec
 			);
 
+        //ヒットバック処理
+        {
+            const float val = Vector3XZLength(m_Params.damage_vec);
+            chr_func::AddMoveFront(m_pCharacter, -val, val);
+        }
+
         //カメラのゆれ
         DefCamera.SetShock(Vector2(0.05f, 0.05f), 15);
 
@@ -82,7 +88,7 @@ void CharacterDamageMotion::Update()
     }
 
     //イベントクラス更新
-    m_pEvent->Update((m_Timer < m_Params.hitStopFrame) ? (0.2f) : (1.0f));
+    m_pEvent->Update(1.0f);
 
     //終了判定
     if (m_End == false &&
@@ -101,11 +107,7 @@ void CharacterDamageMotion::Update()
         chr_func::DamageCheck(m_pCharacter, m_pHitEvent);
     }
 
-    //ヒットバック処理
-    if (m_Params.hitStopFrame == m_Timer)
-    {
-        chr_func::AddMoveFront(m_pCharacter, -m_Params.hitBack, m_Params.hitBack);
-    }
+    
 
     //前回のフレームで揺れて動いた分を元に戻す
     m_pCharacter->m_Params.pos = m_Pos;

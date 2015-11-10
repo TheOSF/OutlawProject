@@ -31,6 +31,13 @@ struct CapsureParam
 class DamageBase
 {
 public:
+    class HitCallBack
+    {
+    public:
+        virtual ~HitCallBack(){}
+        virtual void Hit(const SphereParam* sp) = 0;
+    };
+
 	enum Type
 	{
 		_WeekDamage,	//怯みのみのダメージ
@@ -38,21 +45,23 @@ public:
 		_UpDamage,		//上に吹き飛ぶ(バレーとか)追撃可能
 	};
 
-	LpCharacterBase	pParent;	//このダメージ判定の元のキャラクタ(親がキャラクタでない場合はnullptrが入っている)
-	LpBallBase		pBall;		//この判定についているボール(ボールでなければnull)
-	Type			type;		//このダメージのタイプ
-	float			Value;		//値
-	Vector3			vec;		//ひるむ方向ベクトル
-	int				HitCount;	//当たった回数
+	LpCharacterBase	    pParent;	    //このダメージ判定の元のキャラクタ(親がキャラクタでない場合はnullptrが入っている)
+	LpBallBase		    pBall;		    //この判定についているボール(ボールでなければnull)
+    HitCallBack*        pCallBackClass; //コールバッククラス(nullの場合はよび出さない)
+    Type			    type;		    //このダメージのタイプ
+	float			    Value;		    //値
+	int				    HitCount;	    //当たった回数
+    
 
 	DamageBase();
 	virtual ~DamageBase();
 
     virtual bool HitCheckSphere(const SphereParam* sp) = 0;
-    virtual bool HitCheckCapsure(const CapsureParam* cp) = 0;
-
+    virtual void CalcPosVec(CrVector3 hit_pos, Vector3* pOutPos, Vector3* pOutVec) = 0;
+   
     virtual void DebugDraw() = 0;
 };
+
 
 
 //*************************************************************
@@ -61,14 +70,32 @@ public:
 class DamageShpere :public DamageBase
 {
 public:
+
+    //吹き飛び方向の列挙
+    enum class DamageVecType
+    {
+        MemberParam,     //メンバー変数の方向(m_Vecの方向)
+        CenterToPos,     //中心から放射状に
+        PosToCenter,     //中心に向かって
+
+        CenterToPosXZ, //中心から放射状に(Y方向は常にm_VecPower.yの値になる)
+        PosToCenterXZ, //中心に向かって  (Y方向は常にm_VecPower.yの値になる)
+    };
+
+    
 	bool			m_Enable;	//このダメージが有効かどうか
     SphereParam		m_Param;	//このダメージの球の構造体
 
-	DamageShpere();
-private:
-    bool HitCheckSphere(const SphereParam* sp);
-    bool HitCheckCapsure(const CapsureParam* cp);
+    DamageVecType   m_VecType;  //ダメージ方向タイプ
+    Vector3         m_Vec;      //ダメージ方向(m_VecTypeがMemberParamの場合のみ有効)
+    Vector2         m_VecPower; //ダメージの吹き飛び速度(x = XZ平面 y=Y軸方向)
 
+	DamageShpere();
+
+    bool HitCheckSphere(const SphereParam* sp);
+    void CalcPosVec(CrVector3 hit_pos, Vector3* pOutPos, Vector3* pOutVec);
+
+private:
     void DebugDraw();
 };
 
@@ -78,13 +105,30 @@ private:
 class DamageCapsure :public DamageBase
 {
 public:
+    //吹き飛び方向の列挙
+    enum class DamageVecType
+    {
+        MemberParam,  //メンバー変数の方向(m_Vecの方向)
+        CenterToPos,  //中心から放射状に
+        PosToCenter,  //中心に向かって
+
+        CenterToPosXZ, //中心から放射状に(Y方向は常にm_VecPower.yの値になる)
+        PosToCenterXZ, //中心に向かって  (Y方向は常にm_VecPower.yの値になる)
+    };
+
     bool			m_Enable;	//このダメージが有効かどうか
     CapsureParam	m_Param;	//このダメージの球の構造体
 
+    DamageVecType   m_VecType;  //ダメージ方向タイプ
+    Vector3         m_Vec;      //ダメージ方向(m_VecTypeがMemberParamの場合のみ有効)
+    Vector2         m_VecPower; //ダメージの吹き飛び速度(x = XZ平面 y=Y軸方向)
+
     DamageCapsure();
-private:
+
     bool HitCheckSphere(const SphereParam* sp);
-    bool HitCheckCapsure(const CapsureParam* cp);
+    void CalcPosVec(CrVector3 hit_pos, Vector3* pOutPos, Vector3* pOutVec);
+
+private:
     void DebugDraw();
 };
 
@@ -119,11 +163,6 @@ public:
         const SphereParam&	sp,
 		HitEventBase&		HitEvent
 		);
-
-    //カプセルでダメージ判定を取得する
-    void HitCheckCapsure(
-        const CapsureParam&	cp,
-        HitEventBase&		HitEvent);
 
     //あたり判定をデバッグ描画
     void DebugDraw();

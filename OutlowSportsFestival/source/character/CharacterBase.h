@@ -67,6 +67,8 @@ public:
     static COLOR  GetPlayerColor (PlayerNum::Value number);
     static COLORf GetPlayerColorF(PlayerNum::Value number);
 
+    //当たり判定をとる座標を得る
+    Vector3 CalcHitCheckPos()const;
 
     //ラウンドリセット時のパラメターにセットする
     void ResetRound();

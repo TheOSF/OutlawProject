@@ -111,8 +111,8 @@ StageObjectBus::StageObjectBus(
         m_Damage.type = DamageBase::Type::_VanishDamage;
         m_Damage.Value = 10.0f;
 
-        m_Damage.vec = Vector3Normalize(forward - Vector3AxisZ);
-        m_Damage.vec.y = 0.2f;
+        m_Damage.m_Vec = Vector3Normalize(forward - Vector3AxisZ);
+        m_Damage.m_Vec.y = 0.2f;
 
         UpdateDamage();
     }

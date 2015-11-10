@@ -1,51 +1,50 @@
 #pragma once
 
 #include "../GameSystem/GameObject.h"
-#include "../Render/ForwardHDR_MeshRenderer.h"
-#include "../utillity/ColorUtility.h"
-#include "../Render/LightObject.h"
+#include "../character/CharacterBase.h"
+#include "../Render/BlurObject.h"
+
 
 //------------------------------------------------//
-//   ヒットエフェクトクラス
+//   サッカーの必殺技がヒットしたときのクラス
 //------------------------------------------------//
 
-class SoccerSpecialHitEffect :public GameObjectBase
+class SoccerSpecialHit :public GameObjectBase
 {
 public:
 
-    SoccerSpecialHitEffect(
-        CrVector3 pos,
-        CrVector3 vec,
-        Vector3   color,
-        UINT      particle_level = 0
+    SoccerSpecialHit(
+        CharacterBase* pOwner,//親キャラクタへのポインタ
+        CrVector3      pos,   //出現座標
+        CrVector3      vec,   //方向
+        RATIO          level  //エフェクトのクオリティ(０～１)
         );
 
-    ~SoccerSpecialHitEffect();
+    ~SoccerSpecialHit();
+
 
 private:
+    CharacterBase*const  m_pOwner;
+    void(SoccerSpecialHit::*m_pStateFunc)();
 
-    ForwardHDR_MeshRenderer m_Renderer;
-    float                   m_T;
-    Vector3                 m_Color, m_Pos, m_Vec;
-    PointLight              m_Light;
-    const UINT              m_Particle_level;
-    UINT                    m_Timer;
+    BlurObjectSphere     m_BlurSphere;
 
-    void InitMatrix(
-        CrVector3 pos,
-        CrVector3 vec,
-        float     length,
-        float     width
-        );
+    const Vector3        m_Pos;
+    const Vector3        m_Vec;
+    const RATIO          m_Level;
+                         
+    int                  m_Count;
 
-    void SetParticle(
-        CrVector3 pos,
-        CrVector3 vec,
-        Vector3   color
-        );
+    SoccerSpecialHit(const SoccerSpecialHit&);
 
-    void UpdateMatrix();
     bool Update();
     bool Msg(MsgType mt);
 
+    void EffectApper(int n);
+    void Particle(int n);
+
+    void State_Init();
+    void State_BlurToSmal();
+    void State_Impact();
+    void State_Finish();
 };

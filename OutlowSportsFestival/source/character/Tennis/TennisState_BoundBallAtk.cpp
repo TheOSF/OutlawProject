@@ -507,6 +507,6 @@ void TennisBoundBall::UpdateLocusColor()
 
 void TennisBoundBall::UpdateDamage()     //“–‚½‚è”»’è‚ÌXV
 {
-    m_Damage.vec = m_Params.move;
+    m_Damage.m_Vec = m_Params.move;
     m_Damage.m_Param.pos = m_Params.pos;
 }

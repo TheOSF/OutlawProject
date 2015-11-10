@@ -50,24 +50,26 @@ UsualBall::UsualBall(
         //ダメージ判定のパラメータを代入
         m_Damage.pBall = this;
         m_Damage.pParent = params.pParent;
-        m_Damage.m_Param.width = 2.0f;	//大きさはボールによって異なる?
+        m_Damage.m_Param.width = 1.0f;	//大きさはボールによって異なる?
         m_Damage.type = damage_type;
         m_Damage.Value = damage_val;
         m_Damage.m_Enable = true;
         m_Damage.m_Param.pos1 = m_Params.pos;
         m_Damage.m_Param.pos2 = m_Params.pos;
+        m_Damage.m_VecPower.x = 0.1f;
+        m_Damage.m_VecPower.y = 0.0f;
 
         UpdateDamageClass();
     }
 
     {
-        const float MeshScale = GetBallScale(params.pParent->m_PlayerInfo.chr_type);
+        const float MeshScale = GetBallScale(m_FirstParentType);
         Matrix m;
 
         //ボールのメッシュを作成
         GetBallMesh(params.pParent->m_PlayerInfo.chr_type, &pBallMesh);
 
-        //メッシュのレンダラー作成(最終的にメッシュを使いまわして描画するべき)
+        //メッシュのレンダラー作成
         m_pMeshRenderer = new MeshRenderer(
             pBallMesh,
             false,
@@ -87,7 +89,7 @@ UsualBall::UsualBall(
     {
         //軌跡の設定
         m_Locus.m_Division = 0;
-        m_Locus.m_StartParam.Width = 3.6f * GetBallScale(params.pParent->m_PlayerInfo.chr_type);
+        m_Locus.m_StartParam.Width = 3.6f * GetBallScale(m_FirstParentType);
         m_Locus.m_EndParam.Width = 0.1f;
 
         UpdateColor();
@@ -181,12 +183,12 @@ UsualBall::PhysicsParam UsualBall::GetBallPhysics(
 {
     PhysicsParam params[]=
     {
-        { 0.5f, 100.0f, 0.36f, 0.2f },
-        { 0.5f, 100.0f, 0.36f, 0.2f },
-        { 0.5f, 100.0f, 0.55f, 0.2f },
-        { 0.5f, 100.0f, 0.5f, 0.2f },
-        { 0.5f, 100.0f, 0.5f, 0.2f },
-        { 0.5f, 100.0f, 0.5f, 0.2f },
+        { 0.5f, 600.0f, 0.30f, 0.85f },
+        { 0.5f, 600.0f, 0.28f, 0.85f },
+        { 1.0f, 600.0f, 0.58f, 0.85f },
+        { 0.5f, 600.0f, 0.55f, 0.85f },
+        { 0.5f, 600.0f, 0.55f, 0.85f },
+        { 0.5f, 600.0f, 0.55f, 0.85f },
     };                     
 
     MyAssert((int)type >= 0 && (int)type < (int)ARRAYSIZE(params), "存在しないタイプのキャラクタタイプがUsualBall::GetBallPhysicsに渡されました　type= %d ", (int)type);
@@ -220,7 +222,7 @@ bool UsualBall::isOutofField()const
 
 void UsualBall::UpdateDamageClass()
 {
-	m_Damage.vec = m_Params.move;
+	m_Damage.m_Vec = m_Params.move;
 
     m_Damage.m_Param.pos2 = m_Damage.m_Param.pos1;
 
@@ -287,7 +289,7 @@ bool UsualBall::UpdateWallCheck(Vector3& outNewMove)
 		)
     {
         outNewMove = Vector3Refrect(m_Params.move, Vec);
-        outNewMove *= 0.75f;
+        outNewMove *= GetBallPhysics(m_FirstParentType).Restitution;
         return true;
     }
 
@@ -309,6 +311,7 @@ void UsualBall::Counter(CharacterBase* pCounterCharacter)
 
     UpdateColor();
 
+    m_Damage.m_VecPower.x = 0.5f;
     m_Damage.type = DamageBase::Type::_VanishDamage;
     m_Damage.Value += 1.0f; //ダメージを増やす
 
@@ -348,7 +351,7 @@ void UsualBall::ToNoWork()
     m_BaseMatrix._42 = 0;
     m_BaseMatrix._43 = 0;
 
-    const PhysicsParam p = GetBallPhysics(m_Params.pParent->m_PlayerInfo.chr_type);
+    const PhysicsParam p = GetBallPhysics(m_FirstParentType);
 
     m_pRigitBody = DefBulletSystem.AddRigidSphere(
         p.Mass,
@@ -502,7 +505,7 @@ bool UsualBall::StatePhysicMove()
             //フェードアウトして消えるボールクラスを作成する
             iexMesh* pMesh;
 
-            GetBallMesh(m_Params.pParent->m_PlayerInfo.chr_type, &pMesh);
+            GetBallMesh(m_FirstParentType, &pMesh);
 
             new BallFadeOutRenderer(
                 pMesh,

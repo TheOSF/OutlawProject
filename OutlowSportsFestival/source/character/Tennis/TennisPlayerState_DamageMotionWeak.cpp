@@ -58,8 +58,6 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
 
 	Param.AllFrame = 35;
 	Param.damage_vec = m_Damage_vec;
-	Param.hitBack = 0.2f;
-	Param.hitStopFrame = 5;
 	Param.NoDamageFrame = 5;
 
 	//‚Ğ‚é‚İƒNƒ‰ƒX‚ğì¬

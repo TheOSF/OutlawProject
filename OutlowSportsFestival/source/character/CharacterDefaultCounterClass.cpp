@@ -76,7 +76,7 @@ m_pCounterBall(pCounterBall)
 
 bool CharacterDefaultCounter::HitEventClass_NoBallDamageFileter::Hit(DamageBase* pDmg)
 {
-    //カウンター可能なボールだった場合は処理せずfalseを返す
+    //カウンターする予定のボールだった場合は処理せずfalseを返す
     if (pDmg->pBall != nullptr &&
         BallBase::isCanCounter(pDmg->pBall) &&
         m_pCounterBall == pDmg->pBall
@@ -104,7 +104,7 @@ void CharacterDefaultCounter::Pose()
         //エフェクト
         {
             const Vector3 pos = m_pOwner->m_Params.pos + Vector3(0, 3.5f, 0);
-            EffectFactory::Counter(pos, 8.5f);
+            EffectFactory::Counter(pos, 6.5f);
 
             new ImpactLightObject(
                 pos,

@@ -68,16 +68,6 @@ void CharacterDamageVanish::Initialize()
 
 void CharacterDamageVanish::Flying()
 {
-    RATIO Speed = 0;
-
-    if (GetKeyState('O'))
-    {
-        Speed = (m_FirstSlow && m_Count < 30) ? (0.2f) : (1.0f);
-    }
-    else
-    {
-        Speed = (m_FirstSlow) ? (min((float)m_Count*0.05f, 1)) : (1.0f);
-    }
 
 
     ++m_Count;
@@ -100,11 +90,11 @@ void CharacterDamageVanish::Flying()
 
         D3DXMatrixRotationYawPitchRoll(
             &R,
-            m_Rotate.y*Speed, m_Rotate.x*Speed, m_Rotate.z*Speed
+            m_Rotate.y, m_Rotate.x, m_Rotate.z
             );
 
         //吹き飛び中関数呼び出し
-        m_pEvent->Flying(R, Speed);
+        m_pEvent->Flying(R, 1);
     }
 
 
@@ -129,6 +119,8 @@ void CharacterDamageVanish::Flying()
 
         vec.y = 0;
         vec.Normalize();
+
+        pos.y = 3.0f; //高度は考慮しない
 
         if (DefCollisionMgr.RayPick(
             &out,
@@ -156,7 +148,7 @@ void CharacterDamageVanish::Flying()
 
     {
         //移動更新
-        chr_func::UpdateAll(m_pCharacter, &DamageManager::HitEventBase(), Speed);
+        chr_func::UpdateAll(m_pCharacter, m_pHitEvent);
     }
 }
 

@@ -199,7 +199,7 @@ void iexMesh::Render( u32 dwFlags, float param )
 //------------------------------------------------------
 //	シェーダー描画
 //------------------------------------------------------
-void iexMesh::Render( iexShader* shader, char* name )
+void iexMesh::Render( iexShader* shader, const char* name )
 {
 	//	シェーダーの適用
 	u32 pass = shader->Begine(name);

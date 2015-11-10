@@ -20,7 +20,7 @@
 
 #include "../../Render/LightObject.h"
 #include "TennisPlayerState_SlowUpBall.h"
-
+#include "../../Effect/SoccerSpecialHitEffect.h"
 
 
 class TennisUtillityClass
@@ -329,6 +329,18 @@ void TennisState_PlayerControll_Move::Execute(TennisPlayer* t)
         m_pMoveClass->SetStickValue(Vector2(0, 0));
     }
 
+
+    if (controller::GetTRG(controller::button::maru, 0))
+    {
+        new SoccerSpecialHit(
+            t,
+            Vector3(0, 5, 0),
+            Vector3(1,0,0),
+            1
+            );
+    }
+
+   
 
     //XV
     m_pMoveClass->Update();

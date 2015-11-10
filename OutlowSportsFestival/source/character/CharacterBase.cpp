@@ -2,6 +2,7 @@
 #include "CharacterManager.h"
 #include "CharacterFunction.h"
 #include "../UI/PlayerCursorBillbord.h"
+#include "../Ball/UsualBall.h"
 
 //***************************************************
 //		キャラクタクラス
@@ -75,6 +76,16 @@ COLORf CharacterBase::GetPlayerColorF(PlayerNum::Value number)
         MyAssert(false, "色が存在しないプレイヤー番号が引数に送られました num= %d ", (int)number);
         break;
     }
+
+    return ret;
+}
+
+//当たり判定をとる座標を得る
+Vector3 CharacterBase::CalcHitCheckPos()const
+{
+    Vector3 ret = m_Params.pos;
+
+    ret.y += UsualBall::UsualBallShotY;
 
     return ret;
 }

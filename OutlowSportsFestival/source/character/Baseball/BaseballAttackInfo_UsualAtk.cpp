@@ -45,8 +45,8 @@ void BaseballAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, BaseballPlaye
 	pDmg->m_Param.pos = Pos + Forward*m_Param.DamagePosLength;
 
 	// pDmg->vec = pDmg->m_Param.pos - pTennis->m_Params.pos;
-	chr_func::GetFront(pBaseball, &pDmg->vec);
-	pDmg->vec.y = 0;
+    chr_func::GetFront(pBaseball, &pDmg->m_Vec);
+    pDmg->m_Vec.y = 0;
 
 	m_LocusPos = pDmg->m_Param.pos;
 	m_LocusVec = Forward;

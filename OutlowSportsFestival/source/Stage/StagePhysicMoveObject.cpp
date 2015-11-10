@@ -55,15 +55,21 @@ bool StagePhysicMoveObject::Update()
     class HitCheckObj :public DamageManager::HitEventBase
     {
     public:
+        const Vector3 pos;
         Vector3 vec;
+        
         bool isHit;
 
-        HitCheckObj() :
-            isHit(false){}
+        HitCheckObj(CrVector3 pos) :
+            isHit(false),
+            pos(pos){}
 
         bool Hit(DamageBase* pDmg)
         {
-            vec = pDmg->vec;
+            Vector3 p;
+
+            pDmg->CalcPosVec(pos, &p, &vec);
+
             isHit = true;
 
             return false;
@@ -80,10 +86,11 @@ bool StagePhysicMoveObject::Update()
     MeshUpdate();
 
     SphereParam sp;
-    HitCheckObj HitEvent;
 
     sp.pos = Vector3(M._41, M._42, M._43);
     sp.size = m_HitScale;
+
+    HitCheckObj HitEvent(sp.pos);
 
     DefDamageMgr.HitCheckSphere(sp, HitEvent);
 

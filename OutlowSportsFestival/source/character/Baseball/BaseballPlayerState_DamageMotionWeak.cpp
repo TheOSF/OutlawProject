@@ -49,8 +49,6 @@ void BaseballState_DamageMotion_Weak::Enter(BaseballPlayer* t)
 
 	Param.AllFrame = 35;
 	Param.damage_vec = m_Damage_vec;
-	Param.hitBack = 0.5f;
-	Param.hitStopFrame = 0;
 	Param.NoDamageFrame = 10;
 
 	//‚Ğ‚é‚İƒNƒ‰ƒX‚ğì¬

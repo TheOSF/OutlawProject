@@ -199,6 +199,7 @@ void Kasennziki_Manager::SetSunsetLight()
     //夕焼け時のライティングをセット
     m_DirLight.param.color = Vector3(0.3f, 0.2f, 0.2f);
     m_DirLight.param.vec = Vector3Normalize(Vector3(0.8f, -1, 0.2f));
+  //  m_DirLight.param.vec = Vector3Normalize(Vector3(0.2f, -1.0f, -0.8f));
     m_DirLight.param.Shadow.visible = true;
     m_DirLight.param.Shadow.Near = 5;
     m_DirLight.param.Shadow.Far = 150;
@@ -240,7 +241,7 @@ void Kasennziki_Manager::SetNightLight()
 
         m_pSpotLight[0]->param.origin = Vector3(0, 10, 55);
         m_pSpotLight[0]->param.target = Vector3(0, -2, -30);
-        m_pSpotLight[0]->param.color = Vector3(1.0f, 1.0f, 1.0f)*2.0f;
+        m_pSpotLight[0]->param.color = Vector3(1.0f, 1.0f, 0.75f)*2.0f;
         m_pSpotLight[0]->param.size = 45;
         m_pSpotLight[0]->param.Shadow.visible = true;
     }
@@ -250,7 +251,7 @@ void Kasennziki_Manager::SetNightLight()
                      
         m_pSpotLight[1]->param.origin = Vector3(0, 10, -55);
         m_pSpotLight[1]->param.target = Vector3(0, -2, 30);
-        m_pSpotLight[1]->param.color = Vector3(1.0f, 1.0f, 1.0f)*2.0f;
+        m_pSpotLight[1]->param.color = Vector3(1.0f, 1.0f, 0.75f)*2.0f;
         m_pSpotLight[1]->param.size = 45;
         m_pSpotLight[1]->param.Shadow.visible = true;
     }

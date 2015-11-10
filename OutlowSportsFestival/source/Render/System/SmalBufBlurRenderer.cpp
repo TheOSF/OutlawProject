@@ -76,7 +76,7 @@ void SmalBufBlurRenderer::Render()
     iexSystem::Device->SetDepthStencilSurface(NULL);
 
 
-
+    //一番大きいサイズのテクスチャにＨＲテクスチャをコピー
     RenderToParentTexture();
 
     //作業用テクスチャにブラー結果を出力
@@ -180,12 +180,14 @@ void SmalBufBlurRenderer::RenderToTexture(UINT from, UINT to)
     SetViewport.MinZ = 0;
     SetViewport.MaxZ = 1;
 
+
+
     iexSystem::Device->SetViewport(&SetViewport);
 
     m_pWorkTextures[to]->RenderTarget(0);
 
-    m_pShader->SetValue("g_offset_X", 1 / (float)m_pWorkTextureSizes[from].x);
-    m_pShader->SetValue("g_offset_Y", 1 / (float)m_pWorkTextureSizes[from].y);
+    m_pShader->SetValue("g_offset_X", 1.0f / (float)m_pWorkTextureSizes[from].x);
+    m_pShader->SetValue("g_offset_Y", 1.0f / (float)m_pWorkTextureSizes[from].y);
 
 
     m_pWorkTextures[from]->Render(

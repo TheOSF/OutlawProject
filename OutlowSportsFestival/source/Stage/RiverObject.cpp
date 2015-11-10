@@ -10,7 +10,8 @@ RiverObject::RiverObject(
     CrVector2   speed
     ):
     m_Speed(speed),
-    m_DiffTex(0,0)
+    m_DiffTex(0,0),
+    m_DiffTex2(0.2f,0.2f)
 {
     Matrix T;
 
@@ -45,12 +46,12 @@ void RiverObject::Render()
 {
     m_pMesh->TransMatrix = m_Mat;
 
-    float DiffTex[2] = { m_DiffTex.x, m_DiffTex.y };
+    float DiffTex[2]  = { m_DiffTex.x, m_DiffTex.y };
+    float DiffTex2[2] = { m_DiffTex2.x, m_DiffTex2.y };
 
-    shader->SetValue("g_Color", Vector4(0.125f, 0.25f, 0.5f, 0.6f));
+    shader->SetValue("g_Color", Vector4(0.2f, 0.7f, 0.8f, 0.75f));
     shader->SetValue("g_DiffTex", DiffTex, 2);
-    
-
+    shader->SetValue("g_DiffTex2", DiffTex2, 2);
     
     m_pMesh->Render(
         shader,
@@ -61,19 +62,27 @@ void RiverObject::Render()
 
 bool RiverObject::Update()
 {
-    m_DiffTex += m_Speed;
-
-    if (m_DiffTex.x > 1.0f)
-    {
-        m_DiffTex.x -= 1.0f;
-    }
-
-    if (m_DiffTex.y > 1.0f)
-    {
-        m_DiffTex.y -= 1.0f;
-    }
+    UpdateTex(m_DiffTex,m_Speed);
+    UpdateTex(m_DiffTex2, m_Speed*0.25f);
 
     return true;
+}
+
+void RiverObject::UpdateTex(Vector2& val, CrVector2 Speed)
+{
+    const float m = 1000.0f;
+    val += Speed;
+
+    while (val.x > m)
+    {
+        val.x -= m;
+    }
+
+    while (val.y > m)
+    {
+        val.y -= m;
+    }
+
 }
 
 bool RiverObject::Msg(MsgType mt)

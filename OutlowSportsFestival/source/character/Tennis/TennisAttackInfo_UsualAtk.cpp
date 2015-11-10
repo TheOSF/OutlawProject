@@ -38,22 +38,28 @@ void TennisAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, TennisPlayer* p
     Vector3 Forward;
     Vector3 Pos1, Pos2;
 
-    m_pOwner->m_Renderer.GetWorldBoneMatirx(BoneMat, m_Param.LocusBoneNum1);
 
-    Pos1 = Vector3(BoneMat._41, BoneMat._42, BoneMat._43);
+    //ボーン位置を算出
+    {
+        m_pOwner->m_Renderer.GetWorldBoneMatirx(BoneMat, m_Param.LocusBoneNum1);
 
-    m_pOwner->m_Renderer.GetWorldBoneMatirx(BoneMat, m_Param.LocusBoneNum2);
+        Pos1 = Vector3(BoneMat._41, BoneMat._42, BoneMat._43);
 
-    Pos2 = Vector3(BoneMat._41, BoneMat._42, BoneMat._43);
+        m_pOwner->m_Renderer.GetWorldBoneMatirx(BoneMat, m_Param.LocusBoneNum2);
 
+        Pos2 = Vector3(BoneMat._41, BoneMat._42, BoneMat._43);
+    }
+
+    //ボーン先端位置にダメージをセット
     pDmg->m_Param.pos = Pos2;
 
-    chr_func::GetFront(pTennis, &pDmg->vec);
-    pDmg->vec *= 0.5f;
+    //方向はキャラクタの正面ベクトル
+    chr_func::GetFront(pTennis, &pDmg->m_Vec);
+    pDmg->m_VecPower.x = 0.5f;
 
     if (m_Param.DamageType == DamageBase::Type::_VanishDamage)
     {
-        pDmg->vec.y = 0.2f;
+        pDmg->m_VecPower.y = 0.2f;
     }
 
     m_LocusPos = (Pos2 + Pos1)*0.5f;

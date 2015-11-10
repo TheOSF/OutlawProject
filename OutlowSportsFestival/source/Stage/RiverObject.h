@@ -25,10 +25,14 @@ private:
     iexMesh*       m_pMesh;
     const Vector2  m_Speed;
     Vector2        m_DiffTex;
+    Vector2        m_DiffTex2;
     iex2DObj*      m_pTexture;
 
     void CalcZ();
     void Render();
+
+
+    void UpdateTex(Vector2& val, CrVector2 Speed);
 
     bool Update();
     bool Msg(MsgType mt);

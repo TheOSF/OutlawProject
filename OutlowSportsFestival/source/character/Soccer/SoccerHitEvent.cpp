@@ -21,10 +21,19 @@ bool SoccerHitEvent::Hit(DamageBase* pDmg)
     //ダメージ計算
     chr_func::CalcDamage(m_pSoccer, pDmg->Value);
 
+
+    //ダメージのパラメータ
+    Vector3 dmg_pos, dmg_vec;
+
+    //ダメージ方向と位置を算出
+    pDmg->CalcPosVec(m_pSoccer->CalcHitCheckPos(), &dmg_pos, &dmg_vec);
+
+
+
 	//もし体力がなかったら、どんな攻撃であろうと死亡ステートへ
 	if (chr_func::isDie(m_pSoccer))
 	{
-		m_pSoccer->SetState(new SoccerState_DamageMotion_Die(m_pSoccer, pDmg->vec));
+        m_pSoccer->SetState(new SoccerState_DamageMotion_Die(m_pSoccer, dmg_vec));
 		return true;
 	}
 
@@ -34,13 +43,13 @@ bool SoccerHitEvent::Hit(DamageBase* pDmg)
 	{
 	case DamageBase::Type::_WeekDamage:
 		//弱攻撃
-		m_pSoccer->SetState(new SoccerState_SmallDamage(m_pSoccer, pDmg->vec));
+        m_pSoccer->SetState(new SoccerState_SmallDamage(m_pSoccer, dmg_vec));
 		return true;
 
 		//未作成
 	case DamageBase::Type::_VanishDamage:
 		//吹き飛びダメージ
-		m_pSoccer->SetState(new SoccerState_DamageVanish(m_pSoccer, pDmg->vec));
+        m_pSoccer->SetState(new SoccerState_DamageVanish(m_pSoccer, dmg_vec));
 		return true;
 		/*
 		case DamageBase::Type::_UpDamage:

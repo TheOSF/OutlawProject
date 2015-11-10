@@ -149,7 +149,7 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
     new BlurImpactSphere(
         m_pTennis->m_Params.pos + Vector3(0, 3, 0),
         25,
-        10,
+        30,
         30
         );
 

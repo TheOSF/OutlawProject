@@ -148,6 +148,7 @@
     </ClCompile>
     <ClCompile Include="source\character\Baseball\BaseballState_PoseMotion.cpp" />
     <ClCompile Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.cpp" />
+    <ClCompile Include="source\character\CharacterHitEventFunc.cpp" />
     <ClCompile Include="source\character\Computer\CharacterComputerDoAction.cpp" />
     <ClCompile Include="source\character\Computer\CharacterComputerReaction.cpp" />
     <ClCompile Include="source\character\Computer\CharacterComputerReactionHitEvent.cpp" />
@@ -356,6 +357,7 @@
     </ClInclude>
     <ClInclude Include="source\character\Baseball\BaseballState_PoseMotion.h" />
     <ClInclude Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.h" />
+    <ClInclude Include="source\character\CharacterHitEventFunc.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerDoAction.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerReaction.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerReactionHitEvent.h" />

@@ -4,6 +4,10 @@
 #include "../character/CharacterBase.h"
 #include "../GameSystem/GameObject.h"
 
+//-----------------------------------------------------------------//
+//   キャラクタの上に表示する　プレイヤーナンバーＵＩオブジェクト
+//-----------------------------------------------------------------//
+
 class PlayerCursorBillbord :public UserInterfaceRenderer, public GameObjectBase
 {
 public:

@@ -2,6 +2,9 @@
 #include "../CharacterFunction.h"
 #include "../../Ball/Ball.h"
 
+
+
+
 CharacterComputerReactionHitEvent::CharacterComputerReactionHitEvent(CharacterBase* cb) :
 	m_cCharacter(cb),HitDamage(false)
 {

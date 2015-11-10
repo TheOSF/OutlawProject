@@ -183,6 +183,15 @@ void CharacterRenderer::MasterRender()
     shader->SetValue("g_HDR_Color", m_HDR);
     shader->SetValue("g_Color", D3DXVECTOR4(m_ClothesColor.x, m_ClothesColor.y, m_ClothesColor.z, 1.0f));
 
+
+    if (m_OutlineVisible)
+    {
+        shader->SetValue("g_Outline_Color", m_OutlineColor.toVector4());
+        //shader->SetValue("g_Outline_Color", D3DXVECTOR4(m_ClothesColor.x, m_ClothesColor.y, m_ClothesColor.z, 0.0f)*2.0f);
+        
+        m_pAnimeMesh->Render(shader, "OutLine");
+    }
+
     m_pAnimeMesh->Render(shader, m_Techniques);
 }
 
@@ -199,6 +208,13 @@ void CharacterRenderer::Initialize()
 	m_BodyUpMotionSpeed = m_BodyDownMotionSpeed = 1;
 	m_BodyUpMotion = m_BodyDownMotion = 0;
 	D3DXMatrixIdentity(&m_TransMatrix);
+
+    m_ClothesColor = Vector3Zero;
+
+    m_OutlineColor.SetColor(0, 2.0f, 1.33f, 1.0f);
+    m_OutlineVisible = false;
+
+    m_HDR = Vector3Zero;
 
     //デフォルトの描画テクニックを設定
     for (int i = m_pAnimeMesh->GetNumMaterial() - 1; i >= 0; --i)

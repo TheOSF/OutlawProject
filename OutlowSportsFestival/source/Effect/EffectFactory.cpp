@@ -14,6 +14,9 @@
 
 #include "../Camera/Camera.h"
 
+#include "GlavityLocus.h"
+
+
 void EffectFactory::Smoke(CrVector3 pos, CrVector3 move, float size, DWORD Color, bool Soft)
 {
     ParticleRenderer* r = new ParticleRenderer();
@@ -251,8 +254,9 @@ void EffectFactory::DieEffect(
         0.05f,
         0.15f,
         Vector3(1,1,1)*4.0f,
-        5,
-        50
+        10,
+        50,
+        1
         );
 
     //ブラーエフェクト
@@ -268,4 +272,51 @@ void EffectFactory::DieEffect(
         Vector2(1, 1)*0.22f,
         20
         );
+}
+
+
+//軌跡パーティクル
+void EffectFactory::LocusParticle(
+    CrVector3 pos,
+    CrVector3 move,
+    CrVector3 power,
+    float     width,
+    UINT      length,
+    COLORf    color,
+    COLORf    HDRcolor,
+    UINT      live_frame,
+    RATIO     bound
+    )
+{
+    GlavityLocus* g;
+
+    Vector4
+        stCol(color.toVector4()),
+        endCol(color.toVector4());
+
+    Vector4
+        stHdCol(HDRcolor.toVector4()),
+        endHdCol(HDRcolor.toVector4());
+
+    endCol.w = 0;
+    endHdCol.w = 0;
+
+
+    g = new GlavityLocus(
+        pos, move, power, length, live_frame
+        );
+
+    g->m_BoundRatio = bound;
+    g->m_CheckWall = false;
+
+    g->m_Locus.m_StartParam.Color = stCol;
+    g->m_Locus.m_EndParam.Color = endCol;
+
+    g->m_Locus.m_StartParam.HDRColor = stHdCol;
+    g->m_Locus.m_EndParam.HDRColor = endHdCol;
+
+    g->m_Locus.m_StartParam.Width = width;
+    g->m_Locus.m_EndParam.Width = 0.0f;
+
+
 }

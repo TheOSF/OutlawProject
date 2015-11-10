@@ -58,9 +58,9 @@ bool CharacterNearAttack::Update()
 			m_Params.TurnSpeed
 			);
 	}
-	chr_func::GetFront(m_pCharacter, &m_Damage.vec);
+    chr_func::GetFront(m_pCharacter, &m_Damage.m_Vec);
 	m_Damage.m_Param.pos = m_pCharacter->m_Params.pos;
-	m_Damage.m_Param.pos += m_Damage.vec*m_Params.HitCenter;
+    m_Damage.m_Param.pos += m_Damage.m_Vec*m_Params.HitCenter;
 	// À•WXV
 	chr_func::PositionUpdate(m_pCharacter);
 

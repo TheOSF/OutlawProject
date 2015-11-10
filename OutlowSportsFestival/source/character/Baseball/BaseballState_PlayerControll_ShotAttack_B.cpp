@@ -63,6 +63,9 @@ void  BaseballState_PlayerControll_ShotAttack_B::Enter(BaseballPlayer* b)
 		param.type = BallBase::Type::_CantCounter;
 
 		//生成
+
+        //メモ  --ステージ外でボールを生成するとボールが消えてプログラムが落ちる -- 本来はいけないのでスルーでok
+
 		m_pUpBall = new PhysicallyMoveBall(param, DamageBase::Type::_WeekDamage, 1, -0.025f);
 
 		//打ち上げ中はあたり判定なし

@@ -511,6 +511,22 @@ inline bool isHitSphereCapsure(
     return Vector3Distance(sphere_pos, capsure_pos1 + v2*l) < sphere_size + capsure_width;
 }
 
+//------------------------------------------------------
+//	左右判定(右ならtrue
+//------------------------------------------------------
+inline bool isPositionRight(
+    CrVector3 view_origin,  //見る人の位置
+    CrVector3 view_vec,     //見るベクトル
+    CrVector3 up,           //上
+    CrVector3 view_target   //見る目標位置
+    )
+{
+    Vector3 v;
+    Vector3Cross(v, up, view_vec);
+
+    return Vector3Dot(v, view_target - view_origin) > 0.0f;
+}
+
 static const Vector3
 Vector3Zero(0, 0, 0),
 Vector3AxisX(1, 0, 0),
@@ -1081,7 +1097,7 @@ public:
 	//------------------------------------------------------
 	void Render();
 	void Render( u32 dwFlags, float param=-1 );
-	void Render( iexShader* shader, char* name );
+	void Render( iexShader* shader,const char* name );
 
 	//------------------------------------------------------
 	//	レイ判定

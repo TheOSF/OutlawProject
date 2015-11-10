@@ -109,7 +109,7 @@ StageObjectCar::StageObjectCar(
 
         if (light)
         {
-            m_Light.param.color = Vector3(1, 1, 1)*5.0f;
+            m_Light.param.color = Vector3(1, 1, 1)*2.0f;
             m_Light.param.Shadow.visible = false;
             m_Light.param.Shadow.pDepthRenderer = DefRendererMgr.GetDepthRenderer();
             m_Light.param.size = 30.0f;
@@ -129,8 +129,8 @@ StageObjectCar::StageObjectCar(
         m_Damage.type = DamageBase::Type::_VanishDamage;
         m_Damage.Value = 10.0f;
 
-        m_Damage.vec = Vector3Normalize(forward - Vector3AxisZ);
-        m_Damage.vec.y = 0.2f;
+        m_Damage.m_Vec = Vector3Normalize(forward - Vector3AxisZ);
+        m_Damage.m_Vec.y = 0.2f;
 
         UpdateDamage();
     }
