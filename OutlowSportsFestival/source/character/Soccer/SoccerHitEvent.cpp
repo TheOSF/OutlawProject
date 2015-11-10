@@ -24,7 +24,7 @@ bool SoccerHitEvent::Hit(DamageBase* pDmg)
 	//もし体力がなかったら、どんな攻撃であろうと死亡ステートへ
 	if (chr_func::isDie(m_pSoccer))
 	{
-		m_pSoccer->SetState(new SoccerState_DamageMotion_Die(m_pSoccer, pDmg->vec));
+		m_pSoccer->SetState(new SoccerState_DamageMotion_Die(m_pSoccer, pDmg->vec),true);
 		return true;
 	}
 
@@ -34,13 +34,13 @@ bool SoccerHitEvent::Hit(DamageBase* pDmg)
 	{
 	case DamageBase::Type::_WeekDamage:
 		//弱攻撃
-		m_pSoccer->SetState(new SoccerState_SmallDamage(m_pSoccer, pDmg->vec));
+		m_pSoccer->SetState(new SoccerState_SmallDamage(m_pSoccer, pDmg->vec), true);
 		return true;
 
 		//未作成
 	case DamageBase::Type::_VanishDamage:
 		//吹き飛びダメージ
-		m_pSoccer->SetState(new SoccerState_DamageVanish(m_pSoccer, pDmg->vec));
+		m_pSoccer->SetState(new SoccerState_DamageVanish(m_pSoccer, pDmg->vec), true);
 		return true;
 		/*
 		case DamageBase::Type::_UpDamage:
