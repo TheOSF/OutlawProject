@@ -66,8 +66,8 @@ void FightUI::FightRender(
     )
 {
     m_pTexture->Render(
-        SizeX / 2,
-        360 - SizeY / 2 + diffPosY,
+        iexSystem::ScreenWidth / 2 - SizeX / 2,
+        iexSystem::ScreenHeight / 2 - SizeY / 2 + diffPosY, 
         SizeX,
         SizeY,
 

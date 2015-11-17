@@ -35,6 +35,8 @@ m_NoDamageFrame(0)
             false,
             MeshRenderer::RenderType::UseColorSpecular
             );
+
+        UpdateMesh();
     }
 
 
@@ -85,7 +87,9 @@ TennisSpecialBall::~TennisSpecialBall()
 
 bool TennisSpecialBall::Update()
 {
-
+    UpdateMove();
+    UpdateDamageClass();
+    UpdateMesh();
 
     return !isOutOfField();
 }
@@ -191,6 +195,7 @@ void TennisState_SpecialAtk::Enter(TennisPlayer* t)
     std::list<GameObjectBase*> MoveList;
     MoveList.push_back(t);
     DefGameObjMgr.FreezeOtherObjectUpdate(MoveList, 55);
+
 }
 
 // ステート実行
@@ -207,18 +212,29 @@ void TennisState_SpecialAtk::Execute(TennisPlayer* t)
     {
         Vector3 pos, move;
 
-        pos = m_pTennis->m_Params.pos;
-        pos.y = UsualBall::UsualBallShotY;
+        RADIAN BallAngles[]=
+        {
+            -PI / 4, 0, PI / 4
+        };
 
-        chr_func::GetFront(m_pTennis, &move);
-        move *= BallSpeed;
-        
-        //ボール作成
-        new TennisSpecialBall(
-            m_pTennis,
-            pos, 
-            move
-            );
+        for (int i = 0; i < ARRAYSIZE(BallAngles); ++i)
+        {
+
+            pos = m_pTennis->m_Params.pos;
+            pos.y = UsualBall::UsualBallShotY;
+
+            chr_func::GetFront(m_pTennis, &move);
+            move *= BallSpeed;
+
+            move = Vector3RotateAxis(Vector3AxisY, BallAngles[i], move);
+
+            //ボール作成
+            new TennisSpecialBall(
+                m_pTennis,
+                pos,
+                move
+                );
+        }
 
         //ＳＥ
         Sound::Play(Sound::Beam2);
@@ -235,6 +251,9 @@ void TennisState_SpecialAtk::Execute(TennisPlayer* t)
     //基本的な更新
     {
         chr_func::UpdateAll(t, &DamageManager::HitEventBase());
+
+        chr_func::CreateTransMatrix(t, t->m_ModelSize, &t->m_Renderer.m_TransMatrix);
+        t->m_Renderer.Update(1);
     }
 }
 

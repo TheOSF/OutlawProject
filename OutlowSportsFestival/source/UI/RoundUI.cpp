@@ -30,10 +30,10 @@ void RoundUI::Render()
         550,
         160,
 
-        15,
-        265,
-        527,
-        105,
+        0,
+        600,
+        395,
+        100,
         RS_COPY,
         D3DCOLOR_COLORVALUE(1, 1, 1, m_T)
         );

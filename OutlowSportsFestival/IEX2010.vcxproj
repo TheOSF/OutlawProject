@@ -442,6 +442,7 @@
     <ClInclude Include="source\character\Tennis\TennisState_BoundBallAtk.h" />
     <ClInclude Include="source\character\Tennis\TennisState_Rolling.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Vanish.h" />
+    <ClInclude Include="source\character\Tennis\TennisState_Shot.h" />
     <ClInclude Include="source\character\Tennis\Tennis_HitEvent.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Attack.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Counter.h" />

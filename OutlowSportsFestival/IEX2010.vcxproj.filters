@@ -429,6 +429,7 @@
     <ClInclude Include="source\Stage\SkyObject.h" />
     <ClInclude Include="source\Sound\Sound.h" />
     <ClInclude Include="source\character\CharacterHitEventFunc.h" />
+    <ClInclude Include="source\character\Tennis\TennisState_Shot.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

@@ -24,25 +24,39 @@ private:
     {
     public:
 
-        GaugeRenderer(
-            CharacterBase* pOwnerCharacter
-            );
+        GaugeRenderer();
 
-        COLORf m_Color;
-        COLORf m_FaceColor;
+        COLORf  m_Color;
+        COLORf  m_FaceColor;
+                
+        RATIO   m_Life;
+        RATIO   m_Sp;
 
-        RATIO  m_Life;
-        RATIO  m_Sp;
-        
+        Vector2 m_Pos;
+        Vector2 m_Size;
+
+        PlayerNum::Value m_Num;
+
+        PlayerType::Value m_PlayerType;
+
     private:
+
+        iex2DObj* m_pUItex;
+        iex2DObj* m_pIconTex;
+
+        void BackRender();
         void LifeRender();
         void SpRender();
         void FaceRender();
+        void PlayerNumRender();
+
 
         void CalcZ();
         void Render();
     };
-    
+
+    GaugeRenderer     m_Renderer;
+    CharacterBase*    m_pOwnerCharacter;
 
     bool Update();
     bool Msg(MsgType mt);

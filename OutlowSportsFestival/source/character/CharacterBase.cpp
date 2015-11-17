@@ -3,6 +3,7 @@
 #include "CharacterFunction.h"
 #include "../UI/PlayerCursorBillbord.h"
 #include "../Ball/UsualBall.h"
+#include "../UI/PlayerGauge.h"
 
 //***************************************************
 //		キャラクタクラス
@@ -33,6 +34,9 @@ m_StateType(State::Freeze)
 
     //カーソルＵＩ
     new PlayerCursorBillbord(this);
+
+    //ゲージ
+    new PlayerGauge(this);
 
 	//マネージャに登録
 	DefCharacterMgr.Add(this);

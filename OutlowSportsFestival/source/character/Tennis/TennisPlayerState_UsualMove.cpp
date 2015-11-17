@@ -20,6 +20,7 @@
 #include "../../Render/LightObject.h"
 #include "TennisPlayerState_SlowUpBall.h"
 #include "../../Effect/SoccerSpecialHitEffect.h"
+#include "TennisSpecialAtk.h"
 
 
 class TennisUtillityClass
@@ -388,6 +389,13 @@ void TennisState_PlayerControll_Move::ActionStateSwitch(TennisPlayer* t)
         t->SetState(new TennisState_Shot(new TennisUtillityClass::PlayerShotControllClass(t)));
         return;
     }
+
+    if (controller::GetTRG(controller::button::maru, t->m_PlayerInfo.number))
+    {// [›] ‚Åƒ{[ƒ‹”­Ë
+        t->SetState(new TennisState_SpecialAtk(t));
+        return;
+    }
+
 
     if (controller::GetTRG(controller::button::shikaku, t->m_PlayerInfo.number))
     {// [ ] ‚Å [‹ß‹——£UŒ‚]

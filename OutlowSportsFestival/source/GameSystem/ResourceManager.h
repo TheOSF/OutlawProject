@@ -49,6 +49,8 @@ public:
 
         UI_strings,
         UI_player_name,
+        UI_icon,
+        UI_gauges,
 
         Anime_Circle,
         Anime_Smoke,

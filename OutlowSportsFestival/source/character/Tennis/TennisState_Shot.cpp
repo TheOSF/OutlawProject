@@ -16,7 +16,7 @@
 #include "../../Sound/Sound.h"
 #include "../../GameSystem/GameController.h"
 
-+
+
 TennisState_Shot::TennisState_Shot(
     ControllClass*       pControllClass //終了時にdeleteする
     ):
@@ -94,7 +94,7 @@ void TennisState_Shot::Execute(TennisPlayer* t)
         //移動は前向き
         chr_func::GetFront(t, &param.move);
         //スピードは適当
-        param.move *= 0.45f;
+        param.move *= 0.55f;
 
         //キャラの場所に(最終的に腕の位置に？)
         param.pos = t->m_Params.pos;
