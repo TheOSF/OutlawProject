@@ -22,7 +22,7 @@
 #include	"../character/Baseball/BaseballPlayerState.h"
 
 #include    "../character/Amefoot/AmefootPlayer.h"
-#include    "../character/Amefoot/AmefootPlayerState.h"
+#include "../character/Amefoot/AmefootPlayerState.h"
 
 #include    "../character/Lacrosse/LacrossePlayer.h"
 #include    "../character/Lacrosse/LacrossePlayerState.h"
@@ -87,7 +87,8 @@ static void CreateCharacter(
         break;
 
     case CharacterType::_Americanfootball:
-        //–¢ì¬
+         pChr = new AmefootPlayer(info);
+         ((AmefootPlayer*)pChr)->SetState(new AmefootPlayerState_UsualMove());
 
         break;
 
@@ -236,7 +237,7 @@ void GameInitializer_DevelopMode::GameCreate()
 
     //ƒLƒƒƒ‰ƒNƒ^ì¬
     {
-        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Americanfootball);
         CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Baseball);
     
         CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Soccer);

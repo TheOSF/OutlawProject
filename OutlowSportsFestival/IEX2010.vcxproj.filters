@@ -96,7 +96,6 @@
     <ClCompile Include="source\Library\Bullet\BulletSystem.cpp" />
     <ClCompile Include="source\Library\Bullet\BulletDebug.cpp" />
     <ClCompile Include="source\character\Amefoot\AmefootPlayer.cpp" />
-    <ClCompile Include="source\character\Amefoot\AmefootPlayerState.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballPlayer.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballPlayerState.cpp" />
     <ClCompile Include="source\character\CharacterDamageMotion.cpp" />
@@ -232,6 +231,11 @@
     <ClCompile Include="source\Stage\SkyObject.cpp" />
     <ClCompile Include="source\Sound\Sound.cpp" />
     <ClCompile Include="source\character\CharacterHitEventFunc.cpp" />
+    <ClCompile Include="source\utillity\sstream_helper.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_UsualMove.cpp" />
+    <ClCompile Include="source\character\Amefoot\AmefootUsualHitEvent.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveWeakDamage.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveVanishDamage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -282,7 +286,6 @@
     <ClInclude Include="source\Library\Bullet\BulletDebug.h" />
     <ClInclude Include="IEX\DebugDrawManager.h" />
     <ClInclude Include="source\character\Amefoot\AmefootPlayer.h" />
-    <ClInclude Include="source\character\Amefoot\AmefootPlayerState.h" />
     <ClInclude Include="source\character\Baseball\BaseballPlayer.h" />
     <ClInclude Include="source\character\Baseball\BaseballPlayerState.h" />
     <ClInclude Include="source\character\CharacterDamageMotion.h" />
@@ -430,6 +433,11 @@
     <ClInclude Include="source\Stage\SkyObject.h" />
     <ClInclude Include="source\Sound\Sound.h" />
     <ClInclude Include="source\character\CharacterHitEventFunc.h" />
+    <ClInclude Include="source\character\Amefoot\AmefootPlayerState.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_UsualMove.h" />
+    <ClInclude Include="source\character\Amefoot\AmefootUsualHitEvent.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveWeakDamage.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveVanishDamage.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">
