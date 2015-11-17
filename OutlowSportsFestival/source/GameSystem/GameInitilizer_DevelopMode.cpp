@@ -30,7 +30,7 @@
 #include    "../character/VolleyBall/VolleyBallPlayer.h"
 #include    "../character/VolleyBall/VolleyBallPlayerState.h"
 
-#include    "../Render/LightObject.h"
+#include    "../Render/LightObject.h"・
 
 #include    "../Effect/EffectResourceLoad.h"
 
@@ -92,15 +92,6 @@ static void CreateCharacter(
         ((AmefootPlayer*)pChr)->SetState(new AmefootPlayerState_UsualMove());
         break;
 
-    //case CharacterType::_Lacrosse:
-    //    pChr = new LacrossePlayer(info);
-    //    ((LacrossePlayer*)pChr)->SetState(new LacrosseState_PlayerControllMove());
-    //    break;
-
-    //case CharacterType::_Volleyball:
-    //    pChr = new VolleyBallPlayer(info);
-    //    ((VolleyBallPlayer*)pChr)->SetState(new VolleyBallState_PlayerControll_Move());
-    //    break;
     }
 
     pChr->m_Params.pos = DefCharacterMgr.GetRoundStartPos(n);
@@ -249,10 +240,10 @@ void GameInitializer_DevelopMode::GameCreate()
 
     //キャラクタ作成
     {
-        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Baseball);
         CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Soccer);
      
-        CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Soccer);
-        CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Baseball);
+        CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Baseball);
+        CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Soccer);
     }
 }
