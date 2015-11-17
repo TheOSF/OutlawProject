@@ -1,5 +1,6 @@
 #include "BaseballPlayer.h"
 #include "BaseballPlayerState.h"
+
 #include "Computer\/BaseballPlayerState_ComMove.h"
 #include "BaseballState_Change.h"
 #include "../../Damage/Damage.h"
@@ -23,12 +24,17 @@ m_Renderer(new  BlendAnimationMesh("DATA\\CHR\\BaseBall\\player_B.iem"))
 
 	//　体力低下(デバック用)
 	m_Params.maxHP = m_Params.HP = 100;
+
+	/*temp_batterflg = batterflg;
+	headEquip = new BaseballEquip(this);*/
+
 }
 
 //　デストラクタ
 BaseballPlayer::~BaseballPlayer()
 {
 	delete m_pStateMachine;
+	
 }
 
 //　ステートセット
@@ -41,13 +47,21 @@ void BaseballPlayer::SetState(BaseballState* state, bool Important)
 //　更新
 bool BaseballPlayer::Update()
 {
+
 	//　切り替え可能時間増加
 	changetime++;
 	// ステート実行
 	m_pStateMachine->state_execute();
-
+	////　装備品切替
+	//if (temp_batterflg != batterflg)
+	//{
+	//	headEquip->ToPhysicMove();
+	//	temp_batterflg = batterflg;
+	//}
 	//キャラクタ基本更新
 	BaseUpdate();
+	
+
 
 	return true;	//常にtrueを返すと消去されない
 }
@@ -77,3 +91,4 @@ void BaseballPlayer::Riset()
 	changetime = 20;
 
 }
+

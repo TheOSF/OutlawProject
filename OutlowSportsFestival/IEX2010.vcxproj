@@ -146,6 +146,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="source\character\Baseball\BaseballEquip.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballState_PoseMotion.cpp" />
     <ClCompile Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.cpp" />
     <ClCompile Include="source\character\CharacterHitEventFunc.cpp" />
@@ -355,6 +356,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="source\character\Baseball\BaseballEquip.h" />
     <ClInclude Include="source\character\Baseball\BaseballState_PoseMotion.h" />
     <ClInclude Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.h" />
     <ClInclude Include="source\character\CharacterHitEventFunc.h" />

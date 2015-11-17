@@ -12,12 +12,15 @@
 
 
 class BaseballPlayer_Change;
+class BaseballEquip;
+
 //コンピューターの移動クラス
 class BaseballPlayerState_ComMove :public BaseballState
 {
 private:
 	bool batterflg;//　(true:バッター,false:投手)
 	Vector3 nearpos;//　一番近いキャラのpos
+	BaseballEquip* equip;
 public:
 
 	class MoveControllClass
@@ -29,20 +32,18 @@ public:
 	};
 public:
 	//　コンストラクタ
-	BaseballPlayerState_ComMove() :batterflg(true), nearpos(Vector3Zero){}
+	BaseballPlayerState_ComMove() :batterflg(true), nearpos(Vector3Zero){
+	
+	}
 	//　ステート開始
 	void Enter(BaseballPlayer* b)override;
 	//　ステート実行
 	void Execute(BaseballPlayer* b)override;
 	//　ステート終了
 	void Exit(BaseballPlayer* b)override;
-
+	static bool SwitchGameState(BaseballPlayer* pb);
 public:
 
-	//　バッター時実行
-	void Batter(BaseballPlayer* b);
-	//　投手時実行
-	void Pitcher(BaseballPlayer* b);
 	//　セッター
 	void SetBatterFlg(BaseballPlayer* b){ batterflg = b->getBatterFlg(); }
 

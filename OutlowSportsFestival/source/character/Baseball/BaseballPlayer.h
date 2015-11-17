@@ -5,9 +5,10 @@
 #include "../CharacterRenderer.h"
 #include "../CharacterStateTemplate.h"	
 #include "../../Ball/UsualBall.h"
+#include "BaseballEquip.h"
 
 class BaseballPlayer;
-
+class BaseballEquip;
 //ステートマシン型名付け
 typedef ChrStateMachine< BaseballPlayer, CharacterBase::MsgType> BaseballStateMachine;
 typedef ChrState< BaseballPlayer, CharacterBase::MsgType>BaseballState;
@@ -52,10 +53,12 @@ class BaseballPlayer :public CharacterBase
 {
 protected:
 	bool batterflg;//　(true:バッター,false:投手)
+	bool temp_batterflg;//　一時保存
 	int changetime;
 private:
 	BaseballStateMachine*		m_pStateMachine;
-	
+	BaseballEquip* headEquip;
+	//BaseballEquip* handWepon;
 public:
 
 
@@ -65,7 +68,7 @@ public:
 	CharacterRenderer	m_Renderer;
 	const float m_ModelSize;
 
-
+	void ChangeEquip();
 	void SetState(BaseballState* state, bool Important = false);
 	bool Update();
     bool CharacterMsg(MsgType mt);
