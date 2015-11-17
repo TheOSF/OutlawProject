@@ -28,12 +28,12 @@ public:
 	public:
 		virtual ~MoveControllClass(){}
 		virtual Vector2 Move(BaseballPlayer* b) = 0;
-		
+
 	};
 public:
 	//　コンストラクタ
 	BaseballPlayerState_ComMove() :batterflg(true), nearpos(Vector3Zero){
-	
+
 	}
 	//　ステート開始
 	void Enter(BaseballPlayer* b)override;
