@@ -23,7 +23,7 @@ public:
 		float DownSpeed;	//減速する速度
 		float MaxSpeed;		//最大速度
 		float TurnSpeed;	//角度変化スピード
-        int   RunEndFrame;  //走り終了モーションの長さ
+          int   RunEndFrame;  //走り終了モーションの長さ
 	};
 
 	class MoveEvent

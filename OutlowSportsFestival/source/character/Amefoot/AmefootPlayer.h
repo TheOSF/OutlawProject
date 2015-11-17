@@ -1,39 +1,54 @@
-//#ifndef __AMEFOOT_PLAYER_H__
-//#define __AMEFOOT_PLAYER_H__
-//
-//#include "../CharacterBase.h"
-//#include "../CharacterRenderer.h"
-//#include "../CharacterStateTemplate.h"	
-//
-//class AmefootPlayer;
-//
-////ステートマシン型名付け
-//
-//typedef ChrStateMachine<AmefootPlayer, CharacterBase::MsgType> TennisStateMachine;
-//typedef ChrState<AmefootPlayer, CharacterBase::MsgType>TennisState;
-//
-////*************************************************************
-////		アメフトプレイヤークラス
-////*************************************************************
-//
-//class AmefootPlayer :public CharacterBase
-//{
-//public:
-//	enum MotionType{
-//		_mt_Stand,
-//		_mt_Run,
-//
-//		_mt_CounterPose,
-//		_mt_Counter,
-//	};
-//	AmefootPlayer(const  CharacterBase::PlayerInfo& info);
-//	~AmefootPlayer();
-//
-//	CharacterRenderer m_Render;
-//
-//private:
-//	AmefootStateMachine* m_pStateMachine;
-//};
-//
-//
-//#endif
+#pragma once
+
+#include "../CharacterBase.h"
+#include "../CharacterStateTemplate.h"
+#include "../CharacterRenderer.h"
+
+class AmefootPlayer;
+typedef ChrStateMachine<AmefootPlayer , CharacterBase::MsgType> AmefootStateMachine;
+typedef ChrState<AmefootPlayer , CharacterBase::MsgType> AmefootState;
+
+
+//-----------------------------------------------------------------------------------------
+// AmefootPlayer
+// [ アメフト ] キャラクタークラス
+//-----------------------------------------------------------------------------------------
+class AmefootPlayer : public CharacterBase
+{
+public:
+     AmefootPlayer(const PlayerInfo& info);
+
+     ~AmefootPlayer();
+
+     bool Update()override;
+
+     bool CharacterMsg(MsgType msg)override;
+
+     void SetState(AmefootState* state , bool important = false);
+
+
+     CharacterRenderer m_Renderer;
+     const float m_ModelSize;
+
+public:
+     enum MotionType
+     {
+          Motion_Stand,
+          Motion_Run,
+          Motion_Dummy_1,
+          Motion_Dummy_2,
+          Motion_Dummy_3,
+          Motion_Dummy_4,
+          Motion_WeakDamage,
+          Motion_Vanishing,
+          Motion_Down,
+          Motion_StandUp,
+     };
+
+private:
+     AmefootStateMachine* m_pStateMachine;
+
+
+};
+//-----------------------------------------------------------------------------------------
+
