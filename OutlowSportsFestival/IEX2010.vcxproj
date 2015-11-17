@@ -159,6 +159,7 @@
     <ClCompile Include="source\character\Computer\CharacterComputerReactionHitEvent.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerAttack.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerCounter.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerDash.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerRolling.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerShot.cpp" />
     <ClCompile Include="source\Ball\Ball.cpp" />
@@ -373,6 +374,7 @@
     <ClInclude Include="source\character\Computer\CharacterComputerReactionHitEvent.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerAttack.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerCounter.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerDash.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerRolling.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerShot.h" />
     <ClInclude Include="source\Ball\Ball.h" />

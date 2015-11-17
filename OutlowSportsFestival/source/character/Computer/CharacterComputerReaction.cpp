@@ -25,12 +25,16 @@ void CharacterComputerReaction::Update()
 	//反応レーダー展開
 	DefDamageMgr.HitCheckSphere(sp, hitevent);
 
+	Vector3 outvec;
+	Vector3 outpos;
 
 	//反応する
 	if (hitevent.HitDamage)
 	{
 		hit = hitevent.hittype;
-		m_ActionEvent->Reaction(hit);
+		pDmg = hitevent.pDmg;
+		pDmg->CalcPosVec(m_cCharacter->m_Params.pos, &outpos, &outvec);
+		m_ActionEvent->Reaction(hit,outvec);
 	}
 		
 }

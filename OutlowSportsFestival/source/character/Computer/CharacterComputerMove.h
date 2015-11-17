@@ -47,7 +47,7 @@ public:
 	Vector2 StateStop(CharacterBase* cb);//@—§‚¿~‚Ü‚é
 	
 	Vector2 SwitchAction(CharacterBase* cb);
-	Vector3 GetMoveTargetPos();
+	static Vector3 GetMoveTargetPos(CharacterBase* cb);
 
 //@–ì‹…ê—p
 public:

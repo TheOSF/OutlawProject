@@ -49,6 +49,8 @@ void SoccerAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, SoccerPlayer* p
 	// pDmg->vec = pDmg->m_Param.pos - pTennis->m_Params.pos;
 	chr_func::GetFront(pTennis, &pDmg->m_Vec);
     pDmg->m_Vec.y = 0;
+	pDmg->m_VecPower.x = 0.2f;
+
 
 	m_LocusPos = pDmg->m_Param.pos;
 	m_LocusVec = Forward;

@@ -1,5 +1,4 @@
 #include "BaseballPlayerState_ComMove.h"
-
 #include "../Baseball_HitEvent.h"
 #include "../BaseballPlayerState_Attack_B.h"
 #include "../BaseballPlayerState_Attack_P.h"
@@ -9,7 +8,6 @@
 #include "../BaseballPlayerState_Counter.h"
 #include "../BaseballPlayerState.h"
 #include "../BaseballState_PlayerControll_Evasion.h"
-#include "../BaseballState_PoseMotion.h"
 
 #include "../../../GameSystem/GameController.h"
 #include "../../CharacterFunction.h"
@@ -20,7 +18,6 @@
 #include "../../CharacterShotAttackClass.h"
 #include "../../Computer/CharacterComputerReactionHitEvent.h"
 #include "../../CharacterManager.h"
-
 
 class BaseballPlayerComputerrUtillityClass
 {
@@ -49,52 +46,17 @@ public:
 			vec.Normalize();
 
 			return vec;
-
-
 		}
 	};
-
-
 
 };
 
 
-bool BaseballPlayerState_ComMove::SwitchGameState(BaseballPlayer* pb)
-{
-	Vector3 v;
 
-	switch (pb->GetStateType())
-	{
-	case CharacterBase::State::Usual:
-
-		return false;
-
-	case CharacterBase::State::Freeze:
-
-		return true;
-
-	case CharacterBase::State::LosePose:
-		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_LosePose, 0.2f, 1000));
-		return true;
-
-	case CharacterBase::State::WinPose:
-		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_WinPose, 0.2f, 1000));
-
-		return true;
-	default:
-		break;
-	}
-
-	return false;
-
-
-}
 
 //ステート開始
 void BaseballPlayerState_ComMove::Enter(BaseballPlayer* b)
 {
-	//　装備品
-//	equip = new BaseballEquip(b);
 	//　移動
 	doMove(b);
 	//　攻撃
@@ -106,28 +68,23 @@ void BaseballPlayerState_ComMove::Enter(BaseballPlayer* b)
 
 void BaseballPlayerState_ComMove::Execute(BaseballPlayer* b)
 {
-	
-	if (SwitchGameState(b) == false)
-	{
-		//スティック値をセット
-		m_pMoveClass->SetStickValue(m_pMoveControllClass->SwitcAction_Baseball(b, b->getBatterFlg()));
+	//スティック値をセット
+	m_pMoveClass->SetStickValue(m_pMoveControllClass->SwitcAction_Baseball(b, b->getBatterFlg()));
 
-		//********
-		//　更新
-		//********
-		
-		//　攻撃
-		m_pDoActionClass->Update();
-		//　反応
-		m_pReactionClass->Update();
-		//　切り替え
-		doChange(b);
-	}
+	//********
+	//　更新
+	//********
 	//　動き
 	m_pMoveClass->Update();
+	//　攻撃
+	m_pDoActionClass->Update();
+	//　反応
+	m_pReactionClass->Update();
+	//　切り替え
+	doChange(b);
+	
 	//モデルのワールド変換行列を更新
 	chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
-
 
 }
 
@@ -209,7 +166,7 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 				{
 					m_cBaseball->SetState(new Baseball_PlayerControll_Attack_B(m_cBaseball));
 				}
-				else if (len < 20.0f)
+				else if ( len < 20.0f)
 				{
 					m_cBaseball->SetState(new BaseballState_PlayerControll_ShotAttack_B(new PlayerShotControllClass_B(m_cBaseball)));
 				}
@@ -241,8 +198,8 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 void BaseballPlayerState_ComMove::doChange(BaseballPlayer* b)
 {
 
-	nearpos = m_pMoveControllClass->GetMoveTargetPos() - b->m_Params.pos;
-
+	nearpos = m_pMoveControllClass->GetMoveTargetPos(b) - b->m_Params.pos;
+	
 	//　ターゲットと一定距離以下・以上なら切り替え
 	if (nearpos.Length() < 15.0f && !b->getBatterFlg() ||
 		nearpos.Length() > 36.0f && b->getBatterFlg())
@@ -265,7 +222,7 @@ void  BaseballPlayerState_ComMove::doReaction(BaseballPlayer* b)
 			m_cBaseball(cBaseball) {}
 
 		//アニメーションの更新
-		void Reaction(CharacterComputerReactionHitEvent::HitType hittype)override
+		void Reaction(CharacterComputerReactionHitEvent::HitType hittype, Vector3 vec)override
 		{
 			//　遠距離攻撃なら
 			if (hittype == CharacterComputerReactionHitEvent::HitType::CanCounter)

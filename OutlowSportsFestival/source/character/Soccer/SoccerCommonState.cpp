@@ -414,7 +414,7 @@ void SoccerState_brake::Execute(SoccerPlayer* s)
 {
 	if (s->m_Params.move.Length() <= 0.001f)
 	{
-		s->SetState(new SoccerState_PlayerControll_Move());
+		s->SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(s));
 	}
 	
 		
