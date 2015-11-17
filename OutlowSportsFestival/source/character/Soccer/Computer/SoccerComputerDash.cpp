@@ -160,7 +160,8 @@ void SoccerState_ComputerControll_Dash::Execute(SoccerPlayer* s)
 	++m_timer;
 
 
-	Vector2 st = SwitchAction(s);
+	Vector2 st;
+	
 
 
 	// ˆê’èŽžŠÔ‘–‚é / ˆÚ“®‚µ‚È‚­‚È‚Á‚½‚ç–ß‚é
@@ -168,8 +169,9 @@ void SoccerState_ComputerControll_Dash::Execute(SoccerPlayer* s)
 	{
 		s->SetState(new SoccerState_brake(s));
 	}
-	else
+	else if(SwitchGameState(s) == false)
 	{
+		st = SwitchAction(s);
 		m_pDashClass->SetStickValue(st);
 	}
 

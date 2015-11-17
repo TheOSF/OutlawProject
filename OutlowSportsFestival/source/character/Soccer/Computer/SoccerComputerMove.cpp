@@ -193,15 +193,13 @@ void SoccerState_ComputerControll_Move::Execute(SoccerPlayer* s)
 	if (SwitchGameState(s) == false)
 	{
 		m_pMoveClass->SetStickValue(m_pMoveControllClass->SwitchAction(s));
-		//m_pDashClass->SetStickValue(m_pDashControllClass->SwitchAction(s));
 	}
-	if (rand() % 10 == 0)
+	if (rand() % 100 == 0)
 	{
 		//s->SetState(new SoccerState_ComputerControll_Dash(s));
 	}
 	//XV
 	m_pMoveClass->Update();
-	//m_pDashClass->Update();
 	m_pDoActionClass->Update();
 	m_pReactionClass->Update();
 
