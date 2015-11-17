@@ -131,7 +131,8 @@ bool InputManager::CreateDevice(LPCDIDEVICEINSTANCE pDiDeviceInstance, LPVOID pC
 		&pDiDevice,
 		NULL
 		);
-	if (hr != DI_OK)
+
+    if (FAILED(hr))
 	{
 		OutputDebugString(controllerName << _T(" の作成に失敗しました。\n"));
 		return false;

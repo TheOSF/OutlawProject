@@ -100,7 +100,7 @@ HWND InitWindow( HINSTANCE hInstance, int nCmdShow )
 		ShowCursor(FALSE);
 	}
 	if( !hWnd ) return NULL;
-	
+    
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 

@@ -1,6 +1,6 @@
 #include "TornadoEffect.h"
-
-
+#include "../GameSystem/ResourceManager.h"
+#include "EffectFactory.h"
 
 TornadoEffect::TornadoEffect(
     const Param&   InitParam,
@@ -21,12 +21,14 @@ TornadoEffect::TornadoEffect(
         m_ppLocusPtrArray[i] = new LocusHDR(m_LocusPoint);
 
         m_ppLocusPtrArray[i]->m_StartParam.Width = m_Param.LocusWidthEnd;
-        m_ppLocusPtrArray[i]->m_StartParam.Color = Vector4(1, 1, 1, 0.0f);
-        m_ppLocusPtrArray[i]->m_StartParam.HDRColor = Vector4(1, 1, 1, 0.0f);
+        m_ppLocusPtrArray[i]->m_StartParam.Color = Vector4(1, 1, 1, 0.1f);
+        m_ppLocusPtrArray[i]->m_StartParam.HDRColor = Vector4(1, 1, 1, 1)*0.3f;
 
         m_ppLocusPtrArray[i]->m_EndParam.Width = m_Param.LocusWidthStart;
-        m_ppLocusPtrArray[i]->m_EndParam.Color = Vector4(1, 1, 1, 1);
-        m_ppLocusPtrArray[i]->m_EndParam.HDRColor = Vector4(1, 1, 1, 1);
+        m_ppLocusPtrArray[i]->m_EndParam.Color = Vector4(1, 1, 1, 0.9f);
+        m_ppLocusPtrArray[i]->m_EndParam.HDRColor = Vector4(1, 1, 1, 1)*0.9f;
+
+        m_ppLocusPtrArray[i]->m_pTexture = DefResource.Get(Resource::TextureType::Locus1);
     }
 }
 
@@ -49,7 +51,10 @@ bool TornadoEffect::Update()
 {
     const RADIAN angle = (PI * 2) / (float)m_NumLocus;
     const float one_point_len = m_Param.Length / (float)m_LocusPoint;
-    const float one_width = (m_Param.maxWidth - m_Param.minWidth) / (float)m_LocusPoint;
+    //const float one_width = (m_Param.maxWidth - m_Param.minWidth) / (float)m_LocusPoint;
+   
+    float one_width = 0.0f;
+    float t = 0.0f;
 
     UINT i, j;
     Vector3 pos;
@@ -69,7 +74,6 @@ bool TornadoEffect::Update()
     //ó≥ä™ÇÃíÜêSé≤Ç≈ãOê’ÇÃÇPínì_ï™âÒì]Ç∑ÇÈÉNÉHÅ[É^ÉIÉìçÏê¨
     D3DXQuaternionRotationAxis(&locus_point_q, &D3DXVECTOR3(m_Param.vec.x, m_Param.vec.y, m_Param.vec.z), angle * 0.33f);
 
-
     for (i = 0; i < m_NumLocus; ++i)
     {
         locus_q = total_q;
@@ -82,9 +86,23 @@ bool TornadoEffect::Update()
         {
             //âÒì]ÇµÇΩãOê’ÇÃÇ≈ÇÕÇ∂ÇﬂÇÈà íuÇéZèo
             pos = Vector3RotateQuaternion(locus_q, m_Param.right);
-            
+
             //çLÇ™ÇËÇåvéZ
-            pos *= (m_Param.minWidth + one_width*(float)j);
+            {
+                if (j >= m_Param.middle_height)
+                {
+                    t = (float)(j - m_Param.middle_height) / (float)(m_LocusPoint - m_Param.middle_height - 1);
+                    one_width = m_Param.middleWidth * (1 - t) + m_Param.highWidth*t;
+                }
+                else
+                {
+                    t = (float)j / (float)m_Param.middle_height;
+                    one_width = m_Param.lowWidth*(1 - t) + m_Param.middleWidth * t;
+                }
+                
+
+                pos *= one_width *(frand()*0.2f + 0.8f);
+            }
 
             //êLÇ—ÇåvéZ
             pos += m_Param.vec * one_point_len*(float)j;

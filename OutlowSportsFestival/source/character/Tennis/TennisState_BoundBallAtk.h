@@ -1,39 +1,5 @@
 #pragma once
 
-#include "TennisPlayer.h"
-#include "../../Library/Bullet/BulletSystem.h"
-#include "../../Damage/Damage.h"
-
-//****************************************************
-//	テニス_ボールバウンド攻撃クラス
-//****************************************************
-
-class TennisState_BoundBallAtk :public TennisState
-{
-public:
-    class ControllClass
-    {
-    public:
-        virtual ~ControllClass(){}
-        virtual Vector3 GetBoundVec() = 0;
-    };
-
-    TennisState_BoundBallAtk(
-        ControllClass* pControllClass   //バウンド方向をコントロールするクラス(終了時にdeleteする)
-        );
-
-    ~TennisState_BoundBallAtk();
-
-    void Enter(TennisPlayer* t)override;
-    void Execute(TennisPlayer* t)override;
-    void Exit(TennisPlayer* t)override;
-
-private:
-    ControllClass* const m_pControllClass;
-    int                  m_Timer;
-};
-
-
 //****************************************************
 //	テニス_バウンドするボールクラス
 //****************************************************
@@ -42,6 +8,9 @@ private:
 #include "../../GameSystem/ForwardDecl.h"
 #include "../../utillity/Locus.h"
 #include "../../Render/LightObject.h"
+#include "TennisPlayer.h"
+#include "../../Library/Bullet/BulletSystem.h"
+#include "../../Damage/Damage.h"
 
 class TennisBoundBall :public GameObjectBase, public BallBase
 {

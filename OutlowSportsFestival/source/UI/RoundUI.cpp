@@ -108,10 +108,10 @@ void RoundUI::NumberRender(int num, int posX, int sizeX, float t)
         sizeX,
         160,
 
-        (num % 5) * 140,
-        (num / 5) * 130 + 515,
-        140,
-        120,
+        (num % 10) * 100, 
+        0,
+        100,
+        100,
 
         RS_COPY,
         D3DCOLOR_COLORVALUE(1, 1, 1, min(1, t*2.0f)*m_T)
@@ -128,9 +128,9 @@ void RoundUI::NumberRender(int num, int posX, int sizeX, float t)
         sizeX + UpX,
         160 + UpY,
 
-        (num % 5) * 140,
-        (num / 5) * 100 + 515,
-        140,
+        (num / 10) * 100,
+        0,
+        100,
         100,
 
         RS_ADD,

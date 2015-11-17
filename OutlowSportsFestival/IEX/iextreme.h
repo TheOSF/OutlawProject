@@ -28,7 +28,7 @@
 
 //ì¸óÕï˚ñ@êÿÇËë÷Ç¶
 
-#if TRUE
+#if FALSE
 
 #define OUTLAW2_CONTROLL_TYPE_KEY_BORD
 
@@ -369,7 +369,9 @@ inline float Vector3Distance(const Vector3& p1, const Vector3& p2)
 
 inline RADIAN Vector3Radian(const Vector3& p1, const Vector3& p2)
 {
-    return acosf(Vector3Dot(p1, p2) / (p1.Length()*p2.Length()));
+    float d = Vector3Dot(p1, p2) / (p1.Length()*p2.Length());
+    d = fClamp(d, 1, -1);
+    return acosf(d);
 }
 
 //------------------------------------------------------

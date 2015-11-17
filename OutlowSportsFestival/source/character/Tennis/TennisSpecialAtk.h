@@ -3,7 +3,7 @@
 #include "TennisPlayer.h"
 #include "../../Ball/Ball.h"
 #include "../../Damage/Damage.h"
-#include "../../utillity/Locus.h"
+#include "../../utillity/LocusHDR.h"
 #include "../../Render/MeshRenderer.h"
 
 //***************************************************
@@ -15,7 +15,7 @@ class TennisSpecialBall :public GameObjectBase, public BallBase
 public:
 
     //コンストラクタ
-    TennisSpecialBall(TennisPlayer* t, BallBase::Params& param);
+    TennisSpecialBall(TennisPlayer* t, CrVector3 pos, CrVector3 move);
     ~TennisSpecialBall();
 
     bool Update();
@@ -25,20 +25,14 @@ private:
     TennisPlayer* const m_pTennis;
     LpMeshRenderer		m_pMeshRenderer;
     DamageShpere		m_Damage;
-    UINT                m_DeleteFrame;
-    D3DXQUATERNION		m_Ballrot;
-    Locus               m_Locus;
-    Matrix              m_BaseMatrix;
-    bool                m_DeleteFlag;
-
-    bool isOutofField()const;
+    LocusHDR            m_Locus;
+    RADIAN              m_Rotate;
+    int                 m_NoDamageFrame;
 
     void UpdateDamageClass();
     void UpdateMesh();
-    void UpdateLocusColor();
     void UpdateMove();
     void UpdateWallCheck();
-    void ToNoWork();
 
     void Counter(CharacterBase* pCounterCharacter)override;
 };
@@ -64,6 +58,9 @@ public:
     void Exit(TennisPlayer* t)override;
 
 private:
+
+    TennisPlayer* const  m_pTennis;
+    int                  m_Timer;
 
 };
 

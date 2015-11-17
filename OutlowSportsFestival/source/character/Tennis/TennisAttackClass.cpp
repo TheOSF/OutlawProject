@@ -13,27 +13,28 @@ TennisAttackClass::TennisAttackClass(
     m_Timer(0),
     m_ComboCount(-1),
     m_pStateFunc(&TennisAttackClass::State_NextAtk),
-    m_Locus(8),
-    m_DamageHitCount(0),
-    m_HitStopCount(0)
+    m_Locus(6),
+    m_DamageHitCount(0)
 {
     m_Damage.m_Enable = false;
 
     m_Locus.m_Division = 5;
     //m_Locus.m_pTexture = DefResource.Get(Resource::TextureType::Locus1);
 
-    Vector4 EffectColor = CharacterBase::GetPlayerColorF(m_pOwner->m_PlayerInfo.number).toVector4();
+    Vector4 EffectColor = Vector4(1, 1, 1, 0.5f);// CharacterBase::GetPlayerColorF(m_pOwner->m_PlayerInfo.number).toVector4();
     EffectColor.w = 0.5f;
 
     m_Locus.m_StartParam.Color = EffectColor;
     m_Locus.m_StartParam.HDRColor = EffectColor;
-    m_Locus.m_StartParam.Width = 1.2f;
+    m_Locus.m_StartParam.Width = 0.8f;
 
     EffectColor.w = 0;
 
     m_Locus.m_EndParam.Color = EffectColor;
     m_Locus.m_EndParam.HDRColor = EffectColor;
-    m_Locus.m_EndParam.Width = 0.1f;
+    m_Locus.m_EndParam.Color.w = 0;
+    m_Locus.m_EndParam.HDRColor.w = 0;
+    m_Locus.m_EndParam.Width = 0.5f;
 }
 
 TennisAttackClass::~TennisAttackClass()
@@ -48,18 +49,9 @@ TennisAttackClass::~TennisAttackClass()
 
 void TennisAttackClass::Update()
 {
-    m_pOwner->m_Renderer.Update(1);
     chr_func::CreateTransMatrix(m_pOwner, m_pOwner->m_ModelSize, &m_pOwner->m_Renderer.m_TransMatrix);
 
     (this->*m_pStateFunc)();
-
-
-    //キャラクタ更新
-    {
-        TennisHitEvent HitEvent(m_pOwner);
-
-        chr_func::UpdateAll(m_pOwner, &HitEvent);
-    }
 
 }
 
@@ -75,9 +67,29 @@ void TennisAttackClass::State_Attack()
 {
     AttackInfo* const pNowAtk = m_AttackInfoArray.at(m_ComboCount);
 
-    if (m_HitStopCount > 0)
+
+    //コンボ実行フラグのチェック
+    if (m_DoCombo == false &&
+        pNowAtk->isComboButtonFrame(m_Timer))
     {
-        --m_HitStopCount;
+        m_DoCombo = m_pEvent->isDoCombo();
+    }
+
+    if (pNowAtk->isHitStopFrame())
+    {
+        TennisHitEvent HitEvent(m_pOwner);
+
+        //壁との接触判定
+        chr_func::CheckWall(m_pOwner);
+
+        //床との接触判定
+        chr_func::CheckGround(m_pOwner);
+
+        //あたり判定を取る
+        chr_func::DamageCheck(m_pOwner, &HitEvent);
+
+        pNowAtk->HitStopUpdate();
+
         return;
     }
 
@@ -116,13 +128,6 @@ void TennisAttackClass::State_Attack()
         }
     }
 
-    //コンボ実行フラグのチェック
-    if (m_DoCombo == false &&
-        pNowAtk->isComboButtonFrame(m_Timer))
-    {
-        m_DoCombo = m_pEvent->isDoCombo();
-    }
-
     //コンボ移行
     if (!isLastAtk() &&
         m_DoCombo    &&
@@ -139,6 +144,16 @@ void TennisAttackClass::State_Attack()
     {
         m_pStateFunc = &TennisAttackClass::State_End;
     }
+
+
+    //キャラクタ更新
+    {
+        TennisHitEvent HitEvent(m_pOwner);
+
+        m_pOwner->m_Renderer.Update(1);
+
+        chr_func::UpdateAll(m_pOwner, &HitEvent);
+    }
 }
 
 
@@ -148,6 +163,8 @@ void TennisAttackClass::State_NextAtk()
     MyAssert(!isLastAtk(), "攻撃情報クラスがない状態でTennisAttackClass::State_NextAtkが実行されました");
 
     AttackInfo* const pNowAtk = m_AttackInfoArray.at(++m_ComboCount);
+
+    m_Damage.m_Enable = false;
 
     pNowAtk->DamageParamSet(&m_Damage);
     pNowAtk->DamagePosSet(&m_Damage, m_pOwner);

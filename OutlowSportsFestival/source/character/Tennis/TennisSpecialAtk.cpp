@@ -2,185 +2,244 @@
 #include "../../Ball/UsualBall.h"
 #include "../../Camera/Camera.h"
 #include "../../Collision/Collision.h"
+#include "../CharacterFunction.h"
+#include "../../Sound/Sound.h"
+#include "TennisPlayerState_UsualMove.h"
 
-
-TennisSpecialBall::TennisSpecialBall(TennisPlayer* t, BallBase::Params& param) :
-m_Locus(20),
-m_DeleteFlag(false),
-m_pTennis(t)
+TennisSpecialBall::TennisSpecialBall(TennisPlayer* t, CrVector3 pos, CrVector3 move) :
+m_pTennis(t),
+m_Locus(10),
+m_Rotate(0),
+m_NoDamageFrame(0)
 {
-    LPIEXMESH		pBallMesh;
+    const float DamageValue = 10.0f;
 
-    //パラメータ代入
-    m_Params = param;
+    {
+        //パラメータ初期化
+        m_Params.pos = pos;
+        m_Params.move = move;
+        
+        m_Params.pParent = m_pTennis;
+        m_Params.scale = 0.5f;
+        m_Params.type = BallBase::Type::_TennisSpecialAtk;
+    }
 
-    //ダメージ判定のパラメータを代入
-    m_Damage.pBall = this;
-    m_Damage.pParent = param.pParent;
-    m_Damage.m_Param.size = 1;	//大きさはボールによって異なる?
-    m_Damage.type = DamageBase::Type::_WeekDamage;
-    m_Damage.Value = 0.1f;
-    m_Damage.m_Enable = true;
-    UpdateDamageClass();
+    {
+        //メッシュレンダラ作成
+        iexMesh* pMesh;
 
-    //ボールのメッシュを作成
-    UsualBall::GetBallMesh(param.pParent->m_PlayerInfo.chr_type, &pBallMesh);
+        UsualBall::GetBallMesh(CharacterType::_Tennis, &pMesh);
 
-    //メッシュのレンダラー作成(最終的にメッシュを使いまわして描画するべき)
-    m_pMeshRenderer = new MeshRenderer(
-        pBallMesh,
-        false,
-        MeshRenderer::RenderType::UseColor
-        );
+        m_pMeshRenderer = new MeshRenderer(
+            pMesh,
+            false,
+            MeshRenderer::RenderType::UseColorSpecular
+            );
+    }
 
-    D3DXQuaternionIdentity(&m_Ballrot);
 
-    UpdateMesh();
+    {
+        //ダメージ初期化
+        m_Damage.pBall = this;
+        m_Damage.m_Param.size = 1.5f;
+        m_Damage.m_VecPower.x = 0.8f;
+        m_Damage.m_VecPower.y = 0.2f;
+        m_Damage.m_VecType = DamageShpere::DamageVecType::MemberParam;
+        m_Damage.pParent = m_pTennis;
+        m_Damage.type = DamageBase::Type::_VanishDamage;
+        m_Damage.Value = DamageValue;
+    }
 
-    //軌跡の設定
-    m_Locus.m_Division = 0;
-    m_Locus.m_StartParam.Width = 0.4f;
-    m_Locus.m_EndParam.Width = 0.1f;
+    {
+        //軌跡
+        const COLORf Color = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number);
 
-    UpdateLocusColor();
+        m_Locus.m_StartParam.Color = Color.toVector4();
+        m_Locus.m_StartParam.Color.w = 0.3f;
+        m_Locus.m_StartParam.HDRColor = m_Locus.m_StartParam.Color;
+
+        m_Locus.m_StartParam.HDRColor.w = 0.5f;
+
+        m_Locus.m_EndParam.Color = m_Locus.m_StartParam.Color;
+        m_Locus.m_EndParam.Color.w = 0;
+
+        m_Locus.m_EndParam.HDRColor = m_Locus.m_StartParam.HDRColor;
+        m_Locus.m_EndParam.HDRColor.w = 0;
+
+
+        {
+            //メッシュを光らせる
+            COLORf Color = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number);
+
+            m_pMeshRenderer->m_HDR = Vector3(1, 1, 1) * 0.1f;
+
+        }  
+    }
 }
 
 TennisSpecialBall::~TennisSpecialBall()
 {
     delete m_pMeshRenderer;
+    m_pMeshRenderer = nullptr;
 }
-
 
 bool TennisSpecialBall::Update()
 {
-    UpdateMove();
-    UpdateMesh();
-    UpdateDamageClass();
 
-    if (m_Params.type != BallBase::Type::_DontWork)
-    {
-        UpdateWallCheck();
-    }
 
-    Vector3 v;
-    Vector3Cross(v, m_Params.move, DefCamera.GetForward());
-    v.Normalize();
-
-    m_Locus.AddPoint(m_Params.pos, v);
-
-    return !m_DeleteFlag && !isOutofField() && m_DeleteFrame > 0;
+    return !isOutOfField();
 }
-
 
 bool TennisSpecialBall::Msg(MsgType mt)
 {
-
     return false;
 }
 
-
-bool TennisSpecialBall::isOutofField()const
-{
-    return Vector3Length(m_Params.pos) > 100;
-}
-
-
 void TennisSpecialBall::UpdateDamageClass()
 {
-    m_Damage.m_Vec = m_Params.move;
     m_Damage.m_Param.pos = m_Params.pos;
+    m_Damage.m_Vec = m_Params.move;
 }
 
 void TennisSpecialBall::UpdateMesh()
 {
-    //メッシュのワールド変換行列を更新する
+    Matrix M;
+    const float Scale = UsualBall::GetBallScale(CharacterType::_Tennis);
 
-    Matrix m;
-    const float s = UsualBall::GetBallScale(m_Params.pParent->m_PlayerInfo.chr_type);
+    D3DXMatrixRotationY(&M, m_Rotate);
 
-    D3DXMatrixScaling(&m, s, s, s);	//大きさはボールによって変える必要がある
+    {
+        M._11 *= Scale;
+        M._12 *= Scale;
+        M._13 *= Scale;
 
-    m._41 = m_Params.pos.x;
-    m._42 = m_Params.pos.y;
-    m._43 = m_Params.pos.z;
+        M._21 *= Scale;
+        M._22 *= Scale;
+        M._23 *= Scale;
 
-    m_pMeshRenderer->SetMatrix(m);
-}
+        M._31 *= Scale;
+        M._32 *= Scale;
+        M._33 *= Scale;
+    }
 
-void TennisSpecialBall::UpdateLocusColor()
-{
-    const DWORD Color = CharacterBase::GetPlayerColor(m_Params.pParent->m_PlayerInfo.number);
+    {
+        M._41 = m_Params.pos.x;
+        M._42 = m_Params.pos.y;
+        M._43 = m_Params.pos.z;
+    }
 
-    m_Locus.m_StartParam.Color = Vector4(
-        float((Color >> 16) & 0xFF) / 255.f,
-        float((Color >> 8) & 0xFF) / 255.f,
-        float(Color & 0xFF) / 255.f,
-        0.5f
-        );
-
-    m_Locus.m_EndParam.Color = Vector4(1, 1, 1, 0);
+    m_pMeshRenderer->SetMatrix(M);
 }
 
 void TennisSpecialBall::UpdateMove()
 {
-
-    m_Params.pos += m_Params.move;
-
-    //敵に当たっていたら攻撃判定をなくす
-    if (m_Damage.HitCount > 0)
-    {
-        //攻撃判定のない状態にする
-        ToNoWork();
-    }
-}
-
-void TennisSpecialBall::UpdateWallCheck()
-{
-    Vector3 Out, Pos(m_Params.pos), Vec(m_Params.move);
-    float Dist = m_Params.move.Length()*2.0f;
-    int Material;
-
-    Vec.Normalize();
+    Vector3 out, pos(m_Params.pos), vec(Vector3Normalize(m_Params.move));
+    float dist = m_Params.move.Length();
+    int material;
 
     if (DefCollisionMgr.RayPick(
-        &Out,
-        &Pos,
-        &Vec,
-        &Dist,
-        &Material,
-        CollisionManager::RayType::_Usual
-        )
-        )
+        &out,
+        &pos,
+        &vec,
+        &dist,
+        &material,
+        CollisionManager::RayType::_Character
+        ) != nullptr)
     {
-        //攻撃判定のない状態にする
-        ToNoWork();
+        vec.y = 0;
+        
+        m_Params.move = Vector3Refrect(m_Params.move, vec);
     }
 
+    m_Params.pos += m_Params.move;
 }
+
 
 void TennisSpecialBall::Counter(CharacterBase* pCounterCharacter)
 {
-    m_Damage.pParent = m_Params.pParent = pCounterCharacter;
-
-    UpdateLocusColor();
+    m_NoDamageFrame = 5;
 }
 
-void TennisSpecialBall::ToNoWork()
-{
-    //攻撃判定のない状態にする
+//---------------------------------------------------------------------------//
+//---------------------------------------------------------------------------//
 
-    if (m_DeleteFlag)
+TennisState_SpecialAtk::TennisState_SpecialAtk(TennisPlayer* t) :
+m_pTennis(t),
+m_Timer(0)
+{
+
+}
+
+TennisState_SpecialAtk::~TennisState_SpecialAtk()
+{
+
+}
+
+// ステート開始
+void TennisState_SpecialAtk::Enter(TennisPlayer* t)
+{
+    //以前の移動値をリセット
+    chr_func::XZMoveDown(t, 1);
+    
+    //モーションセット
+    m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_SpecialAtk);
+
+    //キュイーンＳＥ
+    Sound::Play(Sound::Skill);
+
+    //自分以外の時間をとめる
+    std::list<GameObjectBase*> MoveList;
+    MoveList.push_back(t);
+    DefGameObjMgr.FreezeOtherObjectUpdate(MoveList, 55);
+}
+
+// ステート実行
+void TennisState_SpecialAtk::Execute(TennisPlayer* t)
+{
+    const int ShotFrame = 55;
+    const int EndFrame = 85;
+    const float BallSpeed = 0.5f;
+    //時間カウント
+    ++m_Timer;
+
+    //発射
+    if (m_Timer == ShotFrame)
     {
-        return;
+        Vector3 pos, move;
+
+        pos = m_pTennis->m_Params.pos;
+        pos.y = UsualBall::UsualBallShotY;
+
+        chr_func::GetFront(m_pTennis, &move);
+        move *= BallSpeed;
+        
+        //ボール作成
+        new TennisSpecialBall(
+            m_pTennis,
+            pos, 
+            move
+            );
+
+        //ＳＥ
+        Sound::Play(Sound::Beam2);
     }
 
-    m_Params.type = BallBase::Type::_DontWork;
-    m_Damage.m_Enable = false;
-    m_DeleteFlag = true;
 
-    m_BaseMatrix = m_pMeshRenderer->GetMatrix();
+    //一定時間で通常ステートへ
+    if (m_Timer > EndFrame)
+    {
+        m_pTennis->SetState(TennisState_PlayerControll_Move::GetPlayerControllMove(m_pTennis));
+    }
+   
+    
+    //基本的な更新
+    {
+        chr_func::UpdateAll(t, &DamageManager::HitEventBase());
+    }
+}
 
-    m_BaseMatrix._41 = 0;
-    m_BaseMatrix._42 = 0;
-    m_BaseMatrix._43 = 0;
+// ステート終了
+void TennisState_SpecialAtk::Exit(TennisPlayer* t)
+{
+
 }

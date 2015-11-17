@@ -57,11 +57,7 @@ void SoccerState_SmallDamage::Enter(SoccerPlayer* s)
 	//ダメージモーションパラメーターを作成する
 	CharacterDamageMotion::Params Param;
 
-	Param.AllFrame = 40;
 	Param.damage_vec = m_Damage_vec;
-	
-	Param.NoDamageFrame = 10;
-
 	//ひるみクラスを作成
 	m_pDamageMotionClass = new CharacterDamageMotion(
 		m_pSoccer,

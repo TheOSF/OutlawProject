@@ -139,7 +139,7 @@ void GameInitializer_DevelopMode::GameCreate()
     {// Bullet
 
         DefBulletSystem.StartUp();
-        DefBulletSystem.InitializeBulletPhysics(btVector3(0, -9.8f, 0)*3.5f, iexSystem::Device);
+        DefBulletSystem.InitializeBulletPhysics(btVector3(0, -9.8f, 0)*3.5f);
 
         //更新クラスの作成
         new BulletUpdateGameobject();
@@ -150,7 +150,7 @@ void GameInitializer_DevelopMode::GameCreate()
         //ＵＩ用文字列画像
         DefResource.Regist(
             Resource::TextureType::UI_strings,
-            new iex2DObj("DATA\\Texture\\title_raund_nowlording.png")
+            new iex2DObj("DATA\\UI\\ＵＩ戦闘中文字.png")
             );
 
         //ＵＩ用プレイヤーネーム
@@ -229,7 +229,7 @@ void GameInitializer_DevelopMode::GameCreate()
 
 
     {
-        Kasennziki_Manager* p = new Kasennziki_Manager(3);
+        Kasennziki_Manager* p = new Kasennziki_Manager(5);
         p->CreateStage();
     }
 
@@ -237,9 +237,9 @@ void GameInitializer_DevelopMode::GameCreate()
     //キャラクタ作成
     {
         CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Baseball);
-    
-        CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Soccer);
-        CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Soccer);
+        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Soccer);
+     
+        //CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Soccer);
+        //CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Baseball);
     }
 }

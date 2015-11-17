@@ -4,6 +4,8 @@
 #include "Tennis_HitEvent.h"
 #include "../../Effect/EffectFactory.h"
 #include "../../Sound/Sound.h"
+#include "../../Camera/Camera.h"
+
 
 TennisState_Rolling::TennisState_Rolling(CallBackClass* pCallBackClass) :
 m_pCallBackClass(pCallBackClass)
@@ -32,12 +34,13 @@ void TennisState_Rolling::Enter(TennisPlayer* t)
 // ステート実行
 void TennisState_Rolling::Execute(TennisPlayer* t)
 {
-    const int EndFrame = 30;          //終了までのフレーム
-    const int CanControllFrame = 3;   //移動方向をコントロールできるフレーム
-    const int NoDamageFrame = 10;     //無敵時間
+    const int EndFrame = 27;          //終了までのフレーム
+    const int CanControllFrame = 5;   //移動方向をコントロールできるフレーム
+    const int NoDamageFrame = 15;     //無敵時間
+    const int CanCancel = 15;         //キャンセル可能フレーム
 
-    const float MoveValue = 0.7f;    //移動量
-    const float DownValue = 0.06f;     //減速量
+    const float MoveValue = 0.5f;    //移動量
+    const float DownValue = 0.135f;     //減速量
 
     //フレームカウント更新
     ++m_Timer;
@@ -45,7 +48,7 @@ void TennisState_Rolling::Execute(TennisPlayer* t)
     //モーションセット
     if (m_Timer == 1)
     {
-        t->m_Renderer.SetMotion(TennisPlayer::_mt_Rolling);
+        t->m_Renderer.SetMotion(TennisPlayer::_mt_EscapeStep);
     }
 
     //移動方向をコントロール
@@ -57,18 +60,23 @@ void TennisState_Rolling::Execute(TennisPlayer* t)
         if (Vec != Vector3Zero)
         {
             m_Vec = Vec;
+            chr_func::AngleControll(t, t->m_Params.pos + m_Vec, 0.3f);
         }
     }
 
     //コントロールできるフレームが終わった場合向きと移動を設定
     if (m_Timer == CanControllFrame)
     {
-        m_Vec.y = 0;
-        m_Vec.Normalize();
-
         chr_func::AngleControll(t, t->m_Params.pos + m_Vec);
 
         chr_func::AddMoveFront(t, MoveValue, MoveValue);
+    }
+
+
+    //キャンセル行動
+    if (CanCancel < m_Timer)
+    {
+        m_pCallBackClass->CancelUpdate();
     }
 
     //終了
@@ -78,61 +86,6 @@ void TennisState_Rolling::Execute(TennisPlayer* t)
         t->SetState(TennisState_PlayerControll_Move::GetPlayerControllMove(t));
     }
 
-    //煙エフェクト
-    {
-        //スタート時
-        if (m_Timer == 2)
-        {
-            for (int i = 0; i < 2; ++i)
-            {
-                EffectFactory::Smoke(
-                    t->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
-                    Vector3Zero,
-                    1.5f,
-                    0xFFFFA080,
-                    true
-                    );
-            }
-        }
-
-        //軌跡
-        if (m_Timer < 5)
-        {
-            for (int i = 0; i < 2; ++i)
-            {
-                EffectFactory::Smoke(
-                    t->m_Params.pos + Vector3(0, 2, 0) + Vector3Rand() * 0.2f, 
-                    Vector3Zero,
-                    1.0f + frand()*0.5f,
-                    0x20FFA080
-                    );
-            }
-        }
-
-        //着地時
-        if (m_Timer == 43)
-        {
-            for (int i = 0; i < 2; ++i)
-            {
-                EffectFactory::Smoke(
-                    t->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
-                    Vector3Zero,
-                    2.5f,
-                    0xFFFFA080,
-                    true
-                    );
-            }
-        }
-
-    }
-
-    //サウンド
-    if (m_Timer == EndFrame - 25)
-    {
-        //ズザー音
-        Sound::Play(Sound::Sand1);
-    }
-
     //基本的な更新
     {
         DamageManager::HitEventBase NoDmgHitEvent;   //ノーダメージ
@@ -140,7 +93,11 @@ void TennisState_Rolling::Execute(TennisPlayer* t)
 
 
         //移動量の減衰
-        chr_func::XZMoveDown(t, DownValue);
+        if (m_Timer > EndFrame - 13)
+        {
+            chr_func::XZMoveDown(t, DownValue);
+        }
+        
 
         //無敵フレームかによってヒットイベントクラスの分岐
         if (m_Timer < NoDamageFrame)
@@ -151,13 +108,24 @@ void TennisState_Rolling::Execute(TennisPlayer* t)
         {
             chr_func::UpdateAll(t, &UsualHitEvent);
         }
-        
+
         //モデル更新
         t->m_Renderer.Update(1);
 
         //行列更新
         chr_func::CreateTransMatrix(t, t->m_ModelSize, &t->m_Renderer.m_TransMatrix);
     }
+
+    //軌跡
+    //{
+    //    EffectFactory::SmokeParticle(
+    //        t->m_Params.pos + Vector3(0, 2, 0) + Vector3Rand() * 0.2f,
+    //        Vector3Zero,
+    //        25,
+    //        0.5f + frand()*0.5f,
+    //        0x10FFA080
+    //        );
+    //}
 }
 
 // ステート終了

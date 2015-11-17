@@ -50,6 +50,8 @@ public:
     //ボールが相打ちに行ったときに自動的に呼ばれる関数(戻り値：相打ちが成功したかどうか)
     virtual bool HitBall(BallBase* pBall){ return true; }
 
+    bool isOutOfField()const;
+
 	//引数のボールがカウンター可能かどうか
 	static bool isCanCounter(const BallBase* pBall);
 };

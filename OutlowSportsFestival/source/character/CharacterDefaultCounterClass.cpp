@@ -106,12 +106,13 @@ void CharacterDefaultCounter::Pose()
             const Vector3 pos = m_pOwner->m_Params.pos + Vector3(0, 3.5f, 0);
             EffectFactory::Counter(pos, 6.5f);
 
-            new ImpactLightObject(
+            /*new ImpactLightObject(
                 pos,
                 15.0f,
                 Vector3(1, 1, 1)*0.5f, 
                 0.05f
                 );
+                */
         }
 
         //サウンド
@@ -317,8 +318,6 @@ void CharacterDefaultCounter::Shot()
         //ボール側のカウンター処理
         m_pCounterBall->Counter(m_pOwner);
 
-        COLORf EffectColor(CharacterBase::GetPlayerColor(m_pCounterBall->m_Params.pParent->m_PlayerInfo.number));
-        
         //エフェクトの設定
         new HitEffectObject(
             m_pCounterBall->m_Params.pos,

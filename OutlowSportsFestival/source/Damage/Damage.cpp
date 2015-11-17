@@ -86,15 +86,22 @@ void DamageShpere::CalcPosVec(
         *pOutVec = Vector3AxisX;
         break;
     }
-    
-    //³‹K‰»
-    *pOutVec = Vector3Normalize(*pOutVec);
+
 
     //‚x²ˆÚ“®‚ÌŒÅ’è‚Ìê‡
     if (m_VecType == DamageVecType::CenterToPosXZ || 
         m_VecType == DamageVecType::PosToCenterXZ )
     {
+        const float l = Vector3XZLength(*pOutVec);
+
+        pOutVec->x /= l;
+        pOutVec->z /= l;
         pOutVec->y = 1.0f;
+    }
+    else
+    {
+        //³‹K‰»
+        *pOutVec = Vector3Normalize(*pOutVec);
     }
 
     //•ûŒüƒpƒ[‚ğ‚©‚¯‚é
@@ -216,14 +223,20 @@ void DamageCapsure::CalcPosVec(
             break;
         }
 
-        //³‹K‰»
-        *pOutVec = Vector3Normalize(*pOutVec);
-
         //‚x²ˆÚ“®‚ÌŒÅ’è‚Ìê‡
         if (m_VecType == DamageVecType::CenterToPosXZ ||
             m_VecType == DamageVecType::PosToCenterXZ)
         {
+            const float l = Vector3XZLength(*pOutVec);
+
+            pOutVec->x /= l;
+            pOutVec->z /= l;
             pOutVec->y = 1.0f;
+        }
+        else
+        {
+            //³‹K‰»
+            *pOutVec = Vector3Normalize(*pOutVec);
         }
 
         //•ûŒüƒpƒ[‚ğ‚©‚¯‚é

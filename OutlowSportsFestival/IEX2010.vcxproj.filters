@@ -342,7 +342,6 @@
     <ClInclude Include="source\character\Tennis\TennisState_BoundBallAtk.h" />
     <ClInclude Include="source\Effect\AnimationBordRenderer.h" />
     <ClInclude Include="source\Effect\EffectFactory.h" />
-    <ClInclude Include="source\character\Tennis\TennisState_Shot.h" />
     <ClInclude Include="source\Ball\PhysicallyMoveBall.h" />
     <ClInclude Include="source\Effect\ParticleHDRRenderer.h" />
     <ClInclude Include="source\Effect\ImpactLightObject.h" />

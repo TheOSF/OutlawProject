@@ -29,18 +29,6 @@ UsualBall::UsualBall(
     m_FirstParentType(params.pParent->m_PlayerInfo.chr_type)
 {
 
-    class PhysicUpdateCallBack :public MeshRenderer::PreRenderCallBack
-    {
-        RigidBody* const pRigidBody;
-    public:
-        PhysicUpdateCallBack(RigidBody* const pRigidBody) :pRigidBody(pRigidBody){}
-
-        void Execute(MeshRenderer* pRenderer, Type type)
-        {
-
-        }
-    };
-
 	LPIEXMESH		pBallMesh;
 
 	//パラメータ代入
@@ -318,16 +306,6 @@ void UsualBall::Counter(CharacterBase* pCounterCharacter)
     //エフェクトカウント設定
     m_EffectFrameCount = 45;
 
-
-    //EffectFactory::CircleAnimationBillbord(
-    //    m_Params.pos,
-    //    Vector3Zero,
-    //    Vector3Zero,
-    //    Vector2(8, 10), 
-    //    0xFFFFFFFF,
-    //    RS_ADD
-    //    );
-
 }
 
 void UsualBall::ToNoWork()
@@ -452,7 +430,7 @@ bool UsualBall::StateFlyMove()
 
     //パーティクル
     {
-        const float EffectScale = UsualBall::GetBallScale(m_FirstParentType);
+        const float EffectScale = 0.1f;// UsualBall::GetBallScale(m_FirstParentType);
 
         m_EffectFrameCount = max(m_EffectFrameCount - 1, 0);
 
@@ -464,7 +442,7 @@ bool UsualBall::StateFlyMove()
                 Vector3Zero,
                 Vector3Zero,
                 Vector2(23.f, 23.f)*EffectScale*((float)m_EffectFrameCount / 45.0f),
-                0xFFFFFFFF,
+                0x80FFFFFF,
                 CharacterBase::GetPlayerColor(m_Params.pParent->m_PlayerInfo.number)
                 );
         }
@@ -543,10 +521,6 @@ bool UsualBall::StatePhysicMove()
         m_pMeshRenderer->m_HDR *= 0.92f;
     }
 
-    //スケールを0.75倍に…？
-    {
-        
-    }
 
     //フィールド外,もしくは消滅タイマーが０　なら更新失敗
     return !isOutofField() && m_DeleteFrame > 0;

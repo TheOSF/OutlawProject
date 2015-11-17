@@ -26,6 +26,11 @@ BallBase::~BallBase()
 	
 }
 
+bool BallBase::isOutOfField()const
+{
+    return m_Params.pos.Length() > 150.f;
+}
+
 bool BallBase::isCanCounter(const BallBase* pBall)
 {
 	//カウンター可能なボールかどうか

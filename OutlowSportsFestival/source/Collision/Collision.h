@@ -15,6 +15,7 @@ public:
 	{
 		_Usual,
         _Ball,
+        _Character
 	};
 
 	CollisionBase();

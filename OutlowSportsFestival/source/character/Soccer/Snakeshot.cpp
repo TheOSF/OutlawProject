@@ -8,61 +8,81 @@
 #include "character/CharacterFunction.h"
 #include "character/CharacterManager.h"
 #include "Ball/BallFadeOutRenderer.h"
+#include "../../Effect/SoccerSpecialHitEffect.h"
+#include "../../GameSystem/ResourceManager.h"
+
+#include "../../Effect/AnimationBordRenderer.h"
+
+#include "../../Effect/EffectFactory.h"
+#include "../../Effect/BlurImpact.h"
+
 
 Snakeshot::Snakeshot(
-	BallBase::Params	params,			//ボールパラメータ
-	float				damage_val   	//ダメージ量
-	) :
-	m_DeleteFrame(180),
-	m_Locus(30),
-	m_pRigitBody(nullptr)
+    CrVector3 pos,
+    CrVector3 vec,
+    CharacterBase* pParent,
+    RATIO          power
+    ) :
+    m_pRigidBody(nullptr),
+    m_pOriginParent(pParent),
+    m_pTornadoEffect(nullptr),
+    m_Timer(0)
 {
-	LPIEXMESH		pBallMesh;
-
-	m_Locus.m_Division = 1;
-
-	//パラメータ代入
-	m_Params = params;
-	
-	//ダメージ判定のパラメータを代入
-	m_Damage.pBall = this;
-	m_Damage.pParent = params.pParent;
-	m_Damage.m_Param.size = 1;	//大きさはボールによって異なる可能性がある
-	m_Damage.type = DamageBase::Type::_VanishDamage;
-	m_Damage.Value = damage_val;
-	m_Damage.m_Enable = true;
-	UpdateDamageClass();
-
-
-	//ボールのメッシュを作成
-	UsualBall::GetBallMesh(params.pParent->m_PlayerInfo.chr_type, &pBallMesh);
-
-	//メッシュのレンダラー作成(最終的にメッシュを使いまわして描画するべき)
-	m_pMeshRenderer = new MeshRenderer(
-		pBallMesh,
-		false,
-		MeshRenderer::RenderType::UseColor
-		);
-
-
-	UpdateMesh();
-
-	//軌跡の設定
-	m_Locus.m_Division = 0;
-	m_Locus.m_StartParam.Width = 0.8f;
-	m_Locus.m_EndParam.Width = 0.1f;
-
-
-	UpdateLocusColor();
-
-	//物理パラメータ初期化
-	PhysicsParam.Friction = 0.8f;
-	PhysicsParam.Restitution = 0.25f;
-	PhysicsParam.Mass = 1.5f;
-
-	
 	m_pStatefunc = &Snakeshot::State_TargetDecision;
+
+    m_Params.pos = pos;
+    m_Params.move = vec * 0.5f;  //スピード
+    m_Params.pParent = pParent;
+    m_Params.scale = 1.0f;
+    m_Params.type = BallBase::Type::_Usual;
+
+    m_Angle = Vector3Zero;
+
+
+    //メッシュ設定
+    {
+        iexMesh* pMesh;
+
+        UsualBall::GetBallMesh(CharacterType::_Soccer, &pMesh); 
+
+        m_pMeshRenderer = new MeshRenderer(
+            pMesh,
+            false,
+            MeshRenderer::RenderType::UseColorSpecular
+            );
+
+        UpdateMesh();
+    }
+
+    //ダメージ設定
+    m_Damage.m_Param.size = 1.5f;
+    m_Damage.m_VecType = DamageShpere::DamageVecType::PosToCenterXZ;
+    m_Damage.m_VecPower = Vector2(0.5f, 0.5f);
+    m_Damage.pBall = this;
+    m_Damage.pParent = m_Params.pParent;
+    
+
+    //エフェクト
+    TornadoEffect::Param param;
+
+    param.highWidth = 0.25f;
+    param.middleWidth = 2.5f;
+    param.lowWidth = 0.25f;
+
+    param.Length = 2.2f;
+    param.LocusWidthStart = 0.35f;
+    param.LocusWidthEnd = 0.35f;
+    param.middle_height = 10;
+    param.right = Vector3AxisX;
+    param.vec = Vector3AxisY;
+    param.RotateSpeed = 0.4f;
+
+    m_pTornadoEffect = new TornadoEffect(param, 3, 30);
+
+
+    UpdateEffect();
 }
+
 Snakeshot::~Snakeshot()
 {
 	delete	m_pMeshRenderer;
@@ -70,23 +90,17 @@ Snakeshot::~Snakeshot()
 
 bool Snakeshot::Update()
 {
+    const bool ret = m_pStatefunc != &Snakeshot::State_Delete;
+
 	(this->*m_pStatefunc)();
 
-	{
-		Vector3 v;
-		Vector3Cross(v, m_Params.move, DefCamera.GetForward());
-		v.Normalize();
+    m_Params.pos += m_Params.move;
 
-		m_Locus.AddPoint(m_Params.pos, v);
-	}
+    UpdateDamageClass();
+    UpdateMesh();
+    UpdateEffect();
 
-
-	UpdateDamageClass();
-
-	
-
-
-	return m_pStatefunc != &Snakeshot::State_Delete;
+	return ret;
 }
 bool Snakeshot::Msg(MsgType mt)
 {
@@ -94,27 +108,21 @@ bool Snakeshot::Msg(MsgType mt)
 	return false;
 }
 
+//-------------------------------------------------------------------------
+
 void Snakeshot::State_TargetDecision()
 {
 	//ターゲット選択してState_ToTagetMoveに移行
 	//もしターゲットがなければState_NoWorkに移行
 
-
 	//ターゲット取得
 	m_pTarget = CalcTarget();
 
-	//ターゲットがいたら
-	if (m_pTarget != nullptr)
-	{
-		//State_ToTagetMoveに移行
-		m_pStatefunc = &Snakeshot::State_ToTagetMove;
-	}
-	else
-	{
-		//ターゲットがなければState_NoWorkに移行
-		m_pStatefunc = &Snakeshot::State_NoWork;
-	}
-
+    if (m_pTarget != nullptr)
+    {
+        //State_ToTagetMoveに移行
+        m_pStatefunc = &Snakeshot::State_ToTagetMove;
+    }
 }
 
 void Snakeshot::State_ToTagetMove()
@@ -129,16 +137,33 @@ void Snakeshot::State_ToTagetMove()
 	}
 
 	//敵に当たっていたら攻撃判定をなくす
-	if (m_Damage.HitCount > 0)
+    if (m_Damage.HitCount > 0 || isHitWall())
 	{
-		//攻撃判定のない状態にする
-		m_pStatefunc = &Snakeshot::State_NoWork;
-	}
+		//攻撃ステートにいこう
+		m_pStatefunc = &Snakeshot::State_Attack;
 
-	if (isHitWall())
-	{
-		//攻撃判定のない状態にする
-		m_pStatefunc = &Snakeshot::State_NoWork;
+        //カメラのゆれ
+        DefCamera.SetShock(Vector2(0.2f, 0.2f), 30);
+
+        State_Delete();
+
+        m_Timer = 0;
+
+        //エフェクト
+        new SoccerSpecialHit(
+            m_Params.pParent,
+            m_Params.pos,
+            1,
+            60
+            );
+
+        //ブラーエフェクト
+        new BlurImpactSphere(
+            m_Params.pos,
+            15,
+            140,
+            30
+            );
 	}
 
 	//ステージ範囲なら消去ステートへ
@@ -147,79 +172,48 @@ void Snakeshot::State_ToTagetMove()
 		m_pStatefunc = &Snakeshot::State_Delete;
 	}
 
-	Homing(m_pTarget->m_Params.pos);
-	UpdateMesh();
+    //パーティクル
+    EffectFactory::SmokeParticle(
+        m_Params.pos,
+        Vector3Rand()*0.01f,
+        15,
+        0.5f+frand()*0.5f,
+        0x20FFFFFF
+        );
 
+    m_Angle.y += 0.5f;
+
+	MoveHomingRotate(m_pTarget->m_Params.pos);
 }
+
+
 void Snakeshot::State_NoWork()
 {
-	//一定時間でState_Deleteに移行
+    m_Params.type = BallBase::Type::_DontWork;
 
-	ToNoWork();
-	//RigidBodyクラスの行列を自身に適用する
-	{
-
-		Matrix M;
-		Vector3 PrePos = m_Params.pos;
-
-		m_pRigitBody->Get_TransMatrix(M);
-
-		M = m_BaseMatrix * M;
-
-		m_pMeshRenderer->SetMatrix(M);
-
-		m_Params.pos = Vector3(M._41, M._42, M._43);
-		m_Params.move = m_Params.pos - PrePos;
-	}
-
-	
-	//寿命管理
-	{
-		//消滅タイマー
-		m_DeleteFrame--;
-
-		if (m_DeleteFrame == 0)
-		{
-			iexMesh* pMesh;
-
-			UsualBall::GetBallMesh(m_Params.pParent->m_PlayerInfo.chr_type, &pMesh);
-
-			new BallFadeOutRenderer(
-				pMesh,
-				m_BaseMatrix,
-				m_pRigitBody,
-				180
-				);
-
-			m_pRigitBody = nullptr;
-
-			m_pStatefunc = &Snakeshot::State_Delete;
-		}
-	}
-	//軌跡
-	m_Locus.m_StartParam.Color.w *= 0.95f;
-
-	if (m_Locus.m_StartParam.Color.w < 0.1f)
-	{
-		m_Locus.m_Visible = false;
-	}
-	if (m_Locus.m_Visible)
-	{
-		//軌跡の点を追加
-		{
-			Vector3 v;
-			Vector3Cross(v, m_Params.move, DefCamera.GetForward());
-			v.Normalize();
-
-			m_Locus.AddPoint(m_Params.pos, v);
-		}
-	}
+    m_pStatefunc = &Snakeshot::State_Delete;
 }
 
 
 void Snakeshot::State_Delete()
 {
-	//何もしない
+    if (m_pTornadoEffect != nullptr)
+    {
+        m_pTornadoEffect->Destroy();
+        m_pTornadoEffect = nullptr;
+    }
+}
+
+void Snakeshot::State_Attack()
+{
+    //回転しながら停滞
+    m_Params.type = BallBase::Type::_DontWork;
+    m_Damage.m_Enable = false;
+    
+    if (++m_Timer > 120)
+    {
+        m_pStatefunc = &Snakeshot::State_NoWork;
+    }
 }
 
 
@@ -227,57 +221,34 @@ bool Snakeshot::isOutofField()const
 {
 	return Vector3Length(m_Params.pos) > 100;
 }
+
+
 void Snakeshot::UpdateDamageClass()
 {
 	m_Damage.m_Vec = m_Params.move;
 	m_Damage.m_Param.pos = m_Params.pos;
 }
+
+
 void Snakeshot::UpdateMesh()
 {
 	//メッシュのワールド変換行列を更新する
+    Matrix m;
 
-	Matrix m;
-	float Ballsize = UsualBall::GetBallScale(m_Params.pParent->m_PlayerInfo.chr_type);
+    float Ballsize = UsualBall::GetBallScale(CharacterType::_Soccer);
 
-	D3DXMatrixScaling(&m, Ballsize, Ballsize, Ballsize);	//大きさはボールによって変える必要がある
 
-	m._41 = m_Params.pos.x;
-	m._42 = m_Params.pos.y;
-	m._43 = m_Params.pos.z;
+    SetTransformMatrixXYZ(&m, m_Params.pos.x, m_Params.pos.y, m_Params.pos.z, m_Angle.x, m_Angle.y, m_Angle.z);
 
-	m_pMeshRenderer->SetMatrix(m);
-}
-void Snakeshot::UpdateLocusColor()
-{
-	const DWORD Color = CharacterBase::GetPlayerColor(m_Params.pParent->m_PlayerInfo.number);
+    {
+        m._11 *= Ballsize; m._12 *= Ballsize; m._13 *= Ballsize;
+        m._21 *= Ballsize; m._22 *= Ballsize; m._23 *= Ballsize;
+        m._31 *= Ballsize; m._32 *= Ballsize; m._33 *= Ballsize;
+    }
 
-    m_Locus.m_StartParam.Color = Vector4(
-        float((Color >> 16) & 0xFF)  / 255.f,
-        float((Color >> 8)  & 0xFF)  / 255.f,
-        float( Color        & 0xFF)  / 255.f, 
-        0.5f
-        );
-	m_Locus.m_StartParam.HDRColor
-		= Vector4(
-		float((Color >> 16) & 0xFF) / 255.f,
-		float((Color >> 8) & 0xFF) / 255.f,
-		float(Color & 0xFF) / 255.f,
-		0.2f
-		);
-
-    m_Locus.m_EndParam.Color = Vector4(1, 1, 1, 0);
+    m_pMeshRenderer->SetMatrix(m);
 }
 
-void Snakeshot::SetHDR()
-{
-	const DWORD Color = CharacterBase::GetPlayerColor(m_Params.pParent->m_PlayerInfo.number);
-
-	m_pMeshRenderer->m_HDR = Vector3(
-		float((Color >> 16) & 0xFF) / 255.f,
-		float((Color >> 8) & 0xFF) / 255.f,
-		float(Color & 0xFF)       / 255.f
-		);
-}
 
 bool Snakeshot::isHitWall()
 {
@@ -304,72 +275,135 @@ bool Snakeshot::isHitWall()
 	return false;
 }
 
+void Snakeshot::UpdateEffect()
+{
+    if (m_pTornadoEffect == nullptr)
+    {
+        return;
+    }
+
+    m_pTornadoEffect->m_Param.pos = m_Params.pos + Vector3(0, m_pTornadoEffect->m_Param.Length*-0.5f, 0);
+}
 
 void Snakeshot::Counter(CharacterBase* pCounterCharacter)
 {
-	m_Damage.pParent = m_Params.pParent = pCounterCharacter;
-	
-	UpdateLocusColor();
+    //ターゲットが親しかいなかった場合はカウンターしたものを再度標的に
+    if (DefCharacterMgr.GetCharacterLiveCount() == 2 &&
+        chr_func::isDie(m_pOriginParent) == false
+        )
+    {   
+        m_Damage.pParent = m_Params.pParent = m_pOriginParent;
+        m_pTarget = pCounterCharacter;
+    }
+    else
+    {
+        m_Damage.pParent = m_Params.pParent = pCounterCharacter;
 
-	m_pStatefunc = &Snakeshot::State_TargetDecision;
+        m_pStatefunc = &Snakeshot::State_TargetDecision;
+    }
 }
 
-void Snakeshot::ToNoWork()
+void Snakeshot::EffectApper(int n, RATIO scale)
 {
-	//攻撃判定のない状態にする
+    for (int i = 0; i < n; ++i)
+    {
+        Vector3 tvec(Vector3Normalize(Vector3Rand()));
 
-	if (m_pRigitBody != nullptr)
-	{
-		return;
-	}
+        AnimationBordRenderer* r = new AnimationBordRenderer(
+            DefResource.Get(Resource::TextureType::Anime_Circle),
+            4,
+            4,
+            16,
+            0x80FFFFFF,
+            0x80FFFFFF
+            );
 
-	m_Params.type = BallBase::Type::_DontWork;
-	m_Damage.m_Enable = false;
+        r->m_Pos = m_Params.pos;
+        r->m_CellCount = 0;
+        r->m_Size = Vector2(2, 2)*scale;
 
-	
 
-	m_BaseMatrix = m_pMeshRenderer->GetMatrix();
+        Vector3Cross(r->m_Right, tvec, Vector3AxisX);
 
-	m_BaseMatrix._41 = 0;
-	m_BaseMatrix._42 = 0;
-	m_BaseMatrix._43 = 0;
+        if (r->m_Right == Vector3Zero)
+        {
+            Vector3Cross(r->m_Right, tvec, Vector3AxisZ);
+        }
 
-	m_pRigitBody = DefBulletSystem.AddRigidSphere(
-		PhysicsParam.Mass,
-		RigidBody::ct_dynamic,
-		m_Params.pos,
-		Vector3Zero,
-		0.5f,
-		0.8f,
-		0.2f,
-		m_Params.move * 45.0f
-		);
+        Vector3Cross(r->m_Up, r->m_Right, tvec);
+
+
+        r->m_Right.Normalize();
+        r->m_Up.Normalize();
+
+        AnimationBordGameObj* m = new AnimationBordGameObj(
+            r
+            );
+
+        m->animation_end_delete = true;
+        m->animation_loop = false;
+        m->animation_speed = 1.0f;
+
+        m->move_power = Vector3Zero;
+        m->move_speed = Vector3Zero;
+
+        m->scale_speed = Vector2(1, 1)*1.2f*scale;
+    }
 }
 
 //　ホーミング計算
-void Snakeshot::Homing(Vector3 TargetPos)
+void Snakeshot::MoveHomingRotate(Vector3 TargetPos)
 {
 	//引数の位置に向かって移動する(ホーミング)
 	const RADIAN HomingRad = D3DXToRadian(4);
 	RADIAN rotate;
-
+    Matrix R;
 	Vector3 v1, v2;
+
+
+
+    Vector3 tpos(m_Params.pos), tmove(m_Params.move);
+
 	v1 = m_Params.move;
 	v2 = TargetPos - m_Params.pos;
 
-	rotate = Vector3Dot(v1, v2) / (v1.Length()*v2.Length());
-	rotate = acosf(rotate);
+    v1.y = 0;
+    v2.y = 0;
+
+    if (v2 == Vector3Zero || v1 == Vector3Zero)
+    {
+        return;
+    }
+    
+    rotate = Vector3Radian(v1, v2);
+
+    if (HomingRad > rotate)
+    {
+        return;
+    }
+
 	rotate = min(HomingRad, rotate);
-	
-	if (v1.z*v2.x - v1.x*v2.z < 0)
+
+    if (v1.z*v2.x - v1.x*v2.z < 0)
 	{
 		rotate = -rotate;
 	}
 
-	m_Params.move = Vector3RotateAxis(Vector3AxisY, rotate, m_Params.move);
-	m_Params.move.Normalize();
-	m_Params.move *= 0.5f;
-	m_Params.pos += m_Params.move;
+    /*D3DXMatrixRotationY(&R, rotate);
+        
+    m_Params.move = Vector3MulMatrix3x3(m_Params.move, R);*/
+
+    m_Params.move = Vector3RotateAxis(Vector3AxisY, rotate, m_Params.move);
+
+
+    // float b = Vector3Dot(v1, v2) / (v1.Length()*v2.Length());
+
+    MyAssert(
+        !(isnan(m_Params.move.x) || isinf(m_Params.move.x) ||
+        isnan(m_Params.move.y) || isinf(m_Params.move.y) ||
+        isnan(m_Params.move.z) || isinf(m_Params.move.z)
+        ), "このバグはやばいですよザーボンさん");
+   
 }
 
 //　遠距離ターゲット選定
@@ -377,45 +411,48 @@ CharacterBase* Snakeshot::CalcTarget()const
 {
 	Vector3 v1, v2;
 
-	const float HomingAngle = PI / 4;
-	float MostNear = 1000;
-	float TempLen;
+    RADIAN         MostMaxAngle = PI, TempAngle = 0;
 	CharacterBase* pTarget = nullptr;
-
+    
 	//　map代入
 	const CharacterManager::CharacterMap& chr_map =
 		DefCharacterMgr.GetCharacterMap();
 	
+    v1 = m_Params.move;
+    v1.y = 0;
+    v1.Normalize();
 
 	for (auto it = chr_map.begin(); it != chr_map.end(); ++it)
 	{
-		
-		//　死んでるor自分ならcontinue
-		if (chr_func::isDie(it->first) ||
-			it->first->m_PlayerInfo.number == m_Params.pParent->m_PlayerInfo.number)
+		//　死んでるorはじめに撃った人or現在のダメージの親ならcontinue
+        if (chr_func::isDie(it->first) ||
+            it->first == m_pOriginParent ||
+            it->first == m_Damage.pParent
+            )
 		{
 			continue;
 		}
 
 		//　視野角計算
-		chr_func::GetFront(m_Params.pParent, &v1);
-
 		v2 = it->first->m_Params.pos - m_Params.pos;
 		v2.y = 0;
 
+        if (v2 == Vector3Zero)
+        {
+            continue;
+        }
+
+        TempAngle = Vector3Radian(v1, v2);
+
 		//角度外なら適していない
-		if (Vector3Radian(v1, v2) > HomingAngle)
+        if (TempAngle > MostMaxAngle)
 		{
 			continue;
 		}
 
-		TempLen = v2.Length();
+        MostMaxAngle = TempAngle;
+        pTarget = it->first;
 
-		if (MostNear > TempLen)
-		{
-			MostNear = TempLen;
-			pTarget = it->first;
-		}
 	}
 
 	return pTarget;

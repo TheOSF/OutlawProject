@@ -11,6 +11,7 @@
 #include "StageEdit.h"
 #include "RiverObject.h"
 #include "SkyObject.h"
+#include "../GameSystem/ResourceManager.h"
 
 const char* Kasennziki_Manager::StageObjFileName = "DATA\\Stages\\Stage1\\StageObjData.txt";
 
@@ -91,16 +92,25 @@ void Kasennziki_Manager::CreateStage()
             C
             );
 
-        //土台のステージを物理エンジンに登録
-        DefBulletSystem.AddRigidMesh(
-            pStageMesh,
-            0,
-            RigidBody::ct_static,
-            0.5f,
-            0.5f,
-            Vector3(0, 0, 0),
-            Vector3(0, 0, 0)
-            );
+        {
+            iexMesh* pHit = DefResource.Get(Resource::MeshType::Stage1_HitPhysic);
+
+            pHit->SetScale(scale, scale, scale);
+            pHit->SetAngle(0, PI, PI);
+
+            //土台のステージを物理エンジンに登録
+            DefBulletSystem.AddRigidMesh(
+                pHit,
+                0,
+                RigidBody::ct_static,
+                0.5f,
+                0.5f,
+                Vector3(0, 0, 0),
+                Vector3(0, 0, 0)
+                );
+        }
+        
+        
     }
 
    
@@ -135,6 +145,7 @@ void Kasennziki_Manager::CreateStage()
     new StageCarEmitter(0);
 
     //川を追加
+
     new RiverObject(
         Vector3(0, -1, -40),
         Vector3(8, 1, 8),
@@ -263,6 +274,7 @@ void Kasennziki_Manager::SetNightLight()
 
 bool Kasennziki_Manager::Update()
 {
+
     //リセットメッセージが来てから１フレームだけリセットするフレームを遅らせる
     if (m_DeleyFrame > 0)
     {

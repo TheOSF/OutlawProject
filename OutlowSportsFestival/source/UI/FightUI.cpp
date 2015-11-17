@@ -66,15 +66,15 @@ void FightUI::FightRender(
     )
 {
     m_pTexture->Render(
-        640 - SizeX / 2,
+        SizeX / 2,
         360 - SizeY / 2 + diffPosY,
         SizeX,
         SizeY,
 
-        15,
-        377,
-        560,
-        108,
+        0,
+        100*5,
+        415,
+        100,
 
         dw_flg,
         D3DCOLOR_COLORVALUE(1, 1, 1, alpha)

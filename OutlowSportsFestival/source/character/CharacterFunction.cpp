@@ -7,7 +7,7 @@
 #include "../GameSystem/ResourceManager.h"
 #include "../Sound/Sound.h"
 #include "../Effect/EffectFactory.h"
-
+#include "CharacterManager.h"
 
 //基本的な更新(座標更新、壁との判定など)をすべて行う
 void chr_func::UpdateAll(
@@ -151,7 +151,7 @@ void chr_func::AngleControll(CharacterBase* p, CrVector3 view_pos)
 	mepos.y = 0;
 	mepos.Normalize();
 
-	p->m_Params.angle = acosf(mepos.z);
+    p->m_Params.angle = acosf(fClamp(mepos.z, 1, -1));
 
 	if (mepos.x < 0)
 	{
@@ -216,7 +216,7 @@ void chr_func::DamageCheck(
 //地面判定をとる(戻り値：地面についているかどうか)
 bool chr_func::isTouchGround(CharacterBase* p)
 {
-    return p->m_Params.pos.y <= CharacterBase::m_CommonParams.GroundY;
+    return p->m_Params.pos.y <= CharacterBase::m_CommonParams.GroundY + 0.1f;
 }
 
 
@@ -306,7 +306,7 @@ bool chr_func::CheckWall(CharacterBase* p)
     Vector3 CheckVec;
 
     //移動している場合はその方向をチェック、違う場合は前方向をチェック
-    if (p->m_Params.move.Length() > 0)
+    if (Vector3XZLength(p->m_Params.move) > 0)
     {
         CheckVec = Vector3Normalize(Vector3(p->m_Params.move.x, 0, p->m_Params.move.z));
     }
@@ -319,11 +319,13 @@ bool chr_func::CheckWall(CharacterBase* p)
     float RotateCheckVec[]=
     {
         0,
-        PI / 3, 
+        PI / 3,
         -PI / 3,
 
-        PI / 4,
-        -PI / 4,
+        PI / 2, 
+        -PI / 2,
+
+        PI
     };
 
     //計算用パラメータ
@@ -480,8 +482,69 @@ void chr_func::CalcDamage(CharacterBase* p, float value)
     p->m_Params.HP = max(p->m_Params.HP, 0);
 }
 
+//攻撃のターゲットを得る
+bool chr_func::CalcAtkTarget(
+    CharacterBase*  pOwner,
+    RADIAN          check_angle,
+    float           check_distance,
+    CharacterBase** ppOut)
+{
+    //ターゲット選定＆向き補正
+    CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
+
+    RADIAN MostMinAngle = check_angle;   //もっとも狭い角度
+    RADIAN TempAngle;
+
+    Vector3 toEnemy;
+    Vector3 MyFront;      //自身の前方ベクトル
+    chr_func::GetFront(pOwner, &MyFront);
+
+    auto it = ChrMap.begin();
+
+    //戻り値を初期化
+    *ppOut = nullptr;
+
+
+    while (it != ChrMap.end())
+    {
+        //自身と死んでいるキャラを除外
+        if (pOwner->m_PlayerInfo.number == it->first->m_PlayerInfo.number ||
+            chr_func::isDie(it->first)
+            )
+        {
+            ++it;
+            continue;
+        }
+
+        //敵へのベクトル
+        toEnemy = it->first->m_Params.pos - pOwner->m_Params.pos;
+
+        //距離外ならcontinue
+        if (toEnemy.Length() > check_distance)
+        {
+            ++it;
+            continue;
+        }
+
+        //前ベクトルと敵へのベクトルの角度を計算する
+        TempAngle = Vector3Radian(MyFront, toEnemy);
+
+        //角度が一番狭かったら更新
+        if (TempAngle < MostMinAngle)
+        {
+            *ppOut = it->first;
+            MostMinAngle = TempAngle;
+        }
+
+        ++it;
+    }
+
+    return ppOut != nullptr;
+}
+
 //引数のスキル値が必殺技を発動できるかどうか
 bool chr_func::isCanSpecialAttack(RATIO value)
 {
     return value >= 0.5f;
 }
+

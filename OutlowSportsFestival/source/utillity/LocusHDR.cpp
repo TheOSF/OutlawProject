@@ -26,7 +26,8 @@ LocusHDR::~LocusHDR()
 //帯の点を追加する
 void LocusHDR::AddPoint(
     CrVector3 pos,  //中心位置
-    CrVector3 vec   //帯の伸びる方向(正規化していなければならない)
+    CrVector3 vec,   //帯の伸びる方向(正規化していなければならない)
+    CrVector3 speed
     )
 {
     //ひとつ後ろにずらす
@@ -37,6 +38,7 @@ void LocusHDR::AddPoint(
 
     m_pPointData[0].pos = pos;
     m_pPointData[0].vec = vec;
+    m_pPointData[0].speed = speed;
 
     m_UseCount = min(m_UseCount + 1, m_NumPoint - 1);
 }
@@ -75,6 +77,15 @@ bool LocusHDR::GetPos(UINT n, Vector3& out)const
     out = m_pPointData[n].pos;
 
     return true;
+}
+
+//移動更新
+void LocusHDR::Update()
+{
+    for (size_t i = 0; i <= m_UseCount; ++i)
+    {
+        m_pPointData[i].pos += m_pPointData[i].speed;
+    }
 }
 
 //初期化

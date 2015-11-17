@@ -37,9 +37,13 @@ CharacterHitEventFunc::SetType CharacterHitEventFunc::CheckDamage(DamageBase* pD
         //地面に付いていた場合のみ
         if (chr_func::isTouchGround(pOwner))
         {
-            //弱攻撃
+            //弱ひるみは上に移動しない
+            pOutVec->y = 0;
+            //弱ダメージ
             return SetType::Weak_Hit;
         }
+
+        pOutVec->y = 0;
 
         //未作成
     case DamageBase::Type::_VanishDamage:

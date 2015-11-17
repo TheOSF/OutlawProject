@@ -27,7 +27,7 @@ WindBallEffect::WindBallEffect(
 
         m_ppLocusPtrArray[i]->m_StartParam.Width = 0;
         m_ppLocusPtrArray[i]->m_StartParam.Color = Vector4(1, 1, 1, 1);
-        m_ppLocusPtrArray[i]->m_StartParam.HDRColor = Vector4(1, 1, 1, 1);
+        m_ppLocusPtrArray[i]->m_StartParam.HDRColor = Vector4(1, 1, 1, 0);
     }
 }
 

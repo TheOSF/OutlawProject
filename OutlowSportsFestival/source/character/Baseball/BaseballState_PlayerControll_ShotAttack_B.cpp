@@ -302,12 +302,9 @@ const CharacterBase*  BaseballState_PlayerControll_ShotAttack_B::GetFrontTarget(
 void BaseballState_PlayerControll_ShotAttack_B::ComExcute(BaseballPlayer* b)
 {
 	//ターゲット選定＆向き補正
-
 	CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
 
-	const float  AutoDistance = 400.0f;               //自動ができる最大距離
 	const RADIAN AutoMaxAngle = D3DXToRadian(90);   //自動ができる最大角度
-
 
 	RADIAN MostMinAngle = PI;                       //もっとも狭い角度
 	RADIAN TempAngle;
@@ -325,13 +322,6 @@ void BaseballState_PlayerControll_ShotAttack_B::ComExcute(BaseballPlayer* b)
 			)
 		{
 			++it;
-			continue;
-		}
-
-		//距離が一定以上のキャラクタを除外する
-		if (Vector3Distance(it->first->m_Params.pos, b->m_Params.pos) > AutoDistance)
-		{
-			it = ChrMap.erase(it);
 			continue;
 		}
 

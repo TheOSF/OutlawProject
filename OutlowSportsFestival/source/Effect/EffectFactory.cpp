@@ -282,7 +282,7 @@ void EffectFactory::DieEffect(
         Vector3(1,1,1)*4.0f,
         10,
         50,
-        1
+        7
         );
 
     //ブラーエフェクト

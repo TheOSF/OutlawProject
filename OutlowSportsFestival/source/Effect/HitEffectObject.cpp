@@ -38,6 +38,7 @@ HitEffectObject::HitEffectObject(
     m_Light.param.color = color*0.25f;
     m_Light.param.pos = pos;
     m_Light.param.size = LightSize;
+    m_Light.Visible = false;
 }
 
 HitEffectObject::~HitEffectObject()
@@ -209,7 +210,7 @@ bool HitEffectObject::Update()
     UpdateMatrix();
 
     m_Renderer.m_HDR_Color = m_Color * (1 - m_T);
-    m_Renderer.m_HDR_Color *= 0.7f;
+    m_Renderer.m_HDR_Color *= 0.5f;
 
     m_Light.param.color *= 0.9f;
 

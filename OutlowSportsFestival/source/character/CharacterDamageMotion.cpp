@@ -26,7 +26,7 @@ CharacterDamageMotion::CharacterDamageMotion(
     if (m_Params.damage_vec.x == 0 && m_Params.damage_vec.z)
     {
         chr_func::GetFront(m_pCharacter, &m_Params.damage_vec);
-        m_Params.damage_vec = -m_Params.damage_vec;
+        m_Params.damage_vec = -m_Params.damage_vec * 0.001f;
     }
 }
 
@@ -43,6 +43,9 @@ CharacterDamageMotion::~CharacterDamageMotion()
 // 更新
 void CharacterDamageMotion::Update()
 {
+    const int AllFrame = 25;
+    const int NoDamageFrame = 5;
+
 	//フレーム更新
 	++m_Timer;
 
@@ -92,7 +95,7 @@ void CharacterDamageMotion::Update()
 
     //終了判定
     if (m_End == false &&
-        m_Params.AllFrame <= m_Timer)
+        AllFrame <= m_Timer)
     {
         m_End = true;
         m_pEvent->End();
@@ -101,7 +104,7 @@ void CharacterDamageMotion::Update()
 
 
     //無敵フレーム判定
-    if (m_Timer > m_Params.NoDamageFrame)
+    if (m_Timer > NoDamageFrame)
     {
         //ダメージ判定
         chr_func::DamageCheck(m_pCharacter, m_pHitEvent);

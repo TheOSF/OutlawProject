@@ -12,96 +12,6 @@
 #include "../../Effect/EffectFactory.h"
 #include "../../Sound/Sound.h"
 
-TennisState_BoundBallAtk::TennisState_BoundBallAtk(
-    ControllClass* pControllClass   //バウンド方向をコントロールするクラス(終了時にdeleteする)
-    ):
-    m_pControllClass(pControllClass),
-    m_Timer(0)
-
-{
-
-}
-
-TennisState_BoundBallAtk::~TennisState_BoundBallAtk()
-{
-    delete m_pControllClass;
-}
-
-
-void TennisState_BoundBallAtk::Enter(TennisPlayer* t)
-{
-    t->m_Renderer.SetMotion(TennisPlayer::_mt_BoundSmash);
-
-    chr_func::ResetMove(t);
-}
-
-
-void TennisState_BoundBallAtk::Execute(TennisPlayer* t)
-{
-    const int SmashFrame = 15;
-    const int EndFrame = 25;
-
-    //カウント更新
-    ++m_Timer;
-
-    //着地点オブジェクトを生成
-    if (m_Timer == 1)
-    {
-
-    }
-
-    //サウンド
-    if (m_Timer == SmashFrame - 3)
-    {
-        Sound::Play(Sound::Tennis_BallAtk);
-    }
-
-    //発射
-    if (m_Timer == SmashFrame)
-    {
-        Vector3 pos, move;
-
-        pos = t->m_Params.pos + Vector3(0, BallBase::UsualBallShotY, 0);
-
-        chr_func::GetFront(t, &move);
-        move *= 0.3f;
-        move.y = 0.6f;
-
-        new TennisBoundBall(
-            pos,
-            move,
-            t
-            );
-    }
-
-    //終了で通常ステートへ
-    if (m_Timer == EndFrame)
-    {
-        t->SetState(TennisState_PlayerControll_Move::GetPlayerControllMove(t));
-    }
-
-    //基本的な更新
-    {
-        TennisHitEvent HitEvent(t);
-        chr_func::UpdateAll(t, &HitEvent);
-
-        //モデル更新
-        t->m_Renderer.Update(1);
-
-        //行列更新
-        chr_func::CreateTransMatrix(t, t->m_ModelSize, &t->m_Renderer.m_TransMatrix);
-
-    }
-}
-
-
-void TennisState_BoundBallAtk::Exit(TennisPlayer* t)
-{
-
-}
-
-
-
 //****************************************************
 //	テニス_バウンドするボールクラス
 //****************************************************
@@ -247,9 +157,6 @@ void TennisBoundBall::StateFly()
 
     //軌跡の点を追加
     AddLocusPoint();
-
-    //飛んでいる間は発射主のテニスが次弾を発射できないように
-    m_pOwnerTennis->SetDontBoundBallAtkTimer();
 
 }
 

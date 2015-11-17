@@ -37,6 +37,12 @@ void EffectResource::Load()
         new iex2DObj("DATA\\Effect\\Locus2.png")
         );
 
+    //木の葉テクスチャ
+    DefResource.Regist(
+        Resource::TextureType::Konoha,
+        new iex2DObj("DATA\\Effect\\konoha.png")
+        );
+    
 
     //円アニメーションエフェクト
     DefResource.Regist(

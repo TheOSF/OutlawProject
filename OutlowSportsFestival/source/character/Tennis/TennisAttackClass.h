@@ -60,6 +60,12 @@ public:
 
         //攻撃があたったときに呼ばれる
         virtual void HitAttack(DamageShpere* pDmg) = 0;
+
+        //ヒットストップかどうか
+        virtual bool isHitStopFrame() = 0;
+
+        //ヒットストップ時更新
+        virtual void HitStopUpdate() = 0;
     };
 
     typedef std::vector<AttackInfo*> AttackInfoArray;
@@ -78,8 +84,6 @@ public:
 
     bool isEnd()const;   //終了確認
 
-  
-    
 private:
 
     TennisPlayer*  const  m_pOwner;
@@ -90,7 +94,6 @@ private:
     bool                  m_DoCombo;
     LocusHDR              m_Locus;
     int                   m_DamageHitCount;
-    int                   m_HitStopCount;
 
     void(TennisAttackClass::*m_pStateFunc)();
 

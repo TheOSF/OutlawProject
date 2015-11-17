@@ -58,6 +58,8 @@ public:
 
     void SetRotateSpeed(CrVector3 AngleSpeed);
 
+    void Counter(CharacterBase* pCounterCharacter)override;
+
 private:
 
     bool(UsualBall::*m_pStateFunc)();
@@ -81,7 +83,7 @@ private:
     bool UpdateWallCheck(Vector3& outNewMove);    //壁との判定を取り、接触していたなら移動値を反射してステート移行をする
     void AddLocusPoint();      //軌跡のポイントを現在のパラメータで一点追加する
 
-    void Counter(CharacterBase* pCounterCharacter)override;
+
 
     void ToNoWork();           //攻撃判定のない状態にする
 

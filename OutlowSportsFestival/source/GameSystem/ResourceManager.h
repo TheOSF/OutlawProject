@@ -25,6 +25,8 @@ public:
         Volley_ball,
 
         //ステージ１
+        Stage1_Hit,
+        Stage1_HitPhysic,
         Bus,
         Car1,
 
@@ -43,6 +45,7 @@ public:
         Particle,
         Locus1,
         Locus2,
+        Konoha,
 
         UI_strings,
         UI_player_name,

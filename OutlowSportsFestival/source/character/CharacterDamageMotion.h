@@ -13,8 +13,6 @@ public:
 	// パラメータ
 	struct Params
 	{
-		int AllFrame;       // 全フレーム
-		int NoDamageFrame;	//無敵フレーム
 		Vector3 damage_vec;	//ダメージの方向
 	};
 

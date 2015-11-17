@@ -24,8 +24,11 @@ public:
 
         float      Length;
 
-        float      minWidth;
-        float      maxWidth;
+        float      lowWidth;   //L‚ª‚è‚Ì•
+        float      middleWidth;
+        float      highWidth;
+
+        UINT       middle_height;
 
         float      RotateSpeed;
     };

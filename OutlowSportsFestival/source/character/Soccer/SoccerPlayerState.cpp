@@ -849,20 +849,16 @@ CharacterShotAttack* SoccerState_PlayerControll_Finisher::SnakeShotClass(SoccerP
 		void Shot()
 		{
 			//　遠距離攻撃(param計算)
-			BallBase::Params param;
+            Vector3 pos, vec;
 
-			chr_func::GetFront(m_pSoccer, &param.move);
+            chr_func::GetFront(m_pSoccer, &vec);
 			
-			param.pos = m_pSoccer->m_Params.pos;
-			param.pos.y = UsualBall::UsualBallShotY;
-
-			param.pParent = m_pSoccer;
-			param.scale = 1.0f;
-			param.type = BallBase::Type::_Usual;
+            pos = m_pSoccer->m_Params.pos;
+            pos.y = UsualBall::UsualBallShotY;
 
 			//生成
 			Sound::Play(Sound::Beam2);
-			new Snakeshot(param, 1);
+            new Snakeshot(pos, vec, m_pSoccer, 1);
 		}
 
 		//　遠距離攻撃開始

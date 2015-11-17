@@ -1,13 +1,18 @@
 #include "TennisAttackInfo_UsualAtk.h"
 #include "../CharacterFunction.h"
 #include "../../Sound/Sound.h"
+#include "../CharacterManager.h"
 
 #include "../../GameSystem/GameController.h"
 
 TennisAttackInfo_UsualAtk::TennisAttackInfo_UsualAtk(
     TennisPlayer* pOwner
-    ):
-    m_pOwner(pOwner)
+    ) :
+    m_pOwner(pOwner),
+    m_HitStopCount(0),
+    m_LocusPos(Vector3Zero),
+    m_LocusVec(Vector3Zero),
+    m_Hit(false)
 {
     
 }
@@ -50,16 +55,20 @@ void TennisAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, TennisPlayer* p
         Pos2 = Vector3(BoneMat._41, BoneMat._42, BoneMat._43);
     }
 
-    //ボーン先端位置にダメージをセット
-    pDmg->m_Param.pos = Pos2;
-
     //方向はキャラクタの正面ベクトル
     chr_func::GetFront(pTennis, &pDmg->m_Vec);
-    pDmg->m_VecPower.x = 0.5f;
+    pDmg->m_VecPower.x = 0.1f;
+    
+    //pDmg->m_Param.pos = Pos2;  //ボーン先端位置にダメージをセット
+
+    //キャラクタの少し前にダメージをセット
+
+    pDmg->m_Param.pos = m_pOwner->m_Params.pos + pDmg->m_Vec* m_Param.DamagePosLength + Vector3(0, 2, 0);
 
     if (m_Param.DamageType == DamageBase::Type::_VanishDamage)
     {
-        pDmg->m_VecPower.y = 0.2f;
+        pDmg->m_VecPower.x = 0.5f;
+        pDmg->m_VecPower.y = 0.5f;
     }
 
     m_LocusPos = (Pos2 + Pos1)*0.5f;
@@ -121,9 +130,11 @@ bool TennisAttackInfo_UsualAtk::isDamageEnable(int Frame)
         Sound::Play(Sound::Swing2);
     }
 
-    return 
-        Frame >= m_Param.DamageEnableStart&&
-        Frame <= m_Param.DamageEnableEnd;
+    return
+        (Frame >= m_Param.DamageEnableStart&&
+        Frame <= m_Param.DamageEnableEnd) &&
+        m_Hit == false;
+        
 }
 
 
@@ -134,17 +145,32 @@ void TennisAttackInfo_UsualAtk::Update(int Frame, LocusHDR* pLocus)
 
     chr_func::XZMoveDown(m_pOwner, 0.1f);
 
+
     if (Frame >= m_Param.MoveStartFrame&&
         Frame <= m_Param.MoveEndFrame)
     {
-        chr_func::AddMoveFront(m_pOwner, m_Param.MoveSpeed, 1000);
+        if (isFrontStayEnemy() && (m_Param.DamageType != DamageBase::Type::_VanishDamage))
+        {
+            
+        }
+        else
+        {
+            chr_func::AddMoveFront(m_pOwner, m_Param.MoveSpeed, 1000);
+        }
     }
+}
+
+//ヒットストップ時
+void TennisAttackInfo_UsualAtk::HitStopUpdate()
+{
+
+    m_HitStopCount = max(0, m_HitStopCount - 1);
 }
 
 //攻撃があたったときに呼ばれる
 void TennisAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
 {
-    chr_func::AddSkillGauge(m_pOwner, pDmg->Value*10.0f);
+    chr_func::AddSkillGauge(m_pOwner, pDmg->Value);
 
     //コントローラを振動
     controller::SetVibration(
@@ -152,4 +178,47 @@ void TennisAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
         0.15f,
         m_pOwner->m_PlayerInfo.number
         );
+
+    m_HitStopCount = m_Param.HitStopFrame;
+
+    m_Hit = true;
+}
+
+
+//前方に敵がいるかどうか
+bool TennisAttackInfo_UsualAtk::isFrontStayEnemy()
+{   
+    const CharacterManager::CharacterMap& chr_map = DefCharacterMgr.GetCharacterMap();
+    Vector3 front, vec;
+
+    const float OKlen = 3.0f;
+    const RADIAN OKrad = D3DXToRadian(45);
+
+    chr_func::GetFront(m_pOwner, &front);
+
+    for (auto& it : chr_map)
+    {
+        if (chr_func::isDie(it.first) ||
+            it.first == m_pOwner)
+        {
+            continue;
+        }
+
+
+        vec = it.first->m_Params.pos - m_pOwner->m_Params.pos;
+
+        if (vec.Length() < OKlen && Vector3Radian(vec, front) < OKrad)
+        {
+            return true;
+        }
+    }
+
+    return false;;
+}
+
+
+//ヒットストップかどうか
+bool TennisAttackInfo_UsualAtk::isHitStopFrame()
+{
+    return m_HitStopCount > 0;
 }

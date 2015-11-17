@@ -2,96 +2,63 @@
 
 
 #include "../../Ball/Ball.h"
-#include "../../utillity/Locus.h"
 #include "../../Library/Bullet/BulletSystem.h"
 #include "../../GameSystem/GameObject.h"
 #include "../../Damage/Damage.h"
+#include "../../Ball/PhysicallyMoveBall.h"
 #include "TennisPlayer.h"
-
-//*****************************************************
-//		投げ上げるボールクラス(ボール扱いではない)
-//*****************************************************
-
-class TennisUpBall :public GameObjectBase
-{
-public:
-
-    //コンストラクタ
-    TennisUpBall(
-        CrVector3     pos,
-        TennisPlayer* pTennis
-        );
-
-    ~TennisUpBall();
-
-    bool Update();
-    bool Msg(MsgType mt);
-
-    Vector3 GetPos()const;
-
-    void Destory();    //このボールを消去
-    void DoRealTime(); //スローを無効にする
-
-private:
-    void(TennisUpBall::*m_pStateFunc)();
-    TennisPlayer*           m_pTennis;
-    MeshRenderer*           m_pMeshRenderer;
-    RigidBody*              m_pRigidBody;
-    Vector3                 m_Pos;
-    float                   m_MoveY;
-    int                     m_Timer;
-    bool                    m_SlowFlag;
-    
-    void UsualMeshUpdate();
-
-    bool isHitFloor()const;
-
-    void State_SlowFly();
-    void State_PhysicMove();
-    void State_CreateFadeOut();
-    void State_Destroy();
-};
-
-
-
-
-#include "TennisPlayer.h"
-#include "../../Library/Bullet/BulletSystem.h"
-#include "../../Damage/Damage.h"
-
 //****************************************************
 //	テニス_ボールを上に上げるクラス
 //****************************************************
 
-class TennisState_SlowUpBall :public TennisState
+class TennisPlayerState_SlowUpBall :public TennisState
 {
 public:
+    //打つタイプ
+    enum class ShotType
+    {
+        Smash,   //スマッシュ
+        CutBall, //カットして帰ってくるボール
+    };
+
+    //コントロールクラスインターフェース
     class ControllClass
     {
     public:
         virtual ~ControllClass(){}
-        virtual void AngleControll(TennisPlayer* p) = 0;
-        virtual bool SwitchState(TennisState_SlowUpBall* pState) = 0;
+        virtual Vector3 GetVec() = 0;
+        virtual bool    DoOtherAction() = 0;
+        virtual bool    DoShotAfterAction() = 0;
+        virtual bool    isShot() = 0;
     };
 
-    TennisState_SlowUpBall(
-        ControllClass* pControllClass   //操作コントロールするクラス(終了時にdeleteする)
+    TennisPlayerState_SlowUpBall(
+        ControllClass*       pControllClass //終了時にdeleteする
         );
 
-    ~TennisState_SlowUpBall();
+    ~TennisPlayerState_SlowUpBall();
 
-    void Enter(TennisPlayer* t)override;
-    void Execute(TennisPlayer* t)override;
-    void Exit(TennisPlayer* t)override;
 
-    RATIO           GetChargePower()const;
-    TennisUpBall*   GetSlowUpBall();
-    void            DeleteSlowBall();
+    void Enter(TennisPlayer* p)override;
+    void Execute(TennisPlayer* p)override;
+    void Exit(TennisPlayer* p)override;
+
+    ShotType GetShotType()const;
 
 private:
-    ControllClass* const m_pControllClass;
-    TennisUpBall*        m_pUpBall;
-    int                  m_Timer;
-    const int            m_EndFrame;
-};
 
+    void(TennisPlayerState_SlowUpBall::*m_pStateFunc)();
+    int                  m_Timer;
+    PhysicallyMoveBall*  m_pUpBall;
+    ControllClass*       m_pControllClass;
+    TennisPlayer*        m_pTennis;
+    CharacterBase*       m_pTargetEnemy;
+
+    const CharacterBase* GetFrontTarget(TennisPlayer* p)const;
+    void SetState(void(TennisPlayerState_SlowUpBall::*pStateFunc)());
+
+    void State_SlowUp();
+    void State_Smash();
+    void State_CutShot();
+    void State_Finish();
+};

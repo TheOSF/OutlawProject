@@ -49,9 +49,7 @@ void BaseballState_DamageMotion_Weak::Enter(BaseballPlayer* t)
 	//ダメージモーションパラメーターを作成する
 	CharacterDamageMotion::Params Param;
 
-	Param.AllFrame = 35;
 	Param.damage_vec = m_Damage_vec;
-	Param.NoDamageFrame = 10;
 
 	//ひるみクラスを作成
 	m_pDamageMotionClass = new CharacterDamageMotion(

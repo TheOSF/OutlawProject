@@ -36,6 +36,8 @@ void TennisState_PoseMotion::Execute(TennisPlayer* t)
         t->SetState(TennisState_PlayerControll_Move::GetPlayerControllMove(t));
     }
 
+    chr_func::XZMoveDown(t, 0.1f);
+
     chr_func::AngleControll(t, t->m_Params.pos - Vector3AxisZ, m_Speed);
 
     chr_func::UpdateAll(t, &DamageManager::HitEventBase());

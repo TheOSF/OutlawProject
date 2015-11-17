@@ -56,9 +56,7 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
 	//ダメージモーションパラメーターを作成する
 	CharacterDamageMotion::Params Param;
 
-	Param.AllFrame = 35;
 	Param.damage_vec = m_Damage_vec;
-	Param.NoDamageFrame = 5;
 
 	//ひるみクラスを作成
 	m_pDamageMotionClass = new CharacterDamageMotion(
@@ -89,14 +87,6 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
             );
 
     }
-
-    //ブラーエフェクト
-    new BlurImpactSphere(
-        m_pTennis->m_Params.pos + Vector3(0, 3, 0),
-        10,
-        15,
-        30
-        );
 
 
     //コントローラを振動

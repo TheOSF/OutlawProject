@@ -119,9 +119,9 @@ void TennisState_PlayerControll_Attack::Enter(TennisPlayer* t)
 
     TennisAttackInfo_UsualAtk::Param AtkParam[] = 
     {
-        { 6, 1.0f, 1.5f, DamageBase::Type::_WeekDamage,   15, 22, 0.11f , 8,12, TennisPlayer::_mt_Attack1, 35, 20, 25, 32, 0, 3,  D3DXToRadian(45), 42,43 },
-        { 2, 1.0f, 1.5f, DamageBase::Type::_WeekDamage, 5, 8, 0.02f, 1, 5, TennisPlayer::_mt_Attack2, 20, 5, 15, 20, 0, 5, D3DXToRadian(8), 42, 43 },
-        { 8, 1.0f, 1.5f, DamageBase::Type::_VanishDamage, 8, 16, 0.05f, 1, 6, TennisPlayer::_mt_Attack3, 40, -1, -1, -1, 0, 8, D3DXToRadian(8), 42, 43 },
+        { 6, 1.9f, 1.5f, DamageBase::Type::_WeekDamage,   20, 25, 0.15f,  8, 12, TennisPlayer::_mt_Attack1, 35, 24, 27, 32, 0, 15, D3DXToRadian(10), 42, 43, 3 },
+        { 2, 1.9f, 1.5f, DamageBase::Type::_WeekDamage,   4,   5, 0.075f, 1,  5, TennisPlayer::_mt_Attack2, 20, 5, 11, 20, 0, 2, D3DXToRadian(10), 42, 43, 1 }, 
+        { 8, 1.6f, 1.5f, DamageBase::Type::_VanishDamage, 18, 19, 1.0f,  15, 15, TennisPlayer::_mt_Attack3, 50, -1, -1, -1, 0, 4, D3DXToRadian(10), 55, 59, 3 }, 
     };
 
     for (int i = 0; i < (int)ARRAYSIZE(AtkParam); ++i)

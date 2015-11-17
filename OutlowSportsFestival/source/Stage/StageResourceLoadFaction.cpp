@@ -5,6 +5,13 @@
 //ステージ１のメッシュをリソースに登録
 void StageResourceLoadFaction::LoadStage1Object()
 {
+    //ステージ１物理エンジン用メッシュ
+    DefResource.Regist(
+        Resource::MeshType::Stage1_HitPhysic,
+        new iexMesh("DATA\\Stages\\Stage1\\kasenziki\\kasenziki_Hit.imo")
+        );
+
+
     //プレスチックコーン
     DefResource.Regist(
         Resource::MeshType::Cone,

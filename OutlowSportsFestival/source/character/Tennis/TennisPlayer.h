@@ -25,33 +25,40 @@ public:
         _mt_Run = 2,
         _mt_RunEnd = 4,
 
+        _mt_UpBall = 5,
+        _mt_Smash = 6,
+        _mt_CutShot = 7,
+        _mt_ShotCancel = 9,
+
+        _mt_EscapeStep = 10,
+
         _mt_Attack1 = 11,
-        _mt_Shot = 17,
+        _mt_Attack2 = 13,
+        _mt_Attack3 = 33,
+
+        _mt_CounterPose = 15,
+
         _mt_CounterRight = 17,
         _mt_CounterLeft = 18,
-        _mt_Smash = 5,
-        _mt_Guard = 6,
-        _mt_Rolling = 10,
-        _mt_BoundSmash = 3,
+
+        _mt_SpecialAtk = 19,
+
         _mt_Damage_Weak = 21,
 
-        _mt_Damage_Vanish_Fly = 22,
+        _mt_Damage_Vanish_Fly = 22, 
         _mt_Damage_Vanish_Down = 23,
         _mt_Damage_Vanish_StandUp = 24,
 
-        _mt_Damage_Vanish_HitWallAndDown = 26,
-        _mt_Damage_Vanish_HitFloor = 29,
-        _mt_Damage_Vanish_HitFloorAndStandUp = 30, 
+        _mt_Damage_Vanish_HitWallAndDown = 25,
+        _mt_Damage_Vanish_HitFloor = 27,
+        _mt_Damage_Vanish_HitFloorAndStandUp = 28, 
 
 
-        _mt_WinPose = 32,
-        _mt_LosePose = 34,
+        _mt_WinPose = 29,
+        _mt_LosePose = 31,
 
-        _mt_Attack2 = 13,
-        _mt_Attack3 = 15,
+        _mt_Shot = _mt_CounterRight, //ñ≥Ç¢ÉÇÅ[ÉVÉáÉì
 
-        _mt_CounterPose = 16,
-        _mt_Hakushu = 21,
 
     };
 

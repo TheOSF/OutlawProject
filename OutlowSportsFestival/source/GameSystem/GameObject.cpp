@@ -56,7 +56,7 @@ void GameObjectManager::Update()
         UsualUpdate();
     }
 
-#if 0
+#if TRUE
     //デバッグ用
 
     if (KEY(KEY_ENTER, 0) == 3)

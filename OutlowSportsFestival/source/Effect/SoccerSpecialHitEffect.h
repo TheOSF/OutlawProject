@@ -3,7 +3,8 @@
 #include "../GameSystem/GameObject.h"
 #include "../character/CharacterBase.h"
 #include "../Render/BlurObject.h"
-
+#include "../Damage/Damage.h"
+#include "TornadoEffect.h"
 
 //------------------------------------------------//
 //   サッカーの必殺技がヒットしたときのクラス
@@ -16,8 +17,8 @@ public:
     SoccerSpecialHit(
         CharacterBase* pOwner,//親キャラクタへのポインタ
         CrVector3      pos,   //出現座標
-        CrVector3      vec,   //方向
-        RATIO          level  //エフェクトのクオリティ(０～１)
+        RATIO          level, //エフェクトのクオリティ(０～１)
+        UINT           time
         );
 
     ~SoccerSpecialHit();
@@ -27,20 +28,22 @@ private:
     CharacterBase*const  m_pOwner;
     void(SoccerSpecialHit::*m_pStateFunc)();
 
-    BlurObjectSphere     m_BlurSphere;
+    TornadoEffect*       m_pTornadoEffect;
 
     const Vector3        m_Pos;
-    const Vector3        m_Vec;
     const RATIO          m_Level;
                          
+    const int            m_LiveTime;
     int                  m_Count;
+
+    DamageCapsure         m_Damage;
 
     SoccerSpecialHit(const SoccerSpecialHit&);
 
     bool Update();
     bool Msg(MsgType mt);
 
-    void EffectApper(int n);
+    void EffectApper(int n,RATIO scale);
     void Particle(int n);
 
     void State_Init();

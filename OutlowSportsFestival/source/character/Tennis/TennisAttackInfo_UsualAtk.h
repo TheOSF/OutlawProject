@@ -40,6 +40,8 @@ public:
 
         int                LocusBoneNum1;
         int                LocusBoneNum2;
+
+        int                HitStopFrame;
     };
 
     Param m_Param;
@@ -54,6 +56,8 @@ private:
 
     TennisPlayer * const  m_pOwner;
     Vector3               m_LocusPos, m_LocusVec;
+    int                   m_HitStopCount;
+    bool                  m_Hit;
 
     //ダメージパラメータをセット
     void DamageParamSet(DamageShpere* pDmg);
@@ -82,6 +86,15 @@ private:
     //毎フレーム呼ばれる
     void Update(int Frame, LocusHDR* pLocus);
 
+    //ヒットストップ時
+    void HitStopUpdate();
+
     //攻撃があたったときに呼ばれる
     void HitAttack(DamageShpere* pDmg);
+
+    //前方に敵がいるかどうか
+    bool isFrontStayEnemy();
+
+    //ヒットストップかどうか
+    bool isHitStopFrame();
 };

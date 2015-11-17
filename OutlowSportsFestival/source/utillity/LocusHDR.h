@@ -33,7 +33,8 @@ public:
     //帯の点を追加する
     void AddPoint(
         CrVector3 pos,   //中心位置
-        CrVector3 vec    //帯の伸びる方向(正規化していなければならない)
+        CrVector3 vec,    //帯の伸びる方向(正規化していなければならない)
+        CrVector3 speed = Vector3Zero //速度
         );
 
     //帯の長さを０に
@@ -47,12 +48,16 @@ public:
     //点を得る(なければfalseを返す)
     bool GetPos(UINT n, Vector3& out)const;
 
+    //移動更新
+    void Update();
+
 private:
 
     struct Point
     {
         Vector3 pos;
         Vector3 vec;
+        Vector3 speed;
     };
 
     Point*		    m_pPointData;
