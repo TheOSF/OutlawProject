@@ -67,8 +67,8 @@ void TennisAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, TennisPlayer* p
 
     if (m_Param.DamageType == DamageBase::Type::_VanishDamage)
     {
-        pDmg->m_VecPower.x = 0.5f;
-        pDmg->m_VecPower.y = 0.5f;
+        pDmg->m_VecPower.x = 1.0f;
+        pDmg->m_VecPower.y = 0.4f;
     }
 
     m_LocusPos = (Pos2 + Pos1)*0.5f;

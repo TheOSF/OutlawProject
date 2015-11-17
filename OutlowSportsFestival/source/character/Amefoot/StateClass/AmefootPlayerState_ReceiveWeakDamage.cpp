@@ -43,8 +43,6 @@ void AmefootPlayerState_ReceiveWeakDamage::Enter(AmefootPlayer* pCharacter)
 {
      // パラメータ設定
      CharacterDamageMotion::Params params;
-     params.AllFrame = 20;
-     params.NoDamageFrame = 12;
      params.damage_vec = m_damageVec;
 
      // ダメージモーションクラス作成

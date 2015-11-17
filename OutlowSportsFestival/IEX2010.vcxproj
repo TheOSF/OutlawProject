@@ -146,6 +146,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="source\character\Amefoot\AmefootUsualHitEvent.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveVanishDamage.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveWeakDamage.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_UsualMove.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballEquip.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballState_PoseMotion.cpp" />
     <ClCompile Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.cpp" />
@@ -167,7 +171,6 @@
     <ClCompile Include="source\Camera\Camera.cpp" />
     <ClCompile Include="source\Camera\CameraState.cpp" />
     <ClCompile Include="source\character\Amefoot\AmefootPlayer.cpp" />
-    <ClCompile Include="source\character\Amefoot\AmefootPlayerState.cpp" />
     <ClCompile Include="source\character\Attack\CharacterAttack.cpp" />
     <ClCompile Include="source\character\Attack\CharacterDefaultNearAtk.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballAttackClass.cpp" />
@@ -315,6 +318,7 @@
     <ClCompile Include="source\utillity\Locus.cpp" />
     <ClCompile Include="source\utillity\LocusBlur.cpp" />
     <ClCompile Include="source\utillity\LocusHDR.cpp" />
+    <ClCompile Include="source\utillity\sstream_helper.cpp" />
     <ClCompile Include="source\utillity\WindEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -356,6 +360,10 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="source\character\Amefoot\AmefootUsualHitEvent.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveVanishDamage.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveWeakDamage.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_UsualMove.h" />
     <ClInclude Include="source\character\Baseball\BaseballEquip.h" />
     <ClInclude Include="source\character\Baseball\BaseballState_PoseMotion.h" />
     <ClInclude Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.h" />

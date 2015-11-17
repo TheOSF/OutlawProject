@@ -7,7 +7,7 @@ m_pOwnerCharacter(pOwnerCharacter)
 {
     const int ScreenLeftSpace = 50;
 
-    m_Renderer.m_Size = Vector2(1.1f, 1.1f);
+    m_Renderer.m_Size = Vector2(1.05f, 1.05f);
     m_Renderer.m_Color     = COLORf(1, 1, 1, 1);
     m_Renderer.m_FaceColor = COLORf(1, 1, 1, 1);
 
