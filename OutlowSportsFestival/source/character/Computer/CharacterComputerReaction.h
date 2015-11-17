@@ -7,11 +7,16 @@
 #include "CharacterComputerMove.h"
 #include "../../Damage/Damage.h"
 
-//--------------------------------------------------//
-//  CharacterComputerReactionクラスは内部クラスである
-//  ReactionEventクラスのAttack関数を
-//　コンピュータが攻撃するべき時に呼ぶクラスである
-//--------------------------------------------------//
+//---------------------------------------------------//
+/*
+
+要望１
+攻撃判定が来た時に、内部クラスである
+ActionEventを継承したクラスのReaction関数を呼ぶ。
+要望２
+
+
+*/
 
 
 class CharacterComputerReaction
@@ -22,7 +27,7 @@ public:
 	{
 	public:
 		virtual~ActionEvent() {}
-		virtual void Reaction(CharacterComputerReactionHitEvent::HitType hittype) = 0;			//攻撃開始時に呼ばれる関数
+		virtual void Reaction(CharacterComputerReactionHitEvent::HitType hittype,Vector3 vec) = 0;			//攻撃開始時に呼ばれる関数
 	};
 	CharacterComputerReaction(
 		CharacterBase*					pParent,	//操るキャラクタのポインタ
@@ -39,4 +44,5 @@ private:
 	ActionEvent*  	                  m_ActionEvent;
 	CharacterComputerMove::Param	  m_Params;
 	CharacterComputerReactionHitEvent::HitType hit;
+	DamageBase* pDmg;
 };

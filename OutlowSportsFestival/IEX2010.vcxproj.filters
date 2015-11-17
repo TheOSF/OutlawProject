@@ -232,6 +232,7 @@
     <ClCompile Include="source\Stage\SkyObject.cpp" />
     <ClCompile Include="source\Sound\Sound.cpp" />
     <ClCompile Include="source\character\CharacterHitEventFunc.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerDash.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -430,6 +431,7 @@
     <ClInclude Include="source\Stage\SkyObject.h" />
     <ClInclude Include="source\Sound\Sound.h" />
     <ClInclude Include="source\character\CharacterHitEventFunc.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerDash.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

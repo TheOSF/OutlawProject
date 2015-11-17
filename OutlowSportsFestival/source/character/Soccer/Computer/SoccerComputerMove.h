@@ -6,6 +6,7 @@
 #include "../../../character/Computer/CharacterComputerDoAction.h"
 #include "../../../character/Computer/CharacterComputerReaction.h"
 
+
 //****************************************************
 //	サッカープレイヤーのコンピュータ移動操作クラスヘッダー
 //****************************************************
@@ -23,6 +24,7 @@ public:
 
 	static bool SwitchGameState(SoccerPlayer* ps);
 private:
+	int m_timer;
 	CharacterUsualMove*		m_pMoveClass;
 	CharacterComputerMove*  m_pMoveControllClass;
 	CharacterComputerDoAction*  m_pDoActionClass;

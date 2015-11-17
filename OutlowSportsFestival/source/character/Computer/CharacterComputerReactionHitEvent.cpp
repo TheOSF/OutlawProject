@@ -20,7 +20,7 @@ bool CharacterComputerReactionHitEvent::Hit(DamageBase* pDmg)
 	{
 		return false;
 	}
-	
+
 	HitDamage = true;
 	if (pDmg->pBall != nullptr && BallBase::isCanCounter(pDmg->pBall))
 	{

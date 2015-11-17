@@ -8,7 +8,7 @@ m_cCharacter(cb)
 {
 	GetParams(m_cParam, cb->m_PlayerInfo.strong_type);
 	movemode = Stop;
-	m_MoveTargetPos = GetMoveTargetPos();
+	m_MoveTargetPos = GetMoveTargetPos(cb);
 	m_Count = rand() % 20;
 	
 }
@@ -91,7 +91,7 @@ Vector2 CharacterComputerMove::StateMoveFront(CharacterBase* cb)
 
 
 	//目標に向かって移動
-	m_MoveTargetPos = GetMoveTargetPos();
+	m_MoveTargetPos = GetMoveTargetPos(cb);
 
 	Vector3 v = m_MoveTargetPos - cb->m_Params.pos;
 	if (v.Length() < 3.0f)
@@ -126,7 +126,7 @@ Vector2 CharacterComputerMove::StateMoveDistance(CharacterBase* cb)
 
 
 	//目標に向かって移動
-	m_MoveTargetPos = GetMoveTargetPos();
+	m_MoveTargetPos = GetMoveTargetPos(cb);
 
 	Vector3 v = cb->m_Params.pos- m_MoveTargetPos;
 
@@ -142,7 +142,7 @@ Vector2 CharacterComputerMove::StateStop(CharacterBase* cb)
 {
 	const int NextMove = rand() % 5;
 	++m_Count;
-	m_MoveTargetPos = GetMoveTargetPos();
+	m_MoveTargetPos = GetMoveTargetPos(cb);
 
 	if (m_Count > NextMove)
 	{
@@ -178,7 +178,7 @@ Vector2 CharacterComputerMove::SwitchAction(CharacterBase* cb)
 }
 
 
-Vector3 CharacterComputerMove::GetMoveTargetPos()
+Vector3 CharacterComputerMove::GetMoveTargetPos(CharacterBase* cb)
 {
 	Vector3 ret;
 	Vector3 nearTarget = Vector3Zero;
@@ -203,7 +203,7 @@ Vector3 CharacterComputerMove::GetMoveTargetPos()
 
 		//　死んでるor自分ならcontinue
 		if (chr_func::isDie(it->first) ||
-			it->first->m_PlayerInfo.number == m_cCharacter->m_PlayerInfo.number)
+			it->first->m_PlayerInfo.number == cb->m_PlayerInfo.number)
 		{
 			continue;
 		}
@@ -253,7 +253,7 @@ Vector2 CharacterComputerMove::StateStop_Baseball(CharacterBase* cb,bool flg)
 {
 	const int NextMove = rand() % 5;
 	++m_Count;
-	m_MoveTargetPos = GetMoveTargetPos();
+	m_MoveTargetPos = GetMoveTargetPos(cb);
 
 	if (m_Count > NextMove)
 	{
@@ -303,7 +303,7 @@ Vector2 CharacterComputerMove::StateMoveDistance_Baseball(CharacterBase* cb)
 
 
 	//目標に向かって移動
-	m_MoveTargetPos = GetMoveTargetPos();
+	m_MoveTargetPos = GetMoveTargetPos(cb);
 
 	Vector3 v = cb->m_Params.pos - m_MoveTargetPos;
 

@@ -198,7 +198,7 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 void BaseballPlayerState_ComMove::doChange(BaseballPlayer* b)
 {
 
-	nearpos = m_pMoveControllClass->GetMoveTargetPos() - b->m_Params.pos;
+	nearpos = m_pMoveControllClass->GetMoveTargetPos(b) - b->m_Params.pos;
 	
 	//　ターゲットと一定距離以下・以上なら切り替え
 	if (nearpos.Length() < 15.0f && !b->getBatterFlg() ||
@@ -222,7 +222,7 @@ void  BaseballPlayerState_ComMove::doReaction(BaseballPlayer* b)
 			m_cBaseball(cBaseball) {}
 
 		//アニメーションの更新
-		void Reaction(CharacterComputerReactionHitEvent::HitType hittype)override
+		void Reaction(CharacterComputerReactionHitEvent::HitType hittype, Vector3 vec)override
 		{
 			//　遠距離攻撃なら
 			if (hittype == CharacterComputerReactionHitEvent::HitType::CanCounter)

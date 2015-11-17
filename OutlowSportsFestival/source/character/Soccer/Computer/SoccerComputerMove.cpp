@@ -4,6 +4,9 @@
 #include "../../CharacterCounterClass.h"
 #include "../../CharacterMoveClass.h"
 #include "SoccerComputerAttack.h"
+#include "SoccerComputerDash.h"
+#include "../SoccerPlayerState.h"
+#include "../SoccerRolling.h"
 #include "SoccerComputerShot.h"
 #include "SoccerComputerCounter.h"
 #include "SoccerComputerRolling.h"
@@ -11,6 +14,7 @@
 #include "../../CharacterManager.h"
 #include "../../../Camera/Camera.h"
 #include "../SoccerHitEvent.h"
+
 
 class SocceComputerrUtillityClass
 {
@@ -20,21 +24,13 @@ public:
 	{
 	public:
 		SoccerPlayer*const cs;
-		ComputerRollingControll(SoccerPlayer* ps) :cs(cs) {}
-
+		ComputerRollingControll(SoccerPlayer* ps,Vector3 vec) :cs(cs), stick(vec) {}
+		Vector3 stick;
 
 		Vector3 GetVec()override
 		{
-			Vector2 stick = Vector2(1, 1);
-			Vector3 vec(stick.x, 0, stick.y);
-
-			if (vec.Length() < 0.25f)
-			{
-				return Vector3Zero;
-			}
-
-			vec = Vector3MulMatrix3x3(vec, matView);
-			vec.Normalize();
+			
+			Vector3 vec(stick.x, 0, stick.z);
 
 			return vec;
 		}
@@ -103,12 +99,12 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 	};
 
 	//移動パラメータを代入
-	CharacterUsualMove::Params p;
+	CharacterUsualMove::Params Movep;
 
-	p.Acceleration = 0.2f;
-	p.MaxSpeed = 0.2f;
-	p.TurnSpeed = 0.3f;
-	p.DownSpeed = 0.2f;
+	Movep.Acceleration = 0.2f;
+	Movep.MaxSpeed = 0.2f;
+	Movep.TurnSpeed = 0.3f;
+	Movep.DownSpeed = 0.2f;
 
 	//移動コントロールクラスの作成
 	m_pMoveControllClass = new CharacterComputerMove(s);
@@ -116,10 +112,11 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 	//移動クラスの作成
 	m_pMoveClass = new CharacterUsualMove(
 		s,
-		p,
+		Movep,
 		new SoccerMoveEvent(s),
 		new SoccerHitEvent(s)
 		);
+
 
 	//攻撃イベントクラス
 	class SoccerDoEvent :public CharacterComputerDoAction::ActionEvent
@@ -158,22 +155,26 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 	//反応イベントクラス
 	class SoccerReactionEvent :public CharacterComputerReaction::ActionEvent
 	{
-
+		Vector3 Vec;
 		SoccerPlayer* m_cSoccer;
 	public:
 		SoccerReactionEvent(SoccerPlayer* cSoccer) :
-			m_cSoccer(cSoccer) {}
+			m_cSoccer(cSoccer){}
 
 		//アニメーションの更新
-		void Reaction(CharacterComputerReactionHitEvent::HitType hittype)override
+		void Reaction(CharacterComputerReactionHitEvent::HitType hittype, Vector3 vec)override
 		{
 			if (hittype == CharacterComputerReactionHitEvent::HitType::CanCounter)
 			{
-				m_cSoccer->SetState(new SoccerState_ComputerControll_Counter);
+				m_cSoccer->SetState(new SoccerState_PlayerControll_Counter);
+				
 			}
 			else
 			{
-				m_cSoccer->SetState(new SoccerState_ComputerControll_Rolling(new SocceComputerrUtillityClass::ComputerRollingControll(m_cSoccer), false));
+				m_cSoccer->SetState(
+					new SoccerState_ComputerControll_Rolling
+					(new SocceComputerrUtillityClass::ComputerRollingControll(m_cSoccer,vec),
+						false));
 			}
 		}
 
@@ -191,12 +192,16 @@ void SoccerState_ComputerControll_Move::Execute(SoccerPlayer* s)
 {
 	if (SwitchGameState(s) == false)
 	{
-		//スティック値をセット
 		m_pMoveClass->SetStickValue(m_pMoveControllClass->SwitchAction(s));
+		//m_pDashClass->SetStickValue(m_pDashControllClass->SwitchAction(s));
 	}
-
+	if (rand() % 10 == 0)
+	{
+		//s->SetState(new SoccerState_ComputerControll_Dash(s));
+	}
 	//更新
 	m_pMoveClass->Update();
+	//m_pDashClass->Update();
 	m_pDoActionClass->Update();
 	m_pReactionClass->Update();
 
