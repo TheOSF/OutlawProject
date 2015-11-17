@@ -21,7 +21,7 @@ m_NoDamageFrame(0)
         
         m_Params.pParent = m_pTennis;
         m_Params.scale = 0.5f;
-        m_Params.type = BallBase::Type::_TennisSpecialAtk;
+        m_Params.type = BallBase::Type::_Usual;
     }
 
     {
