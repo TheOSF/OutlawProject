@@ -1,4 +1,5 @@
 #include "BaseballPlayerState_ComMove.h"
+
 #include "../Baseball_HitEvent.h"
 #include "../BaseballPlayerState_Attack_B.h"
 #include "../BaseballPlayerState_Attack_P.h"
@@ -8,6 +9,7 @@
 #include "../BaseballPlayerState_Counter.h"
 #include "../BaseballPlayerState.h"
 #include "../BaseballState_PlayerControll_Evasion.h"
+#include "../BaseballState_PoseMotion.h"
 
 #include "../../../GameSystem/GameController.h"
 #include "../../CharacterFunction.h"
@@ -19,6 +21,7 @@
 #include "../../Computer/CharacterComputerReactionHitEvent.h"
 #include "../../CharacterManager.h"
 
+
 class BaseballPlayerComputerrUtillityClass
 {
 public:
@@ -28,35 +31,62 @@ public:
 	public:
 		BaseballPlayer*const cb;
 
-		ComputerRollingControll(BaseballPlayer* pb) :cb(cb) {}
+		ComputerRollingControll(BaseballPlayer* pb, Vector3 vec) :cb(cb) {}
+		Vector3 stick;
 
 
 		Vector3 GetVec()override
 		{
-			Vector2 stick = Vector2(1, 1);
-			//Vector2 stick = chr_func::GetRight(cs,);
-			Vector3 vec(stick.x, 0, stick.y);
 
-			if (vec.Length() < 0.25f)
-			{
-				return Vector3Zero;
-			}
-
-			vec = Vector3MulMatrix3x3(vec, matView);
-			vec.Normalize();
+			Vector3 vec(stick.x, 0, stick.z);
 
 			return vec;
+
+
 		}
 	};
+
+
 
 };
 
 
+bool BaseballPlayerState_ComMove::SwitchGameState(BaseballPlayer* pb)
+{
+	Vector3 v;
 
+	switch (pb->GetStateType())
+	{
+	case CharacterBase::State::Usual:
+
+		return false;
+
+	case CharacterBase::State::Freeze:
+
+		return true;
+
+	case CharacterBase::State::LosePose:
+		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_LosePose, 0.2f, 1000));
+		return true;
+
+	case CharacterBase::State::WinPose:
+		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_WinPose, 0.2f, 1000));
+
+		return true;
+	default:
+		break;
+	}
+
+	return false;
+
+
+}
 
 //ステート開始
 void BaseballPlayerState_ComMove::Enter(BaseballPlayer* b)
 {
+	//　装備品
+	//	equip = new BaseballEquip(b);
 	//　移動
 	doMove(b);
 	//　攻撃
@@ -68,23 +98,28 @@ void BaseballPlayerState_ComMove::Enter(BaseballPlayer* b)
 
 void BaseballPlayerState_ComMove::Execute(BaseballPlayer* b)
 {
-	//スティック値をセット
-	m_pMoveClass->SetStickValue(m_pMoveControllClass->SwitcAction_Baseball(b, b->getBatterFlg()));
 
-	//********
-	//　更新
-	//********
+	if (SwitchGameState(b) == false)
+	{
+		//スティック値をセット
+		m_pMoveClass->SetStickValue(m_pMoveControllClass->SwitcAction_Baseball(b, b->getBatterFlg()));
+
+		//********
+		//　更新
+		//********
+
+		//　攻撃
+		m_pDoActionClass->Update();
+		//　反応
+		m_pReactionClass->Update();
+		//　切り替え
+		doChange(b);
+	}
 	//　動き
 	m_pMoveClass->Update();
-	//　攻撃
-	m_pDoActionClass->Update();
-	//　反応
-	m_pReactionClass->Update();
-	//　切り替え
-	doChange(b);
-	
 	//モデルのワールド変換行列を更新
 	chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
+
 
 }
 
@@ -166,7 +201,7 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 				{
 					m_cBaseball->SetState(new Baseball_PlayerControll_Attack_B(m_cBaseball));
 				}
-				else if ( len < 20.0f)
+				else if (len < 20.0f)
 				{
 					m_cBaseball->SetState(new BaseballState_PlayerControll_ShotAttack_B(new PlayerShotControllClass_B(m_cBaseball)));
 				}
@@ -199,7 +234,7 @@ void BaseballPlayerState_ComMove::doChange(BaseballPlayer* b)
 {
 
 	nearpos = m_pMoveControllClass->GetMoveTargetPos(b) - b->m_Params.pos;
-	
+
 	//　ターゲットと一定距離以下・以上なら切り替え
 	if (nearpos.Length() < 15.0f && !b->getBatterFlg() ||
 		nearpos.Length() > 36.0f && b->getBatterFlg())
@@ -241,7 +276,7 @@ void  BaseballPlayerState_ComMove::doReaction(BaseballPlayer* b)
 			//　それ以外
 			else
 			{
-				m_cBaseball->SetState(new BaseballState_Rolling(new BaseballPlayerComputerrUtillityClass::ComputerRollingControll(m_cBaseball)));
+				m_cBaseball->SetState(new BaseballState_Rolling(new BaseballPlayerComputerrUtillityClass::ComputerRollingControll(m_cBaseball,vec)));
 			}
 		}
 
