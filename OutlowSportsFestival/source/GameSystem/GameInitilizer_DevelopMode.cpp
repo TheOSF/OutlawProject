@@ -236,10 +236,10 @@ void GameInitializer_DevelopMode::GameCreate()
 
     //ÉLÉÉÉâÉNÉ^çÏê¨
     {
-        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Computer, CharacterType::_Baseball);
+		CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Baseball);
+		CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Baseball);
     
-        CreateCharacter((PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Soccer);
-        CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Soccer);
+		CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Soccer);
+		CreateCharacter((PlayerNum::Value)3, PlayerType::_Player, CharacterType::_Soccer);
     }
 }

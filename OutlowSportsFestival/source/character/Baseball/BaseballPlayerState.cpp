@@ -1,5 +1,6 @@
 #include "BaseballPlayerState.h"
 
+
 #include "BaseballState_PlayerControll_Evasion.h"
 #include "BaseballState_PlayerControll_ShotAttack_B.h"
 #include "BaseballState_PlayerControll_ShotAttack_P.h"
@@ -262,12 +263,16 @@ void BaseballState_PlayerControll_Move::Enter(BaseballPlayer* b)
 		new BaseballMoveEvent(b),
 		new BaseballHitEvent(b)
 		);
+
+
+	
 }
 
 
 //　ステート実行
 void BaseballState_PlayerControll_Move::Execute(BaseballPlayer* b)
 {
+
 	if (SwitchGameState(b) == false)
 	{
 		//　スティックの値を取得

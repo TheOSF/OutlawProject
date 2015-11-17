@@ -114,6 +114,8 @@ void BaseballState_SPAttack_B::State_Atk1()
 			m_Damage.m_Vec = m_Damage.m_Param.pos;
 			m_Damage.m_Param.pos *= 3.0f;
 			m_Damage.m_Param.pos += m_pBaseBall->m_Params.pos;
+			m_Damage.m_VecPower.x = 0.2f;
+			
 		}
 		else
 		{
@@ -181,6 +183,9 @@ void BaseballState_SPAttack_B::State_Atk2()
 		chr_func::GetFront(m_pBaseBall, &m_Damage.m_Param.pos);
         m_Damage.m_Vec = m_Damage.m_Param.pos;
         m_Damage.m_Vec.y = 0.8f;//@”ò‚ÔŠp“x
+		m_Damage.m_VecPower.x = 2.0f;
+		m_Damage.m_VecPower.y = 20.0f;
+
 		m_Damage.m_Param.pos *= 3.0f;
 		m_Damage.m_Param.pos += m_pBaseBall->m_Params.pos;
 
