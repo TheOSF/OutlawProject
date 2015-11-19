@@ -42,6 +42,8 @@ public:
         int                LocusBoneNum2;
 
         int                HitStopFrame;
+
+        float              HitBack;
     };
 
     Param m_Param;
@@ -57,7 +59,6 @@ private:
     TennisPlayer * const  m_pOwner;
     Vector3               m_LocusPos, m_LocusVec;
     int                   m_HitStopCount;
-    bool                  m_Hit;
 
     //ダメージパラメータをセット
     void DamageParamSet(DamageShpere* pDmg);

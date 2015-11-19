@@ -9,13 +9,16 @@ pBall(nullptr),
 pCallBackClass(nullptr),
 type(_WeekDamage),
 Value(1),
-HitCount(0)
+HitCount(0),
+m_OptionFlags(),
+MaxChrHit(1)
 {
 #ifdef _DEBUG
 	MyAssert(DefDamageMgr.AddDamage(this), "ダメージ登録の失敗");
 #else
     DefDamageMgr.AddDamage(this);
 #endif
+    m_PlayerHitCounts.fill(0);
 }
 
 DamageBase::~DamageBase()
@@ -29,6 +32,37 @@ DamageBase::~DamageBase()
     DefDamageMgr.EraceDamage(this);
 #endif
 }
+
+bool DamageBase::isOptionOn(Option op)const
+{
+    //引数のオプションがonかどうか
+    return m_OptionFlags.at((int)op);
+}
+void DamageBase::SetOption(Option op, bool flag)
+{
+    //オプションのon,offをセット
+    m_OptionFlags.at((int)op) = flag;
+}
+
+void DamageBase::ResetCounts()
+{
+    //ヒットカウント、キャラヒットカウントをリセット
+    m_PlayerHitCounts.fill(0);
+    HitCount = 0;
+}
+
+void DamageBase::AddHitCount(CharacterBase* pHitChr)
+{
+    //キャラクタに当たった場合カウントを加算
+    ++m_PlayerHitCounts.at((int)pHitChr->m_PlayerInfo.number);
+}
+
+bool DamageBase::isCanHitCharacter(CharacterBase* pHitChr)const
+{
+    //引数のキャラクタに当たれるかどうか
+    return m_PlayerHitCounts.at((int)pHitChr->m_PlayerInfo.number) < MaxChrHit;
+}
+
 
 DamageShpere::DamageShpere():
 m_Enable(true)

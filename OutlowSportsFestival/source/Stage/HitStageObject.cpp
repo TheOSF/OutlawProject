@@ -19,8 +19,15 @@ HitStageObject::~HitStageObject()
 
 void HitStageObject::SetMatrix(const Matrix& mat)
 {
-    m_pMeshRenderer->SetMatrix(mat);
-    m_pMeshCollider->SetWorldMatrix(mat);
+    if (m_pMeshRenderer != nullptr)
+    {
+        m_pMeshRenderer->SetMatrix(mat);
+    }
+
+    if (m_pMeshRenderer != nullptr)
+    {
+        m_pMeshCollider->SetWorldMatrix(mat);
+    }
 }
 
 bool HitStageObject::Update()

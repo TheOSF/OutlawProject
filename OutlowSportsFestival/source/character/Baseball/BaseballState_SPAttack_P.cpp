@@ -104,17 +104,15 @@ CharacterShotAttack* BaseballState_SPAttack_P::CreateSpAttack_P(BaseballPlayer* 
 		void Shot()
 		{
 		
-			BallBase::Params param;
+            Vector3 pos, move;
 			
-			chr_func::GetFront(m_pBaseball, &param.move);
-			param.move *= 9.0f;
-			param.pos = m_pBaseball->m_Params.pos;
-			param.pos.y = BallBase::UsualBallShotY;
-			param.pParent = m_pBaseball;
-			param.type = BallBase::Type::_BaseballSpecialAtk;
+			chr_func::GetFront(m_pBaseball, &move);
+            move *= 3.8f;
+            pos = m_pBaseball->m_Params.pos;
+            pos.y = BallBase::UsualBallShotY;
 
 			//　威力とか
-			new Baseball_SpAtk_Ball(param, DamageBase::Type::_VanishDamage, 50);
+            new Baseball_SpAtk_Ball(m_pBaseball, pos, move, 50);
 		}
 
 		//　遠距離攻撃開始

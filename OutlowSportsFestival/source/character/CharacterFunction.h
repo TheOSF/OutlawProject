@@ -93,7 +93,7 @@ namespace chr_func
     bool isCanSpecialAttack(CharacterBase* p);
 
     //キャラクタの体力をダメージによって減少させる
-    void CalcDamage(CharacterBase* p, float value);
+    void CalcDamage(CharacterBase* p, float value, bool DontDie = false);
 
     //攻撃のターゲットを得る(複数のターゲットがいた場合、自身のもっとも前にいるキャラクタを選ぶ)
     bool CalcAtkTarget(CharacterBase* pOwner, RADIAN check_angle, float check_distance, CharacterBase** ppOut);

@@ -12,8 +12,8 @@ CameraStateGamePlay::CameraStateGamePlay(bool pos_reset)
     //m_PosSpeed = 0.04f;
     //m_TargetSpeed = 0.02f;
 
-    m_PosSpeed = 0.06f;
-    m_TargetSpeed = 0.06f;
+    m_PosSpeed = 0.1f;
+    m_TargetSpeed = 0.1f;
 
     if (pos_reset)
     {

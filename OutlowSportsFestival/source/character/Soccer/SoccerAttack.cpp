@@ -137,6 +137,8 @@ void SoccerAttackClass::State_NextAtk()
 	pNowAtk->DamagePosSet(&m_Damage, m_pOwner);
 	pNowAtk->MotionSet(m_pOwner);
 
+    m_Damage.ResetCounts();
+
 	m_Timer = 0;
 	m_DoCombo = false;
 

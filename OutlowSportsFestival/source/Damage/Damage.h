@@ -4,7 +4,8 @@
 #include "iextreme.h"
 #include "../GameSystem/ForwardDecl.h"
 #include <map>
-
+#include <bitset>
+#include <array>
 //*************************************************************
 //		ダメージ判定クラスヘッダ
 //*************************************************************
@@ -31,6 +32,7 @@ struct CapsureParam
 class DamageBase
 {
 public:
+    
     class HitCallBack
     {
     public:
@@ -45,21 +47,38 @@ public:
 		_UpDamage,		//上に吹き飛ぶ(バレーとか)追撃可能
 	};
 
+    enum class Option
+    {
+        _DontDie,   //死亡しない(必ず１残る
+    };
+
 	LpCharacterBase	    pParent;	    //このダメージ判定の元のキャラクタ(親がキャラクタでない場合はnullptrが入っている)
 	LpBallBase		    pBall;		    //この判定についているボール(ボールでなければnull)
     HitCallBack*        pCallBackClass; //コールバッククラス(nullの場合はよび出さない)
     Type			    type;		    //このダメージのタイプ
 	float			    Value;		    //値
 	int				    HitCount;	    //当たった回数
-    
+    int                 MaxChrHit;      //１キャラクタに当たる総数
 
 	DamageBase();
 	virtual ~DamageBase();
+
+    bool isOptionOn(Option op)const;       //引数のオプションがonかどうか
+    void SetOption(Option op, bool flag);  //オプションのon,offをセット
+
+    void ResetCounts();                    //ヒットカウント、キャラヒットカウントをリセット
+    void AddHitCount(CharacterBase* pHitChr);            //キャラクタに当たった場合カウントを加算
+    bool isCanHitCharacter(CharacterBase* pHitChr)const; //引数のキャラクタに当たれるかどうか
 
     virtual bool HitCheckSphere(const SphereParam* sp) = 0;
     virtual void CalcPosVec(CrVector3 hit_pos, Vector3* pOutPos, Vector3* pOutVec) = 0;
    
     virtual void DebugDraw() = 0;
+
+private:
+    static const int            MaxPlayer = 4;
+    std::bitset<16>             m_OptionFlags;
+    std::array<int, MaxPlayer>  m_PlayerHitCounts;
 };
 
 

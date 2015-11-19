@@ -19,9 +19,11 @@ public:
             int			hit_material){}
 	};
 
-	MeshCollider(
-		LPIEXMESH		pMesh,		//デストラクタでdeleteしない
-		HitEvent*		pHitEvent	//デストラクタでdeleteする
+    MeshCollider(
+        LPIEXMESH		pMesh,		//デストラクタでdeleteしない
+        HitEvent*		pHitEvent,	//デストラクタでdeleteする
+        bool            MeshDelete = false, 
+        DWORD           hitFlags = 0xFFFFFFFF
 		);
 
 	~MeshCollider();
@@ -51,6 +53,8 @@ private:
     Matrix          m_TransMatrix;
     Matrix          m_TransInvMatrix;
     bool            m_ChangeMatrix;
+    bool            m_MeshDelete;
+    DWORD           m_HitFlags;
 };
 
 #endif

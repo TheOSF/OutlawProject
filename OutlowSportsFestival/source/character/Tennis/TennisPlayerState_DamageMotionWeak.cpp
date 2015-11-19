@@ -82,7 +82,7 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
             vec,
             0.03f,
             0.10f,
-            Vector3(1.0f, 1.0f, 1.0f),
+            Vector3(1.0f, 0.8f, 0.25f),
             1
             );
 

@@ -10,7 +10,7 @@
 //	キャラクタ用メッシュクラス
 //*************************************************
 
-class CharacterRenderer :public DeferredRenderer
+class CharacterRenderer :public DeferredRenderer, public ForwardHDRRenderer
 {
 public:
     enum class RenderType
@@ -108,6 +108,8 @@ private:
 
     void DepthRender(iexShader* pShader, const char* pTec, DepthRenderType type);
 
+    void CalcZ();
+    void Render();
 };
 
 #endif

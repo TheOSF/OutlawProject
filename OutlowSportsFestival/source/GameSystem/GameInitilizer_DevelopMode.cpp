@@ -24,13 +24,7 @@
 #include    "../character/Amefoot/AmefootPlayer.h"
 #include    "../character/Amefoot/AmefootPlayerState.h"
 
-#include    "../character/Lacrosse/LacrossePlayer.h"
-#include    "../character/Lacrosse/LacrossePlayerState.h"
-
-#include    "../character/VolleyBall/VolleyBallPlayer.h"
-#include    "../character/VolleyBall/VolleyBallPlayerState.h"
-
-#include    "../Render/LightObject.h"・
+#include    "../Render/LightObject.h"
 
 #include    "../Effect/EffectResourceLoad.h"
 
@@ -53,6 +47,7 @@
 #include "../../Input/GamePad/GamePadManager.h"
 #include "../Stage/Kasenziki_Manager.h"
 #include "../character/Soccer/Computer/SoccerComputerMove.h"
+#include "../Item/SkillGaugeItemEmitter.h"
 
 
 static void CreateCharacter(
@@ -222,28 +217,36 @@ void GameInitializer_DevelopMode::GameCreate()
 
 
     {
-        GameEventer::Param param;
-
-        param.round = 3;
-        param.time = 60 * 60 * 1; // 1 分
-        // param.time = 60 * 3;
-
-        new GameEventer(param, new MatchState::RoundResetCountdown());
-    }
-
-
-    {
         Kasennziki_Manager* p = new Kasennziki_Manager(5);
         p->CreateStage();
     }
 
 
+
+    {
+        GameEventer::Param param;
+
+        param.round = 3;
+        param.time = 60 * 60 * 2; // 2 分
+        // param.time = 60 * 3;
+
+        new GameEventer(param, new MatchState::RoundResetCountdown());
+        //new GameEventer(param, new MatchState::StartCountdown());
+    }
+
+
+    //アイテムエミッターの生成
+    {
+        new SkillGaugeItemEmitter(60 * 60 * 1);
+    }
+
     //キャラクタ作成
     {
-        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Baseball);
-        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Soccer);
+        CreateCharacter((PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis);
+        CreateCharacter((PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Tennis);
      
-        CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Baseball);
+        CreateCharacter((PlayerNum::Value)2, PlayerType::_Player, CharacterType::_Tennis);
         CreateCharacter((PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Soccer);
     }
+
 }

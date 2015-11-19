@@ -22,7 +22,7 @@ TennisBoundBall::TennisBoundBall(
     CrVector3  first_move,
     TennisPlayer* const pOwner
     ) :
-    m_Locus(20),
+    m_Locus(15),
     m_pRigidBody(nullptr),
     m_pOwnerTennis(pOwner)
 {
@@ -385,7 +385,7 @@ void TennisBoundBall::AddLocusPoint()
 void TennisBoundBall::UpdateMesh()
 {
     //メッシュ更新
-    const float scale = UsualBall::GetBallScale(m_Params.pParent->m_PlayerInfo.chr_type);
+    const float scale = UsualBall::GetBallScale(CharacterType::_Tennis);
     Matrix m;
     
     D3DXMatrixScaling(&m, scale, scale, scale);
@@ -399,16 +399,28 @@ void TennisBoundBall::UpdateMesh()
 void TennisBoundBall::UpdateLocusColor()
 {
     //軌跡色更新
-    const DWORD Color = CharacterBase::GetPlayerColor(m_Params.pParent->m_PlayerInfo.number);
+    const COLORf Color = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number);
 
-    m_Locus.m_StartParam.Color = Vector4(
-        float((Color >> 16) & 0xFF) / 255.f,
-        float((Color >> 8) & 0xFF) / 255.f,
-        float(Color & 0xFF) / 255.f,
-        0.5f
-        );
+    m_Locus.m_StartParam.Color = Color.toVector4();
+    m_Locus.m_StartParam.Color.w = 0.3f;
+    m_Locus.m_StartParam.HDRColor = m_Locus.m_StartParam.Color;
 
-    m_Locus.m_EndParam.Color = Vector4(1, 1, 1, 0);
+    m_Locus.m_StartParam.HDRColor.w = 0.5f;
+
+    m_Locus.m_EndParam.Color = m_Locus.m_StartParam.Color;
+    m_Locus.m_EndParam.Color.w = 0;
+
+    m_Locus.m_EndParam.HDRColor = m_Locus.m_StartParam.HDRColor;
+    m_Locus.m_EndParam.HDRColor.w = 0;
+
+
+    {
+        //メッシュを光らせる
+        COLORf Color = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number);
+
+        m_pBallRenderer->m_HDR = Vector3(1, 1, 1) * 0.1f;
+
+    }
 }
 
 
@@ -417,3 +429,4 @@ void TennisBoundBall::UpdateDamage()     //当たり判定の更新
     m_Damage.m_Vec = m_Params.move;
     m_Damage.m_Param.pos = m_Params.pos;
 }
+

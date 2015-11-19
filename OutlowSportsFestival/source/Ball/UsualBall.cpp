@@ -38,7 +38,7 @@ UsualBall::UsualBall(
         //ダメージ判定のパラメータを代入
         m_Damage.pBall = this;
         m_Damage.pParent = params.pParent;
-        m_Damage.m_Param.width = 1.0f;	//大きさはボールによって異なる?
+        m_Damage.m_Param.width = 0.75f;	//大きさはボールによって異なる?
         m_Damage.type = damage_type;
         m_Damage.Value = damage_val;
         m_Damage.m_Enable = true;
@@ -522,6 +522,6 @@ bool UsualBall::StatePhysicMove()
     }
 
 
-    //フィールド外,もしくは消滅タイマーが０　なら更新失敗
-    return !isOutofField() && m_DeleteFrame > 0;
+    //消滅タイマーが０　なら更新失敗
+    return  m_DeleteFrame > 0;
 }

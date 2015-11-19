@@ -71,7 +71,7 @@ void Kasennziki_Manager::CreateStage()
         const float scale = 0.1f;
 
         MeshRenderer* R = new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColorSpecular, MeshRenderer::GbufRenderType::UseNormal);
-        MeshCollider* C = new MeshCollider(pStageMesh, new MeshCollider::HitEvent);
+        MeshCollider* C = new MeshCollider(pStageMesh, nullptr, false, CollisionManager::RayType::_Ball | CollisionManager::RayType::_Usual);
 
         pStageMesh->SetScale(scale, scale, scale);
         pStageMesh->SetAngle(0, PI, PI);
@@ -85,6 +85,15 @@ void Kasennziki_Manager::CreateStage()
 
         R->SetMatrix(m);
         C->SetWorldMatrix(m);
+
+        {
+            //キャラクタ専用の当たり判定ステージ
+            MeshCollider* C2 = new MeshCollider(new iexMesh("DATA\\Stages\\Stage1\\kasenziki\\kasenziki_ChrHit.IMO"), nullptr, true, CollisionManager::RayType::_Character);
+            C2->SetWorldMatrix(m);
+            new StaticGameObjectTemplate<MeshCollider>(C2);
+        }
+
+
 
         //当たり判定のあるステージにする
         new HitStageObject(

@@ -11,8 +11,7 @@ TennisAttackInfo_UsualAtk::TennisAttackInfo_UsualAtk(
     m_pOwner(pOwner),
     m_HitStopCount(0),
     m_LocusPos(Vector3Zero),
-    m_LocusVec(Vector3Zero),
-    m_Hit(false)
+    m_LocusVec(Vector3Zero)
 {
     
 }
@@ -57,7 +56,7 @@ void TennisAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, TennisPlayer* p
 
     //方向はキャラクタの正面ベクトル
     chr_func::GetFront(pTennis, &pDmg->m_Vec);
-    pDmg->m_VecPower.x = 0.1f;
+    pDmg->m_VecPower.x = m_Param.HitBack;
     
     //pDmg->m_Param.pos = Pos2;  //ボーン先端位置にダメージをセット
 
@@ -67,7 +66,6 @@ void TennisAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, TennisPlayer* p
 
     if (m_Param.DamageType == DamageBase::Type::_VanishDamage)
     {
-        pDmg->m_VecPower.x = 1.0f;
         pDmg->m_VecPower.y = 0.4f;
     }
 
@@ -132,8 +130,7 @@ bool TennisAttackInfo_UsualAtk::isDamageEnable(int Frame)
 
     return
         (Frame >= m_Param.DamageEnableStart&&
-        Frame <= m_Param.DamageEnableEnd) &&
-        m_Hit == false;
+        Frame <= m_Param.DamageEnableEnd);
         
 }
 
@@ -180,8 +177,6 @@ void TennisAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
         );
 
     m_HitStopCount = m_Param.HitStopFrame;
-
-    m_Hit = true;
 }
 
 
@@ -213,7 +208,7 @@ bool TennisAttackInfo_UsualAtk::isFrontStayEnemy()
         }
     }
 
-    return false;;
+    return false;
 }
 
 

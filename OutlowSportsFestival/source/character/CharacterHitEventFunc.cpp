@@ -7,7 +7,9 @@ CharacterHitEventFunc::SetType CharacterHitEventFunc::CheckDamage(DamageBase* pD
 
     //自分の作っているダメージだった場合は何もしない
     if (pDmg->pParent != nullptr &&
-        pDmg->pParent->m_PlayerInfo.number == pOwner->m_PlayerInfo.number)
+        pDmg->pParent->m_PlayerInfo.number == pOwner->m_PlayerInfo.number || 
+        pDmg->isCanHitCharacter(pOwner) == false
+        )
     {
         return SetType::_None;
     }
@@ -18,8 +20,11 @@ CharacterHitEventFunc::SetType CharacterHitEventFunc::CheckDamage(DamageBase* pD
     //ダメージ方向と位置を算出
     pDmg->CalcPosVec(pOwner->CalcHitCheckPos(), &dmg_pos, pOutVec);
 
+    //ヒットカウント加算
+    pDmg->AddHitCount(pOwner);
+
     //ダメージ計算
-    chr_func::CalcDamage(pOwner, pDmg->Value);
+    chr_func::CalcDamage(pOwner, pDmg->Value, pDmg->isOptionOn(DamageBase::Option::_DontDie));
 
 
     //もし体力がなかったら、どんな攻撃であろうと死亡ステートへ

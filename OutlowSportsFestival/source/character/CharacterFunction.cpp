@@ -339,7 +339,7 @@ bool chr_func::CheckWall(CharacterBase* p)
     for (int i = 0; i < (int)ARRAYSIZE(RotateCheckVec); ++i)
     {
         pos = p->m_Params.pos;
-        pos.y += 2.0f;
+        pos.y = 2.0f;
         vec = Vector3RotateAxis(Vector3AxisY, RotateCheckVec[i], CheckVec);
         dist = 100;
 
@@ -360,7 +360,7 @@ bool chr_func::CheckWall(CharacterBase* p)
             &vec,
             &dist,
             &material,
-            CollisionManager::RayType::_Usual
+            CollisionManager::RayType::_Character
             ))
         {
             vec.y = 0;
@@ -470,16 +470,27 @@ bool chr_func::isCanSpecialAttack(CharacterBase* p)
 }
 
 //キャラクタの体力をダメージによって減少させる
-void chr_func::CalcDamage(CharacterBase* p, float value)
+void chr_func::CalcDamage(CharacterBase* p, float value, bool DontDie)
 {
-    //戦闘中以外なら計算しない
-    if (p->GetStateType() != CharacterBase::State::Usual)
+    //戦闘中以外orすでに死んでいるなら計算しない
+    if (p->GetStateType() != CharacterBase::State::Usual || 
+        isDie(p))
     {
         return;
     }
 
     p->m_Params.HP -= value;
-    p->m_Params.HP = max(p->m_Params.HP, 0);
+
+    //みねうちなら１残す
+    if (DontDie)
+    {
+        p->m_Params.HP = max(p->m_Params.HP, 1);
+    }
+    else
+    {
+        p->m_Params.HP = max(p->m_Params.HP, 0);
+    }
+
 }
 
 //攻撃のターゲットを得る
@@ -539,7 +550,7 @@ bool chr_func::CalcAtkTarget(
         ++it;
     }
 
-    return ppOut != nullptr;
+    return *ppOut != nullptr;
 }
 
 //引数のスキル値が必殺技を発動できるかどうか

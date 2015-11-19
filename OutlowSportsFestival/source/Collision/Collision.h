@@ -11,11 +11,11 @@ class CollisionBase
 {
 public:
 	//レイのタイプ
-	enum RayType
+    enum RayType :DWORD
 	{
-		_Usual,
-        _Ball,
-        _Character
+        _Usual = 1,
+        _Ball  = 1 << 1,
+        _Character = 1 << 2
 	};
 
 	CollisionBase();

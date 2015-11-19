@@ -12,8 +12,8 @@
 //*************************************************************
 
 SoccerPlayer::SoccerPlayer(const CharacterBase::PlayerInfo& info) :
-CharacterBase(info), m_ModelSize(0.05f),
-m_Renderer(new BlendAnimationMesh("DATA\\CHR\\Soccer\\Player_S.iem"))
+CharacterBase(info, new BlendAnimationMesh("DATA\\CHR\\Soccer\\Player_S.iem")),
+m_ModelSize(0.05f)
 {
 	
 	m_pStateMachine = new SoccerStateMachine(this);

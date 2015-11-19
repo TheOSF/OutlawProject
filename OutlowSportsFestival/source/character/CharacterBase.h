@@ -3,8 +3,10 @@
 
 #include "../GameSystem/GameObject.h"
 #include "../GameSystem/GameSystem.h"
-#include "iextreme.h"
 #include "../utillity/ColorUtility.h"
+
+#include "CharacterRenderer.h"
+#include "iextreme.h"
 #include "CharacterPhysic.h"
 
 //***************************************************
@@ -60,8 +62,9 @@ public:
 
 	const PlayerInfo	m_PlayerInfo; //プレイヤー情報にする構造体
 	Params				m_Params;     //キャラクタ基本パラメーター
+    CharacterRenderer	m_Renderer;   //レンダラ
    
-	CharacterBase(const PlayerInfo& info);
+    CharacterBase(const PlayerInfo& info, BlendAnimationMesh* pMesh);
 	virtual ~CharacterBase();
 
     static COLOR  GetPlayerColor (PlayerNum::Value number);
@@ -85,6 +88,8 @@ public:
 private:
     CharacterPhysic     m_PhysicObj;  //物理判定オブジェクト
     State               m_StateType;  //現在のステートタイプ
+
+    void RendererUpdate();
 };
 
 #endif

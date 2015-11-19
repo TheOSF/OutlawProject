@@ -23,11 +23,15 @@ void GameSetUI::CalcZ()
 
 void GameSetUI::Render()
 {
+    const int SizeX = 700;
+    const int SizeY = 200;
+
+
     m_pTexture->Render(
-        300,
-        310 + (int)(m_T*-50),
-        550,
-        160,
+        (int)iexSystem::ScreenWidth / 2 - SizeX / 2,
+        (int)iexSystem::ScreenHeight / 2 - SizeY / 2 + (int)(m_T*-50), 
+        SizeX,
+        SizeY,
 
         0,
         100*2,

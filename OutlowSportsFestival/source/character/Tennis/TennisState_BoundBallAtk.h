@@ -6,7 +6,7 @@
 #include "../../Ball/Ball.h"
 #include "../../GameSystem/GameObject.h"
 #include "../../GameSystem/ForwardDecl.h"
-#include "../../utillity/Locus.h"
+#include "../../utillity/LocusHDR.h"
 #include "../../Render/LightObject.h"
 #include "TennisPlayer.h"
 #include "../../Library/Bullet/BulletSystem.h"
@@ -36,7 +36,7 @@ private:
 
     TennisPlayer*const  m_pOwnerTennis;  //親テニス
     MeshRenderer*       m_pBallRenderer; //ボール描画クラス
-    Locus               m_Locus;         //軌跡クラス
+    LocusHDR            m_Locus;         //軌跡クラス
     RigidBody*          m_pRigidBody;    //このボールを動かす剛体クラス
     Matrix              m_BaseMatrix;    //スケールを除いた変換行列
     DamageShpere        m_Damage;        //ダメージ判定クラス

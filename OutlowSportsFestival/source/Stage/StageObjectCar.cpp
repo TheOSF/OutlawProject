@@ -132,6 +132,9 @@ StageObjectCar::StageObjectCar(
         m_Damage.m_Vec = Vector3Normalize(forward - Vector3AxisZ);
         m_Damage.m_Vec.y = 0.2f;
 
+        //このダメージではキャラクタは死なないように
+        m_Damage.SetOption(DamageBase::Option::_DontDie, true);
+
         UpdateDamage();
     }
 

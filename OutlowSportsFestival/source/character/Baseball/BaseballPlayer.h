@@ -65,7 +65,6 @@ public:
 	BaseballPlayer(const CharacterBase::PlayerInfo& info);
 	~BaseballPlayer();
 
-	CharacterRenderer	m_Renderer;
 	const float m_ModelSize;
 
 	void ChangeEquip();

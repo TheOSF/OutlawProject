@@ -63,10 +63,6 @@
     </ClCompile>
     <ClCompile Include="source\Ball\UsualBall.cpp" />
     <ClCompile Include="source\brendanimation\BlendAnimationMesh.cpp" />
-    <ClCompile Include="source\character\Lacrosse\LacrosseAttackClose.cpp" />
-    <ClCompile Include="source\character\Lacrosse\LacrosseCounterPoseClass.cpp" />
-    <ClCompile Include="source\character\Lacrosse\LacrossePlayer.cpp" />
-    <ClCompile Include="source\character\Lacrosse\LacrossePlayerState.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayer.cpp" />
     <ClCompile Include="source\character\CharacterBase.cpp" />
     <ClCompile Include="source\character\CharacterFunction.cpp" />
@@ -85,7 +81,6 @@
     <ClCompile Include="source\character\Soccer\SoccerPlayerState.cpp" />
     <ClCompile Include="source\character\CharacterManager.cpp" />
     <ClCompile Include="source\Collision\Collision.cpp" />
-    <ClCompile Include="source\character\Lacrosse\LacrosseCounterClass.cpp" />
     <ClCompile Include="source\character\CharacterEvasionClass.cpp" />
     <ClCompile Include="source\Collision\MeshCollider.cpp" />
     <ClCompile Include="source\character\CharacterCounterClass.cpp" />
@@ -114,8 +109,6 @@
     <ClCompile Include="source\character\Attack\CharacterAttack.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerDash.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerSliding.cpp" />
-    <ClCompile Include="source\character\VolleyBall\VolleyBallPlayer.cpp" />
-    <ClCompile Include="source\character\VolleyBall\VolleyBallPlayerState.cpp" />
     <ClCompile Include="source\Collision\GameObjectCollisionMesh.cpp" />
     <ClCompile Include="source\utillity\ColorUtility.cpp" />
     <ClCompile Include="source\GameSystem\ResourceManager.cpp" />
@@ -237,6 +230,9 @@
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_UsualMove.cpp" />
     <ClCompile Include="source\character\Amefoot\AmefootUsualHitEvent.cpp" />
     <ClCompile Include="source\utillity\sstream_helper.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerDash.cpp" />
+    <ClCompile Include="source\Item\SkillGaugeUpItem.cpp" />
+    <ClCompile Include="source\Item\SkillGaugeItemEmitter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -245,10 +241,6 @@
     <ClInclude Include="source\Ball\Ball.h" />
     <ClInclude Include="source\Ball\UsualBall.h" />
     <ClInclude Include="source\brendanimation\BlendAnimationMesh.h" />
-    <ClInclude Include="source\character\Lacrosse\LacrosseAttackClose.h" />
-    <ClInclude Include="source\character\Lacrosse\LacrosseCounterPoseClass.h" />
-    <ClInclude Include="source\character\Lacrosse\LacrossePlayer.h" />
-    <ClInclude Include="source\character\Lacrosse\LacrossePlayerState.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayer.h" />
     <ClInclude Include="source\character\CharacterBase.h" />
     <ClInclude Include="source\character\CharacterFunction.h" />
@@ -272,7 +264,6 @@
     <ClInclude Include="source\character\Soccer\SoccerPlayerState.h" />
     <ClInclude Include="source\character\CharacterManager.h" />
     <ClInclude Include="source\Collision\Collision.h" />
-    <ClInclude Include="source\character\Lacrosse\LacrosseCounterClass.h" />
     <ClInclude Include="source\character\CharacterEvasionClass.h" />
     <ClInclude Include="source\Collision\MeshCollider.h" />
     <ClInclude Include="source\character\CharacterCounterClass.h" />
@@ -303,8 +294,6 @@
     <ClInclude Include="source\character\Attack\CharacterAttack.h" />
     <ClInclude Include="source\character\Soccer\SoccerDash.h" />
     <ClInclude Include="source\character\Soccer\SoccerSliding.h" />
-    <ClInclude Include="source\character\VolleyBall\VolleyBallPlayer.h" />
-    <ClInclude Include="source\character\VolleyBall\VolleyBallPlayerState.h" />
     <ClInclude Include="source\Collision\GameObjectCollisionMesh.h" />
     <ClInclude Include="source\utillity\ColorUtility.h" />
     <ClInclude Include="source\GameSystem\ResourceManager.h" />
@@ -440,6 +429,9 @@
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveWeakDamage.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_UsualMove.h" />
     <ClInclude Include="source\character\Amefoot\AmefootUsualHitEvent.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerDash.h" />
+    <ClInclude Include="source\Item\SkillGaugeUpItem.h" />
+    <ClInclude Include="source\Item\SkillGaugeItemEmitter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

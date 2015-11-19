@@ -21,7 +21,7 @@ TennisAttackClass::TennisAttackClass(
     m_Locus.m_Division = 5;
     //m_Locus.m_pTexture = DefResource.Get(Resource::TextureType::Locus1);
 
-    Vector4 EffectColor = Vector4(1, 1, 1, 0.5f);// CharacterBase::GetPlayerColorF(m_pOwner->m_PlayerInfo.number).toVector4();
+    Vector4 EffectColor = Vector4(1, 1, 1, 0.2f);// CharacterBase::GetPlayerColorF(m_pOwner->m_PlayerInfo.number).toVector4();
     EffectColor.w = 0.5f;
 
     m_Locus.m_StartParam.Color = EffectColor;
@@ -169,6 +169,8 @@ void TennisAttackClass::State_NextAtk()
     pNowAtk->DamageParamSet(&m_Damage);
     pNowAtk->DamagePosSet(&m_Damage, m_pOwner);
     pNowAtk->MotionSet(m_pOwner);
+
+    m_Damage.ResetCounts();
 
     m_Timer = 0;
     m_DoCombo = false;

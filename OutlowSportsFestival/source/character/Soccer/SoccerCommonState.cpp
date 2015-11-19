@@ -65,6 +65,7 @@ void SoccerState_SmallDamage::Enter(SoccerPlayer* s)
 		new SoccerHitEvent(m_pSoccer),
 		Param
 		);
+
 	//ヒットエフェクト作成
 	new HitEffectObject(
 		m_pSoccer->m_Params.pos + Vector3(0, 3, 0),

@@ -27,7 +27,6 @@ public:
      void SetState(AmefootState* state , bool important = false);
 
 
-     CharacterRenderer m_Renderer;
      const float m_ModelSize;
 
 public:

@@ -1,5 +1,6 @@
 #include "CharacterRenderer.h"
 #include "../IexSystem/System.h"
+#include "../Camera/Camera.h"
 
 //*************************************************
 //	キャラクタ用メッシュクラス
@@ -183,15 +184,6 @@ void CharacterRenderer::MasterRender()
     shader->SetValue("g_HDR_Color", m_HDR);
     shader->SetValue("g_Color", D3DXVECTOR4(m_ClothesColor.x, m_ClothesColor.y, m_ClothesColor.z, 1.0f));
 
-
-    if (m_OutlineVisible)
-    {
-        shader->SetValue("g_Outline_Color", m_OutlineColor.toVector4());
-        //shader->SetValue("g_Outline_Color", D3DXVECTOR4(m_ClothesColor.x, m_ClothesColor.y, m_ClothesColor.z, 0.0f)*2.0f);
-        
-        m_pAnimeMesh->Render(shader, "OutLine");
-    }
-
     m_pAnimeMesh->Render(shader, m_Techniques);
 }
 
@@ -203,6 +195,21 @@ void CharacterRenderer::DepthRender(iexShader* pShader, const char* pTec, DepthR
     m_pAnimeMesh->Render(pShader, str);
 }
 
+void CharacterRenderer::CalcZ()
+{  
+    m_SortZ = DefCamera.GetCameraZ(Vector3(m_TransMatrix._41, m_TransMatrix._42, m_TransMatrix._43));
+}
+
+void CharacterRenderer::Render()
+{
+    if (m_OutlineVisible)
+    {
+        shader->SetValue("g_Outline_Color", m_OutlineColor.toVector4());
+
+        m_pAnimeMesh->Render(shader, "OutLine");
+    }
+}
+
 void CharacterRenderer::Initialize()
 {
 	m_BodyUpMotionSpeed = m_BodyDownMotionSpeed = 1;
@@ -211,7 +218,9 @@ void CharacterRenderer::Initialize()
 
     m_ClothesColor = Vector3Zero;
 
-    m_OutlineColor.SetColor(0, 2.0f, 1.33f, 1.0f);
+    //m_OutlineColor.SetColor(0, 2.0f, 1.33f, 1.0f);
+    //m_OutlineColor.SetColor(0, 1.8f, 1.25f, 1.0f);
+    m_OutlineColor.SetColor(0, 0, 0, 0);
     m_OutlineVisible = false;
 
     m_HDR = Vector3Zero;

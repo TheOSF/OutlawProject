@@ -57,7 +57,7 @@ public:
         _mt_WinPose = 29,
         _mt_LosePose = 31,
 
-        _mt_Shot = _mt_CounterRight, //無いモーション
+        _mt_Shot = 35, //無いモーション
 
 
     };
@@ -66,7 +66,6 @@ public:
 	~TennisPlayer();
 
 	
-	CharacterRenderer	m_Renderer;
 	const float         m_ModelSize;
 
     void SetState(TennisState* state, bool Important = false);

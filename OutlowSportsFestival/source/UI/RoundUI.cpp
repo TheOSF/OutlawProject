@@ -25,9 +25,9 @@ void RoundUI::CalcZ()
 void RoundUI::Render()
 {
     m_pTexture->Render(
-        300,
-        310 + (int)(m_T*-50), 
-        550,
+        350,
+        360 + (int)(m_T*-50), 
+        650,
         160,
 
         0,
@@ -74,7 +74,7 @@ void RoundUI::RoundRender()
         {
             NumberRender(
                 (int)m_Round,
-                850,
+                980,
                 200,
                 min((m_Count - 50.0f)*0.025f, 1)
                 );
@@ -84,14 +84,14 @@ void RoundUI::RoundRender()
 
             NumberRender(
                 (int)(m_Round % 10),
-                1050,
+                1180,
                 200,
                 min((m_Count - 50.0f)*0.025f, 1)
                 );
 
             NumberRender(
                 (int)(m_Round / 10),
-                850,
+                980,
                 200,
                 min((m_Count - 50.0f)*0.025f, 1)
                 );
@@ -104,7 +104,7 @@ void RoundUI::NumberRender(int num, int posX, int sizeX, float t)
 {
     m_pTexture->Render(
         posX,
-        280,
+        330,
         sizeX,
         160,
 
@@ -124,7 +124,7 @@ void RoundUI::NumberRender(int num, int posX, int sizeX, float t)
 
     m_pTexture->Render(
         posX - UpX / 2,
-        280 - UpY / 2,
+        330 - UpY / 2,
         sizeX + UpX,
         160 + UpY,
 

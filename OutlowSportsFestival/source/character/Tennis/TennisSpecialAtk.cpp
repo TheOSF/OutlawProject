@@ -12,7 +12,7 @@ m_Locus(10),
 m_Rotate(0),
 m_NoDamageFrame(0)
 {
-    const float DamageValue = 10.0f;
+    const float DamageValue = 1.0f;
 
     {
         //ƒpƒ‰ƒ[ƒ^‰Šú‰»

@@ -17,8 +17,7 @@
 
 //　コンストラクタ
 BaseballPlayer::BaseballPlayer(const CharacterBase::PlayerInfo& info) :
-CharacterBase(info), batterflg(true), m_ModelSize(0.05f), changetime(20),
-m_Renderer(new  BlendAnimationMesh("DATA\\CHR\\BaseBall\\player_B.iem"))
+CharacterBase(info, new  BlendAnimationMesh("DATA\\CHR\\BaseBall\\player_B.iem")), batterflg(true), m_ModelSize(0.05f), changetime(20)
 {
 	m_pStateMachine = new BaseballStateMachine(this);
 

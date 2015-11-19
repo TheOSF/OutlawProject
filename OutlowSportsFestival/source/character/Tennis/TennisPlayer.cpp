@@ -43,8 +43,7 @@ enum MotionType
 //*************************************************************
 
 TennisPlayer::TennisPlayer(const CharacterBase::PlayerInfo& info) :
-CharacterBase(info),
-m_Renderer(new BlendAnimationMesh("DATA\\CHR\\SanoTennis\\tennis.iem")),
+CharacterBase(info, new BlendAnimationMesh("DATA\\CHR\\SanoTennis\\tennis.iem")),
 m_ModelSize(0.055f),
 m_DontBoundBallAtkTimer(0)
 {

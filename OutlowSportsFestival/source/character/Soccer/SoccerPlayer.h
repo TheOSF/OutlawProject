@@ -2,7 +2,6 @@
 #define __SOCCER_PLAYER_H__
 
 #include "../CharacterBase.h"
-#include "../CharacterRenderer.h"
 #include "../CharacterStateTemplate.h"
 #include "../../Ball/UsualBall.h"
 
@@ -51,7 +50,6 @@ public:
 	SoccerPlayer(const CharacterBase::PlayerInfo& info);
 	~SoccerPlayer();
 
-	CharacterRenderer	m_Renderer;
 	const float m_ModelSize;
 
 	void SetState(SoccerState* state, bool Important=false);

@@ -41,9 +41,9 @@ void TennisState_Shot::Enter(TennisPlayer* t)
 
 void TennisState_Shot::Execute(TennisPlayer* t)
 {
-    const int EndFrame = 25; //終了フレーム
-    const int ShotFrame = 5;//打つフレーム
-    const int AfterAction = 10;//ショット後のアクションが可能になるフレーム
+    const int EndFrame = 38; //終了フレーム
+    const int ShotFrame = 9;//打つフレーム
+    const int AfterAction = 15;//ショット後のアクションが可能になるフレーム
 
     //カウント更新
     ++m_Timer;

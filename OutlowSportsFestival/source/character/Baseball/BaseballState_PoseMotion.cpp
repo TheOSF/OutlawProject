@@ -25,6 +25,7 @@ BaseballState_PoseMotion::~BaseballState_PoseMotion()
 void BaseballState_PoseMotion::Enter(BaseballPlayer* b)
 {
 	b->m_Renderer.SetMotion(m_Motion);
+    chr_func::XZMoveDown(b, 1);
 }
 
 

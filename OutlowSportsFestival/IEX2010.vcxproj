@@ -204,13 +204,8 @@
     <ClCompile Include="source\character\CharacterSliding.cpp" />
     <ClCompile Include="source\character\CharacterDefaultCounterClass.cpp" />
     <ClCompile Include="source\character\Computer\CharacterComputerMove.cpp" />
-    <ClCompile Include="source\character\Lacrosse\LacrosseAttackClose.cpp" />
-    <ClCompile Include="source\character\Lacrosse\LacrosseCounterClass.cpp" />
-    <ClCompile Include="source\character\Lacrosse\LacrosseCounterPoseClass.cpp" />
     <ClCompile Include="source\character\CharacterEvasionClass.cpp" />
     <ClCompile Include="source\character\CharacterShotAttackClass.cpp" />
-    <ClCompile Include="source\character\Lacrosse\LacrossePlayer.cpp" />
-    <ClCompile Include="source\character\Lacrosse\LacrossePlayerState.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerMove.cpp" />
     <ClCompile Include="source\character\Soccer\Snakeshot.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerAttack.cpp" />
@@ -240,8 +235,6 @@
     <ClCompile Include="source\character\Tennis\TennisPlayerState_Attack.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_Counter.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_UsualMove.cpp" />
-    <ClCompile Include="source\character\VolleyBall\VolleyBallPlayer.cpp" />
-    <ClCompile Include="source\character\VolleyBall\VolleyBallPlayerState.cpp" />
     <ClCompile Include="source\Collision\Collision.cpp" />
     <ClCompile Include="source\Collision\MeshCollider.cpp" />
     <ClCompile Include="source\Collision\GameObjectCollisionMesh.cpp" />
@@ -279,6 +272,8 @@
     <ClCompile Include="source\IexSystem\Framework.cpp" />
     <ClCompile Include="source\IexSystem\System.cpp" />
     <ClCompile Include="source\IexSystem\WinMain.cpp" />
+    <ClCompile Include="source\Item\SkillGaugeItemEmitter.cpp" />
+    <ClCompile Include="source\Item\SkillGaugeUpItem.cpp" />
     <ClCompile Include="source\Library\Bullet\BulletDebug.cpp" />
     <ClCompile Include="source\Library\Bullet\BulletSystem.cpp">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">iextreme.h;debug/DebugFunction.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
@@ -423,13 +418,8 @@
     <ClInclude Include="source\character\CharacterStateTemplate.h" />
     <ClInclude Include="source\character\CharacterDefaultCounterClass.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerMove.h" />
-    <ClInclude Include="source\character\Lacrosse\LacrosseAttackClose.h" />
-    <ClInclude Include="source\character\Lacrosse\LacrosseCounterClass.h" />
-    <ClInclude Include="source\character\Lacrosse\LacrosseCounterPoseClass.h" />
     <ClInclude Include="source\character\CharacterEvasionClass.h" />
     <ClInclude Include="source\character\CharacterShotAttackClass.h" />
-    <ClInclude Include="source\character\Lacrosse\LacrossePlayer.h" />
-    <ClInclude Include="source\character\Lacrosse\LacrossePlayerState.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerMove.h" />
     <ClInclude Include="source\character\Soccer\Snakeshot.h" />
     <ClInclude Include="source\character\Soccer\SoccerAttackClass.h" />
@@ -459,8 +449,6 @@
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Attack.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Counter.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_UsualMove.h" />
-    <ClInclude Include="source\character\VolleyBall\VolleyBallPlayer.h" />
-    <ClInclude Include="source\character\VolleyBall\VolleyBallPlayerState.h" />
     <ClInclude Include="source\Collision\Collision.h" />
     <ClInclude Include="source\Collision\MeshCollider.h" />
     <ClInclude Include="source\Collision\GameObjectCollisionMesh.h" />
@@ -502,6 +490,8 @@
     <ClInclude Include="source\IexSystem\Framework.h" />
     <ClInclude Include="source\IexSystem\Scene.h" />
     <ClInclude Include="source\IexSystem\System.h" />
+    <ClInclude Include="source\Item\SkillGaugeItemEmitter.h" />
+    <ClInclude Include="source\Item\SkillGaugeUpItem.h" />
     <ClInclude Include="source\Library\Bullet\BulletDebug.h" />
     <ClInclude Include="source\Library\Bullet\BulletSystem.h" />
     <ClInclude Include="source\Library\Bullet\BulletUpdateGameobject.h" />

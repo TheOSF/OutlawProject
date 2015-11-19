@@ -11,14 +11,15 @@
 
 const CharacterBase::CommonParams CharacterBase::m_CommonParams =
 {
-    0.0f,          //地面の高さ
+    0.000f,          //地面の高さ
     -0.02f,        //重力加速度
 };
 
-CharacterBase::CharacterBase(const PlayerInfo& info) :
+CharacterBase::CharacterBase(const PlayerInfo& info, BlendAnimationMesh* pMesh) :
 m_PlayerInfo(info),
 m_PhysicObj(this),
-m_StateType(State::Freeze)
+m_StateType(State::Freeze),
+m_Renderer(pMesh)
 {
 
 	m_Params.win = 0;
@@ -108,6 +109,7 @@ void CharacterBase::ResetRound()
 void CharacterBase::BaseUpdate()
 {
     m_PhysicObj.Update();
+    RendererUpdate();
 }
 
 bool CharacterBase::Msg(MsgType mt)
@@ -142,4 +144,29 @@ bool CharacterBase::Msg(MsgType mt)
 CharacterBase::State CharacterBase::GetStateType()const
 {
     return m_StateType;
+}
+
+void CharacterBase::RendererUpdate()
+{
+    Vector3  LerpColor(0, 0, 0);
+    Vector3  Color(m_Renderer.m_OutlineColor.r, m_Renderer.m_OutlineColor.g, m_Renderer.m_OutlineColor.b);
+
+    if (chr_func::isCanSpecialAttack(this))
+    {
+        LerpColor = Vector3(1.8f, 1.25f, 1.0f);
+    }
+
+    switch (GetStateType())
+    {
+    case State::Usual:
+        Color += (LerpColor - Color)*0.1f;
+        break;
+
+    default:
+        Color += -Color * 0.1f;
+        break;
+    }
+
+    m_Renderer.m_OutlineColor = COLORf(0, Color.x, Color.y, Color.z);
+    m_Renderer.m_OutlineVisible = Color.Length() > 0.1f;
 }

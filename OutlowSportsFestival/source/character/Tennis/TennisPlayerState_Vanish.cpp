@@ -109,6 +109,13 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
             //ワールド変換行列を計算
             chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
         }
+
+        void CanActionUpdate()
+        {
+            //行動分岐が可能なときに呼ばれる
+            
+        }
+
     private:
         TennisPlayer*  m_pTennis;
     };
@@ -144,7 +151,6 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
         2
         );
     
-
     //ブラーエフェクト
     new BlurImpactSphere(
         m_pTennis->m_Params.pos + Vector3(0, 3, 0),
@@ -152,7 +158,6 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
         30,
         30
         );
-
 
     //コントローラを振動
     controller::SetVibration(

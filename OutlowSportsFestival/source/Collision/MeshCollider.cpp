@@ -2,11 +2,15 @@
 
 MeshCollider::MeshCollider(
     LPIEXMESH		pMesh,
-    HitEvent*		pHitEvent
+    HitEvent*		pHitEvent,
+    bool            MeshDelete,
+    DWORD           hitFlags
     ) :
     m_pMesh(pMesh),
     m_pHitEvent(pHitEvent),
-    m_ChangeMatrix(false)
+    m_ChangeMatrix(false),
+    m_HitFlags(hitFlags),
+    m_MeshDelete(MeshDelete)
 {
     D3DXMatrixIdentity(&m_TransMatrix);
     D3DXMatrixIdentity(&m_TransInvMatrix);
@@ -15,6 +19,11 @@ MeshCollider::MeshCollider(
 MeshCollider::~MeshCollider()
 {
 	delete m_pHitEvent;
+
+    if (m_MeshDelete)
+    {
+        delete m_pMesh;
+    }
 }
 
 bool MeshCollider::RayPick(
@@ -26,6 +35,13 @@ bool MeshCollider::RayPick(
 	RayType		type		//レイのタイプ(処理を分ける可能性があるため)
 	)
 {
+    //レイヤー判定
+    if ((type&m_HitFlags) == 0)
+    {
+        return false;
+    }
+
+
     //ワールド変換行列が変更されていた場合、逆行列を更新する
     if (m_ChangeMatrix)
     {

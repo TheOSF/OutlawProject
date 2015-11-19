@@ -28,7 +28,7 @@
 
 //“ü—Í•û–@Ø‚è‘Ö‚¦
 
-#if FALSE
+#if TRUE
 
 #define OUTLAW2_CONTROLL_TYPE_KEY_BORD
 

@@ -25,6 +25,7 @@ SoccerState_PoseMotion::~SoccerState_PoseMotion()
 void SoccerState_PoseMotion::Enter(SoccerPlayer* s)
 {
 	s->m_Renderer.SetMotion(m_Motion);
+    chr_func::XZMoveDown(s, 1);
 }
 
 
