@@ -7,9 +7,11 @@
 #include "../SoccerPlayerState.h"
 #include "../SoccerRolling.h"
 #include "SoccerComputerShot.h"
+#include "../SoccerSliding.h"
 #include "SoccerComputerDash.h"
 #include "SoccerComputerCounter.h"
 #include "SoccerComputerRolling.h"
+#include "SoccerComputerSliding.h"
 #include "../SoccerPlayerState_PoseMotion.h"
 #include "../../CharacterManager.h"
 #include "../../../Camera/Camera.h"
@@ -17,7 +19,27 @@
 #include "../SoccerCommonState.h"
 #include "../../../Effect/EffectFactory.h"
 #include "../../../Sound/Sound.h"
+class SocceComputerrUtillityClass
+{
+public:
+	//ローリングの方向制御クラス
+	class ComputerRollingControll :public SoccerState_ComputerControll_Rolling::CallBackClass
+	{
+	public:
+		SoccerPlayer*const cs;
+		ComputerRollingControll(SoccerPlayer* ps, Vector3 vec) :cs(cs), stick(vec) {}
+		Vector3 stick;
 
+		Vector3 GetVec()override
+		{
+
+			Vector3 vec(stick.x, 0, stick.z);
+
+			return vec;
+		}
+	};
+
+};
 
 
 bool SoccerState_ComputerControll_Dash::SwitchGameState(SoccerPlayer* ps)
@@ -78,13 +100,12 @@ void SoccerState_ComputerControll_Dash::Enter(SoccerPlayer* s)
 			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Stand);
 		}
 	};
-	m_timer = 0;
+	m_Count = 0;
+	CharacterComputerMove::GetParams(m_cParam, s->m_PlayerInfo.strong_type);
 	Sound::Play(Sound::Soccer_Speed_Up1);
-	m_pDashClass = new SoccerDash(
-		s
-		);
+	m_pDashClass = new SoccerDash(s);
 
-	/*//攻撃イベントクラス
+	//攻撃イベントクラス
 	class SoccerDoEvent :public CharacterComputerDoAction::ActionEvent
 	{
 
@@ -99,7 +120,7 @@ void SoccerState_ComputerControll_Dash::Enter(SoccerPlayer* s)
 
 			if (len < 6.0f)
 			{
-				m_cSoccer->SetState(new SoccerState_ComputerControll_Attack(m_cSoccer));
+				m_cSoccer->SetState(new SoccerState_ComputerControll_Sliding(m_cSoccer));
 			}
 			else if (len < 20.0f)
 			{
@@ -109,7 +130,6 @@ void SoccerState_ComputerControll_Dash::Enter(SoccerPlayer* s)
 
 	};
 	CharacterComputerMove::Param cParam;
-	m_pMoveControllClass->GetParams(cParam, s->m_PlayerInfo.strong_type);
 	//攻撃クラスの作成
 	m_pDoActionClass = new CharacterComputerDoAction(
 		s,
@@ -138,8 +158,7 @@ void SoccerState_ComputerControll_Dash::Enter(SoccerPlayer* s)
 			{
 				m_cSoccer->SetState(
 					new SoccerState_ComputerControll_Rolling
-					(new SocceComputerrUtillityClass::ComputerRollingControll(m_cSoccer, vec),
-						false));
+					(new SocceComputerrUtillityClass::ComputerRollingControll(m_cSoccer, vec),true));
 			}
 		}
 
@@ -147,17 +166,17 @@ void SoccerState_ComputerControll_Dash::Enter(SoccerPlayer* s)
 	//反応クラスの作成
 	m_pReactionClass = new CharacterComputerReaction(
 		s,
-		cParam,
+		m_cParam,
 		new SoccerReactionEvent(s)
-		);*/
-	CharacterComputerMove::GetParams(m_cParam, s->m_PlayerInfo.strong_type);
+		);
+	
 	movemode = Stop;
 }
 
 
 void SoccerState_ComputerControll_Dash::Execute(SoccerPlayer* s)
 {
-	++m_timer;
+	++m_Count;
 
 
 	Vector2 st;
@@ -165,17 +184,21 @@ void SoccerState_ComputerControll_Dash::Execute(SoccerPlayer* s)
 
 
 	// 一定時間走る / 移動しなくなったら戻る
-	if (m_timer>100 )
+	if (m_Count>100 )
 	{
 		s->SetState(new SoccerState_brake(s));
 	}
 	else if(SwitchGameState(s) == false)
 	{
+		
 		st = SwitchAction(s);
 		m_pDashClass->SetStickValue(st);
+		m_pDashClass->Update();
+		m_pDoActionClass->Update();
+		m_pReactionClass->Update();
 	}
 
-	if (m_timer % 19 == 5)
+	if (m_Count % 19 == 5)
 	{
 		Sound::Play(Sound::Sand1);
 		EffectFactory::Smoke(
@@ -186,7 +209,7 @@ void SoccerState_ComputerControll_Dash::Execute(SoccerPlayer* s)
 			true
 			);
 	}
-	m_pDashClass->Update();
+	
 	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
 }
 
@@ -256,31 +279,29 @@ Vector2 SoccerState_ComputerControll_Dash::StateMoveDistance(SoccerPlayer* s)
 
 	Vector3 v = s->m_Params.pos - m_MoveTargetPos;
 
-	/*if (v.Length() < 1.0f)
+	if (v.Length() < 1.0f)
 	{
 	v = Vector3Zero;
 	movemode = Stop;
 	m_Count = 0;
-	}*/
+	}
 	return Vector2Normalize(Vector2(v.x, v.z));
 }
 Vector2 SoccerState_ComputerControll_Dash::StateStop(SoccerPlayer* s)
 {
-	const int NextMove = rand() % 5;
-	++m_Count;
+
 	m_MoveTargetPos = CharacterComputerMove::GetMoveTargetPos(s);
 
-	if (m_Count > NextMove)
+	
+	if (Vector3Distance(m_MoveTargetPos, s->m_Params.pos) > 20.0f)
 	{
-		if (Vector3Distance(m_MoveTargetPos, s->m_Params.pos) > 20.0f)
-		{
-			movemode = Forward;
-		}
-		else
-		{
-			movemode = Distance;
-		}
+		movemode = Forward;
 	}
+	else
+	{
+		movemode = Distance;
+	}
+	
 
 	return Vector2Normalize(Vector2(0, 0));
 }

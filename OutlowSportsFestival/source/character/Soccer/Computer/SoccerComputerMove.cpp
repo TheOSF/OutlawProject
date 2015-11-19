@@ -196,7 +196,7 @@ void SoccerState_ComputerControll_Move::Execute(SoccerPlayer* s)
 	}
 	if (rand() % 100 == 0)
 	{
-		//s->SetState(new SoccerState_ComputerControll_Dash(s));
+		s->SetState(new SoccerState_ComputerControll_Dash(s));
 	}
 	//XV
 	m_pMoveClass->Update();
