@@ -30,8 +30,8 @@ public:
 	{
 	public:
 		BaseballPlayer*const cb;
-
-		ComputerRollingControll(BaseballPlayer* pb, Vector3 vec) :cb(cb) {}
+		
+		ComputerRollingControll(BaseballPlayer* pb, Vector3 vec) :cb(cb), stick(vec) {}
 		Vector3 stick;
 
 
@@ -197,11 +197,11 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 			//　実行パターン
 			if (m_cBaseball->getBatterFlg()){
 				//　バッター時
-				if (len < 6.0f)
+				if (len < 7.0f)
 				{
 					m_cBaseball->SetState(new Baseball_PlayerControll_Attack_B(m_cBaseball));
 				}
-				else if (len < 20.0f)
+				else if (len >= 6.0f && len < 25.0f)
 				{
 					m_cBaseball->SetState(new BaseballState_PlayerControll_ShotAttack_B(new PlayerShotControllClass_B(m_cBaseball)));
 				}
@@ -212,7 +212,7 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 				{
 					m_cBaseball->SetState(new Baseball_PlayerControll_Attack_P(m_cBaseball));
 				}
-				else if (len < 30.0f)
+				else if (len >= 5.0f && len < 35.0f)
 				{
 					m_cBaseball->SetState(new BaseballState_PlayerControll_ShotAttack_P());
 				}
@@ -233,11 +233,11 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 void BaseballPlayerState_ComMove::doChange(BaseballPlayer* b)
 {
 
-	nearpos = m_pMoveControllClass->GetMoveTargetPos(b) - b->m_Params.pos;
+	nearpos = GetNearTargetPos(b) - b->m_Params.pos;
 
 	//　ターゲットと一定距離以下・以上なら切り替え
 	if (nearpos.Length() < 15.0f && !b->getBatterFlg() ||
-		nearpos.Length() > 36.0f && b->getBatterFlg())
+		nearpos.Length() > 34.0f && b->getBatterFlg())
 	{
 		b->SetState(new BaseballState_Change());
 	}
@@ -259,18 +259,35 @@ void  BaseballPlayerState_ComMove::doReaction(BaseballPlayer* b)
 		//アニメーションの更新
 		void Reaction(CharacterComputerReactionHitEvent::HitType hittype, Vector3 vec)override
 		{
+			int rnd = rand()%10;
 			//　遠距離攻撃なら
 			if (hittype == CharacterComputerReactionHitEvent::HitType::CanCounter)
 			{
 				//　実行パターン
 				if (m_cBaseball->getBatterFlg()){
-					//　バッター時
-					m_cBaseball->SetState(new BaseballState_PlayerControll_Counter(5));
+					//　7：3の割合になるように
+					if (rnd < 3)
+					{
+						//　バッター時
+						m_cBaseball->SetState(new BaseballState_PlayerControll_Counter(5));
+					}
+					else
+					{
+						m_cBaseball->SetState(new BaseballState_Rolling(new BaseballPlayerComputerrUtillityClass::ComputerRollingControll(m_cBaseball, vec)));
+					}
 				}
 				else
 				{
-					//　投手時
-					m_cBaseball->SetState(new BaseballState_PlayerControll_Counter(9));
+					//　7：3の割合になるように
+					if (rnd >= 3)
+					{
+						//　投手時
+						m_cBaseball->SetState(new BaseballState_PlayerControll_Counter(9));
+					}
+					else
+					{
+						m_cBaseball->SetState(new BaseballState_Rolling(new BaseballPlayerComputerrUtillityClass::ComputerRollingControll(m_cBaseball, vec)));
+					}
 				}
 			}
 			//　それ以外
@@ -290,4 +307,42 @@ void  BaseballPlayerState_ComMove::doReaction(BaseballPlayer* b)
 		cParam,
 		new BaseballPlayerReactionEvent(b)
 		);
+}
+
+//　一番近いキャラのposをとる
+Vector3 BaseballPlayerState_ComMove::GetNearTargetPos(BaseballPlayer* b)
+{
+	Vector3 v;
+
+	float MostNear = 1000;
+	float TempLen;
+	CharacterBase* pTarget = nullptr;
+
+	//　map代入
+	const CharacterManager::CharacterMap& chr_map =
+		DefCharacterMgr.GetCharacterMap();
+
+	for (auto it = chr_map.begin(); it != chr_map.end(); ++it)
+	{
+
+		//　死んでるor自分ならcontinue
+		if (chr_func::isDie(it->first) ||
+			it->first->m_PlayerInfo.number == b->m_PlayerInfo.number)
+		{
+			continue;
+		}
+
+		v = it->first->m_Params.pos - b->m_Params.pos;
+		v.y = 0;
+
+		TempLen = v.Length();
+
+		if (MostNear > TempLen)
+		{
+			MostNear = TempLen;
+			pTarget = it->first;
+		}
+	}
+
+	return pTarget->m_Params.pos;
 }
