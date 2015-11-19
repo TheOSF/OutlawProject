@@ -207,6 +207,7 @@
     <ClCompile Include="source\character\CharacterEvasionClass.cpp" />
     <ClCompile Include="source\character\CharacterShotAttackClass.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerMove.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerSliding.cpp" />
     <ClCompile Include="source\character\Soccer\Snakeshot.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerAttack.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerAttackInfo_UsualAttack.cpp" />
@@ -421,6 +422,7 @@
     <ClInclude Include="source\character\CharacterEvasionClass.h" />
     <ClInclude Include="source\character\CharacterShotAttackClass.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerMove.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerSliding.h" />
     <ClInclude Include="source\character\Soccer\Snakeshot.h" />
     <ClInclude Include="source\character\Soccer\SoccerAttackClass.h" />
     <ClInclude Include="source\character\Soccer\SoccerAttackInfo_UsualAttack.h" />
