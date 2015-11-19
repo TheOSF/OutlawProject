@@ -42,8 +42,9 @@ private:
 	int       m_Count;
 	Vector3   m_MoveTargetPos;
 	SoccerDash*		m_pDashClass;
+	CharacterComputerReaction*  m_pReactionClass;
+	CharacterComputerDoAction*  m_pDoActionClass;
 
 	SoccerPlayer* const m_cSoccer;
-	int m_timer;
 	
 };
