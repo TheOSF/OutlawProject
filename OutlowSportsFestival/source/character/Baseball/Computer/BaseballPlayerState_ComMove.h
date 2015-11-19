@@ -46,7 +46,7 @@ public:
 
 	//　セッター
 	void SetBatterFlg(BaseballPlayer* b){ batterflg = b->getBatterFlg(); }
-
+	Vector3 GetNearTargetPos(BaseballPlayer* b);
 
 public:
 	//　切り替え

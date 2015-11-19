@@ -82,6 +82,7 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 	const int ShotFrame = 30;//打つフレーム
 	const int CancelStart = 10;//キャンセル行動可能なフレーム
 	const int AfterAction = 33;//ショット後のアクションが可能になるフレーム
+	const float AngleRange = PI / 4;
 	pTargetEnemy = nullptr;    //ターゲット保持のポインタ
 
 	//　Comなら
@@ -101,7 +102,8 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 		if (b->m_PlayerInfo.player_type == PlayerType::_Computer)
 		{
 			//　ターゲットいなかったら
-			if (pTargetEnemy == nullptr ){
+			if (pTargetEnemy == nullptr || pTargetEnemy->m_Params.angle > AngleRange)
+			{
 				if (m_pControllClass->DoOtherAction_Com())
 				{
 					m_pUpBall->m_Damage.m_Enable = true;
@@ -306,6 +308,7 @@ void BaseballState_PlayerControll_ShotAttack_B::ComExcute(BaseballPlayer* b)
 	const RADIAN AutoMaxAngle = D3DXToRadian(90);   //自動ができる最大角度
 
 	RADIAN MostMinAngle = PI;                       //もっとも狭い角度
+	
 	RADIAN TempAngle;
 
 	Vector3 MyFront;      //自身の前方ベクトル
@@ -326,6 +329,7 @@ void BaseballState_PlayerControll_ShotAttack_B::ComExcute(BaseballPlayer* b)
 
 		//前ベクトルと敵へのベクトルの角度を計算する
 		TempAngle = Vector3Radian(MyFront, (it->first->m_Params.pos - b->m_Params.pos));
+
 
 		//角度が一番狭かったら更新
 		if (TempAngle < MostMinAngle)
