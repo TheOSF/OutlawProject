@@ -145,10 +145,10 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
     new HitEffectObject(
         m_pTennis->m_Params.pos + Vector3(0, 3, 0),
         m_Damage_vec,
-        0.05f,
+        0.045f,
         0.15f,
-        Vector3(1.0f, 1.0f, 1.0f),
-        2
+        Vector3(1.0f, 0.8f, 0.25f),
+        8
         );
     
     //ブラーエフェクト

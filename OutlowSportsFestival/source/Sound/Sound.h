@@ -54,8 +54,17 @@ namespace Sound
 		Soccer_Speed_Up2,//サッカーのダッシュ案２
 
         // BGM 
+
+        _BGM_REGIST_START,   //この下からＢＧＭ
+
+        BGM_Title,
+        BGM_Option,
+        BGM_ChrSelect,
+
         BGM_Battle,
         BGM_LastRound,
+
+        _BGM_REGIST_END,     //ここまで
     };
 
     //読み込み
@@ -63,4 +72,7 @@ namespace Sound
 
     //再生
     void Play(Type type, RATIO volume = 1, bool loop = false);
+
+    //ＢＧＭストップ
+    void StopBGM();
 }

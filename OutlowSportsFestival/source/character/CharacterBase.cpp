@@ -151,7 +151,7 @@ void CharacterBase::RendererUpdate()
     Vector3  LerpColor(0, 0, 0);
     Vector3  Color(m_Renderer.m_OutlineColor.r, m_Renderer.m_OutlineColor.g, m_Renderer.m_OutlineColor.b);
 
-    if (chr_func::isCanSpecialAttack(this))
+    if (chr_func::isCanSpecialAttack(this) && chr_func::isDie(this) == false)
     {
         LerpColor = Vector3(1.8f, 1.25f, 1.0f);
     }

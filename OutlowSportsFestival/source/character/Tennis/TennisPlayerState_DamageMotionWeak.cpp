@@ -80,10 +80,10 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
         new HitEffectObject(
             pos,
             vec,
-            0.03f,
-            0.10f,
+            0.045f,
+            0.15f,
             Vector3(1.0f, 0.8f, 0.25f),
-            1
+            2
             );
 
     }

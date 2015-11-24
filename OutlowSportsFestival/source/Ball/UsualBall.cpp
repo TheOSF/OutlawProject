@@ -51,7 +51,7 @@ UsualBall::UsualBall(
     }
 
     {
-        const float MeshScale = GetBallScale(m_FirstParentType);
+        m_MeshScale = GetBallScale(m_FirstParentType);
         Matrix m;
 
         //ボールのメッシュを作成
@@ -64,7 +64,7 @@ UsualBall::UsualBall(
             MeshRenderer::RenderType::UseColorSpecular
             );
 
-        D3DXMatrixScaling(&m, MeshScale, MeshScale, MeshScale);
+        D3DXMatrixScaling(&m, m_MeshScale, m_MeshScale, m_MeshScale);
 
         m._41 = m_Params.pos.x;
         m._42 = m_Params.pos.y;
@@ -252,7 +252,7 @@ void UsualBall::UpdateColor()
         COLORf Color = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number);
 
         m_pMeshRenderer->m_HDR = Vector3(1,1,1) * 0.1f;
-
+        m_pMeshRenderer->m_Lighting = Vector3(1, 1, 1) * 0.3f;
     }
 }
 
@@ -291,6 +291,51 @@ void UsualBall::AddLocusPoint()
     v.Normalize();
 
     m_Locus.AddPoint(m_Params.pos, v);
+}
+
+void UsualBall::ScaleUpdate()
+{
+    const float s = m_MeshScale;
+    Vector3 v;
+
+    {
+        v.x = m_BaseMatrix._11;
+        v.y = m_BaseMatrix._12;
+        v.z = m_BaseMatrix._13;
+
+        v.Normalize();
+        v *= s;
+
+        m_BaseMatrix._11 = v.x;
+        m_BaseMatrix._12 = v.y;
+        m_BaseMatrix._13 = v.z;
+    }
+
+    {
+        v.x = m_BaseMatrix._21;
+        v.y = m_BaseMatrix._22;
+        v.z = m_BaseMatrix._23;
+
+        v.Normalize();
+        v *= s;
+
+        m_BaseMatrix._21 = v.x;
+        m_BaseMatrix._22 = v.y;
+        m_BaseMatrix._23 = v.z;
+    }
+
+    {
+        v.x = m_BaseMatrix._31;
+        v.y = m_BaseMatrix._32;
+        v.z = m_BaseMatrix._33;
+
+        v.Normalize();
+        v *= s;
+
+        m_BaseMatrix._31 = v.x;
+        m_BaseMatrix._32 = v.y;
+        m_BaseMatrix._33 = v.z;
+    }
 }
 
 void UsualBall::Counter(CharacterBase* pCounterCharacter)
@@ -519,6 +564,14 @@ bool UsualBall::StatePhysicMove()
     //光値を減少
     {
         m_pMeshRenderer->m_HDR *= 0.92f;
+        m_pMeshRenderer->m_Lighting += (Vector3(-0.1f, -0.1f, -0.1f) - m_pMeshRenderer->m_Lighting)*0.2f;
+    }
+
+
+    //スケール減少
+    {
+        m_MeshScale += (GetBallScale(m_FirstParentType)*0.85f - m_MeshScale)*0.1f;
+        ScaleUpdate();
     }
 
 

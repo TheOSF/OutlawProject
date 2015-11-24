@@ -20,9 +20,12 @@ public:
 	void Exit(Camera* c);
 
 private:
-
+    Camera* m_pCamera;
+    Vector3 m_Work;
     float m_PosSpeed;
     float m_TargetSpeed;
+
+    bool isViewIn(CrVector3 pos);
 };
 
 

@@ -65,6 +65,9 @@ namespace controller
 	//押しているかどうか
 	bool	GetPush(button::button_type x, CONTROLLER_NUM num);
 
+    //押しているかどうか(誰かが)
+    bool	GetPushAnyController(button::button_type x);
+
 	// コントローラの状態取得
 	button::button_state GetButtonState(button::button_type x, CONTROLLER_NUM num);
 

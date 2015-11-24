@@ -35,12 +35,11 @@ private:
     };
     static const char* StageObjFileName;
     
-    const UINT     m_NightRound;
+    const UINT     m_SunsetRound;
     UINT           m_RoundCount;
 
     DirLight       m_DirLight;
     AmbientLight   m_AmbientLight;
-    SpotLight*     m_pSpotLight[_NumSpotLight];
     SkyObject*     m_pSkyObject;
     UINT           m_DeleyFrame;
 
@@ -48,10 +47,10 @@ private:
     void RoundReset();
 
     void SetSunsetObject();
-    void SetNightObject();
+    void SetNoonObject();
 
     void SetSunsetLight();
-    void SetNightLight();
+    void SetNoonLight();
 
     bool Update();
     bool Msg(MsgType msg);

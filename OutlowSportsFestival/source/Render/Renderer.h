@@ -183,7 +183,6 @@ public:
     bool AddPostEffectRenderer(LpPostEffectRenderer p);
     bool EracePostEffectRenderer(LpPostEffectRenderer p);
 
-
     //•`‰æ
     void Render();
 

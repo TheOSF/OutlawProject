@@ -16,12 +16,16 @@
 #include "../Library/Bullet/BulletSystem.h"
 #include "../../IEX/DebugDrawManager.h"
 
-#include "../GameSystem/GameInitializer.h"
-#include "../GameSystem/GameInitilizer_DevelopMode.h"
+
+#include "../GameSystem/GameInitilizer_UsualMatch.h"
 
 #include "../Effect/ParticleManager.h"
 #include "../Sound/Sound.h"
 #include "../../Input/GamePad/GamePadManager.h"
+
+#include "../Library/Bullet/BulletUpdateGameobject.h"
+
+#include    "../Effect/EffectResourceLoad.h"
 
 
 //*****************************************************************************************************************************
@@ -38,27 +42,129 @@
 //
 //*****************************************************************************************************************************
 
+sceneGamePlay::sceneGamePlay(
+    InitParams& params
+    )
+{
+    m_Params = params;
+}
 
 bool sceneGamePlay::Initialize()
 {
 	
-    IGameInitializer* Initializer = new GameInitializer_DevelopMode();
 
-    Initializer->GameCreate();
+    //	環境設定
+    iexLight::SetAmbient(0x404040);
+    iexLight::SetFog(800, 1000, 0);
 
-    delete Initializer;
+    Vector3 dir(1.0f, -1.0f, -0.5f);
+    dir.Normalize();
+    iexLight::DirLight(shader, 0, &dir, 0.8f, 0.8f, 0.8f);
 
-    //法線・深度バッファを登録
-    {
-        shader->SetValue("NormalDepthMap",
-            DefRendererMgr.GetNormalDepthTexture()->GetTexture());
+    DefCamera.m_Position = Vector3(0, 40, -55);
+    DefCamera.m_Target = Vector3(0, 4, 0);
+
+    //当たり判定のデバッグ描画を有効に
+    DefDamageMgr.m_DebugDrawVisible = true;
+
+
+    {// Bullet
+
+        DefBulletSystem.StartUp();
+        DefBulletSystem.InitializeBulletPhysics(btVector3(0, -9.8f, 0)*3.5f);
+
+        //更新クラスの作成
+        new BulletUpdateGameobject();
     }
 
-    //サウンド初期化
+
     {
-        Sound::Initialize();
+        //ＵＩ用文字列画像
+        DefResource.Regist(
+            Resource::TextureType::UI_strings,
+            new iex2DObj("DATA\\UI\\ＵＩ戦闘中文字.png")
+            );
+
+        //ＵＩ用プレイヤーネーム
+        DefResource.Regist(
+            Resource::TextureType::UI_player_name,
+            new iex2DObj("DATA\\Texture\\PlayerNo.png")
+            );
+
+        //ゲージ
+        DefResource.Regist(
+            Resource::TextureType::UI_gauges,
+            new iex2DObj("DATA\\UI\\ＵＩ体力ゲージ.png")
+            );
+
+        //アイコン
+        DefResource.Regist(
+            Resource::TextureType::UI_icon,
+            new iex2DObj("DATA\\UI\\アイコン.png")
+            );
     }
-    
+
+    {
+        //デバッグ描画用の球メッシュ
+        DefResource.Regist(
+            Resource::MeshType::Sphere,
+            new iexMesh("DATA\\Mesh\\sphere.imo")
+            );
+
+        //デバッグ描画用のカプセルメッシュ
+        DefResource.Regist(
+            Resource::MeshType::Pole,
+            new iexMesh("DATA\\Mesh\\Capsure.imo")
+            );
+    }
+
+
+    {
+        //ボール登録(最終的に登場するキャラクタのボールのみ読み込むようにしたほうが良い)
+
+        DefResource.Regist(
+            Resource::MeshType::Amefoot_ball,
+            new iexMesh("DATA\\CHR\\Ball\\foot_ball.imo")
+            );
+
+        DefResource.Regist(
+            Resource::MeshType::BaseBall_ball,
+            new iexMesh("DATA\\CHR\\Ball\\base_ball.imo")
+            );
+
+        DefResource.Regist(
+            Resource::MeshType::Lacrosse_ball,
+            new iexMesh("DATA\\CHR\\Ball\\base_ball.imo")
+            );
+
+        DefResource.Regist(
+            Resource::MeshType::Soccer_ball,
+            new iexMesh("DATA\\CHR\\Ball\\soccer_ball.imo")
+            );
+
+
+        DefResource.Regist(
+            Resource::MeshType::Tennis_ball,
+            new iexMesh("DATA\\CHR\\Ball\\Tennis_ball.imo")
+            );
+
+        DefResource.Regist(
+            Resource::MeshType::Volley_ball,
+            new iexMesh("DATA\\CHR\\Ball\\soccer_ball.imo")
+            );
+    }
+
+
+    {
+        //エフェクト読み込み
+        EffectResource::Load();
+    }
+
+    //GameInitializer_DevelopMode
+
+    m_Params.pInitializer->GameCreate();
+    delete m_Params.pInitializer;
+
 
 	return true;
 }
@@ -69,12 +175,13 @@ bool sceneGamePlay::Initialize()
 //
 //*****************************************************************************************************************************
 
+
+
 sceneGamePlay::~sceneGamePlay()
 {
 	DefGameObjMgr.Release(); //ゲームオブジェクト削除は一番初めに
 
 	DefCharacterMgr.Release();
-	DefRendererMgr.Release();
 	DefDamageMgr.Release();
 	DefBallMgr.Release();
 	DefCamera.Release();

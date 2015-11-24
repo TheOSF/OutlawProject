@@ -35,7 +35,7 @@ void TennisState_Rolling::Enter(TennisPlayer* t)
 void TennisState_Rolling::Execute(TennisPlayer* t)
 {
     const int EndFrame = 27;          //終了までのフレーム
-    const int CanControllFrame = 5;   //移動方向をコントロールできるフレーム
+    const int CanControllFrame = 4;   //移動方向をコントロールできるフレーム
     const int NoDamageFrame = 15;     //無敵時間
     const int CanCancel = 15;         //キャンセル可能フレーム
 

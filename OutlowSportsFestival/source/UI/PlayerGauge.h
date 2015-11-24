@@ -36,20 +36,36 @@ private:
         Vector2 m_Size;
 
         PlayerNum::Value m_Num;
-
         PlayerType::Value m_PlayerType;
 
+        void AddRoundIcon(CrVector2 Pos);
+        void UpdateRoundIcon();
+
     private:
+        static const int RoundCountMax = 20;
+
+        struct RoundIconParam
+        {
+            bool    Enable;
+            int     Frame;
+            float   Size;
+            Vector2 Pos;
+        };
 
         iex2DObj* m_pUItex;
         iex2DObj* m_pIconTex;
+
+        std::array<RoundIconParam, RoundCountMax> m_RoundIconParams;
 
         void BackRender();
         void LifeRender();
         void SpRender();
         void FaceRender();
         void PlayerNumRender();
+        void WinIconRender(CrVector2 pos,float Size);
+        void AllWinIconRender();
 
+        Vector2 CalcIconPos(int n);
 
         void CalcZ();
         void Render();
@@ -57,6 +73,7 @@ private:
 
     GaugeRenderer     m_Renderer;
     CharacterBase*    m_pOwnerCharacter;
+    UINT              m_RoundCount;
 
     bool Update();
     bool Msg(MsgType mt);

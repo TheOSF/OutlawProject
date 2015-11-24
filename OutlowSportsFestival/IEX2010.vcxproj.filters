@@ -122,7 +122,6 @@
     <ClCompile Include="source\Render\System\DeferredLightManager.cpp" />
     <ClCompile Include="source\Render\System\SmalBufBlurRenderer.cpp" />
     <ClCompile Include="source\Render\LightObject.cpp" />
-    <ClCompile Include="source\GameSystem\GameInitilizer_DevelopMode.cpp" />
     <ClCompile Include="source\Effect\ParticleRenderer.cpp" />
     <ClCompile Include="source\Effect\ParticleMoveObject.cpp" />
     <ClCompile Include="source\Effect\ParticleBase.cpp" />
@@ -145,10 +144,8 @@
     <ClCompile Include="source\character\Tennis\Computer\TennisPlayerState_ComMove.cpp" />
     <ClCompile Include="source\utillity\LocusHDR.cpp" />
     <ClCompile Include="source\character\Tennis\TennisState_Rolling.cpp" />
-    <ClCompile Include="source\character\Tennis\TennisState_BoundBallAtk.cpp" />
     <ClCompile Include="source\Effect\AnimationBordRenderer.cpp" />
     <ClCompile Include="source\Effect\EffectFactory.cpp" />
-    <ClCompile Include="source\character\Tennis\TennisState_Shot.cpp" />
     <ClCompile Include="source\Ball\PhysicallyMoveBall.cpp" />
     <ClCompile Include="source\Effect\ParticleHDRRenderer.cpp" />
     <ClCompile Include="source\Effect\ImpactLightObject.cpp" />
@@ -233,6 +230,13 @@
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerDash.cpp" />
     <ClCompile Include="source\Item\SkillGaugeUpItem.cpp" />
     <ClCompile Include="source\Item\SkillGaugeItemEmitter.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerSliding.cpp" />
+    <ClCompile Include="source\SceneTitle\SceneTitle.cpp" />
+    <ClCompile Include="source\SceneOption\SceneOption.cpp" />
+    <ClCompile Include="source\utillity\UIbase.cpp" />
+    <ClCompile Include="source\GameSystem\GameInitilizer_UsualMatch.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisState_BoundBall.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisState_BoundShot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -309,7 +313,6 @@
     <ClInclude Include="source\Render\System\SmalBufBlurRenderer.h" />
     <ClInclude Include="source\Render\LightObject.h" />
     <ClInclude Include="source\GameSystem\GameInitializer.h" />
-    <ClInclude Include="source\GameSystem\GameInitilizer_DevelopMode.h" />
     <ClInclude Include="source\utillity\StaticGameObjectTemplate.h" />
     <ClInclude Include="source\utillity\DebugControllGameObject.h" />
     <ClInclude Include="source\Effect\ParticleRenderer.h" />
@@ -333,7 +336,6 @@
     <ClInclude Include="source\character\Tennis\Computer\TennisPlayerState_ComMove.h" />
     <ClInclude Include="source\utillity\LocusHDR.h" />
     <ClInclude Include="source\character\Tennis\TennisState_Rolling.h" />
-    <ClInclude Include="source\character\Tennis\TennisState_BoundBallAtk.h" />
     <ClInclude Include="source\Effect\AnimationBordRenderer.h" />
     <ClInclude Include="source\Effect\EffectFactory.h" />
     <ClInclude Include="source\Ball\PhysicallyMoveBall.h" />
@@ -423,7 +425,6 @@
     <ClInclude Include="source\Stage\SkyObject.h" />
     <ClInclude Include="source\Sound\Sound.h" />
     <ClInclude Include="source\character\CharacterHitEventFunc.h" />
-    <ClInclude Include="source\character\Tennis\TennisState_Shot.h" />
     <ClInclude Include="source\character\Baseball\BaseballEquip.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveVanishDamage.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveWeakDamage.h" />
@@ -432,6 +433,13 @@
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerDash.h" />
     <ClInclude Include="source\Item\SkillGaugeUpItem.h" />
     <ClInclude Include="source\Item\SkillGaugeItemEmitter.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerSliding.h" />
+    <ClInclude Include="source\SceneTitle\SceneTitle.h" />
+    <ClInclude Include="source\SceneOption\SceneOption.h" />
+    <ClInclude Include="source\utillity\UIbase.h" />
+    <ClInclude Include="source\GameSystem\GameInitilizer_UsualMatch.h" />
+    <ClInclude Include="source\character\Tennis\TennisState_BoundBall.h" />
+    <ClInclude Include="source\character\Tennis\TennisState_BoundShot.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

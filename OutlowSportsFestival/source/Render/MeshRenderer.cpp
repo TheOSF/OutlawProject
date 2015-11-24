@@ -16,7 +16,8 @@ MeshRenderer::MeshRenderer(
     m_RenderType(type),
     m_Gbuf_Type(gbuf_Type),
     m_HDR(0,0,0),
-    m_pCallBack(pCallBack)
+    m_pCallBack(pCallBack),
+    m_Lighting(0,0,0)
 {
     D3DXMatrixIdentity(&m_TransMatrix);
 
@@ -75,6 +76,8 @@ void MeshRenderer::GbufRender(
 void MeshRenderer::MasterRender()
 {
     shader->SetValue("g_HDR_Color", m_HDR);
+    shader->SetValue("g_Lighting_Color", m_Lighting);
+    
 
     m_pCallBack->Execute(this, PreRenderCallBack::MasterRender);
 

@@ -1,10 +1,11 @@
 #include	"iextreme.h"
 #include	"Framework.h"
-#include	"../GameScene/SceneGamePlay.h"
+#include	"../SceneOption/SceneOption.h"
 #include	"../debug/DebugFunction.h"
 
 #include "../../Input/GamePad/GamePadManager.h"
-
+#include "../Sound/Sound.h"
+#include "../Render/Renderer.h"
 
 //*****************************************************************************************************************************
 //
@@ -40,9 +41,20 @@ BOOL	InitApp( HWND hWnd )
 	//	システムの初期化
 	SYSTEM_Initialize();
 	//	メインフレームワーク生成
-    MainFrame = new Framework(FPS_FLEX);
+    MainFrame = new Framework(FPS_60);
 	//	初期シーン登録
-	MainFrame->ChangeScene(new sceneGamePlay());
+	MainFrame->ChangeScene(new SceneOption());
+
+    //法線・深度バッファを登録
+    {
+        shader->SetValue("NormalDepthMap",
+            DefRendererMgr.GetNormalDepthTexture()->GetTexture());
+    }
+
+    //サウンド初期化
+    {
+        Sound::Initialize();
+    }
 
 	return TRUE;
 }
@@ -136,6 +148,9 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	//	全解放	
 	delete	MainFrame;
 	iexParticle::Release();
+
+    DefRendererMgr.Release();
+
 	SYSTEM_Release();
 	iexSystem::CloseDebugWindow();
 
@@ -147,7 +162,6 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 #endif
 
 	IEX_ReleaseAudio();
-	IEX_Release();
 
 	return 0;
 }

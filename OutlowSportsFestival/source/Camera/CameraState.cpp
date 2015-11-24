@@ -6,14 +6,14 @@
 
 //試合時のカメラステート
 
-CameraStateGamePlay::CameraStateGamePlay(bool pos_reset)
+CameraStateGamePlay::CameraStateGamePlay(bool pos_reset) :
+m_pCamera(nullptr)
 {
-
     //m_PosSpeed = 0.04f;
     //m_TargetSpeed = 0.02f;
 
-    m_PosSpeed = 0.1f;
-    m_TargetSpeed = 0.1f;
+    m_PosSpeed = 0.01f;
+    m_TargetSpeed = 0.01f;
 
     if (pos_reset)
     {
@@ -24,7 +24,7 @@ CameraStateGamePlay::CameraStateGamePlay(bool pos_reset)
 
 void CameraStateGamePlay::Enter(Camera* c)
 {
-
+    m_pCamera = c;
 }
 
 void CameraStateGamePlay::Execute(Camera* c)
@@ -58,12 +58,19 @@ void CameraStateGamePlay::Execute(Camera* c)
 	{
 		center /= (float)livecnt;
 	}
+
 	center.z -= 6.0f;	//若干手前に
 
 	//カメラのターゲットを補間
     c->m_Target += (center - c->m_Target)*m_TargetSpeed;
 
+    Vector3 mVec = first_pos - center;
+    Vector3 moveTarget;
+    Vector3 LineMostNear;
 
+    mVec.Normalize();
+
+    
 	//どれだけカメラを引くかを算出する
 	for (auto it = chr_map.begin();
 		it != chr_map.end();
@@ -78,10 +85,27 @@ void CameraStateGamePlay::Execute(Camera* c)
 
 		if (dRightLen < rlen)dRightLen = rlen;	//最大なら更新
 	}
+    
+    
+    ////どれだけカメラを引くかを算出する
+    //for (auto it = chr_map.begin();
+    //    it != chr_map.end();
+    //    ++it)
+    //{
+    //    if (it->first->m_Params.camera_draw == false)continue;
+    //    CrVector3 chrpos = it->first->m_Params.pos;
 
-	Vector3 mVec = first_pos - center;
-	Vector3 moveTarget;
-	mVec.Normalize();
+    //    LineMostNear = first_pos + mVec * Vector3Dot(chrpos - first_pos, mVec);
+
+    //    //カメラ視線ベクトルからの距離を求める
+    //    float rlen = Vector3Distance(LineMostNear, chrpos);
+
+    //    if (dRightLen < rlen)
+    //    {
+    //        dRightLen = rlen;	//最大なら更新
+    //    }
+    //}
+    
 
 	//視野角のtanから目標を視野に入れるための後方距離を算出
 	float b = dRightLen / tanf(viewangle);
@@ -99,8 +123,9 @@ void CameraStateGamePlay::Execute(Camera* c)
     }
 #endif
 
-    m_PosSpeed = 0.04f;
-    m_TargetSpeed = 0.02f;
+    m_PosSpeed = 0.05f;
+    m_TargetSpeed = 0.04f;
+
 }
 
 //
@@ -117,10 +142,10 @@ void CameraStateGamePlay::Execute(Camera* c)
 //    }
 //
 //    Vector3 center(0, 0, 0);
-//    const float viewangle = PI / 4.5f;	//カメラの視野角
+//    const float viewangle = D3DXToRadian(45);	//カメラの視野角
 //    float dRightLen = 0;
-//    
-//    
+//
+//
 //    {
 //        //注視点を計算
 //        Vector3 MinPos(1000, 1000, 1000), MaxPos(-1000, -1000, -1000);
@@ -139,6 +164,8 @@ void CameraStateGamePlay::Execute(Camera* c)
 //        }
 //
 //        center = (MinPos + MaxPos)*0.5f;
+//
+//        dRightLen = Vector3Distance(center, MaxPos);
 //    }
 //
 //    //カメラのターゲットを補間
@@ -146,19 +173,19 @@ void CameraStateGamePlay::Execute(Camera* c)
 //
 //
 //    //どれだけカメラを引くかを算出する
-//    for (auto it = chr_map.begin();
-//        it != chr_map.end();
-//        ++it)
-//    {
-//        if (it->first->m_Params.camera_draw == false)continue;
-//        CrVector3 chrpos = it->first->m_Params.pos;
+//    //for (auto it = chr_map.begin();
+//    //    it != chr_map.end();
+//    //    ++it)
+//    //{
+//    //    if (it->first->m_Params.camera_draw == false)continue;
+//    //    CrVector3 chrpos = it->first->m_Params.pos;
 //
-//        //カメラ注視点からの距離を求める
-//        float rlen = Vector3Length(chrpos - center);
-//      //  rlen += 12;	//ちょっと大きめに引くため
+//    //    //カメラ注視点からの距離を求める
+//    //    float rlen = Vector3Length(chrpos - center);
 //
-//        if (dRightLen < rlen)dRightLen = rlen;	//最大なら更新
-//    }
+//    //    if (dRightLen < rlen)dRightLen = rlen;	//最大なら更新
+//    //}
+//
 //
 //    Vector3 mVec = first_pos - center;
 //    Vector3 moveTarget;
@@ -179,15 +206,25 @@ void CameraStateGamePlay::Execute(Camera* c)
 //        c->SetNewState(new CameraStateFreeMove());
 //    }
 //#endif
-//
-//    m_PosSpeed = 0.04f;
-//    m_TargetSpeed = 0.02f;
+//    m_PosSpeed = 0.05f;
+//    m_TargetSpeed = 0.04f;
 //}
+
 
 void CameraStateGamePlay::Exit(Camera* c)
 {
 
 
+}
+
+bool CameraStateGamePlay::isViewIn(CrVector3 pos)
+{
+    if (m_pCamera->WorldToProjection(&m_Work, pos) == false)
+    {
+        return false;
+    }
+
+    return m_Work.y > -0.8f;
 }
 
 

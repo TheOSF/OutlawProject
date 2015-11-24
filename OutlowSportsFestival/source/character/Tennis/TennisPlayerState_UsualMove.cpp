@@ -1,5 +1,5 @@
 #include "TennisPlayerState_UsualMove.h"
-#include "TennisState_Shot.h"
+#include "TennisState_BoundShot.h"
 #include "TennisPlayerState_Counter.h"
 #include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
@@ -59,7 +59,7 @@ public:
         {
             if (controller::GetTRG(controller::button::sankaku, pt->m_PlayerInfo.number))
             {// [△] でボール発射
-                pt->SetState(new TennisState_Shot(new TennisUtillityClass::PlayerShotControllClass(pt)));
+                pt->SetState(new TennisPlayerState_SlowUpBall(new TennisUtillityClass::PlayerSlowBallControll(pt)));
                 return;
             }
 
@@ -122,12 +122,6 @@ public:
                 return true;
             }
 
-            if (controller::GetTRG(controller::button::_L1, m_pTennis->m_PlayerInfo.number))
-            {// [L1] で [通常移動ステートへ
-                m_pTennis->SetState(TennisState_PlayerControll_Move::GetPlayerControllMove(m_pTennis));
-                return true;
-            }
-
             return false;
         }
 
@@ -145,13 +139,13 @@ public:
 
         bool isShot()
         {
-            return controller::GetTRG(controller::button::_L1, m_pTennis->m_PlayerInfo.number);
+            return controller::GetTRG(controller::button::sankaku, m_pTennis->m_PlayerInfo.number);
         }
     };
 
 
     //ショット中のコントロールクラス
-    class PlayerShotControllClass :public TennisState_Shot::ControllClass
+    class PlayerShotControllClass :public TennisState_BoundShot::ControllClass
     {
         TennisPlayer* const   m_pTennis;
     public:
@@ -386,16 +380,16 @@ void TennisState_PlayerControll_Move::ActionStateSwitch(TennisPlayer* t)
 {
     if (controller::GetTRG(controller::button::sankaku, t->m_PlayerInfo.number))
     {// [△] でボール発射
-        t->SetState(new TennisState_Shot(new TennisUtillityClass::PlayerShotControllClass(t)));
+        t->SetState(new TennisPlayerState_SlowUpBall(new TennisUtillityClass::PlayerSlowBallControll(t)));
         return;
     }
 
-    if (controller::GetTRG(controller::button::maru, t->m_PlayerInfo.number))
-    {// [○] でボール発射
+    if (chr_func::isCanSpecialAttack(t) && controller::GetTRG(controller::button::maru, t->m_PlayerInfo.number))
+    {// [○] で必殺技
         t->SetState(new TennisState_SpecialAtk(t));
+        chr_func::ResetSkillGauge(t);
         return;
     }
-
 
     if (controller::GetTRG(controller::button::shikaku, t->m_PlayerInfo.number))
     {// [□] で [近距離攻撃]
@@ -418,8 +412,7 @@ void TennisState_PlayerControll_Move::ActionStateSwitch(TennisPlayer* t)
     if (controller::GetTRG(controller::button::_L1, t->m_PlayerInfo.number) &&
         t->isCanBoundBallAtk())
     {// [L1] で ボールを上に投げる攻撃
-      //  t->SetState(new TennisState_BoundBallAtk(new TennisUtillityClass::PlayerBoundBallControll(t)));
-        t->SetState(new TennisPlayerState_SlowUpBall(new TennisUtillityClass::PlayerSlowBallControll(t)));
+        t->SetState(new TennisState_BoundShot(new TennisUtillityClass::PlayerShotControllClass(t)));
         return;
     }
 }

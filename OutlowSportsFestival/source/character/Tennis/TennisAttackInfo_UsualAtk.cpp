@@ -66,6 +66,7 @@ void TennisAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, TennisPlayer* p
 
     if (m_Param.DamageType == DamageBase::Type::_VanishDamage)
     {
+        pDmg->m_Vec.y = 0.5f;
         pDmg->m_VecPower.y = 0.4f;
     }
 

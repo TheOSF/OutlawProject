@@ -16,20 +16,13 @@
 const char* Kasennziki_Manager::StageObjFileName = "DATA\\Stages\\Stage1\\StageObjData.txt";
 
 Kasennziki_Manager::Kasennziki_Manager(UINT night_round) :
-m_NightRound(night_round),
+m_SunsetRound(night_round),
 m_RoundCount(1),
 m_DeleyFrame(0),
 m_pSkyObject(nullptr)
 {
     //リソースにまとめて登録
     StageResourceLoadFaction::LoadStage1Object();
-
-    //ライト初期化
-    for (int i = 0; i < _NumSpotLight; ++i)
-    {
-        m_pSpotLight[i] = new SpotLight();
-        m_pSpotLight[i]->Visible = false;
-    }
 
     //ライト登録
     DefMatchLightManager.AddManageLightValue(&m_DirLight.param.color);
@@ -48,10 +41,6 @@ m_pSkyObject(nullptr)
 
 Kasennziki_Manager::~Kasennziki_Manager()
 {
-    for (int i = 0; i < _NumSpotLight; ++i)
-    {
-        delete m_pSpotLight[i];
-    }
     //リソースから削除
     StageResourceLoadFaction::ReleaseStage1Object();
 }
@@ -118,8 +107,6 @@ void Kasennziki_Manager::CreateStage()
                 Vector3(0, 0, 0)
                 );
         }
-        
-        
     }
 
    
@@ -135,15 +122,15 @@ void Kasennziki_Manager::CreateStage()
     else
     {
         //ライティングセット
-        if (m_NightRound == 1)
-        {
-            SetNightLight();
-            SetNightObject();
-        }
-        else
+        if (m_SunsetRound == 1)
         {
             SetSunsetLight();
             SetSunsetObject();
+        }
+        else
+        {
+            SetNoonLight();
+            SetNoonObject();
         }
     }
 
@@ -172,20 +159,20 @@ void Kasennziki_Manager::RoundReset()
     ++m_RoundCount;
 
     //ライティングチェック
-    if (m_RoundCount == m_NightRound)
+    if (m_RoundCount == m_SunsetRound)
     {
-        //ライティングを夜に
-        SetNightLight();
+        //ライティングを夕方に
+        SetSunsetLight();
     }
 
     //オブジェクトの再配置
-    if (m_RoundCount >= m_NightRound)
+    if (m_RoundCount >= m_SunsetRound)
     {
-        SetNightObject();
+        SetSunsetObject();
     }
     else
     {
-        SetSunsetObject();
+        SetNoonObject();
     }
 }
 
@@ -201,7 +188,7 @@ void Kasennziki_Manager::SetSunsetObject()
     StageEditer::Load(StageObjFileName);
 }
 
-void Kasennziki_Manager::SetNightObject()
+void Kasennziki_Manager::SetNoonObject()
 {
     //空を削除
     if (m_pSkyObject != nullptr)
@@ -219,7 +206,6 @@ void Kasennziki_Manager::SetSunsetLight()
     //夕焼け時のライティングをセット
     m_DirLight.param.color = Vector3(0.3f, 0.2f, 0.2f);
     m_DirLight.param.vec = Vector3Normalize(Vector3(0.8f, -1, 0.2f));
-  //  m_DirLight.param.vec = Vector3Normalize(Vector3(0.2f, -1.0f, -0.8f));
     m_DirLight.param.Shadow.visible = true;
     m_DirLight.param.Shadow.Near = 5;
     m_DirLight.param.Shadow.Far = 150;
@@ -230,51 +216,24 @@ void Kasennziki_Manager::SetSunsetLight()
     m_AmbientLight.param.Occlusion.SamplingSize = 0.1f;
     m_AmbientLight.param.Occlusion.Enable = false;
 
-    for (int i = 0; i < _NumSpotLight; ++i)
-    {
-        m_pSpotLight[i]->Visible = false;
-    }
-
     DefMatchLightManager.UpdateLightColor(&m_AmbientLight.param.color, m_AmbientLight.param.color);
     DefMatchLightManager.UpdateLightColor(&m_DirLight.param.color, m_DirLight.param.color);
 }
 
-void Kasennziki_Manager::SetNightLight()
+void Kasennziki_Manager::SetNoonLight()
 {
-    //夜時のライティングをセット
-
-    m_DirLight.param.color = Vector3(0.08f, 0.08f, 0.08f);
-    m_DirLight.param.vec = Vector3Normalize(Vector3(0.8f, -1, 0.2f));
-    m_DirLight.param.Shadow.visible = false;
+    //昼時のライティングをセット
+    m_DirLight.param.color = Vector3(0.33f, 0.22f, 0.22f);
+    m_DirLight.param.vec = Vector3Normalize(Vector3(0.2f, -2, 0.8f));
+    m_DirLight.param.Shadow.visible = true;
     m_DirLight.param.Shadow.Near = 5;
     m_DirLight.param.Shadow.Far = 150;
     m_DirLight.param.Shadow.origin = m_DirLight.param.vec*-50.0f;
     m_DirLight.param.Shadow.Size = 120;
 
-
-    m_AmbientLight.param.color = Vector3(0.05f, 0.05f, 0.05f);
+    m_AmbientLight.param.color = Vector3(0.29f, 0.29f, 0.29f);
     m_AmbientLight.param.Occlusion.SamplingSize = 0.1f;
     m_AmbientLight.param.Occlusion.Enable = false;
-
-    {
-        m_pSpotLight[0]->Visible = true;
-
-        m_pSpotLight[0]->param.origin = Vector3(0, 10, 55);
-        m_pSpotLight[0]->param.target = Vector3(0, -2, -30);
-        m_pSpotLight[0]->param.color = Vector3(1.0f, 1.0f, 0.75f)*2.0f;
-        m_pSpotLight[0]->param.size = 45;
-        m_pSpotLight[0]->param.Shadow.visible = true;
-    }
-
-    {
-        m_pSpotLight[1]->Visible = true;
-                     
-        m_pSpotLight[1]->param.origin = Vector3(0, 10, -55);
-        m_pSpotLight[1]->param.target = Vector3(0, -2, 30);
-        m_pSpotLight[1]->param.color = Vector3(1.0f, 1.0f, 0.75f)*2.0f;
-        m_pSpotLight[1]->param.size = 45;
-        m_pSpotLight[1]->param.Shadow.visible = true;
-    }
 
     DefMatchLightManager.UpdateLightColor(&m_AmbientLight.param.color, m_AmbientLight.param.color);
     DefMatchLightManager.UpdateLightColor(&m_DirLight.param.color, m_DirLight.param.color);

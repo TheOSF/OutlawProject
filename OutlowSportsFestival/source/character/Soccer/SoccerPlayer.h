@@ -11,8 +11,7 @@ class SoccerPlayer;
 
 typedef ChrStateMachine<SoccerPlayer, CharacterBase::MsgType> SoccerStateMachine;
 typedef ChrState<SoccerPlayer, CharacterBase::MsgType>SoccerState;
-//　最大加速度
-#define MaxAcceleration 0.8f
+
 //*************************************************************
 //		サッカープレイヤークラス
 //*************************************************************

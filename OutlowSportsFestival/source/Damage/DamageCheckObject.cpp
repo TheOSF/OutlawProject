@@ -22,7 +22,7 @@ bool DamageCheckObject::Update()
         DamageManager::HitEventBase* pEvent;
     public:
         MyHitEvent(DamageManager::HitEventBase* pEvent) :
-            pEvent(nullptr),
+            pEvent(pEvent),
             hit(false){}
 
         bool hit;

@@ -60,6 +60,8 @@ public:
 
     void Counter(CharacterBase* pCounterCharacter)override;
 
+    void ToNoWork();           //攻撃判定のない状態にする
+
 private:
 
     bool(UsualBall::*m_pStateFunc)();
@@ -75,6 +77,7 @@ private:
     Vector3                     m_RotateSpeed;
     int                         m_EffectFrameCount;
     const CharacterType::Value  m_FirstParentType;
+    float                       m_MeshScale;
 
 	bool isOutofField()const;  //フィールド外に出ているか
 
@@ -82,10 +85,8 @@ private:
     void UpdateColor();   //色を現在の親キャラクタの色に設定
     bool UpdateWallCheck(Vector3& outNewMove);    //壁との判定を取り、接触していたなら移動値を反射してステート移行をする
     void AddLocusPoint();      //軌跡のポイントを現在のパラメータで一点追加する
+    void ScaleUpdate();
 
-
-
-    void ToNoWork();           //攻撃判定のない状態にする
 
     RATIO GetMovePower()const;
 

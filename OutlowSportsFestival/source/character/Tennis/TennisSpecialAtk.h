@@ -27,7 +27,9 @@ private:
     DamageShpere		m_Damage;
     LocusHDR            m_Locus;
     RADIAN              m_Rotate;
+    const float         m_FirstMoveVal;
     int                 m_NoDamageFrame;
+    int                 m_Timer;
 
     void UpdateDamageClass();
     void UpdateMesh();

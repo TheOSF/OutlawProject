@@ -10,7 +10,6 @@
 #include "../CharacterShotAttackClass.h"
 #include "../CharacterManager.h"
 
-#include "TennisState_BoundBallAtk.h"
 #include "../../Effect/HitEffectObject.h"
 #include "../../Sound/Sound.h"
 #include "../../GameSystem/GameController.h"
@@ -66,21 +65,24 @@ void TennisPlayerState_SlowUpBall::Exit(TennisPlayer* p)
 }
 
 
-TennisPlayerState_SlowUpBall::ShotType TennisPlayerState_SlowUpBall::GetShotType()const
+TennisPlayerState_SlowUpBall::ShotType TennisPlayerState_SlowUpBall::GetShotType(int Timer)const
 {
     //撃ち始め
-    if (m_Timer < 20)
+    if (Timer < 10)
     {
-        return ShotType::CutBall;
+        return ShotType::Weak;
     }
-    else 
-    if (m_Timer < 40) //ボール最頂点
+    else if (Timer < 30)//通常
+    {
+        return ShotType::Usual;
+    }
+    if (Timer < 40) //ボール最頂点
     {
         return ShotType::Smash;
     }
 
     //それ以外
-    return ShotType::CutBall;
+    return ShotType::Usual;
 }
 
 void TennisPlayerState_SlowUpBall::SetState(void(TennisPlayerState_SlowUpBall::*pStateFunc)())
@@ -136,31 +138,188 @@ void TennisPlayerState_SlowUpBall::State_SlowUp()
         Sound::Play(Sound::Swing1);
     }
 
-    if (m_Timer == 60)
+    if (m_Timer == 55)
     {
         SetState(&TennisPlayerState_SlowUpBall::State_Finish);
+        return;
     }
 
     //うち命令が出たら
     if (m_pControllClass->isShot())
     {
         //ショット分岐
-        switch (GetShotType())
+        switch (GetShotType(m_Timer))
         {
+        case ShotType::Weak:
+            SetState(&TennisPlayerState_SlowUpBall::State_Weak);
+            return;
+        case ShotType::Usual:
+            SetState(&TennisPlayerState_SlowUpBall::State_Usual);
+            return;
         case ShotType::Smash:
             SetState(&TennisPlayerState_SlowUpBall::State_Smash);
-            break;
-
-        case ShotType::CutBall:
-            SetState(&TennisPlayerState_SlowUpBall::State_CutShot);
-            break;
-
-        default:
-            break;
+            return;
         }
     }
 }
 
+void TennisPlayerState_SlowUpBall::State_Weak()
+{
+    const RADIAN angle_speed = D3DXToRadian(15);
+    const int ShotFrame = 8;
+    const int EndFrame = 13;
+
+    ++m_Timer;
+
+    if (m_Timer == 1)
+    {
+        //モーション
+        m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Smash);
+    }
+
+
+    if (m_Timer == ShotFrame)
+    {
+        //打ち上げボールを消去
+        m_pUpBall->m_DeleteFlag = true;
+        m_pUpBall = nullptr;
+
+        //ボール生成
+        BallBase::Params param;
+
+        //移動は前向き
+        chr_func::GetFront(m_pTennis, &param.move);
+        //スピードは適当
+        param.move *= 0.3f;
+
+        //キャラの場所に(最終的に腕の位置に？)
+        param.pos = m_pTennis->m_Params.pos + Vector3(0, UsualBall::UsualBallShotY, 0);
+        //高さをキャラ共通ボール発射のYに
+        param.pos.y = BallBase::UsualBallShotY;
+
+        //親を自分に
+        param.pParent = m_pTennis;
+        //通常タイプ
+        param.type = BallBase::Type::_Usual;
+
+        //生成
+        new UsualBall(param, DamageBase::Type::_WeekDamage, 3);
+
+
+        //コントローラを振動
+        controller::SetVibration(
+            5000,
+            0.15f,
+            m_pTennis->m_PlayerInfo.number
+            );
+
+        //サウンド
+        Sound::Play(Sound::Tennis_BallAtk);
+
+        //エフェクト
+        {
+            //エフェクトの設定
+            new HitEffectObject(
+                param.pos,
+                Vector3Normalize(param.move),
+                0.1f,
+                0.1f,
+                Vector3(1, 1, 1)
+                );
+        }
+    }
+
+    if (m_Timer < ShotFrame)
+    {
+        //角度調整
+        AngleControll(D3DXToRadian(15), 100.0f);
+    }
+
+    //一定時間で終了ステートへ
+    if (m_Timer >= EndFrame)
+    {
+        SetState(&TennisPlayerState_SlowUpBall::State_Finish);
+    }
+}
+
+void TennisPlayerState_SlowUpBall::State_Usual()
+{
+    const RADIAN angle_speed = D3DXToRadian(15);
+    const int ShotFrame = 16;
+    const int EndFrame = 24;
+
+    ++m_Timer;
+
+    if (m_Timer == 1)
+    {
+        //モーション
+        m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Smash);
+    }
+
+
+    if (m_Timer == ShotFrame)
+    {
+        //打ち上げボールを消去
+        m_pUpBall->m_DeleteFlag = true;
+        m_pUpBall = nullptr;
+
+        //ボール生成
+        BallBase::Params param;
+
+        //移動は前向き
+        chr_func::GetFront(m_pTennis, &param.move);
+        //スピードは適当
+        param.move *= 0.55f;
+
+        //キャラの場所に(最終的に腕の位置に？)
+        param.pos = m_pTennis->m_Params.pos + Vector3(0, UsualBall::UsualBallShotY, 0);
+        //高さをキャラ共通ボール発射のYに
+        param.pos.y = BallBase::UsualBallShotY;
+
+        //親を自分に
+        param.pParent = m_pTennis;
+        //通常タイプ
+        param.type = BallBase::Type::_Usual;
+
+        //生成
+        new UsualBall(param, DamageBase::Type::_WeekDamage, 5);
+
+
+        //コントローラを振動
+        controller::SetVibration(
+            5000,
+            0.15f,
+            m_pTennis->m_PlayerInfo.number
+            );
+
+        //サウンド
+        Sound::Play(Sound::Tennis_BallAtk);
+
+        //エフェクト
+        {
+            //エフェクトの設定
+            new HitEffectObject(
+                param.pos,
+                Vector3Normalize(param.move),
+                0.1f,
+                0.1f,
+                Vector3(1, 1, 1)
+                );
+        }
+    }
+
+    if (m_Timer < ShotFrame)
+    {
+        //角度調整
+        AngleControll(D3DXToRadian(15), 100.0f);
+    }
+
+    //一定時間で終了ステートへ
+    if (m_Timer >= EndFrame)
+    {
+        SetState(&TennisPlayerState_SlowUpBall::State_Finish);
+    }
+}
 
 void TennisPlayerState_SlowUpBall::State_Smash()
 {
@@ -231,10 +390,7 @@ void TennisPlayerState_SlowUpBall::State_Smash()
     if (m_Timer < SmashFrame)
     {
         //角度調整
-        Vector3 v = m_pControllClass->GetVec();
-
-        chr_func::AngleControll(m_pTennis, m_pTennis->m_Params.pos + v, angle_speed);
-
+        AngleControll(D3DXToRadian(15), 100.0f);
     }
 
     //一定時間で終了ステートへ
@@ -244,85 +400,25 @@ void TennisPlayerState_SlowUpBall::State_Smash()
     }
 }
 
-
-void TennisPlayerState_SlowUpBall::State_CutShot()
-{
-    const RADIAN angle_speed = D3DXToRadian(10);
-    const int ShothFrame = 8;
-    const int EndFrame = 15;
-
-    ++m_Timer;
-
-    if (m_Timer == 1)
-    {
-        //モーション
-        m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_CutShot);
-    }
-
-
-    if (m_Timer == ShothFrame)
-    {
-        //打ち上げボールを消去
-        m_pUpBall->m_DeleteFlag = true;
-        m_pUpBall = nullptr;
-
-        //ボール生成
-        Vector3 pos, move;
-
-        pos = m_pTennis->m_Params.pos + Vector3(0, BallBase::UsualBallShotY, 0);
-
-        chr_func::GetFront(m_pTennis, &move);
-        move *= 0.3f;
-        move.y = 0.6f;
-
-        new TennisBoundBall(
-            pos,
-            move,
-            m_pTennis
-            );
-
-
-        //コントローラを振動
-        controller::SetVibration(
-            5000,
-            0.15f,
-            m_pTennis->m_PlayerInfo.number
-            );
-
-        //サウンド
-        Sound::Play(Sound::Tennis_BallAtk);
-
-        //エフェクト
-        {
-            //エフェクトの設定
-            new HitEffectObject(
-                pos,
-                Vector3Normalize(move),
-                0.1f,
-                0.1f,
-                Vector3(1, 1, 1)
-                );
-        }
-    }
-
-    if (m_Timer < ShothFrame)
-    {
-        //角度調整
-        Vector3 v = m_pControllClass->GetVec();
-
-        chr_func::AngleControll(m_pTennis, m_pTennis->m_Params.pos + v, angle_speed);
-
-    }
-
-    //一定時間で終了ステートへ
-    if (m_Timer >= EndFrame)
-    {
-        SetState(&TennisPlayerState_SlowUpBall::State_Finish);
-    }
-}
 
 
 void TennisPlayerState_SlowUpBall::State_Finish()
 {
     m_pTennis->SetState(TennisState_PlayerControll_Move::GetPlayerControllMove(m_pTennis));
+}
+
+void TennisPlayerState_SlowUpBall::AngleControll(RADIAN Speed, float CheckLen)
+{
+    //角度調整
+    Vector3 v = m_pControllClass->GetVec();
+    CharacterBase* pTarget = nullptr;
+
+    if (chr_func::CalcAtkTarget(m_pTennis, D3DXToRadian(33), CheckLen, &pTarget))
+    {
+        chr_func::AngleControll(m_pTennis, pTarget->m_Params.pos, D3DXToRadian(10));
+    }
+    else
+    {
+        chr_func::AngleControll(m_pTennis, m_pTennis->m_Params.pos + v, Speed);
+    }
 }

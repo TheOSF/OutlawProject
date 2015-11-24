@@ -42,10 +42,12 @@ namespace chr_func
 	void CreateTransMatrix(CharacterBase* p, float Scale, Matrix* pOutMatrix);
 
 	//前方向ベクトルを得る
-	void GetFront(CharacterBase* p, Vector3* pOut);
+	void    GetFront(CharacterBase* p, Vector3* pOut);
+    Vector3 GetFront(CharacterBase* p);
 
     //右方向ベクトルを得る
-    void GetRight(CharacterBase* p, Vector3* pOut);
+    void    GetRight(CharacterBase* p, Vector3* pOut);
+    Vector3 GetRight(CharacterBase* p);
 
 	//キャラクタが死んでいるかどうか
 	bool isDie(const CharacterBase* p);
@@ -92,12 +94,17 @@ namespace chr_func
     //引数のキャラクタが必殺技を発動できるかどうか
     bool isCanSpecialAttack(CharacterBase* p);
 
+    //引数のキャラクタのＳＰが０かどうか
+    bool isSkillZero(CharacterBase* p);
+
     //キャラクタの体力をダメージによって減少させる
     void CalcDamage(CharacterBase* p, float value, bool DontDie = false);
 
     //攻撃のターゲットを得る(複数のターゲットがいた場合、自身のもっとも前にいるキャラクタを選ぶ)
     bool CalcAtkTarget(CharacterBase* pOwner, RADIAN check_angle, float check_distance, CharacterBase** ppOut);
 
+    //キャラクタのラウンド勝利数を加算する
+    void AddWinPoint(CharacterBase* p);
 }
 
 #endif

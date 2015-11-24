@@ -64,6 +64,12 @@ public:
     //ローカル空間(キャラクタ空間)上でのボーン行列を得る
     void GetLocalBoneMatrix(Matrix& Out, int BoneNum);
 
+    //ワールド空間上でのボーン座標を得る
+    Vector3 GetWorldBonePos(int BoneNum);
+
+    //ローカル空間(キャラクタ空間)上でのボーン座標を得る
+    Vector3 GetLocalBonePos(int BoneNum);
+
 	//ワールド変換行列
 	Matrix  m_TransMatrix;
 

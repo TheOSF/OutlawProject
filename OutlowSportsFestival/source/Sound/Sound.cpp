@@ -61,9 +61,13 @@ void Sound::Initialize()
 	RegistSE(Soccer_Speed_Up1, "speedUp1");
 	RegistSE(Soccer_Speed_Up2, "speedUp2");
 
-    
+    RegistBGM(BGM_Title, "title\\game_maoudamashii_4_vehicle02");
+    RegistBGM(BGM_Option, "option\\select2");
+    RegistBGM(BGM_ChrSelect, "character_select\\select");
+
     RegistBGM(BGM_Battle,"battle\\battle_normal");
     RegistBGM(BGM_LastRound, "battle\\battle_last");
+
 }
 
 
@@ -75,4 +79,14 @@ void Sound::Play(Type type, RATIO volume , bool loop)
         (int)type,
         loop
         );
+}
+
+
+//‚a‚f‚lƒXƒgƒbƒv
+void Sound::StopBGM()
+{
+    for (int i = (int)_BGM_REGIST_START + 1; i < (int)_BGM_REGIST_END; ++i)
+    {
+        IEX_StopSound(i);
+    }
 }

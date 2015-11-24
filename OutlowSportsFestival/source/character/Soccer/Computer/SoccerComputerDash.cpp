@@ -19,6 +19,7 @@
 #include "../SoccerCommonState.h"
 #include "../../../Effect/EffectFactory.h"
 #include "../../../Sound/Sound.h"
+
 class SocceComputerrUtillityClass
 {
 public:
@@ -216,6 +217,8 @@ void SoccerState_ComputerControll_Dash::Execute(SoccerPlayer* s)
 void SoccerState_ComputerControll_Dash::Exit(SoccerPlayer* s)
 {
 	delete m_pDashClass;
+    delete m_pDoActionClass;
+    delete m_pReactionClass;
 }
 Vector2 SoccerState_ComputerControll_Dash::StateMoveFront(SoccerPlayer* s)
 {

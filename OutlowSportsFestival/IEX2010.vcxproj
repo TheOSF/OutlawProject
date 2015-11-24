@@ -228,11 +228,11 @@
     <ClCompile Include="source\character\Tennis\TennisPlayerState_PoseMotion.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_SlowUpBall.cpp" />
     <ClCompile Include="source\character\Tennis\TennisSpecialAtk.cpp" />
-    <ClCompile Include="source\character\Tennis\TennisState_BoundBallAtk.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisState_BoundBall.cpp" />
     <ClCompile Include="source\character\Tennis\TennisState_Rolling.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_Vanish.cpp" />
     <ClCompile Include="source\character\Tennis\Tennis_HitEvent.cpp" />
-    <ClCompile Include="source\character\Tennis\TennisState_Shot.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisState_BoundShot.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_Attack.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_Counter.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_UsualMove.cpp" />
@@ -265,7 +265,7 @@
     <ClCompile Include="source\GameScene\sceneMain.cpp" />
     <ClCompile Include="source\GameSystem\GameController.cpp" />
     <ClCompile Include="source\GameSystem\GameEventer.cpp" />
-    <ClCompile Include="source\GameSystem\GameInitilizer_DevelopMode.cpp" />
+    <ClCompile Include="source\GameSystem\GameInitilizer_UsualMatch.cpp" />
     <ClCompile Include="source\GameSystem\GameObject.cpp" />
     <ClCompile Include="source\GameSystem\LightEventExecuter.cpp" />
     <ClCompile Include="source\GameSystem\MatchLightManager.cpp" />
@@ -293,6 +293,8 @@
     <ClCompile Include="source\Render\System\DeferredLightBufRenderer.cpp" />
     <ClCompile Include="source\Render\System\DeferredLightManager.cpp" />
     <ClCompile Include="source\Render\System\SmalBufBlurRenderer.cpp" />
+    <ClCompile Include="source\SceneOption\SceneOption.cpp" />
+    <ClCompile Include="source\SceneTitle\SceneTitle.cpp" />
     <ClCompile Include="source\Sound\Sound.cpp" />
     <ClCompile Include="source\Stage\HitStageObject.cpp" />
     <ClCompile Include="source\Stage\Kasenziki_Manager.cpp" />
@@ -316,6 +318,7 @@
     <ClCompile Include="source\utillity\LocusBlur.cpp" />
     <ClCompile Include="source\utillity\LocusHDR.cpp" />
     <ClCompile Include="source\utillity\sstream_helper.cpp" />
+    <ClCompile Include="source\utillity\UIbase.cpp" />
     <ClCompile Include="source\utillity\WindEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -443,10 +446,10 @@
     <ClInclude Include="source\character\Tennis\TennisPlayerState_PoseMotion.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_SlowUpBall.h" />
     <ClInclude Include="source\character\Tennis\TennisSpecialAtk.h" />
-    <ClInclude Include="source\character\Tennis\TennisState_BoundBallAtk.h" />
+    <ClInclude Include="source\character\Tennis\TennisState_BoundBall.h" />
     <ClInclude Include="source\character\Tennis\TennisState_Rolling.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Vanish.h" />
-    <ClInclude Include="source\character\Tennis\TennisState_Shot.h" />
+    <ClInclude Include="source\character\Tennis\TennisState_BoundShot.h" />
     <ClInclude Include="source\character\Tennis\Tennis_HitEvent.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Attack.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Counter.h" />
@@ -483,7 +486,7 @@
     <ClInclude Include="source\GameSystem\GameController.h" />
     <ClInclude Include="source\GameSystem\GameEventer.h" />
     <ClInclude Include="source\GameSystem\GameInitializer.h" />
-    <ClInclude Include="source\GameSystem\GameInitilizer_DevelopMode.h" />
+    <ClInclude Include="source\GameSystem\GameInitilizer_UsualMatch.h" />
     <ClInclude Include="source\GameSystem\GameObject.h" />
     <ClInclude Include="source\GameSystem\GameSystem.h" />
     <ClInclude Include="source\GameSystem\LightEventExecuter.h" />
@@ -511,6 +514,8 @@
     <ClInclude Include="source\Render\System\DeferredLightBufRenderer.h" />
     <ClInclude Include="source\Render\System\DeferredLightManager.h" />
     <ClInclude Include="source\Render\System\SmalBufBlurRenderer.h" />
+    <ClInclude Include="source\SceneOption\SceneOption.h" />
+    <ClInclude Include="source\SceneTitle\SceneTitle.h" />
     <ClInclude Include="source\Sound\Sound.h" />
     <ClInclude Include="source\Stage\HitStageObject.h" />
     <ClInclude Include="source\Stage\Kasenziki_Manager.h" />
@@ -541,6 +546,7 @@
     <ClInclude Include="source\utillity\StateTemplate.h" />
     <ClInclude Include="source\utillity\StaticGameObjectTemplate.h" />
     <ClInclude Include="source\utillity\String.h" />
+    <ClInclude Include="source\utillity\UIbase.h" />
     <ClInclude Include="source\utillity\WindEffect.h" />
   </ItemGroup>
   <ItemGroup>

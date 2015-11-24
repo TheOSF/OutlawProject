@@ -49,7 +49,7 @@ void RiverObject::Render()
     float DiffTex[2]  = { m_DiffTex.x, m_DiffTex.y };
     float DiffTex2[2] = { m_DiffTex2.x, m_DiffTex2.y };
 
-    shader->SetValue("g_Color", Vector4(0.05f, 0.3f, 0.4f, 0.9f));
+    shader->SetValue("g_Color", Vector4(0.05f, 0.3f, 0.4f, 0.98f));
     shader->SetValue("g_DiffTex", DiffTex, 2);
     shader->SetValue("g_DiffTex2", DiffTex2, 2);
     

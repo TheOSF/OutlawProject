@@ -36,6 +36,7 @@ SoccerSpecialHit::SoccerSpecialHit(
     m_Damage.pParent = pOwner;
     m_Damage.type = DamageBase::Type::_VanishDamage;
     m_Damage.Value = 2.5f*level;
+    m_Damage.MaxChrHit = 10;
 
     //—³Šª
     TornadoEffect::Param p;

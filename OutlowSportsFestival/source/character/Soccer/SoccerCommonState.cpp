@@ -176,7 +176,6 @@ void SoccerState_DamageVanish::Enter(SoccerPlayer* s)
 	Param.move = m_Damage_vec;
 	Param.down_frame = 15;
 	Param.down_muteki_frame = 15;
-	Param.move.y = 0.2f;
 	Param.standup_frame = 50;
 
 	//‚Ğ‚é‚İƒNƒ‰ƒX‚ğì¬

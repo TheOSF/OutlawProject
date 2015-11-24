@@ -84,6 +84,9 @@ inline float fClamp(float x, float max_val, float min_val)
 class iex2DObj;
 class iexShader;
 
+class Framework;
+extern Framework*	MainFrame;
+
 //*****************************************************************************************************************************
 //
 //		i-ExtremeƒVƒXƒeƒ€

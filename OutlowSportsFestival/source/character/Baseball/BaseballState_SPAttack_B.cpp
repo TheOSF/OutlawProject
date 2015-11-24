@@ -177,6 +177,7 @@ void BaseballState_SPAttack_B::State_Atk2()
 	if (m_Timer == 56)
 	{
 		m_Damage.m_Enable = true;
+        m_Damage.ResetCounts();
 		m_Damage.Value = 50.0f;
 		m_Damage.type = DamageBase::Type::_VanishDamage;
 		m_Damage.HitCount = 0;

@@ -183,6 +183,13 @@ void chr_func::GetFront(CharacterBase* p, Vector3* pOut)
 	pOut->z = cosf(p->m_Params.angle);
 }
 
+Vector3 chr_func::GetFront(CharacterBase* p)
+{
+    Vector3 ret;
+    GetFront(p, &ret);
+    return ret;
+}
+
 //右方向ベクトルを得る
 void chr_func::GetRight(CharacterBase* p, Vector3* pOut)
 {
@@ -190,6 +197,13 @@ void chr_func::GetRight(CharacterBase* p, Vector3* pOut)
     pOut->x = sinf(angle);
     pOut->y = 0;
     pOut->z = cosf(angle);
+}
+
+Vector3 chr_func::GetRight(CharacterBase* p)
+{
+    Vector3 ret;
+    GetRight(p, &ret);
+    return ret;
 }
 
 bool chr_func::isDie(const CharacterBase* p)
@@ -460,13 +474,16 @@ void chr_func::ResetSkillGauge(CharacterBase* p)
     p->m_Params.SP = 0;
 }
 
-
-
-
 //引数のキャラクタが必殺技を発動できるかどうか
 bool chr_func::isCanSpecialAttack(CharacterBase* p)
 {
     return p->m_Params.SP >= 0.5f;
+}
+
+//引数のキャラクタのＳＰが０かどうか
+bool chr_func::isSkillZero(CharacterBase* p)
+{
+    return p->m_Params.SP <= 0.0f;;
 }
 
 //キャラクタの体力をダメージによって減少させる
@@ -551,6 +568,12 @@ bool chr_func::CalcAtkTarget(
     }
 
     return *ppOut != nullptr;
+}
+
+//キャラクタのラウンド勝利数を加算する
+void chr_func::AddWinPoint(CharacterBase* p)
+{
+    p->m_Params.win++;
 }
 
 //引数のスキル値が必殺技を発動できるかどうか

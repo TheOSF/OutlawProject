@@ -17,8 +17,9 @@ public:
     //打つタイプ
     enum class ShotType
     {
+        Weak,    //弱い
+        Usual,   //普通
         Smash,   //スマッシュ
-        CutBall, //カットして帰ってくるボール
     };
 
     //コントロールクラスインターフェース
@@ -43,7 +44,7 @@ public:
     void Execute(TennisPlayer* p)override;
     void Exit(TennisPlayer* p)override;
 
-    ShotType GetShotType()const;
+    ShotType GetShotType(int m_Timer)const;
 
 private:
 
@@ -58,7 +59,12 @@ private:
     void SetState(void(TennisPlayerState_SlowUpBall::*pStateFunc)());
 
     void State_SlowUp();
+
+    void State_Weak();
+    void State_Usual();
     void State_Smash();
-    void State_CutShot();
+
     void State_Finish();
+
+    void AngleControll(RADIAN Speed,float CheckLen);
 };

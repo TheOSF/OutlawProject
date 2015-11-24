@@ -51,6 +51,19 @@ bool controller::GetPush(button::button_type x, CONTROLLER_NUM num)
     return KEY(button_key_code[x], num) != 0;
 }
 
+//押しているかどうか(誰かが)
+bool controller::GetPushAnyController(button::button_type x)
+{
+    for(int i = 0 ; i < 4 ; ++i)
+    {
+        if(KEY(button_key_code[x], i)!= 0)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 // コントローラの状態取得
 controller::button::button_state controller::GetButtonState(controller::button::button_type x, CONTROLLER_NUM num)
 {
@@ -136,6 +149,19 @@ bool controller::GetLeave(button::button_type x, CONTROLLER_NUM num)
 bool controller::GetPush(button::button_type x, CONTROLLER_NUM num)
 {
 	return GamePadManager::GetState(num, button_key_code[x]) != 0;
+}
+
+//押しているかどうか(誰かが)
+bool controller::GetPushAnyController(button::button_type x)
+{
+    for (int i = 0; i<4; ++i)
+    {
+        if (GamePadManager::GetState((size_t)i, button_key_code[x]) != 0)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 // コントローラの状態取得

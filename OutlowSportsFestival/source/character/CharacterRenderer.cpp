@@ -167,6 +167,19 @@ void CharacterRenderer::GetLocalBoneMatrix(Matrix& Out, int BoneNum)
     Out = *m_pAnimeMesh->GetBone(BoneNum);
 }
 
+//ワールド空間上でのボーン座標を得る
+Vector3 CharacterRenderer::GetWorldBonePos(int BoneNum)
+{
+    return Vector3MulMatrix(GetLocalBonePos(BoneNum), m_TransMatrix);
+}
+
+//ローカル空間(キャラクタ空間)上でのボーン座標を得る
+Vector3 CharacterRenderer::GetLocalBonePos(int BoneNum)
+{
+    Matrix* m = m_pAnimeMesh->GetBone(BoneNum);
+    return Vector3(m->_41, m->_42, m->_43);
+}
+
 //描画
 void CharacterRenderer::GbufRender(
     iexShader*        pShader,                       //シェーダークラス
@@ -183,6 +196,7 @@ void CharacterRenderer::MasterRender()
 {
     shader->SetValue("g_HDR_Color", m_HDR);
     shader->SetValue("g_Color", D3DXVECTOR4(m_ClothesColor.x, m_ClothesColor.y, m_ClothesColor.z, 1.0f));
+    shader->SetValue("g_Lighting_Color", Vector3(0, 0, 0));
 
     m_pAnimeMesh->Render(shader, m_Techniques);
 }

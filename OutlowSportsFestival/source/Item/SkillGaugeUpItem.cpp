@@ -7,6 +7,7 @@
 #include "../Effect/BlurImpact.h"
 #include "../Sound/Sound.h"
 #include "../Collision/Collision.h"
+#include "../GameSystem/GameController.h"
 
 SkillGaugeUpItem::SkillGaugeUpItem(CrVector3 pos, CrVector3 move) :
 m_LiveFlag(true),
@@ -111,6 +112,13 @@ bool SkillGaugeUpItem::Update()
 
         //ゲージを上昇
         chr_func::AddSkillGauge(HitChr, 0.5f);
+
+        //コントローラを振動
+        controller::SetVibration(
+            10000,
+            0.15f,
+            HitChr->m_PlayerInfo.number
+            );
     }
     else
     {

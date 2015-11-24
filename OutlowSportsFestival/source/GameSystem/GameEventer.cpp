@@ -502,6 +502,9 @@ void MatchState::WinPose::Execute(_Client_type_ptr p)
 
         Sound::Play(Sound::Kira_n);
         DefCamera.SetNewState(new CameraStateCharacterZoom(m_pWinCharacter, 0.05f));
+
+        //ƒ‰ƒEƒ“ƒhŸ—˜”‚ğ‰ÁZ
+        chr_func::AddWinPoint(m_pWinCharacter);
     }
 
     if (m_Frame == 300)

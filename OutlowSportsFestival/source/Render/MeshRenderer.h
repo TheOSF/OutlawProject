@@ -68,6 +68,9 @@ public:
 
     //故意に輝かせる際のパラメータ(xyz = rgb)
     Vector3 m_HDR;
+
+    //故意に光らせる際のパラメータ(xyz = rgb)
+    Vector3 m_Lighting;
 private:
     Matrix               m_TransMatrix;
 	bool		const	 m_MeshDelete;
