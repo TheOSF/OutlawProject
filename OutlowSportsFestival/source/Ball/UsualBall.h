@@ -9,6 +9,7 @@
 #include "../utillity/LocusHDR.h"
 #include "../Render/LightObject.h"
 #include "../Library/Bullet/BulletSystem.h"
+#include "BallEffect.h"
 
 //*****************************************************
 //		通常玉クラス
@@ -27,6 +28,8 @@ public:
         float Restitution;
     };
 
+    //スキルゲージの伸びる量(AddSkillValueRatio*ダメージ量)
+    static const float AddSkillValueRatio;
 
 	//コンストラクタ
     UsualBall(
@@ -75,8 +78,8 @@ private:
     UINT                        m_HitCountSave;
     UINT                        m_HitStopFrame;
     Vector3                     m_RotateSpeed;
-    int                         m_EffectFrameCount;
     const CharacterType::Value  m_FirstParentType;
+    BallEffect                  m_BallEffect;
     float                       m_MeshScale;
 
 	bool isOutofField()const;  //フィールド外に出ているか

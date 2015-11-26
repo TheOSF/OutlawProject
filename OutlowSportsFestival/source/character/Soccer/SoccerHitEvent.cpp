@@ -21,19 +21,19 @@ bool SoccerHitEvent::Hit(DamageBase* pDmg)
     {
     case CharacterHitEventFunc::SetType::Die:
         //死亡ステートへ
-        m_pSoccer->SetState(new SoccerState_DamageMotion_Die(m_pSoccer, DamageVec), true);
+        m_pSoccer->SetState(new SoccerState_DamageMotion_Die(m_pSoccer, DamageVec), 2);
         break;
 
 
     case CharacterHitEventFunc::SetType::Weak_Hit:
         //弱ひるみステートへ
-        m_pSoccer->SetState(new SoccerState_SmallDamage(m_pSoccer, DamageVec), true);
+        m_pSoccer->SetState(new SoccerState_SmallDamage(m_pSoccer, DamageVec), 1);
         break;
 
 
     case CharacterHitEventFunc::SetType::Vanish_Hit:
         //吹き飛びステートへ
-        m_pSoccer->SetState(new SoccerState_DamageVanish(m_pSoccer, DamageVec), true);
+        m_pSoccer->SetState(new SoccerState_DamageVanish(m_pSoccer, DamageVec), 1);
         break;
 
 

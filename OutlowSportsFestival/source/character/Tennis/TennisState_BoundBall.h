@@ -3,6 +3,7 @@
 //****************************************************
 //	テニス_バウンドするボールクラス
 //****************************************************
+
 #include "../../Ball/Ball.h"
 #include "../../GameSystem/GameObject.h"
 #include "../../GameSystem/ForwardDecl.h"
@@ -11,6 +12,7 @@
 #include "TennisPlayer.h"
 #include "../../Library/Bullet/BulletSystem.h"
 #include "../../Damage/Damage.h"
+#include "../../Ball/BallEffect.h"
 
 class TennisBoundBall :public GameObjectBase, public BallBase
 {
@@ -40,6 +42,7 @@ private:
     RigidBody*          m_pRigidBody;    //このボールを動かす剛体クラス
     Matrix              m_BaseMatrix;    //スケールを除いた変換行列
     DamageShpere        m_Damage;        //ダメージ判定クラス
+    BallEffect          m_BallEffect;    //エフェクトクラス
 
     void StateFly();         //放物線運度中のステート
     void StateGroundTouch(); //地面に着弾した瞬間のステート

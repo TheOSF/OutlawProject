@@ -156,9 +156,9 @@ void GameObjectManager::FreezeUpdate()
     {
         it2 = m_GameObjectMap.find(*it);
 
-        MyAssert(it2 != m_GameObjectMap.end(), "GameObjectManager::FreezeUpdate　更新するオブジェクトが見つかりませんでした");
+        //MyAssert(it2 != m_GameObjectMap.end(), "GameObjectManager::FreezeUpdate　更新するオブジェクトが見つかりませんでした");
     
-        if ((*it)->Update() == false)
+        if (it2 != m_GameObjectMap.end() && (*it)->Update() == false)
         {
 
 #ifdef _DEBUG

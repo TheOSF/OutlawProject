@@ -237,6 +237,11 @@
     <ClCompile Include="source\GameSystem\GameInitilizer_UsualMatch.cpp" />
     <ClCompile Include="source\character\Tennis\TennisState_BoundBall.cpp" />
     <ClCompile Include="source\character\Tennis\TennisState_BoundShot.cpp" />
+    <ClCompile Include="source\Ball\BallTemplate.cpp" />
+    <ClCompile Include="source\Ball\BallEffect.cpp" />
+    <ClCompile Include="source\Effect\SpecialAttackEffect.cpp" />
+    <ClCompile Include="source\Effect\SpeedEffect.cpp" />
+    <ClCompile Include="source\SceneResult\SceneResult.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -440,6 +445,11 @@
     <ClInclude Include="source\GameSystem\GameInitilizer_UsualMatch.h" />
     <ClInclude Include="source\character\Tennis\TennisState_BoundBall.h" />
     <ClInclude Include="source\character\Tennis\TennisState_BoundShot.h" />
+    <ClInclude Include="source\Ball\BallTemplate.h" />
+    <ClInclude Include="source\Ball\BallEffect.h" />
+    <ClInclude Include="source\Effect\SpecialAttackEffect.h" />
+    <ClInclude Include="source\Effect\SpeedEffect.h" />
+    <ClInclude Include="source\SceneResult\SceneResult.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

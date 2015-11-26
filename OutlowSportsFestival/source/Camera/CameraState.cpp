@@ -6,6 +6,8 @@
 
 //試合時のカメラステート
 
+const Vector3 CameraStateGamePlay::first_pos(0, 40, -55);
+
 CameraStateGamePlay::CameraStateGamePlay(bool pos_reset) :
 m_pCamera(nullptr)
 {
@@ -30,7 +32,6 @@ void CameraStateGamePlay::Enter(Camera* c)
 void CameraStateGamePlay::Execute(Camera* c)
 {
 
-    const Vector3 first_pos(0, 40, -55);	//適当
 	const CharacterManager::CharacterMap& chr_map = DefCharacterMgr.GetCharacterMap();
 
 	//キャラクタがいない場合移動できない
@@ -415,3 +416,78 @@ void CameraStateCharacterZoom::Exit(Camera* c)
 
 }
 
+//スキル時にキャラクタにズームするカメラ
+CameraStateSkillCharacterZoom::CameraStateSkillCharacterZoom(
+    LpCharacterBase  pZoomCharacter,
+    RATIO            speed,
+    int              time
+    ) :
+    m_pZoomCharacter(pZoomCharacter),
+    m_Speed(speed),
+    m_Timer(time),
+    m_MoveAngle(0)
+{
+
+}
+
+void CameraStateSkillCharacterZoom::Enter(Camera* c)
+{
+    const float MoveLen = 15.0f;  //スーム距離
+    const float DontZoomLen = 40.0f; //ズームしないようになる距離
+    Vector3 TargetPos = GetTargetPos();
+    Vector3 ToTarget = GetTargetPos() - c->m_Position;
+    float Len;
+
+    m_FirstViewVec = c->m_Target - c->m_Position;
+
+    {
+        m_MovePos = c->m_Position + Vector3Normalize(ToTarget)*MoveLen;
+        
+        Len = Vector3Distance(m_MovePos, TargetPos);
+
+        if (Len < DontZoomLen)
+        {
+            m_MovePos -= Vector3Normalize(ToTarget) * (DontZoomLen - Len);
+            
+            if (Vector3Distance(m_MovePos, TargetPos) > ToTarget.Length())
+            {
+                m_MovePos = c->m_Position;
+            }
+            //m_MovePos = TargetPos - Vector3Normalize(m_FirstViewVec)*DontZoomLen;
+        }
+    }
+
+    m_MaxMoveAngle = Vector3Radian(m_FirstViewVec, ToTarget);
+
+    Vector3Cross(m_RotateAxis, m_FirstViewVec, ToTarget);
+    m_RotateAxis.Normalize();
+}
+
+void CameraStateSkillCharacterZoom::Execute(Camera* c)
+{
+    const Vector3 target = GetTargetPos();
+    const RADIAN MoveMaxAngle = min(D3DXToRadian(8), m_MaxMoveAngle);
+
+    if (--m_Timer < 0)
+    {
+        c->SetNewState(new CameraStateGamePlay());
+    }
+
+    m_MoveAngle += (MoveMaxAngle - m_MoveAngle)*0.1f;
+
+    c->m_Position += (m_MovePos - c->m_Position)*0.1f;
+    {
+        c->m_Target = c->m_Position + Vector3RotateAxis(m_RotateAxis, m_MoveAngle, m_FirstViewVec);
+    }
+}
+
+void CameraStateSkillCharacterZoom::Exit(Camera* c)
+{
+
+}
+
+
+Vector3 CameraStateSkillCharacterZoom::GetTargetPos()const
+{
+    return m_pZoomCharacter->m_Params.pos + Vector3(0, 1.5f, 0);
+}

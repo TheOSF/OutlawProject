@@ -24,19 +24,19 @@ bool TennisHitEvent::Hit(DamageBase* pDmg)
     {
     case CharacterHitEventFunc::SetType::Die:
         //死亡ステートへ
-        m_pTennis->SetState(new TennisState_DamageMotion_Die(m_pTennis, DamageVec), true);
+        m_pTennis->SetState(new TennisState_DamageMotion_Die(m_pTennis, DamageVec), 2);
         break;
 
 
     case CharacterHitEventFunc::SetType::Weak_Hit:
         //弱ひるみステートへ
-        m_pTennis->SetState(new TennisState_DamageMotion_Weak(m_pTennis, DamageVec), true);
+        m_pTennis->SetState(new TennisState_DamageMotion_Weak(m_pTennis, DamageVec), 1);
         break;
 
 
     case CharacterHitEventFunc::SetType::Vanish_Hit:
         //吹き飛びステートへ
-        m_pTennis->SetState(new TennisState_DamageVanish(m_pTennis, DamageVec), true);
+        m_pTennis->SetState(new TennisState_DamageVanish(m_pTennis, DamageVec), 1);
         break;
 
 

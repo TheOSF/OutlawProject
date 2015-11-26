@@ -13,7 +13,7 @@ namespace EffectFactory
         CrVector3 pos,
         CrVector3 move,
         float size,
-        DWORD Color,
+        float alpha,
         bool Soft = false);
 
     //煙エフェクト

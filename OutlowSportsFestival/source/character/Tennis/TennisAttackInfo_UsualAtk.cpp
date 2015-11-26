@@ -71,6 +71,7 @@ void TennisAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, TennisPlayer* p
     }
 
     m_LocusPos = (Pos2 + Pos1)*0.5f;
+    //m_LocusPos = Pos2;
     m_LocusVec = Vector3Normalize(Pos2 - Pos1);
 }
 
@@ -161,7 +162,6 @@ void TennisAttackInfo_UsualAtk::Update(int Frame, LocusHDR* pLocus)
 //ヒットストップ時
 void TennisAttackInfo_UsualAtk::HitStopUpdate()
 {
-
     m_HitStopCount = max(0, m_HitStopCount - 1);
 }
 

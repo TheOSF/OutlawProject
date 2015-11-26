@@ -14,6 +14,9 @@
 #include "../GameSystem/GameController.h"
 
 
+const float CharacterDefaultCounter::m_SkillUpValue = 0.05f; //スキルゲージが上がる量
+
+
 CharacterDefaultCounter::CharacterDefaultCounter(
     CharacterBase*               pOwner,        //オーナーキャラクタ
     const Param&                 param,         //カウンターパラメタ
@@ -313,6 +316,11 @@ void CharacterDefaultCounter::Shot()
         {
             m_pCounterBall->m_Params.pos = m_pOwner->m_Params.pos;
             m_pCounterBall->m_Params.pos.y = UsualBall::UsualBallShotY;
+        }
+
+        //ゲージ上昇
+        {
+            chr_func::AddSkillGauge(m_pOwner, m_SkillUpValue);
         }
 
         //ボール側のカウンター処理

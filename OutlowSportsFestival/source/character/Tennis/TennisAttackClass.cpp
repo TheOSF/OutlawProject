@@ -19,9 +19,9 @@ TennisAttackClass::TennisAttackClass(
     m_Damage.m_Enable = false;
 
     m_Locus.m_Division = 5;
-    //m_Locus.m_pTexture = DefResource.Get(Resource::TextureType::Locus1);
+//    m_Locus.m_pTexture = DefResource.Get(Resource::TextureType::Locus1);
 
-    Vector4 EffectColor = Vector4(1, 1, 1, 0.2f);// CharacterBase::GetPlayerColorF(m_pOwner->m_PlayerInfo.number).toVector4();
+    Vector4 EffectColor = Vector4(1, 1, 1, 0.6f);// CharacterBase::GetPlayerColorF(m_pOwner->m_PlayerInfo.number).toVector4();
     EffectColor.w = 0.5f;
 
     m_Locus.m_StartParam.Color = EffectColor;
@@ -32,8 +32,10 @@ TennisAttackClass::TennisAttackClass(
 
     m_Locus.m_EndParam.Color = EffectColor;
     m_Locus.m_EndParam.HDRColor = EffectColor;
+
     m_Locus.m_EndParam.Color.w = 0;
     m_Locus.m_EndParam.HDRColor.w = 0;
+
     m_Locus.m_EndParam.Width = 0.5f;
 }
 
@@ -67,6 +69,7 @@ void TennisAttackClass::State_Attack()
 {
     AttackInfo* const pNowAtk = m_AttackInfoArray.at(m_ComboCount);
 
+    
 
     //コンボ実行フラグのチェック
     if (m_DoCombo == false &&
@@ -92,6 +95,8 @@ void TennisAttackClass::State_Attack()
 
         return;
     }
+
+    m_pOwner->m_Renderer.Update(1);
 
     //カウント進行
     ++m_Timer;
@@ -149,8 +154,6 @@ void TennisAttackClass::State_Attack()
     //キャラクタ更新
     {
         TennisHitEvent HitEvent(m_pOwner);
-
-        m_pOwner->m_Renderer.Update(1);
 
         chr_func::UpdateAll(m_pOwner, &HitEvent);
     }

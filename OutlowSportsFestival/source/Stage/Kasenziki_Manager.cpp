@@ -224,7 +224,7 @@ void Kasennziki_Manager::SetNoonLight()
 {
     //昼時のライティングをセット
     m_DirLight.param.color = Vector3(0.33f, 0.22f, 0.22f);
-    m_DirLight.param.vec = Vector3Normalize(Vector3(0.2f, -2, 0.8f));
+    m_DirLight.param.vec = Vector3Normalize(Vector3(0.8f, -2, 0.2f));
     m_DirLight.param.Shadow.visible = true;
     m_DirLight.param.Shadow.Near = 5;
     m_DirLight.param.Shadow.Far = 150;

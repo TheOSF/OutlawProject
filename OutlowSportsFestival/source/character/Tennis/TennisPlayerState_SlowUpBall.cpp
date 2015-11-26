@@ -72,11 +72,11 @@ TennisPlayerState_SlowUpBall::ShotType TennisPlayerState_SlowUpBall::GetShotType
     {
         return ShotType::Weak;
     }
-    else if (Timer < 30)//通常
+    else if (Timer < 25)//通常
     {
         return ShotType::Usual;
     }
-    if (Timer < 40) //ボール最頂点
+    if (Timer < 35) //ボール最頂点
     {
         return ShotType::Smash;
     }
@@ -129,7 +129,7 @@ void TennisPlayerState_SlowUpBall::State_SlowUp()
         param.type = BallBase::Type::_CantCounter;
 
         //生成
-        m_pUpBall = new PhysicallyMoveBall(param, DamageBase::Type::_WeekDamage, 1, -0.015f);
+        m_pUpBall = new PhysicallyMoveBall(param, DamageBase::Type::_WeekDamage, 1, -0.0135f);// -0.015f);
 
         //打ち上げ中はあたり判定なし
         m_pUpBall->m_Damage.m_Enable = false;
@@ -144,21 +144,30 @@ void TennisPlayerState_SlowUpBall::State_SlowUp()
         return;
     }
 
-    //うち命令が出たら
-    if (m_pControllClass->isShot())
+    if (m_Timer > SlowFrame)
     {
-        //ショット分岐
-        switch (GetShotType(m_Timer))
+        //キャンセル
+        if (m_pControllClass->DoOtherAction())
         {
-        case ShotType::Weak:
-            SetState(&TennisPlayerState_SlowUpBall::State_Weak);
             return;
-        case ShotType::Usual:
-            SetState(&TennisPlayerState_SlowUpBall::State_Usual);
-            return;
-        case ShotType::Smash:
-            SetState(&TennisPlayerState_SlowUpBall::State_Smash);
-            return;
+        }
+
+        //うち命令が出たら
+        if (m_pControllClass->isShot())
+        {
+            //ショット分岐
+            switch (GetShotType(m_Timer))
+            {
+            case ShotType::Weak:
+                SetState(&TennisPlayerState_SlowUpBall::State_Weak);
+                return;
+            case ShotType::Usual:
+                SetState(&TennisPlayerState_SlowUpBall::State_Usual);
+                return;
+            case ShotType::Smash:
+                SetState(&TennisPlayerState_SlowUpBall::State_Smash);
+                return;
+            }
         }
     }
 }
@@ -166,7 +175,7 @@ void TennisPlayerState_SlowUpBall::State_SlowUp()
 void TennisPlayerState_SlowUpBall::State_Weak()
 {
     const RADIAN angle_speed = D3DXToRadian(15);
-    const int ShotFrame = 8;
+    const int ShotFrame = 3;
     const int EndFrame = 13;
 
     ++m_Timer;
@@ -245,7 +254,7 @@ void TennisPlayerState_SlowUpBall::State_Weak()
 void TennisPlayerState_SlowUpBall::State_Usual()
 {
     const RADIAN angle_speed = D3DXToRadian(15);
-    const int ShotFrame = 16;
+    const int ShotFrame = 3;
     const int EndFrame = 24;
 
     ++m_Timer;
@@ -324,7 +333,7 @@ void TennisPlayerState_SlowUpBall::State_Usual()
 void TennisPlayerState_SlowUpBall::State_Smash()
 {
     const RADIAN angle_speed = D3DXToRadian(15);
-    const int SmashFrame = 20;
+    const int SmashFrame = 3;
     const int EndFrame = 30;
 
     ++m_Timer;

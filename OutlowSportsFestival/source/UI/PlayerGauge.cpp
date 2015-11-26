@@ -282,6 +282,7 @@ void PlayerGauge::GaugeRenderer::UpdateRoundIcon()
     Vector2 v;
     const float Speed = 0.05f;
     const int MoveFrame = 60;
+    Vector2 Move;
 
     for (int i = 0; i < RoundCountMax; ++i)
     {
@@ -294,7 +295,9 @@ void PlayerGauge::GaugeRenderer::UpdateRoundIcon()
 
         if (it.Frame > MoveFrame)
         {
-            it.Pos += (CalcIconPos(i) - it.Pos)*Speed;
+            Move = CalcIconPos(i) - it.Pos;
+            it.Pos.x += Move.x*Speed*0.5f;
+            it.Pos.y += Move.y*Speed;
             it.Size += (1 - it.Size)*Speed;
         }
         else

@@ -2,6 +2,7 @@
 
 #include "TennisPlayer.h"
 #include "../CharacterEvasionClass.h"
+#include "../../Effect/SpeedEffect.h"
 
 //***************************************************
 //		テニス回避クラス
@@ -34,6 +35,7 @@ public:
 
 private:
     CallBackClass * const m_pCallBackClass;
+    SpeedEffect           m_SpeedEffect;
     Vector3               m_Vec;
     int                   m_Timer;
 };

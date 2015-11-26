@@ -52,8 +52,8 @@ TennisBoundBall::TennisBoundBall(
 
     {
         //軌跡の設定
-        m_Locus.m_StartParam.Width = 0.25f;
-        m_Locus.m_EndParam.Width = 0.025f;
+        m_Locus.m_StartParam.Width = 0.36f;
+        m_Locus.m_EndParam.Width = 0.1f;
 
         UpdateLocusColor();
     }
@@ -66,9 +66,12 @@ TennisBoundBall::TennisBoundBall(
         m_Damage.m_Enable = false;
         m_Damage.pBall = this;
         m_Damage.m_Param.size = 1.0f;
+        m_Damage.MaxChrHit = 1;
 
         UpdateDamage();
     }
+
+    m_BallEffect.SetParent(this);
 }
 
 TennisBoundBall::~TennisBoundBall()
@@ -89,6 +92,7 @@ bool TennisBoundBall::Update()
     UpdateMesh();
     UpdateLocusColor();
     UpdateDamage();
+    m_BallEffect.Update();
 
     return m_pStateFunc != &TennisBoundBall::StateFinish;
 }
@@ -157,6 +161,8 @@ void TennisBoundBall::StateFly()
     //軌跡の点を追加
     AddLocusPoint();
 
+    //エフェクト更新
+    m_BallEffect.Update();
 }
 
 void TennisBoundBall::StateGroundTouch()
@@ -188,9 +194,17 @@ void TennisBoundBall::StateGroundTouch()
             m_Params.pos,
             Vector3Zero,
             2.0f,
-            0x80FFA080,
+            1.0f,
             true
             );
+    }
+
+    {
+        //メッシュを光らせる
+        COLORf Color = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number);
+
+        m_pBallRenderer->m_HDR = Vector3(1, 1, 1) * 0.1f;
+        m_pBallRenderer->m_Lighting = Vector3(1, 1, 1) * 0.1f;
     }
 
     //ＳＥ
@@ -290,6 +304,12 @@ void TennisBoundBall::StateNoDamage()
         }
     }
 
+    //ライト少く
+    {
+        m_pBallRenderer->m_HDR *= 0.1f;
+        m_pBallRenderer->m_Lighting *= 0.1f;
+    }
+
     //時間経過でフェードアウト
     if (++m_Timer > 60)
     {
@@ -367,7 +387,9 @@ void TennisBoundBall::Counter(CharacterBase* pCounterCharacter)
     m_Damage.pParent = m_Params.pParent = pCounterCharacter;
 
     UpdateLocusColor();
+    m_BallEffect.Counter();
 
+    m_Damage.ResetCounts();
     m_Damage.type = DamageBase::Type::_VanishDamage;
 }
 
@@ -413,13 +435,6 @@ void TennisBoundBall::UpdateLocusColor()
     m_Locus.m_EndParam.HDRColor.w = 0;
 
 
-    {
-        //メッシュを光らせる
-        COLORf Color = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number);
-
-        m_pBallRenderer->m_HDR = Vector3(1, 1, 1) * 0.1f;
-
-    }
 }
 
 

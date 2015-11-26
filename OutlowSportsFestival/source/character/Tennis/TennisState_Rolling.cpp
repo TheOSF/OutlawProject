@@ -5,10 +5,11 @@
 #include "../../Effect/EffectFactory.h"
 #include "../../Sound/Sound.h"
 #include "../../Camera/Camera.h"
-
+#include "../../Effect/SpeedEffect.h"
 
 TennisState_Rolling::TennisState_Rolling(CallBackClass* pCallBackClass) :
-m_pCallBackClass(pCallBackClass)
+m_pCallBackClass(pCallBackClass),
+m_SpeedEffect(1)
 {
 
 }
@@ -72,6 +73,11 @@ void TennisState_Rolling::Execute(TennisPlayer* t)
         chr_func::AddMoveFront(t, MoveValue, MoveValue);
     }
 
+    //エフェクト
+    if (m_Timer < 13 && m_Timer > CanControllFrame)
+    {
+        m_SpeedEffect.Update(t->m_Params.pos + Vector3(0, 2, 0) + chr_func::GetFront(t)*2.8f, -chr_func::GetFront(t)*0.35f);
+    }
 
     //キャンセル行動
     if (CanCancel < m_Timer)

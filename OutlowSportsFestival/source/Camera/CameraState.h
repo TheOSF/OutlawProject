@@ -13,6 +13,8 @@
 class CameraStateGamePlay :public CameraState
 {
 public:
+    static const Vector3 first_pos;
+
     CameraStateGamePlay(bool pos_reset = false);
 
 	void Enter(Camera* c);
@@ -97,5 +99,31 @@ private:
     RATIO            m_Speed;
 };
 
+//スキル時にキャラクタにズームするカメラ
+class CameraStateSkillCharacterZoom :public CameraState
+{
+public:
+    CameraStateSkillCharacterZoom(
+        LpCharacterBase  pZoomCharacter,
+        RATIO            speed,
+        int              time
+        );
+
+    void Enter(Camera* c);
+    void Execute(Camera* c);
+    void Exit(Camera* c);
+
+    Vector3 GetTargetPos()const;
+
+private:
+    LpCharacterBase  m_pZoomCharacter;
+    Vector3          m_FirstViewVec;
+    Vector3          m_RotateAxis;
+    RADIAN           m_MoveAngle;
+    RADIAN           m_MaxMoveAngle;
+    RATIO            m_Speed;
+    int              m_Timer;
+    Vector3          m_MovePos;
+};
 
 #endif

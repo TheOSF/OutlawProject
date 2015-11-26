@@ -146,6 +146,8 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="source\Ball\BallEffect.cpp" />
+    <ClCompile Include="source\Ball\BallTemplate.cpp" />
     <ClCompile Include="source\character\Amefoot\AmefootUsualHitEvent.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveVanishDamage.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveWeakDamage.cpp" />
@@ -257,6 +259,8 @@
     <ClCompile Include="source\Effect\ParticleMoveObject.cpp" />
     <ClCompile Include="source\Effect\ParticleRenderer.cpp" />
     <ClCompile Include="source\Effect\SoccerSpecialHitEffect.cpp" />
+    <ClCompile Include="source\Effect\SpecialAttackEffect.cpp" />
+    <ClCompile Include="source\Effect\SpeedEffect.cpp" />
     <ClCompile Include="source\Effect\StageSmokeEmitter.cpp" />
     <ClCompile Include="source\Effect\ThunderEffect.cpp" />
     <ClCompile Include="source\Effect\TornadoEffect.cpp" />
@@ -294,6 +298,7 @@
     <ClCompile Include="source\Render\System\DeferredLightManager.cpp" />
     <ClCompile Include="source\Render\System\SmalBufBlurRenderer.cpp" />
     <ClCompile Include="source\SceneOption\SceneOption.cpp" />
+    <ClCompile Include="source\SceneResult\SceneResult.cpp" />
     <ClCompile Include="source\SceneTitle\SceneTitle.cpp" />
     <ClCompile Include="source\Sound\Sound.cpp" />
     <ClCompile Include="source\Stage\HitStageObject.cpp" />
@@ -360,6 +365,8 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="source\Ball\BallEffect.h" />
+    <ClInclude Include="source\Ball\BallTemplate.h" />
     <ClInclude Include="source\character\Amefoot\AmefootUsualHitEvent.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveVanishDamage.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveWeakDamage.h" />
@@ -476,6 +483,8 @@
     <ClInclude Include="source\Effect\ParticleMoveObject.h" />
     <ClInclude Include="source\Effect\ParticleRenderer.h" />
     <ClInclude Include="source\Effect\SoccerSpecialHitEffect.h" />
+    <ClInclude Include="source\Effect\SpecialAttackEffect.h" />
+    <ClInclude Include="source\Effect\SpeedEffect.h" />
     <ClInclude Include="source\Effect\StageSmokeEmitter.h" />
     <ClInclude Include="source\Effect\ThunderEffect.h" />
     <ClInclude Include="source\Effect\TornadoEffect.h" />
@@ -515,6 +524,7 @@
     <ClInclude Include="source\Render\System\DeferredLightManager.h" />
     <ClInclude Include="source\Render\System\SmalBufBlurRenderer.h" />
     <ClInclude Include="source\SceneOption\SceneOption.h" />
+    <ClInclude Include="source\SceneResult\SceneResult.h" />
     <ClInclude Include="source\SceneTitle\SceneTitle.h" />
     <ClInclude Include="source\Sound\Sound.h" />
     <ClInclude Include="source\Stage\HitStageObject.h" />

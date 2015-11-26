@@ -139,7 +139,8 @@ public:
 
         bool isShot()
         {
-            return controller::GetTRG(controller::button::sankaku, m_pTennis->m_PlayerInfo.number);
+            //return controller::GetLeave(controller::button::sankaku, m_pTennis->m_PlayerInfo.number);
+             return controller::GetTRG(controller::button::sankaku, m_pTennis->m_PlayerInfo.number);
         }
     };
 

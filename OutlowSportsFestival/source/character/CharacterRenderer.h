@@ -76,6 +76,9 @@ public:
     //体全体の輝き度(０が標準、xyz = rgb)
     Vector3 m_HDR;
 
+    //ライト値を加算する
+    Vector3 m_Lighting;
+
     //服の色（xyz = rgb)
     Vector3 m_ClothesColor;
 
@@ -84,6 +87,9 @@ public:
 
     //輪郭線の色(１以上の値は光る、２が最大値)
     COLORf m_OutlineColor;
+
+
+    void DepthRender(iexShader* pShader, const char* pTec, DepthRenderType type);
 
 private:
 	typedef std::vector<int> BoneNumArray;
@@ -112,7 +118,6 @@ private:
 
     void MasterRender();
 
-    void DepthRender(iexShader* pShader, const char* pTec, DepthRenderType type);
 
     void CalcZ();
     void Render();

@@ -1,5 +1,6 @@
 #include "LightObject.h"
 #include "../Render/Renderer.h"
+#include "../character/CharacterBase.h"
 
 //---------------------------------------------------------------
 //   ポイントライト
@@ -37,14 +38,31 @@ SpotLight::SpotLight()
     param.Shadow.pDepthRenderer = nullptr;
 }
 
+void SpotLight::AddCharacterDepthRenderer(CharacterBase* pChr)
+{
+    m_MyDepthRenderer.DrawChrList.push_back(pChr);
+}
+
+void SpotLight::SetCharacterDepthRender()
+{
+    param.Shadow.pDepthRenderer = &m_MyDepthRenderer;
+}
+
+void SpotLight::MyDepthRenderer::Render(iexShader* pShader, const char* technique)
+{
+    for (auto& it : DrawChrList)
+    {
+        it->m_Renderer.DepthRender(pShader, technique, DeferredRenderer::DepthRenderType::SpotLight);
+    }
+}
 
 void SpotLight::Render(LightRenderer* pLightRenderer)
 {
     DeferredLightBufRenderer::SpotLightParam temp = param;
 
-    if (temp.Shadow.visible)
+    if (temp.Shadow.visible && temp.Shadow.pDepthRenderer == nullptr)
     {
-        RendererManager::DepthRenderer* p=DefRendererMgr.GetDepthRenderer();
+        RendererManager::DepthRenderer* p = DefRendererMgr.GetDepthRenderer();
         p->m_Type = DeferredRenderer::DepthRenderType::SpotLight;
         temp.Shadow.pDepthRenderer = p;
     }

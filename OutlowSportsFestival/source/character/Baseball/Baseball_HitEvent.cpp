@@ -25,19 +25,19 @@ bool BaseballHitEvent::Hit(DamageBase* pDmg)
     {
     case CharacterHitEventFunc::SetType::Die:
         //死亡ステートへ
-        m_pBaseball->SetState(new BaseballState_DamageMotion_Die(m_pBaseball, DamageVec), true);
+        m_pBaseball->SetState(new BaseballState_DamageMotion_Die(m_pBaseball, DamageVec), 2);
         break;
 
 
     case CharacterHitEventFunc::SetType::Weak_Hit:
         //弱ひるみステートへ
-        m_pBaseball->SetState(new BaseballState_DamageMotion_Weak(m_pBaseball, DamageVec), true);
+        m_pBaseball->SetState(new BaseballState_DamageMotion_Weak(m_pBaseball, DamageVec), 1);
         break;
 
 
     case CharacterHitEventFunc::SetType::Vanish_Hit:
         //吹き飛びステートへ
-        m_pBaseball->SetState(new BaseballState_DamageVanish(m_pBaseball, DamageVec), true);
+        m_pBaseball->SetState(new BaseballState_DamageVanish(m_pBaseball, DamageVec), 1);
         break;
 
 

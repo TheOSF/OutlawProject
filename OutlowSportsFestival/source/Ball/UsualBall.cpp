@@ -9,7 +9,10 @@
 #include "../Effect/ParticleHDRRenderer.h"
 #include "../Effect/ParticleMoveObject.h"
 #include "../Effect/EffectFactory.h"
+#include "../character/CharacterFunction.h"
 
+
+const float UsualBall::AddSkillValueRatio = 0.01f;
 
 UsualBall::UsualBall(
     BallBase::Params	params,			//ボールパラメータ
@@ -25,7 +28,6 @@ UsualBall::UsualBall(
     m_HitStopFrame(0),
     m_pStateFunc(&UsualBall::StateFlyMove),
     m_RotateSpeed(0.15f, 0.05f, 0.05f),
-    m_EffectFrameCount(0),
     m_FirstParentType(params.pParent->m_PlayerInfo.chr_type)
 {
 
@@ -83,7 +85,8 @@ UsualBall::UsualBall(
         UpdateColor();
     }
 
-  
+    //エフェクトの親セット
+    m_BallEffect.SetParent(this);
 
 }
 
@@ -348,8 +351,8 @@ void UsualBall::Counter(CharacterBase* pCounterCharacter)
     m_Damage.type = DamageBase::Type::_VanishDamage;
     m_Damage.Value += 1.0f; //ダメージを増やす
 
-    //エフェクトカウント設定
-    m_EffectFrameCount = 45;
+    //エフェクト設定
+    m_BallEffect.Counter();
 
 }
 
@@ -425,6 +428,8 @@ bool UsualBall::StateFlyMove()
             m_Params.move *= -0.25f;
             m_Params.move.y += 0.2f;
 
+            //ゲージ増加
+            chr_func::AddSkillGauge(m_Params.pParent, AddSkillValueRatio*m_Damage.Value);
 
             //攻撃判定のない状態にする
             ToNoWork();
@@ -433,7 +438,7 @@ bool UsualBall::StateFlyMove()
 
         //ダメージ判定の位置を現在の位置に更新
         UpdateDamageClass();
-}
+    }
 
     //ステージとのあたり判定
     {
@@ -473,26 +478,8 @@ bool UsualBall::StateFlyMove()
         AddLocusPoint();
     }
 
-    //パーティクル
-    {
-        const float EffectScale = 0.1f;// UsualBall::GetBallScale(m_FirstParentType);
-
-        m_EffectFrameCount = max(m_EffectFrameCount - 1, 0);
-
-        if (m_EffectFrameCount % 2 == 0 && m_EffectFrameCount > 0)
-        {
-            EffectFactory::CircleAnimation(
-                m_Params.pos,
-                m_Params.move,
-                Vector3Zero,
-                Vector3Zero,
-                Vector2(23.f, 23.f)*EffectScale*((float)m_EffectFrameCount / 45.0f),
-                0x80FFFFFF,
-                CharacterBase::GetPlayerColor(m_Params.pParent->m_PlayerInfo.number)
-                );
-        }
-    }
-
+    //エフェクト更新
+    m_BallEffect.Update();
 
     //フィールド外なら更新失敗
     return !isOutofField();

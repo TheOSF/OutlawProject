@@ -88,6 +88,7 @@ private:
     
     void SetAutoCounter();
 
+    static const float                  m_SkillUpValue; //スキルゲージが上がる量
     CharacterBase* const                m_pOwner;       //オーナーキャラクタ
     Param  const                        m_Param;        //カウンターパラメタ
     Event* const                        m_pEventClass;  //イベントクラスへのポインタ(中でdeleteする)

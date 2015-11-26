@@ -53,14 +53,13 @@ public:
         _mt_Damage_Vanish_HitFloor = 27,
         _mt_Damage_Vanish_HitFloorAndStandUp = 28, 
 
-
         _mt_WinPose = 29,
         _mt_LosePose = 31,
 
         _mt_Shot = 35, //ñ≥Ç¢ÉÇÅ[ÉVÉáÉì
 
-
     };
+
 
 	TennisPlayer(const CharacterBase::PlayerInfo& info);
 	~TennisPlayer();

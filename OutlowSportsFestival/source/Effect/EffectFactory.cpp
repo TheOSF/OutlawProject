@@ -17,14 +17,14 @@
 #include "GlavityLocus.h"
 
 
-void EffectFactory::Smoke(CrVector3 pos, CrVector3 move, float size, DWORD Color, bool Soft)
+void EffectFactory::Smoke(CrVector3 pos, CrVector3 move, float size, float alpha,bool Soft)
 {
     ParticleRenderer* r = new ParticleRenderer();
 
     r->m_pTexture = DefResource.Get(Resource::TextureType::Anime_Smoke);
     r->m_Param.pos = pos;
-    r->m_Param.color = Color;
-    r->m_Param.dw_Flag = RS_COPY;
+    r->m_Param.color = D3DCOLOR_COLORVALUE(1, 1, 1, alpha);
+    r->m_Param.dw_Flag = RS_ADD;
     r->m_Param.size = Vector2(size, size);
     r->m_SoftEnable = Soft;
     r->m_SoftDepth = 0.008f;

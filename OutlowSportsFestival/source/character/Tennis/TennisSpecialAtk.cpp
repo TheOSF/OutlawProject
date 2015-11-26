@@ -4,7 +4,9 @@
 #include "../../Collision/Collision.h"
 #include "../CharacterFunction.h"
 #include "../../Sound/Sound.h"
+#include "../../GameSystem/MatchLightManager.h"
 #include "TennisPlayerState_UsualMove.h"
+#include "../../Effect/SpecialAttackEffect.h"
 
 TennisSpecialBall::TennisSpecialBall(TennisPlayer* t, CrVector3 pos, CrVector3 move) :
 m_pTennis(t),
@@ -231,14 +233,16 @@ void TennisState_SpecialAtk::Enter(TennisPlayer* t)
     //モーションセット
     m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_SpecialAtk);
 
-    //キュイーンＳＥ
-    Sound::Play(Sound::Skill);
-
     //自分以外の時間をとめる
     std::list<GameObjectBase*> MoveList;
     MoveList.push_back(t);
-    DefGameObjMgr.FreezeOtherObjectUpdate(MoveList, 55);
+    DefGameObjMgr.FreezeOtherObjectUpdate(MoveList, 55, true);
 
+    //エフェクト
+    new SpecialAttackEffect(t, 55);
+
+    //SE
+    Sound::Play(Sound::Skill);
 }
 
 // ステート実行
@@ -258,8 +262,8 @@ void TennisState_SpecialAtk::Execute(TennisPlayer* t)
 
         RADIAN BallAngles[] = 
         {
-            PI / 5.0f, 
-            -PI / 5.0f,
+            D3DXToRadian(20),
+            -D3DXToRadian(20)
         };
 
         for (int i = 0; i < ARRAYSIZE(BallAngles); ++i)
@@ -286,6 +290,15 @@ void TennisState_SpecialAtk::Execute(TennisPlayer* t)
     }
 
 
+    if (m_Timer > ShotFrame)
+    {
+        m_pTennis->m_Renderer.m_Lighting *= 0.95f;
+    }
+    else
+    {
+        m_pTennis->m_Renderer.m_Lighting += (Vector3(1, 1, 1)*0.2f - m_pTennis->m_Renderer.m_Lighting)*0.2f;
+    }
+
     //一定時間で通常ステートへ
     if (m_Timer > EndFrame)
     {
@@ -305,5 +318,5 @@ void TennisState_SpecialAtk::Execute(TennisPlayer* t)
 // ステート終了
 void TennisState_SpecialAtk::Exit(TennisPlayer* t)
 {
-
+    m_pTennis->m_Renderer.m_Lighting = Vector3Zero;
 }

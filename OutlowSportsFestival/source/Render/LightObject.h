@@ -1,6 +1,7 @@
 #ifndef __LIGHT_OBJECT_H__
 #define __LIGHT_OBJECT_H__
 
+#include "../GameSystem/ForwardDecl.h"
 #include "Renderer.h"
 
 //---------------------------------------------------------------
@@ -30,7 +31,18 @@ public:
 
     SpotLight();
 
+    void AddCharacterDepthRenderer(CharacterBase* pChr);
+    void SetCharacterDepthRender();
 private:
+
+    class MyDepthRenderer :public DeferredLightBufRenderer::IDepthRenderer
+    {
+    public:
+        void Render(iexShader* pShader, const char* technique)override;
+        std::list<CharacterBase*> DrawChrList;
+    };
+
+    MyDepthRenderer m_MyDepthRenderer;
 
     void Render(LightRenderer* pLightRenderer);
 };

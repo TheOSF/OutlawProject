@@ -101,7 +101,7 @@ void SoccerState_Rolling::Execute(SoccerPlayer* s)
 					s->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
 					Vector3Zero,
 					1.5f,
-					0xFFFFA080,
+					1.0f,
 					true
 					);
 			}
@@ -116,7 +116,7 @@ void SoccerState_Rolling::Execute(SoccerPlayer* s)
 					s->m_Params.pos + Vector3(0, 2, 0) + Vector3Rand() * 0.2f,
 					Vector3Zero,
 					1.0f + frand()*0.5f,
-					0x20FFA080
+					0.6f
 					);
 			}
 		}
@@ -130,7 +130,7 @@ void SoccerState_Rolling::Execute(SoccerPlayer* s)
 					s->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
 					Vector3Zero,
 					2.5f,
-					0xFFFFA080,
+					1.0f,
 					true
 					);
 			}

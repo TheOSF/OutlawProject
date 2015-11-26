@@ -89,7 +89,7 @@ public:
     
     LightObject();
     virtual~LightObject();
-    
+  
     virtual void Render(LightRenderer* pLightRenderer) = 0;
 };
 typedef LightObject* LpLightObject;

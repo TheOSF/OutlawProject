@@ -11,7 +11,8 @@
 CharacterRenderer::CharacterRenderer(BlendAnimationMesh* pAnimeMesh) :
 m_pAnimeMesh(pAnimeMesh),
 m_UsePartsMotion(false),
-m_HDR(0,0,0)
+m_HDR(0, 0, 0),
+m_Lighting(0, 0, 0)
 {
 	Initialize();
 }
@@ -195,8 +196,8 @@ void CharacterRenderer::GbufRender(
 void CharacterRenderer::MasterRender()
 {
     shader->SetValue("g_HDR_Color", m_HDR);
+    shader->SetValue("g_Lighting_Color", m_Lighting);
     shader->SetValue("g_Color", D3DXVECTOR4(m_ClothesColor.x, m_ClothesColor.y, m_ClothesColor.z, 1.0f));
-    shader->SetValue("g_Lighting_Color", Vector3(0, 0, 0));
 
     m_pAnimeMesh->Render(shader, m_Techniques);
 }

@@ -20,7 +20,6 @@ public:
 
         int     standup_frame;
         int     standup_muteki_frame;
-
 	};
 
     class Event

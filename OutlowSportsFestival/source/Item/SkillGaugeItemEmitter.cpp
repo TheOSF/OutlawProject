@@ -20,7 +20,7 @@ SkillGaugeItemEmitter::~SkillGaugeItemEmitter()
 bool SkillGaugeItemEmitter::CheckLosePlayer(CharacterBase** ppOut)
 {
     //平均よりも一定以下の体力のプレイヤーを算出
-    const RATIO MinRatio = 0.3f;
+    const RATIO MinRatio = 0.01f;
     CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
 
     RATIO avg = 0, MostMin = 1, Temp;
@@ -76,6 +76,7 @@ void SkillGaugeItemEmitter::SetApperFrame()
 
 bool SkillGaugeItemEmitter::Update()
 {
+#if 1
     if (m_isEmmite == false)
     {
         return true;
@@ -110,6 +111,17 @@ bool SkillGaugeItemEmitter::Update()
     }
 
     m_EmitteCount = max(0, m_EmitteCount - 1);
+#else
+
+    if (rand() % 240 == 0)
+    {
+
+        new SkillGaugeUpItem(
+            Vector3(0, 20, 0),
+            Vector3Normalize(Vector3Rand())*0.5
+            );
+    }
+#endif
     
     return true;
 }
