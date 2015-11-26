@@ -56,6 +56,7 @@ public:
 public:
 
 	Vector2 SwitcAction_Baseball(CharacterBase* cb, bool flg = false);
+	
 	Vector2 StateStop_Baseball(CharacterBase* cb, bool flg = false);//　立ち止まる
 	Vector2 StateMoveDistance_Baseball(CharacterBase* cb);//　ターゲットとの距離をとる
 	Vector2 StateKeepLen(CharacterBase* cb);//　ターゲットとの距離を保つ

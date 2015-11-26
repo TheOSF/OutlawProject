@@ -101,7 +101,7 @@ Vector2 CharacterComputerMove::StateMoveFront(CharacterBase* cb)
 		movemode = Stop;
 		m_Count = 0;
 	}
-	cb->CalcHitCheckPos();
+
 	return Vector2Normalize(Vector2(v.x, v.z));
 }
 Vector2 CharacterComputerMove::StateMoveDistance(CharacterBase* cb)
@@ -260,14 +260,14 @@ Vector3 CharacterComputerMove::GetMoveTargetPos(CharacterBase* cb)
 			MostTaugh = it->first->m_Params.HP;
 		}
 	}
-	//達敵の最大HPが0(MostTaughの変化なし)なら0ベク返す
-	if (MostTaugh == 0)
+
+
+	if (pTarget != nullptr)
 	{
-		return Vector3Zero;
+		return pTarget->m_Params.pos;
 	}
 
-
-	return pTarget->m_Params.pos;
+	return Vector3Zero;
 }
 
 //******************************
@@ -298,6 +298,9 @@ Vector2 CharacterComputerMove::SwitcAction_Baseball(CharacterBase* cb, bool flg)
 	}
 	return xz;
 }
+
+
+
 Vector2 CharacterComputerMove::StateStop_Baseball(CharacterBase* cb, bool flg)
 {
 	const int NextMove = rand() % 4;
@@ -327,7 +330,7 @@ Vector2 CharacterComputerMove::StateStop_Baseball(CharacterBase* cb, bool flg)
 		}
 	}
 
-	return Vector2Normalize(Vector2(0, 0));
+	return Vector2(0, 0);
 }
 
 Vector2 CharacterComputerMove::StateMoveDistance_Baseball(CharacterBase* cb)
@@ -335,6 +338,8 @@ Vector2 CharacterComputerMove::StateMoveDistance_Baseball(CharacterBase* cb)
 
 	++m_Count;
 	const float Bestlen =35.0f + rand() % 5; //そのキャラのベスト距離(今は固定)
+
+
 
 	//目標に到達していたらとまる
 	if (Vector3Distance(m_MoveTargetPos, m_cCharacter->m_Params.pos) > Bestlen)
@@ -347,7 +352,7 @@ Vector2 CharacterComputerMove::StateMoveDistance_Baseball(CharacterBase* cb)
 	//　移動中壁に当たったら
 	if (chr_func::CheckWall(cb))
 	{
-		chr_func::AngleControll(cb,m_MoveTargetPos*0.5f,2.0f);
+		movemode = Forward;
 	}
 
 	//目標に到達できない or 新目標があればそこに変更する

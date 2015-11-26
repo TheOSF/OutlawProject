@@ -26,16 +26,17 @@ private:
     float acc;//　加速度
     int homingcounter;//　追尾時間
 	bool frontflg;//　前向きにするよう
-	BaseballPlayer* bp;
+	BaseballPlayer* m_Baseball;
 public:
     //物理パラメータ
-    struct
-    {
-        float Mass;
-        float Friction;
-        float Restitution;
-    }
-    PhysicsParam;
+	//物理パラメータ
+	struct PhysicsParam
+	{
+		float Mass;
+		float Friction;
+		float Radius;
+		float Restitution;
+	};
 public:
     //コンストラクタ
     MilderHoming(
@@ -47,13 +48,13 @@ public:
 
     bool Update();
     bool Msg(MsgType mt);
-
+	//bool(UsualBal::*m_pStateFunc)();
     LpMeshRenderer		m_pMeshRenderer;
-    DamageShpere		m_Damage;
+	DamageCapsure		m_Damage;
     UINT                m_DeleteFrame;
     Matrix              m_BaseMatrix;
     RigidBody*          m_pRigitBody;
-    Locus            m_Locus;
+    LocusHDR            m_Locus;
 	int                         m_EffectFrameCount;
     BallBase			m_BallBase;
     CharacterBase*      m_pTarget;
@@ -85,6 +86,23 @@ public:
     CharacterBase* CalcTarget()const;
     //　ホーミング計算
     void Homing(Vector3 TargetPos);
+public:
+	//ボールのメッシュを返す
+	static bool GetBallMesh(
+		CharacterType::Value	type,	//ボールのキャラクタタイプ
+		LPIEXMESH*				ppOut	//戻り値
+		);
 
+	//ボールのメッシュスケールを返す
+	static float GetBallScale(
+		CharacterType::Value	type    //ボールのキャラクタタイプ
+		);
+
+	//ボールの物理パラメータを返す
+	static PhysicsParam GetBallPhysics(
+		CharacterType::Value	type	//ボールのキャラクタタイプ
+		);
+	bool StatePhysicMove();
+	void AddLocusPoint();
 };
 #endif

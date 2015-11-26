@@ -20,7 +20,7 @@ m_ModelSize(0.05f)
 	m_Renderer.SetMotion(0);
 	SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(this));
 	//　体力低下(デバック用)
-	m_Params.maxHP = m_Params.HP = 100;
+	m_Params.maxHP = m_Params.HP = 1;
 }
 
 SoccerPlayer::~SoccerPlayer()

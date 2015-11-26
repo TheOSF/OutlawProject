@@ -15,6 +15,7 @@ private:
 private:
 	//　遠距離クラス
 	CharacterShotAttack* m_pShotAttackClass_P;
+	const CharacterBase* pTargetEnemy;
 public:
 
 	//　コンストラクタ
@@ -26,8 +27,6 @@ public:
 	//　ステート終了
 	void Exit(BaseballPlayer* b)override;
 
-public:
-	void ComExcute(BaseballPlayer* b);
 };
 
 #endif

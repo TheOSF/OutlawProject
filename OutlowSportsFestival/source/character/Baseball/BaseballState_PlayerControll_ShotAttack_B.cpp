@@ -78,6 +78,7 @@ void  BaseballState_PlayerControll_ShotAttack_B::Enter(BaseballPlayer* b)
 
 void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 {
+	Vector3 v1(0, 0, 0), v2(0, 0, 0);
 	const int EndFrame = 48; //終了フレーム
 	const int ShotFrame = 30;//打つフレーム
 	const int CancelStart = 10;//キャンセル行動可能なフレーム
@@ -101,13 +102,22 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 		//　Comならこっち
 		if (b->m_PlayerInfo.player_type == PlayerType::_Computer)
 		{
-			//　ターゲットいなかったら
-			if (pTargetEnemy == nullptr || pTargetEnemy->m_Params.angle > AngleRange)
+			if (pTargetEnemy != nullptr)
 			{
-				if (m_pControllClass->DoOtherAction_Com())
+				//　視野角計算
+				chr_func::GetFront(b, &v1);
+
+				v2 = pTargetEnemy->m_Params.pos - b->m_Params.pos;
+				v2.y = 0;
+
+				//　ターゲットいなかったら
+				if (pTargetEnemy == nullptr || Vector3Radian(v1, v2) > AngleRange)
 				{
-					m_pUpBall->m_Damage.m_Enable = true;
-					m_pUpBall->m_Params.type = BallBase::Type::_CantCounter;
+					if (m_pControllClass->DoOtherAction_Com())
+					{
+						m_pUpBall->m_Damage.m_Enable = true;
+						m_pUpBall->m_Params.type = BallBase::Type::_CantCounter;
+					}
 				}
 			}
 		}
