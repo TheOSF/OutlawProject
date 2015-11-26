@@ -1,4 +1,5 @@
 #include "AmefootPlayerState_UsualMove.h"
+#include "../AmefootPlayerState.h"
 #include "../../../Damage/Damage.h"
 #include "../../CharacterMoveClass.h"
 #include "../../../GameSystem/GameController.h"
@@ -51,6 +52,8 @@ void AmefootPlayerState_UsualMove::Enter(AmefootPlayer* pCharacter)
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_UsualMove::Execute(AmefootPlayer* pCharacter)
 {
+     this->ActionStateSwitch(pCharacter);
+
      Vector2 stickScreen = controller::GetStickValue(controller::stick::left , pCharacter->m_PlayerInfo.number);
      Vector3 stickWorld = DefCamera.GetRight() *stickScreen.x + DefCamera.GetForward()* stickScreen.y;
      stickScreen.x = stickWorld.x;
@@ -68,6 +71,35 @@ void AmefootPlayerState_UsualMove::Exit(AmefootPlayer* pCharacter)
      delete m_pCharacterUsualMove;
 }
 //-----------------------------------------------------------------------------------------
+void AmefootPlayerState_UsualMove::ActionStateSwitch(AmefootPlayer* pCharacter)
+{
+     if ( controller::GetTRG(controller::button::batu, pCharacter->m_PlayerInfo.number))
+     {
+          pCharacter->SetState(new AmefootPlayerState_Evasion());
+     }
+     else if ( controller::GetTRG(controller::button::maru, pCharacter->m_PlayerInfo.number) )
+     {
+
+     }
+     else if ( controller::GetTRG(controller::button::sankaku, pCharacter->m_PlayerInfo.number) )
+     {
+
+     }
+     else if ( controller::GetTRG(controller::button::shikaku, pCharacter->m_PlayerInfo.number) )
+     {
+
+     }
+     else if ( controller::GetTRG(controller::button::_R1, pCharacter->m_PlayerInfo.number) )
+     {
+
+     }
+     else if ( controller::GetTRG(controller::button::_L1, pCharacter->m_PlayerInfo.number) )
+     {
+
+     }
+}
+//-----------------------------------------------------------------------------------------
+
 
 //-----------------------------------------------------------------------------------------
 // MoveEvent

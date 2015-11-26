@@ -92,7 +92,7 @@ AmefootPlayerState_ReceiveWeakDamage::MotionEvent::MotionEvent(AmefootPlayer* pA
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveWeakDamage::MotionEvent::Update(RATIO speed)
 {
-     m_pAmefoot->m_Renderer.Update(speed);
+     m_pAmefoot->m_Renderer.Update(1);
 
      // モデルのワールド変換行列を更新
      chr_func::CreateTransMatrix(

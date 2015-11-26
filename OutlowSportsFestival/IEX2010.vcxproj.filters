@@ -237,6 +237,9 @@
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_UsualMove.cpp" />
     <ClCompile Include="source\character\Amefoot\AmefootUsualHitEvent.cpp" />
     <ClCompile Include="source\utillity\sstream_helper.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerDash.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_Evasion.cpp" />
+    <ClCompile Include="source\character\Amefoot\MoveClass\AmefootEvasionStandUpClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -440,6 +443,9 @@
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveWeakDamage.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_UsualMove.h" />
     <ClInclude Include="source\character\Amefoot\AmefootUsualHitEvent.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerDash.h" />
+    <ClInclude Include="source\character\Amefoot\MoveClass\AmefootEvasionStandUpClass.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_Evasion.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

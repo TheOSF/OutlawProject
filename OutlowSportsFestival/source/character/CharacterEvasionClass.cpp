@@ -72,9 +72,13 @@ bool CharacterEvasion::Update()
 	m_pEvent->Update();
 
 	if (m_Timer >= m_EvasionParams.AllFrame)
-	{// 回避終了
-		m_pEvent->EvasionEnd();
-		return false;
+	{
+          if(!m_pEvent->IsEvasionContinue())
+          {
+               // 回避終了
+               m_pEvent->EvasionEnd();
+               return false;
+          }
 	}
 
 	// タイマー更新

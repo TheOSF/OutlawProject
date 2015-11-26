@@ -19,6 +19,9 @@ private:
      class MoveEvent;
 
 private:
+     void ActionStateSwitch(AmefootPlayer* pCharacter);
+
+private:
      CharacterUsualMove* m_pCharacterUsualMove;
 
 };

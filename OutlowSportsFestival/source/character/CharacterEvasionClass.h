@@ -29,6 +29,8 @@ public:
 		virtual void Update() = 0;                // 更新
 		virtual void EvasionStart() = 0;       // 回避行動開始s
 		virtual void EvasionEnd() = 0;         // 回避行動終了
+
+          virtual bool IsEvasionContinue()const { return false; } // 回避行動を続けるかどうか
 	};
 
 	// コンストラクタ
@@ -59,3 +61,6 @@ private:
 
 
 };
+
+
+
