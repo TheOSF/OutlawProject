@@ -1,5 +1,6 @@
 #include "BaseballState_SPAttack_B.h"
 #include "BaseballPlayerState.h"
+#include "Computer\/BaseballPlayerState_ComMove.h"
 #include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
 #include "../CharacterManager.h"
@@ -64,7 +65,16 @@ void BaseballState_SPAttack_B::Execute(BaseballPlayer* b)
 
 	if (m_pStateFunc == &BaseballState_SPAttack_B::State_Finish)
 	{
-		b->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(b));
+
+		if (b->m_PlayerInfo.player_type == PlayerType::_Player)
+		{
+			//UŒ‚I—¹Žž‚É’ÊíˆÚ“®ƒ‚[ƒh‚É–ß‚é
+			b->SetState(new BaseballState_PlayerControll_Move());
+		}
+		else
+		{
+			b->SetState(new BaseballPlayerState_ComMove());
+		}
 	}
 }
 
@@ -178,6 +188,7 @@ void BaseballState_SPAttack_B::State_Atk2()
 	{
 		m_Damage.m_Enable = true;
 		m_Damage.Value = 50.0f;
+		m_Damage.ResetCounts();
 		m_Damage.type = DamageBase::Type::_VanishDamage;
 		m_Damage.HitCount = 0;
 		chr_func::GetFront(m_pBaseBall, &m_Damage.m_Param.pos);

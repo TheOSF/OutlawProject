@@ -2,7 +2,7 @@
 #include "BaseballPlayerState.h"
 #include "Baseball_HitEvent.h"
 #include "../../Ball/Baseball_SpAtk_Ball.h"
-
+#include "Computer/BaseballPlayerState_ComMove.h"
 #include "../../Camera/Camera.h"
 #include "../../Collision/Collision.h"
 #include "../../GameSystem/GameController.h"
@@ -51,9 +51,11 @@ void BaseballState_SPAttack_P::Execute(BaseballPlayer* b){
 	else
 	{
 		// スティックの値セット
-		m_pSpAttack_P->SetStickValue(
-			controller::GetStickValue(controller::stick::left, b->m_PlayerInfo.number));
-
+		if (b->m_PlayerInfo.player_type == PlayerType::_Player)
+		{
+			m_pSpAttack_P->SetStickValue(
+				controller::GetStickValue(controller::stick::left, b->m_PlayerInfo.number));
+		}
 		target = nullptr;
 		target = CalcTarget();
 		const float AngleSpeed = D3DXToRadian(3);
@@ -123,8 +125,16 @@ CharacterShotAttack* BaseballState_SPAttack_P::CreateSpAttack_P(BaseballPlayer* 
 
 		void AttackEnd()
 		{
-			//攻撃終了時に通常移動モードに戻る
-			m_pBaseball->SetState(new BaseballState_PlayerControll_Move());
+			if (m_pBaseball->m_PlayerInfo.player_type == PlayerType::_Player)
+			{
+				//攻撃終了時に通常移動モードに戻る
+				m_pBaseball->SetState(new BaseballState_PlayerControll_Move());
+			}
+			else
+			{
+				m_pBaseball->SetState(new BaseballPlayerState_ComMove());
+			}
+
 		}
 	
 	};

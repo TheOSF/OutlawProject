@@ -12,7 +12,7 @@
 
 
 class BaseballPlayer_Change;
-class BaseballEquip;
+//class BaseballEquip;
 
 //コンピューターの移動クラス
 class BaseballPlayerState_ComMove :public BaseballState
@@ -20,7 +20,7 @@ class BaseballPlayerState_ComMove :public BaseballState
 private:
 	bool batterflg;//　(true:バッター,false:投手)
 	Vector3 nearpos;//　一番近いキャラのpos
-	BaseballEquip* equip;
+	//BaseballEquip* equip;
 public:
 
 	class MoveControllClass

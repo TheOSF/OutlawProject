@@ -23,7 +23,7 @@
 //***************************************
 class ShotAttackEvent_P;
 //　コンストラクタ
-BaseballState_PlayerControll_ShotAttack_P::BaseballState_PlayerControll_ShotAttack_P() :m_pShotAttackClass_P(nullptr){
+BaseballState_PlayerControll_ShotAttack_P::BaseballState_PlayerControll_ShotAttack_P() :pTargetEnemy(nullptr), m_pShotAttackClass_P(nullptr){
 
 }
 
@@ -32,24 +32,39 @@ BaseballState_PlayerControll_ShotAttack_P::BaseballState_PlayerControll_ShotAtta
 void BaseballState_PlayerControll_ShotAttack_P::Enter(BaseballPlayer* b){
 	// 遠距離(ピッチャー)クラス作成
 	m_pShotAttackClass_P = this->CreateShotAttackClass_P(b);
-	//　Comなら
-	ComExcute(b);
+
 
 }
 
 
 //　ステート実行
 void BaseballState_PlayerControll_ShotAttack_P::Execute(BaseballPlayer* b){
-	// スティックの値セット
-	m_pShotAttackClass_P->SetStickValue(
-		controller::GetStickValue(controller::stick::left, b->m_PlayerInfo.number));
 
-	
-	// 更新
-	if (m_pShotAttackClass_P->Update() == false)
+	//　Playerならこっち
+	if (b->m_PlayerInfo.player_type == PlayerType::_Player)
 	{
-		return;
+		// スティックの値セット
+		m_pShotAttackClass_P->SetStickValue(
+			controller::GetStickValue(controller::stick::left, b->m_PlayerInfo.number));
+		// 更新
+		if (m_pShotAttackClass_P->Update() == false)
+		{
+			return;
+		}
 	}
+	else
+	{
+
+		// 更新
+		if (m_pShotAttackClass_P->Update() == false)
+		{
+			return;
+		}
+
+
+	}
+
+
 }
 
 //　ステート終了
@@ -70,7 +85,7 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 		Vector3 target;
 	public:
 		//　コンストラクタ
-		ShotAttackEvent_P(BaseballPlayer* pBaseball) :target(0,0,0),
+		ShotAttackEvent_P(BaseballPlayer* pBaseball) :target(0, 0, 0),
 			m_pBaseball(pBaseball){}
 		//　更新
 		void Update()override{
@@ -100,7 +115,7 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 			param.scale = 1.0f;
 			param.type = BallBase::Type::_Milder;
 			//生成
-			new MilderHoming(param,5,m_pBaseball);
+			new MilderHoming(param, 5, m_pBaseball);
 			//コントローラを振動
 			controller::SetVibration(
 				5000,
@@ -147,58 +162,4 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 		atk,
 		new  BaseballHitEvent(b)
 		);
-}
-
-void BaseballState_PlayerControll_ShotAttack_P::ComExcute(BaseballPlayer* b)
-{
-	if (b->m_PlayerInfo.player_type == PlayerType::_Computer)
-	{
-		//ターゲット選定＆向き補正
-
-		CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
-
-		const float  AutoDistance = 400.0f;               //自動ができる最大距離
-		const RADIAN AutoMaxAngle = D3DXToRadian(90);   //自動ができる最大角度
-
-		const CharacterBase* pTargetEnemy = nullptr;    //ターゲット保持のポインタ
-		RADIAN MostMinAngle = PI;                       //もっとも狭い角度
-		RADIAN TempAngle;
-
-		Vector3 MyFront;      //自身の前方ベクトル
-		chr_func::GetFront(b, &MyFront);
-
-		auto it = ChrMap.begin();
-
-		while (it != ChrMap.end())
-		{
-			//自身を除外
-			if (b->m_PlayerInfo.number == it->first->m_PlayerInfo.number ||
-				chr_func::isDie(it->first)
-				)
-			{
-				++it;
-				continue;
-			}
-
-			//距離が一定以上のキャラクタを除外する
-			if (Vector3Distance(it->first->m_Params.pos, b->m_Params.pos) > AutoDistance)
-			{
-				it = ChrMap.erase(it);
-				continue;
-			}
-
-			//前ベクトルと敵へのベクトルの角度を計算する
-			TempAngle = Vector3Radian(MyFront, (it->first->m_Params.pos - b->m_Params.pos));
-
-			//角度が一番狭かったら更新
-			if (TempAngle < MostMinAngle)
-			{
-				pTargetEnemy = it->first;
-				MostMinAngle = TempAngle;
-			}
-
-			++it;
-		}
-	}
-
 }

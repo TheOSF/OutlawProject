@@ -17,15 +17,16 @@
 
 //　コンストラクタ
 BaseballPlayer::BaseballPlayer(const CharacterBase::PlayerInfo& info) :
-CharacterBase(info, new  BlendAnimationMesh("DATA\\CHR\\BaseBall\\player_B.iem")), batterflg(true), m_ModelSize(0.05f), changetime(20)
+CharacterBase(info, new  BlendAnimationMesh("DATA\\CHR\\BaseBall\\player_B.iem")), batterflg(true), m_ModelSize(0.05f), changetime(20)/*,
+helmetEquip(nullptr), capEquip(nullptr)*/
 {
 	m_pStateMachine = new BaseballStateMachine(this);
-
+	SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(this));
 	//　体力低下(デバック用)
-	m_Params.maxHP = m_Params.HP = 100;
+	m_Params.maxHP = m_Params.HP = 50;
 
-	/*temp_batterflg = batterflg;
-	headEquip = new BaseballEquip(this);*/
+	temp_batterflg = batterflg;
+	//helmetEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Helmet);
 
 }
 
@@ -54,13 +55,13 @@ bool BaseballPlayer::Update()
 	////　装備品切替
 	//if (temp_batterflg != batterflg)
 	//{
-	//	headEquip->ToPhysicMove();
+	//	helmetEquip->ToPhysicMove();
 	//	temp_batterflg = batterflg;
+	//	capEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Cap);
 	//}
 	//キャラクタ基本更新
 	BaseUpdate();
 	
-
 
 	return true;	//常にtrueを返すと消去されない
 }
@@ -85,7 +86,7 @@ void BaseballPlayer::Riset()
 	
 	m_Renderer.SetMotion(baseball_player::_mb_Stand);
 	m_Renderer.Update(0);
-	ResetRound();
+	//ResetRound();
 	batterflg = true;
 	changetime = 20;
 

@@ -142,7 +142,7 @@ BaseballState* BaseballState_PlayerControll_Move::GetPlayerControllMove(Baseball
 		return new BaseballState_PlayerControll_Move();
 
 	case PlayerType::_Computer:
-
+		return new BaseballPlayerState_ComMove();
 		switch (pt->m_PlayerInfo.strong_type)
 		{
 		case StrongType::_Weak:
@@ -150,7 +150,7 @@ BaseballState* BaseballState_PlayerControll_Move::GetPlayerControllMove(Baseball
 		case StrongType::_Usual:
 			//return new ã‚¢’ÊíˆÚ“®
 		case StrongType::_Strong:
-			return new BaseballPlayerState_ComMove();
+			
 		default:break;
 		}
 	default:break;

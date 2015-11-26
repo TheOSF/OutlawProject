@@ -24,20 +24,20 @@ namespace baseball_player{
 		_mb_Stand,
 		_mb_Run,
 		_mb_Shot,
-		_mb_CounterPose=17,
-		_mb_CounterRight=3,
-		_mb_CounterLeft=3,
-		_mb_LosePose=12,
-		_mb_WinPose=11,
+		_mb_CounterPose = 17,
+		_mb_CounterRight = 3,
+		_mb_CounterLeft = 3,
+		_mb_LosePose = 12,
+		_mb_WinPose = 11,
 		_mb_Evasion = 5,  // 回避
 		_mb_Damage_Weak,
 		_mb_Damage_Vanish_Fly,
 		_mb_Damage_Vanish_Down,
 		_mb_Damage_Vanish_StandUp,
-		_mb_Atk1=15,//　近距離攻撃
-		_mb_Atk2=2,
-		_mb_Atk3=16,
-		_mb_SpAtk1=13,
+		_mb_Atk1 = 15,//　近距離攻撃
+		_mb_Atk2 = 2,
+		_mb_Atk3 = 16,
+		_mb_SpAtk1 = 13,
 		_mb_SpAtk2 = 14
 
 	};
@@ -57,7 +57,8 @@ protected:
 	int changetime;
 private:
 	BaseballStateMachine*		m_pStateMachine;
-	BaseballEquip* headEquip;
+	/*BaseballEquip* helmetEquip;
+	BaseballEquip* capEquip;*/
 	//BaseballEquip* handWepon;
 public:
 
@@ -67,15 +68,15 @@ public:
 
 	const float m_ModelSize;
 
-	void ChangeEquip();
+	//void ChangeEquip();
 	void SetState(BaseballState* state, bool Important = false);
 	bool Update();
-    bool CharacterMsg(MsgType mt);
+	bool CharacterMsg(MsgType mt);
 public:
 
 	//　リセット
 	void Riset();
-	
+
 public:
 	//　ゲッター
 	bool getBatterFlg(){ return batterflg; }
