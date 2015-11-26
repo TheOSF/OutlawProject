@@ -149,6 +149,8 @@
     <ClCompile Include="source\Ball\BallEffect.cpp" />
     <ClCompile Include="source\Ball\BallTemplate.cpp" />
     <ClCompile Include="source\character\Amefoot\AmefootUsualHitEvent.cpp" />
+    <ClCompile Include="source\character\Amefoot\MoveClass\AmefootEvasionStandUpClass.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_Evasion.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveVanishDamage.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveWeakDamage.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_UsualMove.cpp" />
@@ -369,6 +371,8 @@
     <ClInclude Include="source\Ball\BallEffect.h" />
     <ClInclude Include="source\Ball\BallTemplate.h" />
     <ClInclude Include="source\character\Amefoot\AmefootUsualHitEvent.h" />
+    <ClInclude Include="source\character\Amefoot\MoveClass\AmefootEvasionStandUpClass.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_Evasion.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveVanishDamage.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveWeakDamage.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_UsualMove.h" />

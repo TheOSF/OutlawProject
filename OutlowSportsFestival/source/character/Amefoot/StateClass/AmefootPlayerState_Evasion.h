@@ -1,14 +1,20 @@
 #pragma once
 
+
 #include "../AmefootPlayer.h"
 
+class AmefootEvasionStandUpClass;
+class CharacterEvasion;
+
 //-----------------------------------------------------------------------------------------
-// AmefootPlayerState_UsualMove
-// [ アメフト ] 通常移動するステートクラス
+// AmefootPlayerState_Evasion
+// [ アメフト ] 回避行動をするステートクラス
 //-----------------------------------------------------------------------------------------
-class AmefootPlayerState_UsualMove : public AmefootState
+class AmefootPlayerState_Evasion : public AmefootState
 {
 public:
+     AmefootPlayerState_Evasion();
+
      void Enter(AmefootPlayer* pCharacter)override;
 
      void Execute(AmefootPlayer* pCharacter)override;
@@ -16,14 +22,10 @@ public:
      void Exit(AmefootPlayer* pCharacter)override;
 
 private:
-     class MoveEvent;
+     class EvasionEvent;
 
 private:
-     void ActionStateSwitch(AmefootPlayer* pCharacter);
-
-private:
-     CharacterUsualMove* m_pCharacterUsualMove;
-
+     AmefootEvasionStandUpClass* m_pAmefootEvasionStandUpClass;
+     CharacterEvasion* m_pCharacterEvasion;
 };
-//-----------------------------------------------------------------------------------------
 
