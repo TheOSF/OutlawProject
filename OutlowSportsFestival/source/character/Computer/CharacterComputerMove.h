@@ -27,6 +27,7 @@ private:
 		Stop, 
 		Forward,
 		Distance,
+		MoveCenter,
 		Distance_B,
 		Keep
 	};
@@ -45,6 +46,7 @@ public:
 
 	Vector2 StateMoveFront(CharacterBase* cb);//　ターゲットに前進
 	Vector2 StateMoveDistance(CharacterBase* cb);//　ターゲットとの距離をとる
+	Vector2 StateMoveCenter(CharacterBase* cb);//　中心に戻ろうとする
 	Vector2 StateStop(CharacterBase* cb);//　立ち止まる
 	
 	Vector2 SwitchAction(CharacterBase* cb);

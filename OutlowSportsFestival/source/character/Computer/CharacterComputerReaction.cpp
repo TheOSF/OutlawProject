@@ -10,6 +10,7 @@ CharacterComputerReaction::CharacterComputerReaction(
 	) :
 	m_cCharacter(pParent), m_Params(param), m_ActionEvent(pActionEvent)
 {
+	m_ReactionPoint = (int)(frand()*100);
 }
 CharacterComputerReaction::~CharacterComputerReaction()
 {
@@ -29,11 +30,14 @@ void CharacterComputerReaction::Update()
 	Vector3 outpos;
 
 	//”½‰ž‚·‚é
-	if (hitevent.HitDamage)
+	if (hitevent.HitDamage && m_ReactionPoint<=m_Params.DangerEscape*100)
 	{
 		hit = hitevent.hittype;
 		pDmg = hitevent.pDmg;
 		pDmg->CalcPosVec(m_cCharacter->m_Params.pos, &outpos, &outvec);
+		/*outvec.y = 0;
+		outvec.x -= sinf(outvec.x - PI / 2);
+		outvec.z -= cosf(outvec.z - PI / 2);*/
 		m_ActionEvent->Reaction(hit,outvec);
 	}
 		

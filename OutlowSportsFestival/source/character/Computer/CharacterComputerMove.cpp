@@ -94,6 +94,7 @@ Vector2 CharacterComputerMove::StateMoveFront(CharacterBase* cb)
 	m_MoveTargetPos = GetMoveTargetPos(cb);
 
 	Vector3 v = m_MoveTargetPos - cb->m_Params.pos;
+
 	if (v.Length() < 3.0f)
 	{
 		v = Vector3Zero;
@@ -113,7 +114,7 @@ Vector2 CharacterComputerMove::StateMoveDistance(CharacterBase* cb)
 	if (Vector3Distance(m_MoveTargetPos, m_cCharacter->m_Params.pos) > Bestlen)
 	{
 		m_Count = (int)(m_cParam.RunStop * 100.0f);
-		movemode = Forward;
+		movemode = Stop;
 		m_Count = 0;
 	}
 
@@ -139,6 +140,42 @@ Vector2 CharacterComputerMove::StateMoveDistance(CharacterBase* cb)
 	}*/
 	return Vector2Normalize(Vector2(v.x, v.z));
 }
+Vector2 CharacterComputerMove::StateMoveCenter(CharacterBase* cb)
+{
+	++m_Count;
+
+	//–Ú•W‚É“ž’B‚µ‚Ä‚¢‚½‚ç‚Æ‚Ü‚é
+	if (Vector3Distance(Vector3(0, 0, 0), m_cCharacter->m_Params.pos) < 1.0f)
+	{
+		m_Count = (int)(m_cParam.RunStop * 100.0f);
+		movemode = Stop;
+		m_Count = 0;
+	}
+
+
+	//­‚µˆÚ“®‚µ‚½‚ç‚â‚ß‚é
+	if (m_Count > 50)
+	{
+		movemode = Stop;
+		m_Count = 0;
+	}
+
+
+	//–Ú•W‚ÉŒü‚©‚Á‚ÄˆÚ“®
+	m_MoveTargetPos = Vector3(0,0,0);
+
+	Vector3 v = m_MoveTargetPos - cb->m_Params.pos;
+
+	/*if (v.Length() < 1.0f)
+	{
+		v = Vector3Zero;
+		movemode = Stop;
+		m_Count = 0;
+	}*/
+	return Vector2Normalize(Vector2(v.x, v.z));
+
+
+}
 Vector2 CharacterComputerMove::StateStop(CharacterBase* cb)
 {
 	const int NextMove = rand() % 5;
@@ -147,7 +184,11 @@ Vector2 CharacterComputerMove::StateStop(CharacterBase* cb)
 
 	if (m_Count > NextMove)
 	{
-		if (Vector3Distance(m_MoveTargetPos, m_cCharacter->m_Params.pos) > 20.0f)
+		if (Vector3Distance(Vector3(0,0,0), m_cCharacter->m_Params.pos) > 30.0f)
+		{
+			movemode = MoveCenter;
+		}
+		else if (Vector3Distance(m_MoveTargetPos, m_cCharacter->m_Params.pos) > 20.0f)
 		{
 			movemode = Forward;
 		}
@@ -173,6 +214,9 @@ Vector2 CharacterComputerMove::SwitchAction(CharacterBase* cb)
 		break;
 	case Distance:
 		xz = StateMoveDistance(cb);
+		break;
+	case MoveCenter:
+		xz = StateMoveCenter(cb);
 		break;
 
 	}

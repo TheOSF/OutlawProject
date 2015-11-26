@@ -52,6 +52,7 @@ public:
 	void UpdateMesh();
 	bool isHitWall();
     void UpdateEffect();
+	void FreezeGame(UINT frame);
 
 	void Counter(CharacterBase* pCounterCharacter)override;
 

@@ -6,6 +6,7 @@
 #include "Snakeshot.h"
 #include "../../Effect/EffectFactory.h"
 #include "../Soccer/Computer/SoccerComputerMove.h"
+#include "../Soccer/Computer/SoccerComputerFinisher.h"
 
 
 #include "../CharacterDefaultCounterClass.h"
@@ -786,7 +787,6 @@ void SoccerState_PlayerControll_Dash::Execute(SoccerPlayer* s)
 }
 void SoccerState_PlayerControll_Dash::Exit(SoccerPlayer* s)
 {
-	
 	delete m_pMoveClass;
 }
 
@@ -802,12 +802,33 @@ m_pSnakeShotClass(nullptr)
 void SoccerState_PlayerControll_Finisher::Enter(SoccerPlayer* s)
 {
 	m_pSnakeShotClass = this->SnakeShotClass(s);
+	timeflg = false;
+	m_Timer = 0;
 }
 void SoccerState_PlayerControll_Finisher::Execute(SoccerPlayer* s)
 {
-	m_pSnakeShotClass->SetStickValue(
-		controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number));
+	m_Timer++;
 
+	if (!timeflg)
+	{
+		//@”­“®‰¹Ä¶&The World
+		if (m_Timer == 1)
+		{
+			Sound::Play(Sound::Skill);
+			SoccerState_ComputerControll_Finisher::FreezeGame(30, s);
+		}
+
+		if (m_Timer >= 31)
+		{
+			timeflg = true;
+			m_Timer = 0;
+		}
+	}
+	else
+	{
+		m_pSnakeShotClass->SetStickValue(
+			controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number));
+	}
 	// XV
 	if (m_pSnakeShotClass->Update() == false)
 	{

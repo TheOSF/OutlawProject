@@ -39,7 +39,7 @@ public:
 	void Update();
 private:
 	typedef DamageManager::HitEventBase HitEventBase;
-
+	int                             m_ReactionPoint;
 	CharacterBase*	                  m_cCharacter;
 	ActionEvent*  	                  m_ActionEvent;
 	CharacterComputerMove::Param	  m_Params;

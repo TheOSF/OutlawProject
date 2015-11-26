@@ -231,6 +231,7 @@
     <ClCompile Include="source\Item\SkillGaugeUpItem.cpp" />
     <ClCompile Include="source\Item\SkillGaugeItemEmitter.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerSliding.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="source\SceneTitle\SceneTitle.cpp" />
     <ClCompile Include="source\SceneOption\SceneOption.cpp" />
     <ClCompile Include="source\utillity\UIbase.cpp" />
@@ -242,6 +243,9 @@
     <ClCompile Include="source\Effect\SpecialAttackEffect.cpp" />
     <ClCompile Include="source\Effect\SpeedEffect.cpp" />
     <ClCompile Include="source\SceneResult\SceneResult.cpp" />
+=======
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerFinisher.cpp" />
+>>>>>>> origin/櫛田作業8.1
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -439,6 +443,7 @@
     <ClInclude Include="source\Item\SkillGaugeUpItem.h" />
     <ClInclude Include="source\Item\SkillGaugeItemEmitter.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerSliding.h" />
+<<<<<<< HEAD
     <ClInclude Include="source\SceneTitle\SceneTitle.h" />
     <ClInclude Include="source\SceneOption\SceneOption.h" />
     <ClInclude Include="source\utillity\UIbase.h" />
@@ -450,6 +455,9 @@
     <ClInclude Include="source\Effect\SpecialAttackEffect.h" />
     <ClInclude Include="source\Effect\SpeedEffect.h" />
     <ClInclude Include="source\SceneResult\SceneResult.h" />
+=======
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerFinisher.h" />
+>>>>>>> origin/櫛田作業8.1
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

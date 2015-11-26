@@ -19,7 +19,6 @@
 #include "../SoccerCommonState.h"
 #include "../../../Effect/EffectFactory.h"
 #include "../../../Sound/Sound.h"
-
 class SocceComputerrUtillityClass
 {
 public:
@@ -109,23 +108,39 @@ void SoccerState_ComputerControll_Dash::Enter(SoccerPlayer* s)
 	//攻撃イベントクラス
 	class SoccerDoEvent :public CharacterComputerDoAction::ActionEvent
 	{
-
 		SoccerPlayer* m_cSoccer;
+		CharacterComputerMove::Param cParam;
+		CharacterComputerMove*  m_pMoveControllClass;
+		int AttackPoint;
 	public:
 		SoccerDoEvent(SoccerPlayer* cSoccer) :
-			m_cSoccer(cSoccer) {}
+			m_cSoccer(cSoccer) 
+		{
+			AttackPoint = rand() % 100;
+			m_pMoveControllClass->GetParams(cParam, m_cSoccer->m_PlayerInfo.strong_type);
+		}
 
 		//アニメーションの更新
 		void Attack(float len)override
 		{
-
-			if (len < 6.0f)
+			//if (m_cSoccer->m_Params.SP >= 0.6f)
+			if (chr_func::isCanSpecialAttack(m_cSoccer))
 			{
-				m_cSoccer->SetState(new SoccerState_ComputerControll_Sliding(m_cSoccer));
+				//m_cSoccer->SetState(new SoccerState_ComputerControll_Finisher());
 			}
-			else if (len < 20.0f)
+			if (len < 10.0f)
 			{
-				m_cSoccer->SetState(new SoccerState_ComputerControll_Shot);
+				if ((cParam.ActionFrequence * 100) > AttackPoint)
+				{
+					m_cSoccer->SetState(new SoccerState_ComputerControll_Sliding(m_cSoccer));
+				}
+			}
+			else if (len < 22.0f)
+			{
+				if ((cParam.ActionFrequence * 100) > AttackPoint)
+				{
+					m_cSoccer->SetState(new SoccerState_ComputerControll_Shot);
+				}
 			}
 		}
 
@@ -144,22 +159,35 @@ void SoccerState_ComputerControll_Dash::Enter(SoccerPlayer* s)
 	{
 		Vector3 Vec;
 		SoccerPlayer* m_cSoccer;
+		CharacterComputerMove::Param cParam;
+		CharacterComputerMove*  m_pMoveControllClass;
+		int ReactionPoint;
 	public:
 		SoccerReactionEvent(SoccerPlayer* cSoccer) :
-			m_cSoccer(cSoccer) {}
+			m_cSoccer(cSoccer)
+		{
+			m_pMoveControllClass->GetParams(cParam, m_cSoccer->m_PlayerInfo.strong_type);
+			ReactionPoint = rand() % 100;
+		}
 
 		//アニメーションの更新
 		void Reaction(CharacterComputerReactionHitEvent::HitType hittype, Vector3 vec)override
 		{
 			if (hittype == CharacterComputerReactionHitEvent::HitType::CanCounter)
 			{
-				m_cSoccer->SetState(new SoccerState_PlayerControll_Counter);
+				if ((cParam.BallCounter * 100) > ReactionPoint)
+				{
+					m_cSoccer->SetState(new SoccerState_PlayerControll_Counter);
+				}
 			}
 			else
 			{
-				m_cSoccer->SetState(
-					new SoccerState_ComputerControll_Rolling
-					(new SocceComputerrUtillityClass::ComputerRollingControll(m_cSoccer, vec),true));
+				if ((cParam.BallCounter * 100) > ReactionPoint)
+				{
+					m_cSoccer->SetState(
+						new SoccerState_ComputerControll_Rolling
+						(new SocceComputerrUtillityClass::ComputerRollingControll(m_cSoccer, vec), true));
+				}
 			}
 		}
 
@@ -206,7 +234,7 @@ void SoccerState_ComputerControll_Dash::Execute(SoccerPlayer* s)
 			s->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
 			Vector3Zero,
 			1.8f,
-			0.2f,
+			0xFFFFA080,
 			true
 			);
 	}
@@ -217,8 +245,8 @@ void SoccerState_ComputerControll_Dash::Execute(SoccerPlayer* s)
 void SoccerState_ComputerControll_Dash::Exit(SoccerPlayer* s)
 {
 	delete m_pDashClass;
-    delete m_pDoActionClass;
-    delete m_pReactionClass;
+	delete m_pReactionClass;
+	delete m_pDoActionClass;
 }
 Vector2 SoccerState_ComputerControll_Dash::StateMoveFront(SoccerPlayer* s)
 {
