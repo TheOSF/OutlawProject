@@ -62,7 +62,7 @@ float CharacterComputerDoAction::GetMoveTargetLength()
 			continue;
 		}
 		float len = Vector3Distance(m_cCharacter->m_Params.pos, it->first->m_Params.pos);
-		//最も体力が高い敵をターゲットに
+		//最も近い敵をターゲットに
 		if (len < MostNear)
 		{
 			pTarget = it->first;

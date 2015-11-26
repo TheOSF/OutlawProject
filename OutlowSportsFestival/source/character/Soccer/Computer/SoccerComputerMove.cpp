@@ -8,6 +8,7 @@
 #include "../SoccerPlayerState.h"
 #include "../SoccerRolling.h"
 #include "SoccerComputerShot.h"
+#include "SoccerComputerFinisher.h"
 #include "SoccerComputerCounter.h"
 #include "SoccerComputerRolling.h"
 #include "../SoccerPlayerState_PoseMotion.h"
@@ -72,10 +73,13 @@ bool SoccerState_ComputerControll_Move::SwitchGameState(SoccerPlayer* ps)
 //ステート開始
 void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 {
+	m_pMoveControllClass->GetParams(cParam, s->m_PlayerInfo.strong_type);
+	Dashpro = 200 - (int)(cParam.ActionFrequence * 100);
 	//移動イベントクラス
 	class SoccerMoveEvent :public CharacterUsualMove::MoveEvent
 	{
 		SoccerPlayer* m_cSoccer;
+		
 	public:
 		SoccerMoveEvent(SoccerPlayer* cSoccer) :
 			m_cSoccer(cSoccer){}
@@ -121,23 +125,39 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 	//攻撃イベントクラス
 	class SoccerDoEvent :public CharacterComputerDoAction::ActionEvent
 	{
-		
 		SoccerPlayer* m_cSoccer;
+		CharacterComputerMove::Param cParam;
+		CharacterComputerMove*  m_pMoveControllClass;
+		int AttackPoint;
 	public:
 		SoccerDoEvent(SoccerPlayer* cSoccer) :
-			m_cSoccer(cSoccer) {}
+			m_cSoccer(cSoccer) 
+		{
+			AttackPoint = rand() % 100;
+			m_pMoveControllClass->GetParams(cParam, m_cSoccer->m_PlayerInfo.strong_type);
+		}
 
 		//アニメーションの更新
 		void Attack(float len)override
 		{
-			
+			//if (m_cSoccer->m_Params.SP >= 0.6f)
+			if (chr_func::isCanSpecialAttack(m_cSoccer))
+			{
+				//m_cSoccer->SetState(new SoccerState_ComputerControll_Finisher());
+			}
 			if (len < 6.0f)
 			{
-				m_cSoccer->SetState(new SoccerState_ComputerControll_Attack(m_cSoccer));
+				if ((cParam.ActionFrequence * 100) > AttackPoint)
+				{
+					m_cSoccer->SetState(new SoccerState_ComputerControll_Attack(m_cSoccer));
+				}
 			}
 			else if (len < 20.0f)
 			{
-				m_cSoccer->SetState(new SoccerState_ComputerControll_Shot);
+				if ((cParam.ActionFrequence * 100) > AttackPoint)
+				{
+					m_cSoccer->SetState(new SoccerState_ComputerControll_Shot);
+				}
 			}
 		}
 
@@ -157,24 +177,39 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 	{
 		Vector3 Vec;
 		SoccerPlayer* m_cSoccer;
+		CharacterComputerMove::Param cParam;
+		CharacterComputerMove*  m_pMoveControllClass;
+		int ReactionPoint;
 	public:
 		SoccerReactionEvent(SoccerPlayer* cSoccer) :
-			m_cSoccer(cSoccer){}
+			m_cSoccer(cSoccer)
+		{
+			m_pMoveControllClass->GetParams(cParam, m_cSoccer->m_PlayerInfo.strong_type);
+			ReactionPoint = rand() % 100;
+		
+		}
 
 		//アニメーションの更新
 		void Reaction(CharacterComputerReactionHitEvent::HitType hittype, Vector3 vec)override
 		{
 			if (hittype == CharacterComputerReactionHitEvent::HitType::CanCounter)
 			{
-				m_cSoccer->SetState(new SoccerState_PlayerControll_Counter);
+				if ((cParam.BallCounter * 100) > ReactionPoint)
+				{
+					m_cSoccer->SetState(new SoccerState_PlayerControll_Counter);
+				}
+				
 				
 			}
 			else
 			{
-				m_cSoccer->SetState(
-					new SoccerState_ComputerControll_Rolling
-					(new SocceComputerrUtillityClass::ComputerRollingControll(m_cSoccer,vec),
-						false));
+				if ((cParam.BallCounter * 100) > ReactionPoint)
+				{
+					m_cSoccer->SetState(
+						new SoccerState_ComputerControll_Rolling
+						(new SocceComputerrUtillityClass::ComputerRollingControll(m_cSoccer, vec),
+							false));
+				}
 			}
 		}
 
@@ -193,16 +228,16 @@ void SoccerState_ComputerControll_Move::Execute(SoccerPlayer* s)
 	if (SwitchGameState(s) == false)
 	{
 		m_pMoveClass->SetStickValue(m_pMoveControllClass->SwitchAction(s));
+		m_pDoActionClass->Update();
+		m_pReactionClass->Update();
+		if (rand() %  Dashpro == 0)
+		{
+			s->SetState(new SoccerState_ComputerControll_Dash(s));
+		}
 	}
-	if (rand() % 100 == 0)
-	{
-		s->SetState(new SoccerState_ComputerControll_Dash(s));
-	}
-	//更新
 	m_pMoveClass->Update();
-	m_pDoActionClass->Update();
-	m_pReactionClass->Update();
-
+	
+	
 	//モデルのワールド変換行列を更新
 	chr_func::CreateTransMatrix(s, s->m_ModelSize, &s->m_Renderer.m_TransMatrix);
 

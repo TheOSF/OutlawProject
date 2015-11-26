@@ -149,10 +149,10 @@ private:
 	CharacterShotAttack* m_pSnakeShotClass;
 	
 public:
-
+	int m_Timer;
+	bool timeflg;
 	//　コンストラクタ
 	SoccerState_PlayerControll_Finisher();
-
 	void Enter(SoccerPlayer* s);
 	void Execute(SoccerPlayer* s);
 	void Exit(SoccerPlayer* s);

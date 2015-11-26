@@ -233,6 +233,8 @@
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerDash.cpp" />
     <ClCompile Include="source\Item\SkillGaugeUpItem.cpp" />
     <ClCompile Include="source\Item\SkillGaugeItemEmitter.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerSliding.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerFinisher.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -432,6 +434,8 @@
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerDash.h" />
     <ClInclude Include="source\Item\SkillGaugeUpItem.h" />
     <ClInclude Include="source\Item\SkillGaugeItemEmitter.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerSliding.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerFinisher.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATA\Shader\2D.fx">

@@ -4,6 +4,7 @@
 #include "../../CharacterManager.h"
 #include "../../CharacterFunction.h"
 #include "../../../Sound/Sound.h"
+#include "../Snakeshot.h"
 
 
 void SoccerState_ComputerControll_Shot::Enter(SoccerPlayer* s)
@@ -42,6 +43,7 @@ void SoccerState_ComputerControll_Shot::Enter(SoccerPlayer* s)
 			param.type = BallBase::Type::_Usual;
 			Sound::Play(Sound::Impact2);
 			new UsualBall(param, DamageBase::Type::_WeekDamage, 10);
+			//new Snakeshot(param, DamageBase::Type::_WeekDamage, 10);
 		}
 	};
 

@@ -16,15 +16,17 @@
 class SoccerState_ComputerControll_Move :public SoccerState
 {
 public:
-	
-
+	SoccerState_ComputerControll_Move() {};
+	~SoccerState_ComputerControll_Move(){};
 	void Enter(SoccerPlayer* s)override;
 	void Execute(SoccerPlayer* s)override;
 	void Exit(SoccerPlayer* s)override;
 
 	static bool SwitchGameState(SoccerPlayer* ps);
 private:
+	int Dashpro;
 	int m_timer;
+	CharacterComputerMove::Param cParam;
 	CharacterUsualMove*		m_pMoveClass;
 	CharacterComputerMove*  m_pMoveControllClass;
 	CharacterComputerDoAction*  m_pDoActionClass;
