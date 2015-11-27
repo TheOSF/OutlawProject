@@ -3,6 +3,7 @@
 #include "../character/CharacterFunction.h"
 #include "../character/CharacterBase.h"
 #include "../GameSystem/GameController.h"
+#include "IEX_Input.h"
 
 //試合時のカメラステート
 

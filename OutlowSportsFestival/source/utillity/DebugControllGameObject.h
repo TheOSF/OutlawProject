@@ -2,6 +2,7 @@
 
 #include "../GameSystem/GameObject.h"
 #include "../GameSystem/GameController.h"
+#include "IEX_Input.h"
 
 //-------------------------------------------------------------
 //  デバッグ用　値を変更するクラス
