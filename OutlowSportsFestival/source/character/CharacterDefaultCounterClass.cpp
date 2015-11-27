@@ -228,7 +228,15 @@ void CharacterDefaultCounter::Move()
     //時間で打ちステートへ移行
     if (m_Count > m_Param.ShotFrame)
     {
-        SetState(&CharacterDefaultCounter::Shot);
+         if ( m_Param.CatchFrame == 0 )
+         {
+              SetState(&CharacterDefaultCounter::Shot);
+         }
+         else
+         {
+              SetState(&CharacterDefaultCounter::Catch);
+         }
+        
     }
 
     ////すでにボールとの距離が一定以下なら打ちステートへ移行
@@ -270,6 +278,49 @@ void CharacterDefaultCounter::Failed()
         chr_func::XZMoveDown(m_pOwner,0.1f);
         chr_func::UpdateAll(m_pOwner, m_pHitEventClass);
     }
+}
+
+
+// キャッチ中
+void CharacterDefaultCounter::Catch()
+{
+     //カウンタ更新
+     ++m_Count;
+
+     if ( m_Count == 1 )
+     {
+          // イベントクラス通知
+          m_pEventClass->Catch(m_pCounterBall);
+
+          //コントローラを振動
+          controller::SetVibration(
+               10000,
+               0.10f,
+               m_pOwner->m_PlayerInfo.number
+               );
+     }
+
+     // ボールをボーンに引っ付ける
+     Vector3 bonePos = m_pOwner->m_Renderer.GetWorldBonePos(m_Param.CatchBoneNumber);
+     m_pCounterBall->m_Params.pos = bonePos;
+     // とりあえず移動量はゼロに
+     //m_pCounterBall->m_Params.move = Vector3Zero;
+
+     //**************************************************************
+     // @TODO  ボールのあたり判定を消さないと持ってるときに当たってしまう！！！
+     //**************************************************************
+
+     // 時間で打ち返しステートへ
+     if ( m_Count > m_Param.CatchFrame )
+     {
+          SetState(&CharacterDefaultCounter::Shot);
+     }
+
+     //基本的な更新
+     {
+          HitEventClass_NoBallDamageFileter BallDmgFilter(m_pHitEventClass, m_pCounterBall);
+          chr_func::UpdateAll(m_pOwner, &BallDmgFilter);
+     }
 }
 
 

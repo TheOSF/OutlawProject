@@ -21,7 +21,11 @@ public:
         virtual void Pose() = 0;      //構え開始(ステートの開始)
         virtual void Move(BallBase* pCounterBall) = 0;      //カウンターするボールに向かって移動開始
  
+        virtual void Catch(BallBase* pCounterBall) {} // キャッチ時
+
         virtual void Shot(BallBase* pCounterBall) = 0;      //打ち返し時
+        
+
         virtual void ShotFaild() = 0; //移動時にボールが打ち返せない状態になった時
 
         virtual void End() = 0;       //クラス終了
@@ -32,9 +36,12 @@ public:
     {
         UINT     PoseFrame;       //構えを行うフレーム
         UINT     CanCounterFrame; //カウンター移行が可能なフレーム
-        UINT     ShotFrame;       //ボールを検知してから打つまでのフレーム
+        UINT     ShotFrame;       //ボールを検知してからキャッチするまでのフレーム
         UINT     AfterShotFrame;  //うち返した後のフレーム
         UINT     FailedFrame;     //打ち返しに失敗してからクラス終了までのフレーム
+
+        UINT     CatchFrame = 0;     // キャッチしてから投げるまでのフレーム ※ 0なら即打ち返す
+        UINT     CatchBoneNumber; // キャッチしたボールをどのボーンにつけるか
                                   
         float    CatchAriaSize;   //カウンター検知範囲
         float    ControllRadian;  //操作できる打ち返し角度 (PI/2を超えると見た目的におかしくなるので注意)
@@ -75,6 +82,7 @@ private:
 
     void Pose();  //構え中
     void Move();  //移動中
+    void Catch(); // キャッチ中
     void Shot();  //打ち返し中
     void Failed();//打ち返し失敗
     void End();   //終了
