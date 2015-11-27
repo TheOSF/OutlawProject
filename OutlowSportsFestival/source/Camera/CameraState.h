@@ -120,7 +120,6 @@ private:
     Vector3          m_FirstViewVec;
     Vector3          m_RotateAxis;
     RADIAN           m_MoveAngle;
-    RADIAN           m_MaxMoveAngle;
     RATIO            m_Speed;
     int              m_Timer;
     Vector3          m_MovePos;

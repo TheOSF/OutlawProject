@@ -38,8 +38,8 @@ public:
 
         _mt_CounterPose = 15,
 
-        _mt_CounterRight = 17,
-        _mt_CounterLeft = 18,
+        _mt_CounterRight = 18,
+        _mt_CounterLeft = 17,
 
         _mt_SpecialAtk = 19,
 

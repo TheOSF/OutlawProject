@@ -230,7 +230,9 @@ void chr_func::DamageCheck(
 //地面判定をとる(戻り値：地面についているかどうか)
 bool chr_func::isTouchGround(CharacterBase* p)
 {
-    return p->m_Params.pos.y <= CharacterBase::m_CommonParams.GroundY + 0.1f;
+    return 
+        p->m_Params.pos.y <= CharacterBase::m_CommonParams.GroundY + 0.1f &&
+        p->m_Params.move.y <= 0.0f;
 }
 
 

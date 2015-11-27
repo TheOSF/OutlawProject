@@ -19,6 +19,7 @@ public:
 
 	//キャラクタデータのゲッタ
 	const CharacterMap& GetCharacterMap()const;
+    CharacterMap& GetCharacterMap();
 
 	//キャラクタの生存人数を取得
 	UINT GetCharacterLiveCount()const;

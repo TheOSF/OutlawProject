@@ -15,6 +15,7 @@
 #include "../Item/SkillGaugeItemEmitter.h"
 
 #include "../Stage/Kasenziki_Manager.h"
+#include "../Item/Item_BellEmitter.h"
 
 
 static void CreateCharacter(
@@ -91,7 +92,13 @@ void GameInitializer_UsualMatch::GameCreate()
     //アイテムエミッターの生成
     {
         new SkillGaugeItemEmitter(60 * 60 * 1);
+
+        new Item_BellEmitter(
+            60 * 60 * 2  //２分
+            );
     }
+
+
 
 
     //ステージ作成

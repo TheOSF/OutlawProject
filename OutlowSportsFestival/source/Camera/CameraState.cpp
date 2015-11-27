@@ -456,21 +456,30 @@ void CameraStateSkillCharacterZoom::Enter(Camera* c)
             //m_MovePos = TargetPos - Vector3Normalize(m_FirstViewVec)*DontZoomLen;
         }
     }
-
-    m_MaxMoveAngle = Vector3Radian(m_FirstViewVec, ToTarget);
-
-    Vector3Cross(m_RotateAxis, m_FirstViewVec, ToTarget);
-    m_RotateAxis.Normalize();
 }
 
 void CameraStateSkillCharacterZoom::Execute(Camera* c)
 {
     const Vector3 target = GetTargetPos();
-    const RADIAN MoveMaxAngle = min(D3DXToRadian(8), m_MaxMoveAngle);
+    RADIAN MoveMaxAngle = D3DXToRadian(8);
 
     if (--m_Timer < 0)
     {
         c->SetNewState(new CameraStateGamePlay());
+    }
+
+    {
+        Vector3 v = target - c->m_Position;
+        Vector3Cross(m_RotateAxis, m_FirstViewVec, v);
+
+        m_RotateAxis.Normalize();
+
+        RADIAN Angle = Vector3Radian(m_FirstViewVec, v);
+
+        if (MoveMaxAngle>Angle)
+        {
+            MoveMaxAngle = Angle;
+        }
     }
 
     m_MoveAngle += (MoveMaxAngle - m_MoveAngle)*0.1f;
