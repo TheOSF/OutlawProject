@@ -2,6 +2,7 @@
 #define __GAME_CONTROLLER_H__
 
 #include "iextreme.h"
+#include "IEX_Input.h"
 
 //***********************************************
 //	コントローラーに関するヘッダ

@@ -1,5 +1,6 @@
 #include	"iextreme.h"
 #include	"Framework.h"
+#include "IEX_Input.h"
 #include	"../SceneOption/SceneOption.h"
 #include	"../debug/DebugFunction.h"
 
@@ -31,7 +32,7 @@ BOOL	InitApp( HWND hWnd )
 	IEX_InitAudio();
 
     // èâä˙âª
-#ifdef OUTLAW2_CONTROLL_TYPE_KEY_BORD
+#ifdef OUTLAW2_CONTROLL_TYPE_IEX_INPUT
 	IEX_InitInput();
 #else
 	GamePadManager::Initialize(hWnd);
@@ -155,7 +156,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	iexSystem::CloseDebugWindow();
 
     // âï˙
-#ifdef OUTLAW2_CONTROLL_TYPE_KEY_BORD
+#ifdef OUTLAW2_CONTROLL_TYPE_IEX_INPUT
     IEX_ReleaseInput();
 #else
     GamePadManager::Release();

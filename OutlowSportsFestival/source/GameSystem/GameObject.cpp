@@ -2,6 +2,7 @@
 #include <typeinfo>
 #include <time.h>
 #include <chrono>
+#include "IEX_Input.h"
 
 GameObjectManager*	GameObjectManager::m_pInstance = nullptr;
 

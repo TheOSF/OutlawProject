@@ -1,6 +1,7 @@
 #include	"iextreme.h"
 #include	"system.h"
 #include	"Framework.h"
+#include "IEX_Input.h"
 
 #include    "../../Input/GamePad/GamePadManager.h"
 
@@ -71,7 +72,7 @@ bool Framework::Update()
     dwGameFrame++;	//	ゲームフレーム数更新
 
     //	更新処理
-#ifdef OUTLAW2_CONTROLL_TYPE_KEY_BORD
+#ifdef OUTLAW2_CONTROLL_TYPE_IEX_INPUT
     for (int i = 0; i < 4; i++)
     {
         KEY_SetInfo(i);
