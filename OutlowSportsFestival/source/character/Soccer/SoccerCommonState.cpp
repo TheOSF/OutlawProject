@@ -5,11 +5,7 @@
 #include "../../Sound/Sound.h"
 
 #include "../CharacterFunction.h"
-
-#include "../../Effect/BlurImpact.h"
-
-#include "../../Effect/HitEffectObject.h"
-
+#include "../../Effect/EffectFactory.h"
 #include "../../Camera/Camera.h"
 
 SoccerState_SmallDamage::SoccerState_SmallDamage(
@@ -66,22 +62,11 @@ void SoccerState_SmallDamage::Enter(SoccerPlayer* s)
 		Param
 		);
 
-	//ヒットエフェクト作成
-	new HitEffectObject(
-		m_pSoccer->m_Params.pos + Vector3(0, 3, 0),
-		m_Damage_vec,
-		0.05f,
-		0.15f,
-		Vector3(1.0f, 1.0f, 1.0f)
-		);
-
-	//ブラーエフェクト
-	new BlurImpactSphere(
-		m_pSoccer->m_Params.pos + Vector3(0, 3, 0),
-		10,
-		15,
-		30
-		);
+    //エフェクト
+    EffectFactory::HitEffect(
+        m_pSoccer,
+        m_Damage_vec
+        );
 
 }
 void SoccerState_SmallDamage::Execute(SoccerPlayer* t)
@@ -185,21 +170,12 @@ void SoccerState_DamageVanish::Enter(SoccerPlayer* s)
 		new SoccerEvent(s),
 		new SoccerHitEvent(s)
 		);
-	//ヒットエフェクト作成
-	new HitEffectObject(
-		m_pSoccer->m_Params.pos + Vector3(0, 3, 0),
-		m_Damage_vec,
-		0.05f,
-		0.15f,
-		Vector3(1.0f, 1.0f, 1.0f)
-		);
-	//ブラーエフェクト
-	new BlurImpactSphere(
-		m_pSoccer->m_Params.pos + Vector3(0, 3, 0),
-		25,
-		10,
-		30
-		);
+
+    //エフェクト
+    EffectFactory::VanishEffect(
+        m_pSoccer,
+        m_Damage_vec
+        );
 
 }
 void SoccerState_DamageVanish::Execute(SoccerPlayer* s)
@@ -308,34 +284,12 @@ void SoccerState_DamageMotion_Die::Enter(SoccerPlayer* t)
 		new DamageManager::HitEventBase()
 		);
 
-	{
-		COLORf EffectColor(CharacterBase::GetPlayerColor(t->m_PlayerInfo.number));
+    //エフェクト
+    EffectFactory::DieEffect(
+        m_pSoccer,
+        m_Damage_vec
+        );
 
-		//ヒットエフェクト作成
-		new HitEffectObject(
-			m_pSoccer->m_Params.pos + Vector3(0, 3, 0) + Vector3Normalize(m_Damage_vec)*3.5f,
-			m_Damage_vec,
-			0.05f,
-			0.15f,
-			Vector3(EffectColor.r, EffectColor.g, EffectColor.b),
-			5,
-			50
-			);
-	}
-
-	//ブラーエフェクト
-	new BlurImpactSphere(
-		m_pSoccer->m_Params.pos + Vector3(0, BallBase::UsualBallShotY, 0),
-		20,
-		50,
-		15
-		);
-
-	//カメラショック
-	DefCamera.SetShock(
-		Vector2(1, 1)*0.22f,
-		20
-		);
 }
 
 void SoccerState_DamageMotion_Die::Execute(SoccerPlayer* s)
@@ -405,7 +359,7 @@ void SoccerState_brake::Enter(SoccerPlayer* s)
 			Vector3Zero,
 			1.8f,
 			0.2f,
-			true
+			false
 			);
 	}
 

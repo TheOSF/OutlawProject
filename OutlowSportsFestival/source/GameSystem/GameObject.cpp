@@ -224,6 +224,11 @@ void GameObjectManager::UsualUpdate()
 
     while (it != m_GameObjectMap.end())
     {
+        if (isFreezeFrame())
+        {
+            return;
+        }
+
         if (it->second->Update() == false)
         {
 #ifdef _DEBUG

@@ -51,7 +51,7 @@ public:
 
 	const float m_ModelSize;
 
-	void SetState(SoccerState* state, bool Important=false);
+    void SetState(SoccerState* state, int Important = 0);
 	bool Update();
     bool CharacterMsg(MsgType mt);
 

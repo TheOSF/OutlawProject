@@ -2,9 +2,8 @@
 #include "Baseball_HitEvent.h"
 #include "BaseballPlayerState.h"
 #include "../CharacterFunction.h"
-#include "../../Effect/HitEffectObject.h"
-#include "../../Effect/BlurImpact.h"
 #include "../../GameSystem/GameController.h"
+#include "../../Effect/EffectFactory.h"
 
 BaseballState_DamageMotion_Weak::BaseballState_DamageMotion_Weak(
 	BaseballPlayer* pBaseball,
@@ -59,22 +58,12 @@ void BaseballState_DamageMotion_Weak::Enter(BaseballPlayer* t)
 		Param
 		);
 
-	//ヒットエフェクト作成
-	new HitEffectObject(
-		m_pBaseball->m_Params.pos + Vector3(0, 3, 0),
-		m_Damage_vec,
-		0.05f,
-		0.15f,
-		Vector3(1.0f, 1.0f, 1.0f)
-		);
+    //エフェクト
+    EffectFactory::HitEffect(
+        m_pBaseball,
+        m_Damage_vec
+        );
 
-	//ブラーエフェクト
-	new BlurImpactSphere(
-		m_pBaseball->m_Params.pos + Vector3(0, 3, 0),
-		10,
-		15,
-		30
-		);
 	//コントローラを振動
 	controller::SetVibration(
 		5000,

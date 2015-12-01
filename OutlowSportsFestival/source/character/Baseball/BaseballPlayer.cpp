@@ -38,7 +38,7 @@ BaseballPlayer::~BaseballPlayer()
 }
 
 //　ステートセット
-void BaseballPlayer::SetState(BaseballState* state, bool Important)
+void BaseballPlayer::SetState(BaseballState* state, int Important)
 {
 	//　新しいステートをセット
 	m_pStateMachine->set_state(state,Important);

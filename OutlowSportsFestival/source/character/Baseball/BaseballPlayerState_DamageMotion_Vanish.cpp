@@ -2,9 +2,7 @@
 #include "BaseballPlayerState.h"
 #include "Baseball_HitEvent.h"
 #include "../CharacterFunction.h"
-
-#include "../../Effect/HitEffectObject.h"
-#include "../../Effect/BlurImpact.h"
+#include "../../Effect/EffectFactory.h"
 #include "../../GameSystem/GameController.h"
 
 BaseballState_DamageVanish::BaseballState_DamageVanish(
@@ -105,22 +103,12 @@ void BaseballState_DamageVanish::Enter(BaseballPlayer* b)
 		new BaseballHitEvent(b)
 		);
 
-	//ヒットエフェクト作成
-	new HitEffectObject(
-		m_pBaseball->m_Params.pos + Vector3(0, 3, 0),
-		m_Damage_vec,
-		0.05f,
-		0.15f,
-		Vector3(1.0f, 1.0f, 1.0f)
-		);
+    //エフェクト
+    EffectFactory::VanishEffect(
+        m_pBaseball,
+        m_Damage_vec
+        );
 
-	//ブラーエフェクト
-	new BlurImpactSphere(
-		m_pBaseball->m_Params.pos + Vector3(0, 3, 0),
-		25,
-		10,
-		30
-		);
 	//コントローラを振動
 	controller::SetVibration(
 		5000,

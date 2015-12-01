@@ -72,7 +72,7 @@ m_pStatefunc(&TennisSpecialBall::StateMove)
     }
 
     {
-        m_Damage.Value = 30.0f*m_pTennis->m_Params.SP;
+        m_Damage.Value = 30.0f;
 
         m_Damage.pParent = m_pTennis;
         m_Damage.type = DamageBase::Type::_VanishDamage;
@@ -228,33 +228,33 @@ void TennisSpecialBall::UpdateMove()
 
 void TennisSpecialBall::ApperEffect()
 {
-    Vector3  color(0.5f, 0.5f, 1);
+    Vector3  color(1.0f, 0.5f, 0);
     Vector3 Nmove = Vector3Normalize(m_Move);
     Vector3 power(0, -0.02f, 0);
     Vector3 move;
     GlavityLocus* g;
 
     const Vector4
-        stCol(color.x, color.y, color.z, 0.4f),
-        endCol(color.x, color.y, color.z, 0);
+        stCol(color.x, color.y, color.z, 1.0f),
+        endCol(color.x, color.y, color.z, 0.5f);
 
     const Vector4
         stHdCol(color.x, color.y, color.z, 1.0f),
-        endHdCol(color.x, color.y, color.z, 0);
+        endHdCol(color.x, color.y, color.z, 0.5f);
 
 
     for (int i = 0; i < 50; ++i)
     {
         move = Vector3Rand() + Nmove;
         move *= frand();
-        move.x *= 0.5f;
-        move.z *= 0.5f;
+        move.y *= 2.0f;
+        move *= 0.75f;
 
         g = new GlavityLocus(
-            m_Pos, move, power, 4, 120 + rand() % 30
+            m_Pos, move, power, 8, 40 + rand() % 20
             );
 
-        g->m_BoundRatio = 1.0f;
+        g->m_BoundRatio = 0.5f;
         g->m_CheckWall = false;
 
         g->m_Locus.m_StartParam.Color = stCol;
@@ -263,21 +263,42 @@ void TennisSpecialBall::ApperEffect()
         g->m_Locus.m_StartParam.HDRColor = stHdCol;
         g->m_Locus.m_EndParam.HDRColor = endHdCol;
 
-        g->m_Locus.m_StartParam.Width = 0.07f;
+        g->m_Locus.m_StartParam.Width = 0.09f;
         g->m_Locus.m_EndParam.Width = 0.00f;
 
         // g->m_Locus.m_pTexture = DefResource.Get(Resource::TextureType::Locus1);
     }
 
-    for (int i = 0; i < 8; ++i)
+    const float SmokeSize = 3.0f;
+    Vector3 SmokePos;
+
+    for (int i = 0; i < 20; ++i)
     {
+        SmokePos = m_Pos;
+
+        SmokePos.x += (frand() - 0.5f)*5.0f;
+        SmokePos.z += (frand() - 0.5f)*5.0f;
+
+        SmokePos.y += frand()*3.5f + SmokeSize*0.5f;
+
         EffectFactory::Smoke(
-            m_Pos + Vector3Rand(),
-            Vector3(0, 0.2f, 0),
-            3,
+            SmokePos,
+            Vector3(frand() - 0.5f, 0.5f, frand() - 0.5f)*0.15f, 
+            SmokeSize,
             0.2f
             );
     }
+
+    EffectFactory::CircleAnimation(
+        m_Pos + Vector3(0, 2, 0), 
+        Vector3AxisY,
+        Vector3Zero,
+        Vector3Zero,
+        Vector2(20,20),
+        0x0,
+        0xA0FFFFFF,
+        1.25f
+        );
 
     //ブラーエフェクト
     new BlurImpactSphere(

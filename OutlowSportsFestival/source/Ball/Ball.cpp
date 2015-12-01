@@ -9,21 +9,12 @@ const float BallBase::UsualBallShotY = 2.9f;
 
 BallBase::BallBase()
 {
-#if defined(_DEBUG)
-	MyAssert(DefBallMgr.AddBall(this), "ボール登録に失敗しました");
-#else
-    DefBallMgr.AddBall(this);
-#endif
+    m_ID = DefBallMgr.AddBall(this);
 }
 
 BallBase::~BallBase()
 {
-#if defined(_DEBUG)
-    MyAssert(DefBallMgr.EraceBall(this), "ボール削除に失敗しました");
-#else
     DefBallMgr.EraceBall(this);
-#endif
-	
 }
 
 bool BallBase::isOutOfField()const
@@ -37,6 +28,12 @@ bool BallBase::isCanCounter(const BallBase* pBall)
     return
         pBall->m_Params.type == BallBase::Type::_Usual ||
         pBall->m_Params.type == BallBase::Type::_Milder;
+}
+
+//固有ＩＤのゲッタ
+BallBase::BallID BallBase::GetID()const
+{
+    return m_ID;
 }
 
 //*****************************************************
@@ -60,11 +57,11 @@ void BallManager::Release()
 	m_pInstance = nullptr;
 }
 
-//ボールデータ取得
-BallManager::BallMap* BallManager::GetBallMap()
-{
-	return &m_BallMap;
-}
+////ボールデータ取得
+//BallManager::BallArray* BallManager::GetBallData()
+//{
+//	return &m_BallData;
+//}
 
 #define MyDebugStringC(str,...)\
 {\
@@ -93,21 +90,17 @@ bool BallManager::GetCounterBall(
 	Vector3 len;
 
 
-	for (
-		auto it = m_BallMap.begin();
-		it != m_BallMap.end();
-		++it)
+    for (auto& it : m_BallData)
 	{
-
-		if (!BallBase::isCanCounter(it->second))
+        if (it == nullptr || !BallBase::isCanCounter(it))
 		{
 			continue;
 		}
 
 		//Fmove_frame後のボールの位置を算出
-		move_pos = it->second->m_Params.move;
+		move_pos = it->m_Params.move;
 		move_pos *= Fmove_frame;
-		move_pos += it->second->m_Params.pos;
+		move_pos += it->m_Params.pos;
 
 		//距離を算出
 		len = move_pos - character_pos;
@@ -117,7 +110,7 @@ bool BallManager::GetCounterBall(
 		if (most_near > temp_len)
 		{
 			most_near = temp_len;
-			*ppOut = it->second;
+            *ppOut = it;
 			*pOutAfterFrameBallPos = move_pos;
 		}
 	}
@@ -126,9 +119,21 @@ bool BallManager::GetCounterBall(
 	return *ppOut != nullptr;
 }
 
-BallManager::BallManager()
+bool BallManager::isBallEnable(BallBase::BallID Id)
 {
+    if (Id == BallBase::BallID::ErrorID)
+    {
+        return false;
+    }
 
+    return m_BallIDFlags.at((size_t)Id);
+}
+
+
+BallManager::BallManager() :
+m_IdSetCount(0)
+{
+    m_BallData.fill(nullptr);
 }
 
 BallManager::~BallManager()
@@ -136,31 +141,59 @@ BallManager::~BallManager()
 
 }
 
-
-bool BallManager::AddBall(BallBase* pBall)
+BallBase::BallID BallManager::AddBall(BallBase* pBall)
 {
-	if (m_BallMap.find(pBall) != m_BallMap.end())
-	{
-		return false;
-	}
+    size_t id = 0;
+    //空きインデックスに追加する
+    for (size_t i = 0; i < MaxBallNum; ++i)
+    {
+        if (m_BallData[i] == nullptr)
+        {
+            m_BallData[i] = pBall;
+            
+            id = m_IdSetCount;
 
-	m_BallMap.insert(
-		BallMap::value_type(pBall, pBall)
-		);
+            MyAssert(m_BallIDFlags.at(m_IdSetCount) == false, "すでに使われているボールＩＤが指定されました");
+            
+            m_BallIDFlags.at(m_IdSetCount) = true;
 
-	return true;
+            m_IdSetCount = (m_IdSetCount + 1) % (size_t)MaxBallRegistId;
+
+            MyAssert(m_IdSetCount < MaxBallRegistId, "ボールＩＤ登録数が上限に達しました");
+            return (BallBase::BallID)id;
+        }
+    }
+
+    MyAssert(
+        false,
+        "ボール同時出現数が最大に達しました ボール数＝ %d ", (int)MaxBallNum
+        );
+
+    //満タンだった！？
+    return BallBase::BallID::ErrorID;
 }
 
 bool BallManager::EraceBall(BallBase* pBall)
 {
-	auto it = m_BallMap.find(pBall);
+    const int id = (int)pBall->GetID();
+    bool bit_reset = true;
+    size_t i;
 
-	if (it == m_BallMap.end())
-	{
-		return false;
-	}
+    MyAssert(id >= 0, "ボール削除ができませんでした");
+    
+    for (i = 0; i < MaxBallNum; ++i)
+    {
+        if (m_BallData[i] == pBall)
+        {
+            m_BallData[i] = nullptr;
+            break;
+        }
+    }
 
-	m_BallMap.erase(it);
+    MyAssert(i < MaxBallNum, "ボール削除ができませんでした２");
+    MyAssert(m_BallIDFlags.at((size_t)id) == true, "ボール削除ができませんでした３");
 
+    m_BallIDFlags.at((size_t)id) = false;
+    
 	return true;
 }

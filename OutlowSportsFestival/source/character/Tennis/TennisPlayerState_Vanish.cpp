@@ -8,7 +8,7 @@
 #include "../../Effect/BlurImpact.h"
 
 #include "../../GameSystem/GameController.h"
-
+#include "../../Effect/EffectFactory.h"
 
 TennisState_DamageVanish::TennisState_DamageVanish(
     TennisPlayer* pTennis,
@@ -141,22 +141,10 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
         new TennisHitEvent(t)
         );
 
-    //ヒットエフェクト作成
-    new HitEffectObject(
-        m_pTennis->m_Params.pos + Vector3(0, 3, 0),
-        m_Damage_vec,
-        0.045f,
-        0.15f,
-        Vector3(1.0f, 0.8f, 0.25f),
-        8
-        );
-    
-    //ブラーエフェクト
-    new BlurImpactSphere(
-        m_pTennis->m_Params.pos + Vector3(0, 3, 0),
-        25,
-        30,
-        30
+    //エフェクト
+    EffectFactory::VanishEffect(
+        m_pTennis,
+        m_Damage_vec
         );
 
     //コントローラを振動

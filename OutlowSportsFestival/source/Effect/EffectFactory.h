@@ -29,8 +29,10 @@ namespace EffectFactory
     void Counter(
         CrVector3 pos,
         float size);
+
 	//　切り替え
-	void Change(CrVector3 pos,
+	void Change(
+        CrVector3 pos,
 		float size);
 
     //円が大きくなるアニメーション
@@ -51,7 +53,8 @@ namespace EffectFactory
         CrVector3   power,
         CrVector2   size,
         DWORD       color,
-        DWORD       hdr_col
+        DWORD       hdr_col,
+        RATIO       speed = 1.0f
         );
 
     //パーティクル
@@ -76,6 +79,17 @@ namespace EffectFactory
 		DWORD     Color
 		);
 
+    //攻撃ヒット時のエフェクト
+    void HitEffect(
+        CharacterBase* pDieCharacter,
+        CrVector3      Damage_Vec
+        );
+
+    //吹き飛び攻撃くらい時のエフェクト
+    void VanishEffect(
+        CharacterBase* pDieCharacter,
+        CrVector3      Damage_Vec
+        );
 
     //死亡時のエフェクト
     void DieEffect(

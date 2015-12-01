@@ -2,15 +2,13 @@
 #include "Baseball_HitEvent.h"
 #include "../CharacterFunction.h"
 #include "../../Effect/BlurImpact.h"
-
 #include "../../Effect/HitEffectObject.h"
 #include "../../Ball/Ball.h"
-
 #include "../../Camera/Camera.h"
-
 #include "../../Effect/EffectFactory.h"
-
 #include "../../GameSystem/GameController.h"
+
+
 BaseballState_DamageMotion_Die::BaseballState_DamageMotion_Die(
 	BaseballPlayer* pBaseball,
 	const Vector3& Damage_vec  //ダメージを受けた方向
@@ -104,34 +102,6 @@ void BaseballState_DamageMotion_Die::Enter(BaseballPlayer* b)
 		Param,
 		new BaseballEvent(b),
 		new DamageManager::HitEventBase()
-		);
-
-	COLORf EffectColor(CharacterBase::GetPlayerColor(b->m_PlayerInfo.number));
-
-
-	//ヒットエフェクト作成
-	new HitEffectObject(
-		m_pBaseball->m_Params.pos + Vector3(0, 3, 0) + Vector3Normalize(m_Damage_vec)*3.5f,
-		m_Damage_vec,
-		0.05f,
-		0.15f,
-		Vector3(EffectColor.r, EffectColor.g, EffectColor.b),
-		5,
-		50
-		);
-
-	//ブラーエフェクト
-	new BlurImpactSphere(
-		m_pBaseball->m_Params.pos + Vector3(0, BallBase::UsualBallShotY, 0),
-		20,
-		50,
-		15
-		);
-
-	//カメラショック
-	DefCamera.SetShock(
-		Vector2(1, 1)*0.22f,
-		20
 		);
 
 	//死亡エフェクト
