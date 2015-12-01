@@ -1,9 +1,9 @@
 #include "GameController.h"
+#include "IEX_Input.h"
 
 
 
-
-#ifdef OUTLAW2_CONTROLL_TYPE_KEY_BORD
+#ifdef OUTLAW2_CONTROLL_TYPE_IEX_INPUT
 
 
 

@@ -4,5 +4,6 @@
 #include "StateClass/AmefootPlayerState_ReceiveWeakDamage.h"
 #include "StateClass/AmefootPlayerState_ReceiveVanishDamage.h"
 #include "StateClass/AmefootPlayerState_Evasion.h"
+#include "StateClass/AmefootPlayerState_Counter.h"
 
 

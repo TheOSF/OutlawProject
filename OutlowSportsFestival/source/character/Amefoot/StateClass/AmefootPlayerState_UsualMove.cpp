@@ -34,6 +34,10 @@ private:
 // AmefootPlayerState_UsualMove
 // [ アメフト ] 通常移動するステートクラス
 //-----------------------------------------------------------------------------------------
+AmefootPlayerState_UsualMove::AmefootPlayerState_UsualMove() :
+     m_pCharacterUsualMove(nullptr)
+{};
+//-----------------------------------------------------------------------------------------
 void AmefootPlayerState_UsualMove::Enter(AmefootPlayer* pCharacter)
 {
      CharacterUsualMove::Params params;
@@ -91,7 +95,7 @@ void AmefootPlayerState_UsualMove::ActionStateSwitch(AmefootPlayer* pCharacter)
      }
      else if ( controller::GetTRG(controller::button::_R1, pCharacter->m_PlayerInfo.number) )
      {
-
+          pCharacter->SetState(new AmefootPlayerState_Counter());
      }
      else if ( controller::GetTRG(controller::button::_L1, pCharacter->m_PlayerInfo.number) )
      {

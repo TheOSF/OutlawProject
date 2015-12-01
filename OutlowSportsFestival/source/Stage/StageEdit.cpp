@@ -1,7 +1,7 @@
 #include "StageEdit.h"
 #include "StageObjectFactory.h"
 #include "../GameSystem/GameController.h"
-
+#include "IEX_Input.h"
 
 
 static StagePhysicMoveObject*(*CreateFunc[])(CrVector3 pos, CrVector3 angle) =

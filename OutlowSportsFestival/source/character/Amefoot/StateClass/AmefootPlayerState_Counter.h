@@ -1,15 +1,18 @@
 #pragma once
 
+
 #include "../AmefootPlayer.h"
 
+class CharacterDefaultCounter;
+
 //-----------------------------------------------------------------------------------------
-// AmefootPlayerState_UsualMove
-// [ アメフト ] 通常移動するステートクラス
+// AmefootPlayerState_Counter
+// [ アメフト ] カウンターをするステートクラス
 //-----------------------------------------------------------------------------------------
-class AmefootPlayerState_UsualMove : public AmefootState
+class AmefootPlayerState_Counter : public AmefootState
 {
 public:
-     AmefootPlayerState_UsualMove();
+     AmefootPlayerState_Counter();
 
      void Enter(AmefootPlayer* pCharacter)override;
 
@@ -18,14 +21,10 @@ public:
      void Exit(AmefootPlayer* pCharacter)override;
 
 private:
-     class MoveEvent;
+     class CounterEvent;
 
 private:
-     void ActionStateSwitch(AmefootPlayer* pCharacter);
-
-private:
-     CharacterUsualMove* m_pCharacterUsualMove;
-
+     CharacterDefaultCounter* m_pCharacterDefaultCounter;
 };
-//-----------------------------------------------------------------------------------------
+
 
