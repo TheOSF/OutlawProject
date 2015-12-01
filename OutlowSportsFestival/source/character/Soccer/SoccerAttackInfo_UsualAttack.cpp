@@ -2,6 +2,8 @@
 #include "../CharacterFunction.h"
 #include "../../Sound/Sound.h"
 
+#include "../../GameSystem/GameController.h"
+
 
 SoccerAttackInfo_UsualAtk::SoccerAttackInfo_UsualAtk(
 	SoccerPlayer* pOwner
@@ -123,4 +125,16 @@ void SoccerAttackInfo_UsualAtk::Update(int Frame, Locus* pLocus)
 	{
 		chr_func::AddMoveFront(m_pOwner, m_Param.MoveSpeed, 1000);
 	}
+}
+//UŒ‚‚ª‚ ‚½‚Á‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
+void SoccerAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
+{
+	chr_func::AddSkillGauge(m_pOwner, pDmg->Value*0.01f);
+
+	//ƒRƒ“ƒgƒ[ƒ‰‚ðU“®
+	controller::SetVibration(
+		5000,
+		0.15f,
+		m_pOwner->m_PlayerInfo.number
+		);
 }

@@ -1,19 +1,19 @@
 #include "SoccerComputerAttack.h"
+
 #include "../../CharacterFunction.h"
 #include "../../CharacterManager.h"
 #include "../SoccerPlayerState.h"
 
 //------------コンピュータ操作の攻撃操作クラス--------------
 
-SoccerState_ComputerControll_Attack::ComputerControllEvent::ComputerControllEvent(SoccerPlayer*const pSoccer) :
-	m_pSoccer(pSoccer)
+SoccerState_ComputerControll_Attack::ComputerControllEvent::ComputerControllEvent(SoccerPlayer*const pSoccer, SoccerAttackClass* Attack) :
+	m_pSoccer(pSoccer),m_Attack(Attack)
 {
 
 }
 bool SoccerState_ComputerControll_Attack::ComputerControllEvent::isDoCombo()
 {
-	
-	if (rand() % 100 > 60)
+	if (m_Attack->getDoHit())
 	{
 		return true;
 	}
@@ -21,6 +21,7 @@ bool SoccerState_ComputerControll_Attack::ComputerControllEvent::isDoCombo()
 	{
 		return false;
 	}
+		
 }
 void SoccerState_ComputerControll_Attack::ComputerControllEvent::AngleControll(RADIAN angle)
 {
@@ -86,7 +87,7 @@ const CharacterBase* SoccerState_ComputerControll_Attack::ComputerControllEvent:
 
 }
 SoccerState_ComputerControll_Attack::SoccerState_ComputerControll_Attack(SoccerPlayer* s) :
-	m_Attack(s, new ComputerControllEvent(s), 0)
+	m_Attack(s, new ComputerControllEvent(s,&m_Attack), 0)
 {
 
 }

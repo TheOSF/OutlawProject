@@ -10,34 +10,14 @@
 #include "SoccerComputerShot.h"
 #include "SoccerComputerFinisher.h"
 #include "SoccerComputerCounter.h"
-#include "SoccerComputerRolling.h"
 #include "../SoccerPlayerState_PoseMotion.h"
 #include "../../CharacterManager.h"
 #include "../../../Camera/Camera.h"
 #include "../SoccerHitEvent.h"
 
+#include "../Computer/SoccerComputerUtilityClass.h"
 
-class SocceComputerrUtillityClass
-{
-public:
-	//ローリングの方向制御クラス
-	class ComputerRollingControll :public SoccerState_ComputerControll_Rolling::CallBackClass
-	{
-	public:
-		SoccerPlayer*const cs;
-		ComputerRollingControll(SoccerPlayer* ps,Vector3 vec) :cs(cs), stick(vec) {}
-		Vector3 stick;
 
-		Vector3 GetVec()override
-		{
-			
-			Vector3 vec(stick.x, 0, stick.z);
-
-			return vec;
-		}
-	};
-
-};
 
 bool SoccerState_ComputerControll_Move::SwitchGameState(SoccerPlayer* ps)
 {
@@ -156,7 +136,7 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 			{
 				if ((cParam.ActionFrequence * 100) > AttackPoint)
 				{
-					m_cSoccer->SetState(new SoccerState_ComputerControll_Shot);
+					//m_cSoccer->SetState(new SoccerState_ComputerControll_Shot);
 				}
 			}
 		}
@@ -206,7 +186,7 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 				if ((cParam.BallCounter * 100) > ReactionPoint)
 				{
 					m_cSoccer->SetState(
-						new SoccerState_ComputerControll_Rolling
+						new SoccerState_Rolling
 						(new SocceComputerrUtillityClass::ComputerRollingControll(m_cSoccer, vec),
 							false));
 				}
@@ -232,7 +212,7 @@ void SoccerState_ComputerControll_Move::Execute(SoccerPlayer* s)
 		m_pReactionClass->Update();
 		if (rand() %  Dashpro == 0)
 		{
-			s->SetState(new SoccerState_ComputerControll_Dash(s));
+			//s->SetState(new SoccerState_ComputerControll_Dash(s));
 		}
 	}
 	m_pMoveClass->Update();

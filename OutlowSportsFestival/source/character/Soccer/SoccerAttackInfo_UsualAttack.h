@@ -39,6 +39,7 @@ public:
 		RADIAN             AngleControllValue;
 
 		int                LocusBoneNum;
+		float              AddSkillValue;
 	};
 
 	Param m_Param;
@@ -80,4 +81,7 @@ private:
 
 	//–ˆƒtƒŒ[ƒ€ŒÄ‚Î‚ê‚é
 	void Update(int Frame, Locus* pLocus);
+
+	//UŒ‚‚ª“–‚½‚Á‚½‚ÉŒÄ‚Î‚ê‚é
+	void HitAttack(DamageShpere* pDmg);
 };

@@ -20,6 +20,7 @@ SoccerState_ComputerControll_Finisher::SoccerState_ComputerControll_Finisher() :
 void SoccerState_ComputerControll_Finisher::Enter(SoccerPlayer* s)
 {
 	m_pSnakeShotClass = this->SnakeShotClass(s);
+	chr_func::ResetSkillGauge(s);
 }
 void SoccerState_ComputerControll_Finisher::Execute(SoccerPlayer* s)
 {

@@ -10,6 +10,17 @@
 //*************************************************************
 //		サッカープレイヤークラス
 //*************************************************************
+const SoccerPlayer::SkillParam SoccerPlayer::skillparams = 
+
+{
+	0.05f,
+	0.05f,
+	0.05f,
+	0.02f
+
+
+};
+
 
 SoccerPlayer::SoccerPlayer(const CharacterBase::PlayerInfo& info) :
 CharacterBase(info, new BlendAnimationMesh("DATA\\CHR\\Soccer\\Player_S.iem")),
@@ -20,7 +31,7 @@ m_ModelSize(0.05f)
 	m_Renderer.SetMotion(0);
 	SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(this));
 	//　体力低下(デバック用)
-	m_Params.maxHP = m_Params.HP = 1;
+	m_Params.maxHP = m_Params.HP = 100;
 }
 
 SoccerPlayer::~SoccerPlayer()

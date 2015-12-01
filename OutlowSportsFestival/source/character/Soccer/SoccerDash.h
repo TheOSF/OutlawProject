@@ -6,6 +6,8 @@
 #include "../../Damage/Damage.h"
 #include "../../utillity/Locus.h"
 
+#include "../../Effect/SpeedEffect.h"
+
 
 //****************************************************************
 //		サッカーのダッシュクラス
@@ -24,18 +26,12 @@ public:
 	void Update();	//更新
 	void UpdateLocusColor();
 	void SetStickValue(CrVector2 StickValue);
-	void DoShot();
-	void DoSliding();
-	void DoCounter();
-	void DoAvoid();
-	void DoFinisher();
-	void DoStop();
-private:
 	typedef DamageManager::HitEventBase HitEventBase;
 
 	SoccerPlayer*	m_pParent;
 	Vector2			m_StickValue;
 	Locus           m_Locus;
+	SpeedEffect     m_SpeedEffect;
 	bool			m_isRun;
 	bool            m_Init;
 };

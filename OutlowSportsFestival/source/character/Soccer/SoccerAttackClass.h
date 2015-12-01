@@ -57,6 +57,9 @@ public:
 
 		//毎フレーム呼ばれる
 		virtual void Update(int Frame, Locus* pLocus) = 0;
+
+		//攻撃が当たった時に呼ばれる
+		virtual void HitAttack(DamageShpere* pDmg) = 0;
 	};
 
 	typedef std::vector<AttackInfo*> AttackInfoArray;
@@ -71,6 +74,11 @@ public:
 		);
 
 	~SoccerAttackClass();
+	bool getDoHit()
+	{
+		return m_DoHit;
+	}
+	
 
 	void Update();	//更新
 
@@ -87,7 +95,10 @@ private:
 	int                   m_ComboCount;
 	int                   NoDamageFrame;
 	bool                  m_DoCombo;
+	bool                  m_DoHit;
 	Locus                 m_Locus;
+	int                   m_DamageHitCount;
+	int                   m_HitStopCount;
 
 	void(SoccerAttackClass::*m_pStateFunc)();
 

@@ -10,37 +10,15 @@
 #include "../SoccerSliding.h"
 #include "SoccerComputerDash.h"
 #include "SoccerComputerCounter.h"
-#include "SoccerComputerRolling.h"
 #include "SoccerComputerSliding.h"
 #include "../SoccerPlayerState_PoseMotion.h"
 #include "../../CharacterManager.h"
+#include "../Computer/SoccerComputerUtilityClass.h"
 #include "../../../Camera/Camera.h"
 #include "../SoccerHitEvent.h"
 #include "../SoccerCommonState.h"
 #include "../../../Effect/EffectFactory.h"
 #include "../../../Sound/Sound.h"
-class SocceComputerrUtillityClass
-{
-public:
-	//ローリングの方向制御クラス
-	class ComputerRollingControll :public SoccerState_ComputerControll_Rolling::CallBackClass
-	{
-	public:
-		SoccerPlayer*const cs;
-		ComputerRollingControll(SoccerPlayer* ps, Vector3 vec) :cs(cs), stick(vec) {}
-		Vector3 stick;
-
-		Vector3 GetVec()override
-		{
-
-			Vector3 vec(stick.x, 0, stick.z);
-
-			return vec;
-		}
-	};
-
-};
-
 
 bool SoccerState_ComputerControll_Dash::SwitchGameState(SoccerPlayer* ps)
 {
@@ -78,7 +56,7 @@ SoccerState_ComputerControll_Dash::SoccerState_ComputerControll_Dash(SoccerPlaye
 //ステート開始
 void SoccerState_ComputerControll_Dash::Enter(SoccerPlayer* s)
 {
-	class SoccerDashEvent
+	class SoccerDashEvent : public CharacterUsualMove::MoveEvent
 	{
 		SoccerPlayer* m_pSoccer;
 	public:
@@ -128,7 +106,7 @@ void SoccerState_ComputerControll_Dash::Enter(SoccerPlayer* s)
 			{
 				//m_cSoccer->SetState(new SoccerState_ComputerControll_Finisher());
 			}
-			if (len < 10.0f)
+			if (len < 6.0f)
 			{
 				if ((cParam.ActionFrequence * 100) > AttackPoint)
 				{
@@ -185,7 +163,7 @@ void SoccerState_ComputerControll_Dash::Enter(SoccerPlayer* s)
 				if ((cParam.BallCounter * 100) > ReactionPoint)
 				{
 					m_cSoccer->SetState(
-						new SoccerState_ComputerControll_Rolling
+						new SoccerState_Rolling
 						(new SocceComputerrUtillityClass::ComputerRollingControll(m_cSoccer, vec), true));
 				}
 			}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../SoccerPlayer.h"
+#include "../SoccerAttackClass.h"
 #include "../../Attack/CharacterAttack.h"
 #include "../../Soccer/SoccerAttackInfo_UsualAttack.h"
 #include "../../../GameSystem/ForwardDecl.h"
@@ -19,14 +20,14 @@ public:
 	class ComputerControllEvent :public SoccerAttackClass::ControllEvent
 	{
 	public:
-		ComputerControllEvent(SoccerPlayer*const pSoccer);
-
+		ComputerControllEvent(SoccerPlayer*const pSoccer, SoccerAttackClass* Attack);
+	
 		bool isDoCombo();
 		void AngleControll(RADIAN angle);
+		SoccerAttackClass* m_Attack;
 
 	private:
 		SoccerPlayer*const m_pSoccer;
-
 		const CharacterBase* GetFrontTargetEnemy();
 	};
 	SoccerState_ComputerControll_Attack(SoccerPlayer* s);
@@ -35,6 +36,8 @@ public:
 	void Enter(SoccerPlayer* s)override;
 	void Execute(SoccerPlayer* s)override;
 	void Exit(SoccerPlayer* s)override;
+	
+
 private:
 	SoccerAttackClass m_Attack;
 };
