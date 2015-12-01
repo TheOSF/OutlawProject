@@ -150,6 +150,7 @@
     <ClCompile Include="source\Ball\BallTemplate.cpp" />
     <ClCompile Include="source\character\Amefoot\AmefootUsualHitEvent.cpp" />
     <ClCompile Include="source\character\Amefoot\MoveClass\AmefootEvasionStandUpClass.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_Counter.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_Evasion.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveVanishDamage.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveWeakDamage.cpp" />
@@ -332,6 +333,7 @@
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
     <ClInclude Include="IEX\iextreme.h" />
+    <ClInclude Include="IEX\IEX_Input.h" />
     <ClInclude Include="Input\GamePad\GamePad.h">
       <SubType>
       </SubType>
@@ -372,6 +374,7 @@
     <ClInclude Include="source\Ball\BallTemplate.h" />
     <ClInclude Include="source\character\Amefoot\AmefootUsualHitEvent.h" />
     <ClInclude Include="source\character\Amefoot\MoveClass\AmefootEvasionStandUpClass.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_Counter.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_Evasion.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveVanishDamage.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveWeakDamage.h" />
