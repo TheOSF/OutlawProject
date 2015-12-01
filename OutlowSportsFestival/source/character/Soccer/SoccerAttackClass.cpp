@@ -92,6 +92,7 @@ void SoccerAttackClass::State_Attack()
 
 		//    m_HitStopCount = 5;
 	}
+
 	//äpìxçXêV
 	RADIAN ControllRadian = 0;
 
