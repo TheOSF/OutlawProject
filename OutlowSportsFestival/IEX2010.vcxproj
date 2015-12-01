@@ -166,7 +166,6 @@
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerCounter.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerDash.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerFinisher.cpp" />
-    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerRolling.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerShot.cpp" />
     <ClCompile Include="source\Ball\Ball.cpp" />
     <ClCompile Include="source\Ball\BallFadeOutRenderer.cpp" />
@@ -214,8 +213,9 @@
     <ClCompile Include="source\character\CharacterShotAttackClass.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerMove.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerSliding.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerUtilityClass.cpp" />
     <ClCompile Include="source\character\Soccer\Snakeshot.cpp" />
-    <ClCompile Include="source\character\Soccer\SoccerAttack.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerAttackClass.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerAttackInfo_UsualAttack.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerCommonState.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerDash.cpp" />
@@ -393,7 +393,6 @@
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerCounter.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerDash.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerFinisher.h" />
-    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerRolling.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerShot.h" />
     <ClInclude Include="source\Ball\Ball.h" />
     <ClInclude Include="source\Ball\BallFadeOutRenderer.h" />
@@ -445,6 +444,7 @@
     <ClInclude Include="source\character\CharacterShotAttackClass.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerMove.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerSliding.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerUtilityClass.h" />
     <ClInclude Include="source\character\Soccer\Snakeshot.h" />
     <ClInclude Include="source\character\Soccer\SoccerAttackClass.h" />
     <ClInclude Include="source\character\Soccer\SoccerAttackInfo_UsualAttack.h" />

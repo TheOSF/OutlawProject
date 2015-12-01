@@ -461,9 +461,9 @@ void SoccerState_PlayerControll_Attack::Enter(SoccerPlayer* s)
 
 	SoccerAttackInfo_UsualAtk::Param AtkParam[] =
 	{
-		{ 6, 1.0f, 1.5f, DamageBase::Type::_WeekDamage, 3, 20, 0.07f, 5, 10, SoccerPlayer::_ms_Atk1, 50, 20, 27, 35, 0, 5, D3DXToRadian(5), 21 },
-		{ 2, 1.0f, 1.5f, DamageBase::Type::_WeekDamage, 5, 18, 0.02f, 1, 5, SoccerPlayer::_ms_Atk2, 35, 5, 15, 20, 0, 5, D3DXToRadian(5), 3 },
-		{ 8, 1.0f, 1.5f, DamageBase::Type::_VanishDamage, 8, 16, 0.05f, 1, 6, SoccerPlayer::_ms_Atk3, 40, -1, -1, -1, 0, 8, D3DXToRadian(5), 21 },
+		{ 6, 1.0f, 1.5f, DamageBase::Type::_WeekDamage, 3, 20, 0.07f, 5, 10, SoccerPlayer::_ms_Atk1, 50, 20, 27, 35, 0, 5, D3DXToRadian(5), 21,SoccerPlayer::skillparams.Attack1 },
+		{ 2, 1.0f, 1.5f, DamageBase::Type::_WeekDamage, 5, 18, 0.02f, 1, 5, SoccerPlayer::_ms_Atk2, 35, 5, 15, 20, 0, 5, D3DXToRadian(5), 3,SoccerPlayer::skillparams.Attack2 },
+		{ 8, 1.0f, 1.5f, DamageBase::Type::_VanishDamage, 8, 16, 0.05f, 1, 6, SoccerPlayer::_ms_Atk3, 40, -1, -1, -1, 0, 8, D3DXToRadian(5), 21 ,SoccerPlayer::skillparams.Attack3 },
 	};
 
 	for (int i = 0; i < (int)ARRAYSIZE(AtkParam); ++i)
@@ -804,6 +804,7 @@ void SoccerState_PlayerControll_Finisher::Enter(SoccerPlayer* s)
 	m_pSnakeShotClass = this->SnakeShotClass(s);
 	timeflg = false;
 	m_Timer = 0;
+	chr_func::ResetSkillGauge(s);
 }
 void SoccerState_PlayerControll_Finisher::Execute(SoccerPlayer* s)
 {

@@ -1,6 +1,7 @@
 #include "../CharacterMoveClass.h"
 #include "../CharacterFunction.h"
 #include "../CharacterBase.h"
+
 #include "Damage/Damage.h"
 #include "Ball/Ball.h"
 #include "Camera/Camera.h"
@@ -19,14 +20,16 @@ SoccerDash::SoccerDash(
 	m_pParent(pParent),
 	m_isRun(false),
 	m_Init(false),
-	m_Locus(20)
+	m_Locus(20),
+	m_SpeedEffect(1)
 {
 	m_Locus.m_Division = 1;
-
 	//‹OÕ‚ÌÝ’è
 	m_Locus.m_Division = 0;
 	m_Locus.m_StartParam.Width = 1.0f;
 	m_Locus.m_EndParam.Width = 0.2f;
+
+	m_pParent->m_Renderer.SetMotion(SoccerPlayer::_ms_Run);
 
 
 	UpdateLocusColor();
@@ -85,7 +88,9 @@ void SoccerDash::Update()
 
 		chr_func::UpdateAll(m_pParent, &HitEvent);
 	}
-
+	Vector3 chrpos = m_pParent->m_Params.pos;
+	chrpos.y += 1.5f;
+	m_SpeedEffect.Update(chrpos,-m_pParent->m_Params.move);
 	m_pParent->m_Renderer.Update(1);
 	chr_func::CreateTransMatrix(m_pParent, m_pParent->m_ModelSize, &m_pParent->m_Renderer.m_TransMatrix);
 }
@@ -93,30 +98,4 @@ void SoccerDash::Update()
 void SoccerDash::SetStickValue(CrVector2 StickValue)
 {
 	m_StickValue = StickValue;
-}
-void SoccerDash::DoSliding()
-{
-	m_pParent->SetState(new SoccerState_PlayerControll_Sliding(m_pParent));
-	return;
-}
-void SoccerDash::DoShot()
-{
-	
-	
-}
-void SoccerDash::DoAvoid()
-{
-	
-}
-void SoccerDash::DoCounter()
-{
-	
-}
-void SoccerDash::DoFinisher()
-{
-	
-}
-void SoccerDash::DoStop()
-{
-	
 }

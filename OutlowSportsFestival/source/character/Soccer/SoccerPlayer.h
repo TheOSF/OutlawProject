@@ -49,6 +49,14 @@ public:
 	SoccerPlayer(const CharacterBase::PlayerInfo& info);
 	~SoccerPlayer();
 
+	struct SkillParam
+	{
+		float Attack1;
+		float Attack2;
+		float Attack3;
+		float shot;
+	};
+	static const SkillParam skillparams;
 	const float m_ModelSize;
 
     void SetState(SoccerState* state, int Important = 0);

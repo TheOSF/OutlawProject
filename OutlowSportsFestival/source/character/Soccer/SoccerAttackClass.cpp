@@ -13,6 +13,7 @@ SoccerAttackClass::SoccerAttackClass(
 	m_pEvent(pEvent),
 	m_Timer(0),
 	m_ComboCount(-1),
+	m_DoHit(false),
 	m_pStateFunc(&SoccerAttackClass::State_NextAtk),
 	m_Locus(7),
 	NoDamageFrame(Frame)
@@ -82,6 +83,15 @@ void SoccerAttackClass::State_Attack()
 		pNowAtk->Update(m_Timer, &m_Locus);
 		pNowAtk->DamagePosSet(&m_Damage, m_pOwner);
 	}
+	//攻撃ヒット関数の呼び出し
+	if (m_DamageHitCount != m_Damage.HitCount)
+	{
+		m_DamageHitCount = m_Damage.HitCount;
+		pNowAtk->HitAttack(&m_Damage);
+		m_DoHit = true;
+
+		//    m_HitStopCount = 5;
+	}
 
 	//角度更新
 	RADIAN ControllRadian = 0;
@@ -105,13 +115,16 @@ void SoccerAttackClass::State_Attack()
 		pNowAtk->isComboButtonFrame(m_Timer))
 	{
 		m_DoCombo = m_pEvent->isDoCombo();
+
 	}
 
 	//コンボ移行
 	if (!isLastAtk() &&
 		m_DoCombo    &&
-		pNowAtk->isComboSwitchFrame(m_Timer))
+		pNowAtk->isComboSwitchFrame(m_Timer) &&
+		m_DoHit == true)
 	{
+		m_DoHit = false;
 		m_pStateFunc = &SoccerAttackClass::State_NextAtk;
 	}
 
@@ -122,6 +135,7 @@ void SoccerAttackClass::State_Attack()
 	if (pNowAtk->isEnd(m_Timer))
 	{
 		m_pStateFunc = &SoccerAttackClass::State_End;
+		m_DoHit = false;
 	}
 }
 
@@ -149,8 +163,6 @@ void SoccerAttackClass::State_End()
 {
 
 }
-
-
 //最終段攻撃かどうか
 bool SoccerAttackClass::isLastAtk()
 {

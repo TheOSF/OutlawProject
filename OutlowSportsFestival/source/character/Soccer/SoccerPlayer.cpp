@@ -10,6 +10,17 @@
 //*************************************************************
 //		サッカープレイヤークラス
 //*************************************************************
+const SoccerPlayer::SkillParam SoccerPlayer::skillparams = 
+
+{
+	0.05f,
+	0.05f,
+	0.05f,
+	0.02f
+
+
+};
+
 
 SoccerPlayer::SoccerPlayer(const CharacterBase::PlayerInfo& info) :
 CharacterBase(info, new BlendAnimationMesh("DATA\\CHR\\Soccer\\Player_S.iem")),
