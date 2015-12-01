@@ -30,7 +30,7 @@ Item_WallBoundBall::Item_WallBoundBall(
 
     //ãOê’
     {
-        m_Locus.m_StartParam.Width=0.8f;
+        m_Locus.m_StartParam.Width=0.5f;
         m_Locus.m_EndParam.Width = 0.1f;
     }
 

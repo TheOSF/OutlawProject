@@ -5,7 +5,7 @@
 
 Item_BellEmitter::Item_BellEmitter(UINT ApperFrame) :
 m_ApperFrame((int)ApperFrame),
-m_ApperCount(ApperFrame),
+m_ApperCount(0),
 m_FirstRound(false)
 {
 
