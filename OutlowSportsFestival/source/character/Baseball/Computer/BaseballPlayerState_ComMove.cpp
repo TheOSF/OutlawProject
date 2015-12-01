@@ -45,8 +45,6 @@ public:
 		}
 	};
 
-
-
 };
 
 
@@ -84,14 +82,12 @@ bool BaseballPlayerState_ComMove::SwitchGameState(BaseballPlayer* pb)
 //ステート開始
 void BaseballPlayerState_ComMove::Enter(BaseballPlayer* b)
 {
-
 	//　移動
 	doMove(b);
 	//　攻撃
 	doAction(b);
 	//　反応
 	doReaction(b);
-
 }
 
 
@@ -190,9 +186,16 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 	{
 
 		BaseballPlayer* m_cBaseball;
+		CharacterComputerMove::Param cParam;
+		CharacterComputerMove*  m_pMoveControllClass;
+		int AttackPoint;
 	public:
 		BaseballDoEvent(BaseballPlayer* cBaseball) :
-			m_cBaseball(cBaseball) {}
+			m_cBaseball(cBaseball) 
+		{
+			AttackPoint = rand() % 100;
+			m_pMoveControllClass->GetParams(cParam, m_cBaseball->m_PlayerInfo.strong_type);
+		}
 
 		//アニメーションの更新
 		void Attack(float len)override
@@ -201,48 +204,52 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 				return;
 			}
 			//　実行パターン
-			if (m_cBaseball->getBatterFlg()){
-				
+			if (m_cBaseball->getBatterFlg())
+			{
 				//　バッター時
 				if (len < 7.0f)
 				{
-					//　必殺
-					if (len <= 6.0f)
+					if ((cParam.ActionFrequence * 100) > AttackPoint)
 					{
-						if (m_cBaseball->m_Params.SP >= 0.5f)
+						//　必殺
+						if (chr_func::isCanSpecialAttack(m_cBaseball))
 						{
 							m_cBaseball->SetState(new BaseballState_SPAttack_B(m_cBaseball));
-
 						}
 						else
 						{
 							m_cBaseball->SetState(new Baseball_PlayerControll_Attack_B(m_cBaseball));
 						}
 					}
-					else
-					{
-						m_cBaseball->SetState(new Baseball_PlayerControll_Attack_B(m_cBaseball));
-					}
+
 				}
 				else if (len >= 6.0f && len < 25.0f)
 				{
-					m_cBaseball->SetState(new BaseballState_PlayerControll_ShotAttack_B(new PlayerShotControllClass_B(m_cBaseball)));
-					
+					if ((cParam.ActionFrequence * 100) > AttackPoint)
+					{
+						m_cBaseball->SetState(new BaseballState_PlayerControll_ShotAttack_B(new PlayerShotControllClass_B(m_cBaseball)));
+					}
 				}
 			}
 			else{
-				if (m_cBaseball->m_Params.SP >= 0.5f)
+				if (chr_func::isCanSpecialAttack(m_cBaseball))
 				{
 					m_cBaseball->SetState(new BaseballState_SPAttack_P());
 				}
 				//　投手時
-				if (len < 5.0f)
+				if (len < 6.0f)
 				{
-					m_cBaseball->SetState(new Baseball_PlayerControll_Attack_P(m_cBaseball));
+					if ((cParam.ActionFrequence * 100) > AttackPoint)
+					{
+						m_cBaseball->SetState(new Baseball_PlayerControll_Attack_P(m_cBaseball));
+					}
 				}
-				else if (len >= 5.0f && len < 35.0f)
+				else if (len >= 6.0f && len < 35.0f)
 				{
-					m_cBaseball->SetState(new BaseballState_PlayerControll_ShotAttack_P());
+					if ((cParam.ActionFrequence * 100) > AttackPoint)
+					{
+						m_cBaseball->SetState(new BaseballState_PlayerControll_ShotAttack_P());
+					}
 				}
 			}
 
@@ -287,9 +294,17 @@ void  BaseballPlayerState_ComMove::doReaction(BaseballPlayer* b)
 	{
 		Vector3 Vec;
 		BaseballPlayer* m_cBaseball;
+		CharacterComputerMove::Param cParam;
+		CharacterComputerMove*  m_pMoveControllClass;
+		int ReactionPoint;
 	public:
 		BaseballPlayerReactionEvent(BaseballPlayer* cBaseball) :
-			m_cBaseball(cBaseball) {}
+			m_cBaseball(cBaseball)
+		{
+			m_pMoveControllClass->GetParams(cParam, m_cBaseball->m_PlayerInfo.strong_type);
+			ReactionPoint = rand() % 100;
+
+		}
 
 		//アニメーションの更新
 		void Reaction(CharacterComputerReactionHitEvent::HitType hittype, Vector3 vec)override
@@ -298,30 +313,36 @@ void  BaseballPlayerState_ComMove::doReaction(BaseballPlayer* b)
 			//　遠距離攻撃なら
 			if (hittype == CharacterComputerReactionHitEvent::HitType::CanCounter)
 			{
+				if ((cParam.BallCounter * 100) > ReactionPoint)
+				{
 				//　実行パターン
-				if (m_cBaseball->getBatterFlg()){
-					//　7：3の割合になるように
-					if (rnd < 3)
-					{
-						//　バッター時
-						m_cBaseball->SetState(new BaseballState_PlayerControll_Counter(5));
-					}
-					else
-					{
-						m_cBaseball->SetState(new BaseballState_Rolling(new BaseballPlayerComputerrUtillityClass::ComputerRollingControll(m_cBaseball, vec)));
+					if (m_cBaseball->getBatterFlg()){
+						//　7：3の割合になるように
+						if (rnd < 3)
+						{
+							//　バッター時
+							m_cBaseball->SetState(new BaseballState_PlayerControll_Counter(5));
+						}
+						else
+						{
+							m_cBaseball->SetState(new BaseballState_Rolling(new BaseballPlayerComputerrUtillityClass::ComputerRollingControll(m_cBaseball, vec)));
+						}
 					}
 				}
 				else
 				{
-					//　7：3の割合になるように
-					if (rnd >= 3)
+					if ((cParam.BallCounter * 100) > ReactionPoint)
 					{
-						//　投手時
-						m_cBaseball->SetState(new BaseballState_PlayerControll_Counter(9));
-					}
-					else
-					{
-						m_cBaseball->SetState(new BaseballState_Rolling(new BaseballPlayerComputerrUtillityClass::ComputerRollingControll(m_cBaseball, vec)));
+						//　7：3の割合になるように
+						if (rnd >= 3)
+						{
+							//　投手時
+							m_cBaseball->SetState(new BaseballState_PlayerControll_Counter(9));
+						}
+						else
+						{
+							m_cBaseball->SetState(new BaseballState_Rolling(new BaseballPlayerComputerrUtillityClass::ComputerRollingControll(m_cBaseball, vec)));
+						}
 					}
 				}
 			}

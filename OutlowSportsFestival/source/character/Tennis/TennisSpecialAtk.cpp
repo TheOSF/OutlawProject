@@ -262,6 +262,9 @@ void TennisState_SpecialAtk::Execute(TennisPlayer* t)
 
         RADIAN BallAngles[] = 
         {
+			0,
+			D3DXToRadian(30),
+			-D3DXToRadian(30),
             D3DXToRadian(20),
             -D3DXToRadian(20)
         };

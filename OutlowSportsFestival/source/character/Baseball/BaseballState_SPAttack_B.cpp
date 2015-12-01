@@ -10,7 +10,7 @@
 #include "../../Effect/ThunderEffect.h"
 #include "../../Camera/Camera.h"
 #include "../../Sound/Sound.h"
-
+#include "../../Effect/SpecialAttackEffect.h"
 
 //-------------近距離攻撃ステートクラス-------------
 
@@ -40,6 +40,7 @@ BaseballState_SPAttack_B::~BaseballState_SPAttack_B()
 void  BaseballState_SPAttack_B::Enter(BaseballPlayer* b)
 {
 
+
 	m_Timer = 0;
 
 	m_pStateFunc = &BaseballState_SPAttack_B::State_Atk1;
@@ -47,6 +48,13 @@ void  BaseballState_SPAttack_B::Enter(BaseballPlayer* b)
 	m_pBaseBall = b;
 
 	chr_func::XZMoveDown(b, 1);
+
+	//エフェクト
+	new SpecialAttackEffect(b, 55);
+	Sound::Play(Sound::Skill);
+	//　スキルゲージリセット
+	chr_func::ResetSkillGauge(b);
+	timeflg = true;
 }
 
 
@@ -95,11 +103,11 @@ void BaseballState_SPAttack_B::State_Atk1()
 		//　発動音再生&The World
 		if (m_Timer == 1)
 		{
-			Sound::Play(Sound::Skill);
-			FreezeGame(20);
+			//Sound::Play(Sound::Skill);
+			//FreezeGame(55);
 		}
 
-		if (m_Timer >= 21)
+		if (m_Timer >= 56)
 		{
 			timeflg = true;
 			m_Timer = 0;

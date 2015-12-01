@@ -37,6 +37,8 @@ public:
 		float Radius;
 		float Restitution;
 	};
+	//スキルゲージの伸びる量(AddSkillValueRatio*ダメージ量)
+	static const float AddSkillValueRatio;
 public:
     //コンストラクタ
     MilderHoming(

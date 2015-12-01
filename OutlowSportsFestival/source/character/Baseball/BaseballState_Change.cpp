@@ -24,7 +24,7 @@ BaseballState_Change::~BaseballState_Change()
 // ステート開始
 void  BaseballState_Change::Enter(BaseballPlayer* b)
 {
-	
+	chr_func::XZMoveDown(b, 1);
 }
 
 

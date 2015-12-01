@@ -14,6 +14,8 @@
 //　最大加速度
 #define MaxAcceleration 1.0f
 
+const float MilderHoming::AddSkillValueRatio = 0.01f;
+
 MilderHoming::MilderHoming(
 	BallBase::Params	params,			//ボールパラメータ
 	float				damage_val,   	//ダメージ量
@@ -266,6 +268,8 @@ void MilderHoming::Cheak()
 	//敵に当たっていたら攻撃判定をなくす
 	if (m_Damage.HitCount > 0)
 	{
+		//ゲージ増加
+		chr_func::AddSkillGauge(m_Params.pParent, AddSkillValueRatio*m_Damage.Value);
 		//攻撃判定のない状態にする
 		m_pStatefunc = &MilderHoming::State_NoWork;
 	}

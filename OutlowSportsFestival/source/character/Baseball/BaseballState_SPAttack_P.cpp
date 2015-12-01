@@ -10,7 +10,7 @@
 #include "../CharacterManager.h"
 #include "../CharacterEvasionClass.h"
 #include "../../Sound/Sound.h"
-
+#include "../../Effect/SpecialAttackEffect.h"
 //　コンストラクタ
 BaseballState_SPAttack_P::BaseballState_SPAttack_P() :
 m_Timer(0),
@@ -24,10 +24,17 @@ m_pSpAttack_P(nullptr)
 //　ステート開始
 void BaseballState_SPAttack_P::Enter(BaseballPlayer* b)
 {
+	//以前の移動値をリセット
+	chr_func::XZMoveDown(b,1);
 	// 遠距離(バッター)クラス作成
 	m_pSpAttack_P = this->CreateSpAttack_P(b);
 	m_pBaseBall = b;
 	timeflg = false;
+
+	//エフェクト
+	new SpecialAttackEffect(b, 55);
+	//　スキルゲージリセット
+	chr_func::ResetSkillGauge(b);
 }
 
 
@@ -40,9 +47,9 @@ void BaseballState_SPAttack_P::Execute(BaseballPlayer* b){
 		if (m_Timer == 1)
 		{
 			Sound::Play(Sound::Skill);
-			FreezeGame(20);
+			FreezeGame(55);
 		}
-		if (m_Timer == 21)
+		if (m_Timer == 56)
 		{
 			m_Timer = 0;
 			timeflg = true;
