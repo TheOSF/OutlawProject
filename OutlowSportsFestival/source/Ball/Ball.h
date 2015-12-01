@@ -107,7 +107,7 @@ public:
 private:
     enum :size_t
     {
-        MaxBallRegistId = 1024  //(1ラウンドに撃てる最大玉数)
+        MaxBallRegistId = 256  //(1ラウンドに撃てる最大玉数)
     };
     typedef std::bitset<MaxBallRegistId> BallIDFlags;
 
