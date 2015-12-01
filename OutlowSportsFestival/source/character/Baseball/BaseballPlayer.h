@@ -57,10 +57,21 @@ protected:
 	int changetime;
 private:
 	BaseballStateMachine*		m_pStateMachine;
-	/*BaseballEquip* helmetEquip;
-	BaseballEquip* capEquip;*/
-	//BaseballEquip* handWepon;
+	BaseballEquip* helmetEquip;
+	BaseballEquip* capEquip;
+	BaseballEquip* batEquip;
+	BaseballEquip* groveEquip;
 public:
+
+	//　攻撃によるスキルゲージ増加量
+	struct SkillParam
+	{
+		float atk1Value;//　近初撃
+		float atk2Value;//　2撃
+		float atk3Value;//　3撃
+
+	};
+	static const SkillParam skillparams;
 
 
 	BaseballPlayer(const CharacterBase::PlayerInfo& info);
@@ -68,12 +79,12 @@ public:
 
 	const float m_ModelSize;
 
-	//void ChangeEquip();
-	void SetState(BaseballState* state, int Important = 0);
+	void SetState(BaseballState* state, bool Important = false);
 	bool Update();
 	bool CharacterMsg(MsgType mt);
 public:
-
+	//　装備切り替え
+	void CheangeEquip();
 	//　リセット
 	void Riset();
 

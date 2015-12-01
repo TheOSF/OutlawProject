@@ -15,18 +15,27 @@
 //		野球プレイヤークラス
 //*************************************************************
 
+const BaseballPlayer::SkillParam BaseballPlayer::skillparams =
+{
+	0.05f,
+	0.05f,
+	0.05f,
+};
+
 //　コンストラクタ
 BaseballPlayer::BaseballPlayer(const CharacterBase::PlayerInfo& info) :
-CharacterBase(info, new  BlendAnimationMesh("DATA\\CHR\\BaseBall\\player_B.iem")), batterflg(true), m_ModelSize(0.05f), changetime(20)/*,
-helmetEquip(nullptr), capEquip(nullptr)*/
+CharacterBase(info, new  BlendAnimationMesh("DATA\\CHR\\BaseBall\\player_B.iem")), batterflg(true), m_ModelSize(0.05f), changetime(20),
+helmetEquip(nullptr), capEquip(nullptr), batEquip(nullptr), groveEquip(nullptr)
 {
 	m_pStateMachine = new BaseballStateMachine(this);
 	SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(this));
 	//　体力低下(デバック用)
-	m_Params.maxHP = m_Params.HP = 50;
+	m_Params.maxHP = m_Params.HP = 100;
 
 	temp_batterflg = batterflg;
-	//helmetEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Helmet);
+	helmetEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Helmet);
+	batEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Bat);
+	
 
 }
 
@@ -52,17 +61,11 @@ bool BaseballPlayer::Update()
 	changetime++;
 	// ステート実行
 	m_pStateMachine->state_execute();
-	////　装備品切替
-	//if (temp_batterflg != batterflg)
-	//{
-	//	helmetEquip->ToPhysicMove();
-	//	temp_batterflg = batterflg;
-	//	capEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Cap);
-	//}
+	//　装備品切替
+	CheangeEquip();
 	//キャラクタ基本更新
 	BaseUpdate();
 	
-
 	return true;	//常にtrueを返すと消去されない
 }
 
@@ -78,6 +81,39 @@ bool  BaseballPlayer::CharacterMsg(MsgType mt)
 	return m_pStateMachine->Msg(mt);
 }
 
+void BaseballPlayer::CheangeEquip()
+{
+	if (temp_batterflg != batterflg)
+	{
+		//　バッターへ
+		if (batterflg)
+		{
+			//　現在装備している物を物理挙動&nullptr代入
+			capEquip->ToPhysicMove();
+			groveEquip->ToPhysicMove();
+			capEquip = nullptr;
+			groveEquip = nullptr;
+			//　新しい装備をnew
+			helmetEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Helmet);
+			batEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Bat);
+
+		}
+		else
+		{
+			//　現在装備している物を物理挙動&nullptr代入
+			helmetEquip->ToPhysicMove();
+			batEquip->ToPhysicMove();
+			helmetEquip = nullptr;
+			batEquip = nullptr;
+			//　新しい装備をnew
+			capEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Cap);
+			groveEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Grove);
+
+		}
+		//　一時保存に今のフラグを代入
+		temp_batterflg = batterflg;
+	}
+}
 
 //　リセット
 void BaseballPlayer::Riset()
@@ -86,8 +122,7 @@ void BaseballPlayer::Riset()
 	
 	m_Renderer.SetMotion(baseball_player::_mb_Stand);
 	m_Renderer.Update(0);
-	//ResetRound();
-	batterflg = true;
+	//batterflg = true;
 	changetime = 20;
 
 }

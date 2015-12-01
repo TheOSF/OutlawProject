@@ -51,7 +51,6 @@ m_DontBoundBallAtkTimer(0)
 
     m_Params.maxHP = m_Params.HP = 100;
 
-
     //•`‰æŽw’è
     CharacterRenderer::RenderType Types[3]=
     {

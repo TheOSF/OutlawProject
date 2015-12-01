@@ -39,6 +39,8 @@ public:
 		RADIAN             AngleControllValue;
 
 		int                LocusBoneNum;
+
+		float              AddSkillValue;
 	};
 
 	Param m_Param;
