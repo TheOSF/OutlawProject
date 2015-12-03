@@ -11,6 +11,7 @@
 #include "SoccerComputerDash.h"
 #include "SoccerComputerCounter.h"
 #include "SoccerComputerSliding.h"
+#include "SoccerComputerFinisher.h"
 #include "../SoccerPlayerState_PoseMotion.h"
 #include "../../CharacterManager.h"
 #include "../Computer/SoccerComputerUtilityClass.h"
@@ -19,6 +20,7 @@
 #include "../SoccerCommonState.h"
 #include "../../../Effect/EffectFactory.h"
 #include "../../../Sound/Sound.h"
+#include "../../../Collision/Collision.h"
 
 bool SoccerState_ComputerControll_Dash::SwitchGameState(SoccerPlayer* ps)
 {
@@ -104,7 +106,7 @@ void SoccerState_ComputerControll_Dash::Enter(SoccerPlayer* s)
 			//if (m_cSoccer->m_Params.SP >= 0.6f)
 			if (chr_func::isCanSpecialAttack(m_cSoccer))
 			{
-				//m_cSoccer->SetState(new SoccerState_ComputerControll_Finisher());
+				m_cSoccer->SetState(new SoccerState_ComputerControll_Finisher());
 			}
 			if (len < 6.0f)
 			{
@@ -177,7 +179,7 @@ void SoccerState_ComputerControll_Dash::Enter(SoccerPlayer* s)
 		new SoccerReactionEvent(s)
 		);
 	
-	movemode = Stop;
+	movemode = Wait;
 }
 
 
@@ -191,7 +193,7 @@ void SoccerState_ComputerControll_Dash::Execute(SoccerPlayer* s)
 
 
 	// 一定時間走る / 移動しなくなったら戻る
-	if (m_Count>100 )
+	if (m_Count>100  || movemode== Stop)
 	{
 		s->SetState(new SoccerState_brake(s));
 	}
@@ -229,9 +231,10 @@ void SoccerState_ComputerControll_Dash::Exit(SoccerPlayer* s)
 Vector2 SoccerState_ComputerControll_Dash::StateMoveFront(SoccerPlayer* s)
 {
 	++m_Count;
-	const float GoalOKlen = 2.0f; //ゴールとみなす距離(誤差の対処)
+	const float GoalOKlen = 1.0f; //ゴールとみなす距離(誤差の対処)
+	m_MoveTargetPos = CharacterComputerMove::GetMoveTargetPos(s);
 
-								  //目標に到達していたらとまる
+	//目標に到達していたらとまる
 	if (Vector3Distance(m_MoveTargetPos, m_cSoccer->m_Params.pos) < GoalOKlen)
 	{
 		m_Count = (int)(m_cParam.RunStop * 100.0f);
@@ -246,18 +249,25 @@ Vector2 SoccerState_ComputerControll_Dash::StateMoveFront(SoccerPlayer* s)
 		movemode = Stop;
 		m_Count = 0;
 	}
+	//壁に向かって進むの防止
+	if (chr_func::CheckWall(s))
+	{
+		m_Count = (int)(m_cParam.RunStop * 100.0f);
+		movemode = Stop;
+		m_Count = 0;
+	}
 
 
 	//目標に向かって移動
-	m_MoveTargetPos = CharacterComputerMove:: GetMoveTargetPos(s);
+
 
 	Vector3 v = m_MoveTargetPos - s->m_Params.pos;
-	if (v.Length() < 3.0f)
+	/*if (v.Length() < 3.0f)
 	{
 		v = Vector3Zero;
 		movemode = Stop;
 		m_Count = 0;
-	}
+	}*/
 	return Vector2Normalize(Vector2(v.x, v.z));
 }
 Vector2 SoccerState_ComputerControll_Dash::StateMoveDistance(SoccerPlayer* s)
@@ -266,18 +276,25 @@ Vector2 SoccerState_ComputerControll_Dash::StateMoveDistance(SoccerPlayer* s)
 	const float Bestlen = 12.0f + rand() % 10; //そのキャラのベスト距離(今は固定)
 
 
-											   //目標に到達していたらとまる
-	if (Vector3Distance(m_MoveTargetPos, m_cSoccer->m_Params.pos) > Bestlen)
+	//目標に到達していたらとまる
+	if (Vector3Distance(m_MoveTargetPos, m_cSoccer->m_Params.pos) > 20.0f)
 	{
 		m_Count = (int)(m_cParam.RunStop * 100.0f);
-		movemode = Forward;
+		movemode = Stop;
 		m_Count = 0;
 	}
 
 
 	//目標に到達できない or 新目標があればそこに変更する
-	if (m_Count > 200)
+	if (m_Count > 300)
 	{
+		movemode = Stop;
+		m_Count = 0;
+	}
+
+	if (chr_func::CheckWall(m_cSoccer))
+	{
+		m_Count = (int)(m_cParam.RunStop * 100.0f);
 		movemode = Stop;
 		m_Count = 0;
 	}
@@ -290,18 +307,57 @@ Vector2 SoccerState_ComputerControll_Dash::StateMoveDistance(SoccerPlayer* s)
 
 	if (v.Length() < 1.0f)
 	{
-	v = Vector3Zero;
-	movemode = Stop;
-	m_Count = 0;
+		v = Vector3Zero;
+		movemode = Stop;
+		m_Count = 0;
 	}
 	return Vector2Normalize(Vector2(v.x, v.z));
 }
-Vector2 SoccerState_ComputerControll_Dash::StateStop(SoccerPlayer* s)
+Vector2 SoccerState_ComputerControll_Dash::StateMoveCenter(SoccerPlayer* s)
+{
+	++m_Count;
+
+	//目標に到達していたらとまる
+	if (Vector3Distance(Vector3(0, 0, 0), m_cSoccer->m_Params.pos) < 1.0f)
+	{
+		m_Count = (int)(m_cParam.RunStop * 100.0f);
+		movemode = Forward;
+		m_Count = 0;
+	}
+
+
+	//少し移動したらやめる
+	if (m_Count > 150)
+	{
+		movemode = Stop;
+		m_Count = 0;
+	}
+
+
+	//目標に向かって移動
+	//m_MoveTargetPos = Vector3(0, 0, 0);
+
+	Vector3 v = Vector3(0, 0, 0) - s->m_Params.pos;
+
+	/*if (v.Length() < 1.0f)
+	{
+	v = Vector3Zero;
+	movemode = Stop;
+	m_Count = 0;
+	}*/
+	return Vector2Normalize(Vector2(v.x, v.z));
+
+
+}
+Vector2 SoccerState_ComputerControll_Dash::StateWait(SoccerPlayer* s)
 {
 
 	m_MoveTargetPos = CharacterComputerMove::GetMoveTargetPos(s);
 
-	
+	if (Vector3Distance(Vector3(0, 0, 0), m_cSoccer->m_Params.pos) > 30.0f)
+	{
+		movemode = MoveCenter;
+	}
 	if (Vector3Distance(m_MoveTargetPos, s->m_Params.pos) > 20.0f)
 	{
 		movemode = Forward;
@@ -320,8 +376,8 @@ Vector2 SoccerState_ComputerControll_Dash::SwitchAction(SoccerPlayer* s)
 	Vector2 xz;
 	switch (movemode)
 	{
-	case Stop:
-		xz = StateStop(s);
+	case Wait:
+		xz = StateWait(s);
 		break;
 	case Forward:
 		xz = StateMoveFront(s);
@@ -329,53 +385,9 @@ Vector2 SoccerState_ComputerControll_Dash::SwitchAction(SoccerPlayer* s)
 	case Distance:
 		xz = StateMoveDistance(s);
 		break;
+	case MoveCenter:
+		xz = StateMoveCenter(s);
+		break;
 	}
 	return xz;
 }
-
-
-//Vector3 SoccerState_ComputerControll_Dash::GetMoveTargetPos()
-//{
-//	Vector3 ret;
-//	Vector3 nearTarget = Vector3Zero;
-//	float MostTaugh = 0;
-//
-//	CharacterBase* pTarget = nullptr;
-//
-//
-//
-//	struct TargetInfo
-//	{
-//		bool      ok;
-//		Vector3   pos;
-//	};
-//
-//	TargetInfo targets[8];
-//
-//	const CharacterManager::CharacterMap& ChrMap = DefCharacterMgr.GetCharacterMap();
-//
-//	for (auto it = ChrMap.begin(); it != ChrMap.end(); ++it)
-//	{
-//
-//		//　死んでるor自分ならcontinue
-//		if (chr_func::isDie(it->first) ||
-//			it->first->m_PlayerInfo.number == m_cCharacter->m_PlayerInfo.number)
-//		{
-//			continue;
-//		}
-//		//最も体力の高い敵をターゲットに
-//		if (it->first->m_Params.HP > MostTaugh)
-//		{
-//			pTarget = it->first;
-//			MostTaugh = it->first->m_Params.HP;
-//		}
-//	}
-//	//達敵の最大HPが0(MostTaughの変化なし)なら0ベク返す
-//	if (MostTaugh == 0)
-//	{
-//		return Vector3Zero;
-//	}
-//
-//
-//	return pTarget->m_Params.pos;
-//}

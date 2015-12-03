@@ -25,6 +25,7 @@ void CharacterComputerDoAction::Update()
 	sp.pos = m_cCharacter->m_Params.pos;
 
 
+
 	//UŒ‚‚·‚é‚È‚ç‚Î
 	if (rand() % 50 == 0)
 	{
@@ -85,7 +86,7 @@ float CharacterComputerDoAction::GetMoveTargetLength()
 	//MostNear‚Ì•Ï‰»‚È‚µ‚È‚ç0ƒxƒN•Ô‚·
 	if (MostNear >= 9990.0f)
 	{
-		return 0;
+		return 10000;
 	}
 	return MostNear;
 }

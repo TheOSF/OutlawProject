@@ -168,10 +168,11 @@ void SoccerState_PlayerControll_Move::Enter(SoccerPlayer* s)
 
 	CharacterUsualMove::Params p;
 
-	p.Acceleration = 0.17f;
-	p.MaxSpeed = 0.29f;
+	p.Acceleration = 0.25f;
+	p.MaxSpeed = 0.35f;
 	p.TurnSpeed = 0.3f;
-	p.DownSpeed = 0.2f;
+	p.DownSpeed = 0.08f;
+	p.RunEndFrame = 35;
 
 	m_pMoveClass = new CharacterUsualMove(
 		s, 

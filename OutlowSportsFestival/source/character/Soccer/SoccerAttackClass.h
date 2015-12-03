@@ -60,6 +60,12 @@ public:
 
 		//攻撃が当たった時に呼ばれる
 		virtual void HitAttack(DamageShpere* pDmg) = 0;
+
+		//ヒットストップかどうか
+		virtual bool isHitStopFrame() = 0;
+
+		//ヒットストップ時更新
+		virtual void HitStopUpdate() = 0;
 	};
 
 	typedef std::vector<AttackInfo*> AttackInfoArray;

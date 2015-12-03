@@ -31,11 +31,11 @@ void CharacterComputerMove::GetParams(Param& out, StrongType::Value st)
 	case StrongType::_Weak:
 		out.BallCounter = 0.3f;
 		out.BallCounterSpeed = 0.5f;
-		out.BallCounterTec = 0.1f;
+		out.BallCounterTec = 0.6f;
 		out.RunStop = 0.8f;
 		out.RunPlaceTec = 0.1f;
 		out.DangerEscape = 0.2f;
-		out.ActionFrequence = 0.3f;
+		out.ActionFrequence = 0.5f;
 		out.NamePlay = 1.0f;
 		break;
 
@@ -43,7 +43,7 @@ void CharacterComputerMove::GetParams(Param& out, StrongType::Value st)
 	case StrongType::_Usual:
 		out.BallCounter = 0.6f;
 		out.BallCounterSpeed = 0.7f;
-		out.BallCounterTec = 0.7f;
+		out.BallCounterTec = 0.8f;
 		out.RunStop = 0.4f;
 		out.RunPlaceTec = 0.5f;
 		out.DangerEscape = 0.5f;
@@ -56,7 +56,7 @@ void CharacterComputerMove::GetParams(Param& out, StrongType::Value st)
 		out.BallCounter = 1.0f;
 		out.BallCounterSpeed = 1.0f;
 		out.BallCounterTec = 1.0f;
-		out.RunStop = 0.2f;
+		out.RunStop = 0.1f;
 		out.RunPlaceTec = 1.0f;
 		out.DangerEscape = 1.0f;
 		out.ActionFrequence = 1.0f;
@@ -83,7 +83,7 @@ Vector2 CharacterComputerMove::StateMoveFront(CharacterBase* cb)
 
 
 	//目標に到達できない or 新目標があればそこに変更する
-	if (m_Count > 200)
+	if (m_Count > 300)
 	{
 		movemode = Stop;
 		m_Count = 0;
@@ -107,7 +107,7 @@ Vector2 CharacterComputerMove::StateMoveFront(CharacterBase* cb)
 Vector2 CharacterComputerMove::StateMoveDistance(CharacterBase* cb)
 {
 	++m_Count;
-	const float Bestlen = 12.0f + rand() % 10; //そのキャラのベスト距離(今は固定)
+	const float Bestlen = 22.0f + rand() % 10; //そのキャラのベスト距離(今は固定)
 
 
 	//目標に到達していたらとまる
@@ -120,12 +120,18 @@ Vector2 CharacterComputerMove::StateMoveDistance(CharacterBase* cb)
 
 
 	//目標に到達できない or 新目標があればそこに変更する
-	if (m_Count > 200)
+	if (m_Count > 300)
 	{
 		movemode = Stop;
 		m_Count = 0;
 	}
-
+	//壁に向かって進むの防止
+	if (chr_func::CheckWall(cb))
+	{
+		m_Count = (int)(m_cParam.RunStop * 100.0f);
+		movemode = MoveCenter;
+		m_Count = 0;
+	}
 
 	//目標に向かって移動
 	m_MoveTargetPos = GetMoveTargetPos(cb);
@@ -154,7 +160,7 @@ Vector2 CharacterComputerMove::StateMoveCenter(CharacterBase* cb)
 
 
 	//少し移動したらやめる
-	if (m_Count > 50)
+	if (m_Count > 150)
 	{
 		movemode = Stop;
 		m_Count = 0;
@@ -162,9 +168,9 @@ Vector2 CharacterComputerMove::StateMoveCenter(CharacterBase* cb)
 
 
 	//目標に向かって移動
-	m_MoveTargetPos = Vector3(0,0,0);
+	//m_MoveTargetPos = Vector3(0, 0, 0);
 
-	Vector3 v = m_MoveTargetPos - cb->m_Params.pos;
+	Vector3 v = Vector3(0, 0, 0) - cb->m_Params.pos;
 
 	/*if (v.Length() < 1.0f)
 	{
@@ -178,7 +184,7 @@ Vector2 CharacterComputerMove::StateMoveCenter(CharacterBase* cb)
 }
 Vector2 CharacterComputerMove::StateStop(CharacterBase* cb)
 {
-	const int NextMove = rand() % 5;
+	const int NextMove = (int)(rand() % (int)(m_cParam.RunStop*20) + m_cParam.RunStop*50);
 	++m_Count;
 	m_MoveTargetPos = GetMoveTargetPos(cb);
 

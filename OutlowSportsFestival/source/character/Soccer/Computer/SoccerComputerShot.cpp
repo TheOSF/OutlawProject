@@ -62,7 +62,6 @@ void SoccerState_ComputerControll_Shot::Enter(SoccerPlayer* s)
 			//©•ª‚Ìì‚Á‚Ä‚¢‚éƒ_ƒ[ƒW‚¾‚Á‚½ê‡‚Í‰½‚à‚µ‚È‚¢
 			if (pDmg->pParent->m_PlayerInfo.number == m_pSoccer->m_PlayerInfo.number)
 			{
-				chr_func::AddSkillGauge(m_pSoccer, m_pSoccer->skillparams.shot);
 				return false;
 			}
 
