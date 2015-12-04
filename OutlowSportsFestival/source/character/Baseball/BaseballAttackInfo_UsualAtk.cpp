@@ -141,3 +141,10 @@ void BaseballAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
 		);
 	m_pOwner->setChangeFlg(m_Param.changeFlg);
 }
+
+
+//カウンターヒットフレームかどうか
+bool BaseballAttackInfo_UsualAtk::isCounterHitFrame(int Frame)
+{
+    return Frame < m_Param.DamageEnableEnd;
+}
