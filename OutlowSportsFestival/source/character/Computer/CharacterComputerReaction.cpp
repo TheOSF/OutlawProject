@@ -20,7 +20,7 @@ void CharacterComputerReaction::Update()
 {
 	SphereParam sp;
 	sp.pos = m_cCharacter->m_Params.pos;
-	sp.size = 10.0f;
+	sp.size = m_Params.BallCounterTec*10.0f;
 
 	CharacterComputerReactionHitEvent hitevent(m_cCharacter);
 	//反応レーダー展開

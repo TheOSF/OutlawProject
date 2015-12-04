@@ -27,6 +27,7 @@ void BaseballAttackInfo_UsualAtk::DamageParamSet(DamageShpere* pDmg)
 	pDmg->pParent = m_pOwner;
 	pDmg->type = m_Param.DamageType;
 	pDmg->Value = m_Param.DamageValue;
+	pDmg->m_VecPower = m_Param.VanishValue;
 	DamagePosSet(pDmg, m_pOwner);
 }
 
@@ -45,12 +46,13 @@ void BaseballAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, BaseballPlaye
 	Forward = Vector3(BoneMat._31, BoneMat._32, BoneMat._33);
 	Forward.Normalize();
 
-	pDmg->m_Param.pos = Pos + Forward*m_Param.DamagePosLength;
+	//pDmg->m_Param.pos = Pos + Forward*m_Param.DamagePosLength;
+	pDmg->m_Param.pos = pBaseball->m_Params.pos + chr_func::GetFront(pBaseball)*1.5f + Vector3(0, 2, 0);
 
 	// pDmg->vec = pDmg->m_Param.pos - pTennis->m_Params.pos;
     chr_func::GetFront(pBaseball, &pDmg->m_Vec);
-    pDmg->m_Vec.y = 0;
-	pDmg->m_VecPower.x = 0.2f;
+    pDmg->m_Vec.y = 1;
+	//pDmg->m_VecPower.x = 0.2f;
 
 	m_LocusPos = pDmg->m_Param.pos;
 	m_LocusVec = Forward;
@@ -137,10 +139,5 @@ void BaseballAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
 		0.15f,
 		m_pOwner->m_PlayerInfo.number
 		);
-}
-
-//カウンターヒットかどうか
-bool BaseballAttackInfo_UsualAtk::isCounterHitFrame(int Frame)
-{
-    return Frame < m_Param.DamageEnableEnd;
+	m_pOwner->setChangeFlg(m_Param.changeFlg);
 }
