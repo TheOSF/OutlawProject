@@ -55,6 +55,7 @@ protected:
 	bool batterflg;//　(true:バッター,false:投手)
 	bool temp_batterflg;//　一時保存
 	int changetime;
+	bool changeflg;//　Com用
 private:
 	BaseballStateMachine*		m_pStateMachine;
 	BaseballEquip* helmetEquip;
@@ -89,11 +90,13 @@ public:
 	void Riset();
 
 public:
-	//　ゲッター
+	//　ゲッター・セッター
 	bool getBatterFlg(){ return batterflg; }
 	int getChangeTime(){ return changetime; }
 	void setChangeTime(int t){ changetime = t; }
 	void setBatterFlg(bool flg){ batterflg = flg; }
+	void setChangeFlg(bool flg){ changeflg = flg; }
+	bool getChangeFlg(){ return changeflg; }
 
 public:
 

@@ -41,6 +41,11 @@ public:
 		int                LocusBoneNum;
 
 		float              AddSkillValue;
+
+		Vector2            VanishValue;
+
+		bool			   changeFlg;
+
 	};
 
 	Param m_Param;
@@ -55,7 +60,7 @@ private:
 
 	BaseballPlayer * const  m_pOwner;
 	Vector3               m_LocusPos, m_LocusVec;
-
+	bool				  VanishFlg;
 	//ダメージパラメータをセット
 	void DamageParamSet(DamageShpere* pDmg);
 

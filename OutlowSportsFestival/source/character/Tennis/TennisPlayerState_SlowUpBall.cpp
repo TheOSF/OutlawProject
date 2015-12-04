@@ -68,7 +68,7 @@ void TennisPlayerState_SlowUpBall::Exit(TennisPlayer* p)
 TennisPlayerState_SlowUpBall::ShotType TennisPlayerState_SlowUpBall::GetShotType(int Timer)const
 {
     //Œ‚‚¿Žn‚ß
-    if (Timer < 10)
+    if (Timer < 20)
     {
         return ShotType::Weak;
     }
@@ -95,7 +95,7 @@ void TennisPlayerState_SlowUpBall::SetState(void(TennisPlayerState_SlowUpBall::*
 
 void TennisPlayerState_SlowUpBall::State_SlowUp()
 {
-    const int SlowFrame = 5;
+    const int SlowFrame = 10;
 
     ++m_Timer;
 
@@ -138,7 +138,7 @@ void TennisPlayerState_SlowUpBall::State_SlowUp()
         Sound::Play(Sound::Swing1);
     }
 
-    if (m_Timer == 55)
+    if (m_Timer == 60)
     {
         SetState(&TennisPlayerState_SlowUpBall::State_Finish);
         return;
@@ -183,7 +183,7 @@ void TennisPlayerState_SlowUpBall::State_Weak()
     if (m_Timer == 1)
     {
         //ƒ‚[ƒVƒ‡ƒ“
-        m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Smash);
+        m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_CutShot);
     }
 
 

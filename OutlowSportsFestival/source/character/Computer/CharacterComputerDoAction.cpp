@@ -25,13 +25,11 @@ void CharacterComputerDoAction::Update()
 	sp.pos = m_cCharacter->m_Params.pos;
 
 
-	//UŒ‚‚·‚éŽž‚È‚ç‚Î
-	if (rand() % 50 == 0)
-	{
+	
 		//‹——£‚ð‘ª‚èAUŒ‚‚·‚é
 		m_ActionEvent->Attack(GetMoveTargetLength());
 
-	}
+	//}
 }
 
 float CharacterComputerDoAction::GetMoveTargetLength()

@@ -361,12 +361,20 @@ void TennisState_SpecialAtk::Enter(TennisPlayer* t)
 void TennisState_SpecialAtk::Execute(TennisPlayer* t)
 {
     const int ShotFrame = 55;
-    const int JumpFrame = 10;
+    const int JumpFrame = 14;
     const int EndFrame = 85;
-    const float MoveY = 0.70f;
     const float BallSpeed = 3.0f;
+    const float HitBack = 1.0f;
 
+    //const float MoveY = 0.70f;
+    //const RADIAN BallShotAngle = D3DXToRadian(35);
+    //const float FrontMoveValue = 0.02f;
+
+
+    const float MoveY = 0.62f;
     const RADIAN BallShotAngle = D3DXToRadian(35);
+    const float FrontMoveValue = 0.1f;
+
 
     //時間カウント
     ++m_Timer;
@@ -374,7 +382,7 @@ void TennisState_SpecialAtk::Execute(TennisPlayer* t)
     //ジャンプ
     if (m_Timer == JumpFrame)
     {
-        chr_func::AddMoveFront(m_pTennis, 0.02f, 0.02f);
+        chr_func::AddMoveFront(m_pTennis, FrontMoveValue, FrontMoveValue);
         m_pTennis->m_Params.move.y = MoveY;
 
         Vector3 pos = m_pTennis->m_Params.pos + Vector3AxisY*1.5f;
@@ -430,6 +438,9 @@ void TennisState_SpecialAtk::Execute(TennisPlayer* t)
                 );
         }
 
+        //ヒットバック
+        chr_func::AddMoveFront(m_pTennis, -HitBack, HitBack);
+
         //ＳＥ
         Sound::Play(Sound::AtkHit2);
     }
@@ -438,6 +449,7 @@ void TennisState_SpecialAtk::Execute(TennisPlayer* t)
     if (m_Timer > ShotFrame)
     {
         m_pTennis->m_Renderer.m_Lighting *= 0.95f;
+        chr_func::XZMoveDown(m_pTennis, 0.1f);
     }
     else
     {
