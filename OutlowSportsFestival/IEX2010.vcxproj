@@ -237,6 +237,7 @@
     <ClCompile Include="source\character\Tennis\TennisState_BoundBall.cpp" />
     <ClCompile Include="source\character\Tennis\TennisState_Rolling.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_Vanish.cpp" />
+    <ClCompile Include="source\character\Tennis\Tennis_DoCancelAction.cpp" />
     <ClCompile Include="source\character\Tennis\Tennis_HitEvent.cpp" />
     <ClCompile Include="source\character\Tennis\TennisState_BoundShot.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_Attack.cpp" />
@@ -469,6 +470,8 @@
     <ClInclude Include="source\character\Tennis\TennisState_Rolling.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Vanish.h" />
     <ClInclude Include="source\character\Tennis\TennisState_BoundShot.h" />
+    <ClInclude Include="source\character\Tennis\TennisUtillityClass.h" />
+    <ClInclude Include="source\character\Tennis\Tennis_DoCancelAction.h" />
     <ClInclude Include="source\character\Tennis\Tennis_HitEvent.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Attack.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Counter.h" />

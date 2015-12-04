@@ -138,3 +138,9 @@ void SoccerAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
 		m_pOwner->m_PlayerInfo.number
 		);
 }
+
+//カウンターフレームかどうか
+bool SoccerAttackInfo_UsualAtk::isCounterHitFrame(int Frame)
+{
+    return Frame < m_Param.DamageEnableEnd;
+}

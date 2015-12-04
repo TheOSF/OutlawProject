@@ -41,7 +41,6 @@
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerCounter.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerDash.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerFinisher.cpp" />
-    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerRolling.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerShot.cpp" />
     <ClCompile Include="source\Ball\Ball.cpp" />
     <ClCompile Include="source\Ball\BallFadeOutRenderer.cpp" />
@@ -90,7 +89,6 @@
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerMove.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerSliding.cpp" />
     <ClCompile Include="source\character\Soccer\Snakeshot.cpp" />
-    <ClCompile Include="source\character\Soccer\SoccerAttack.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerAttackInfo_UsualAttack.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerCommonState.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerDash.cpp" />
@@ -204,6 +202,10 @@
     <ClCompile Include="source\Item\Item_Bell.cpp" />
     <ClCompile Include="source\Item\Item_WallBoundBall.cpp" />
     <ClCompile Include="source\Item\Item_BellEmitter.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_Counter.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerUtilityClass.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerAttackClass.cpp" />
+    <ClCompile Include="source\character\Tennis\Tennis_DoCancelAction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -236,7 +238,6 @@
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerCounter.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerDash.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerFinisher.h" />
-    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerRolling.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerShot.h" />
     <ClInclude Include="source\Ball\Ball.h" />
     <ClInclude Include="source\Ball\BallFadeOutRenderer.h" />
@@ -416,6 +417,11 @@
     <ClInclude Include="source\Item\Item_Bell.h" />
     <ClInclude Include="source\Item\Item_WallBoundBall.h" />
     <ClInclude Include="source\Item\Item_BellEmitter.h" />
+    <ClInclude Include="IEX\IEX_Input.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_Counter.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerUtilityClass.h" />
+    <ClInclude Include="source\character\Tennis\Tennis_DoCancelAction.h" />
+    <ClInclude Include="source\character\Tennis\TennisUtillityClass.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DATA\Shader\3DEx.fx" />

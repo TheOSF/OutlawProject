@@ -76,7 +76,7 @@ void SkillGaugeItemEmitter::SetApperFrame()
 
 bool SkillGaugeItemEmitter::Update()
 {
-#if 0
+#if 1
     if (m_isEmmite == false)
     {
         return true;

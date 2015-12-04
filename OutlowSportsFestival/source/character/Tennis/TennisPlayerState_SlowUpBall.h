@@ -54,6 +54,7 @@ private:
     ControllClass*       m_pControllClass;
     TennisPlayer*        m_pTennis;
     CharacterBase*       m_pTargetEnemy;
+    bool                 m_isDoShot;
 
     const CharacterBase* GetFrontTarget(TennisPlayer* p)const;
     void SetState(void(TennisPlayerState_SlowUpBall::*pStateFunc)());

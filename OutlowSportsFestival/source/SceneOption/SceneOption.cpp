@@ -34,7 +34,7 @@ void SceneOption::Update()
 
         //ƒLƒƒƒ‰‘I‘ð
         param.PlayerArray.at(0) = { 0, PlayerType::_Player, CharacterType::_Tennis };
-        param.PlayerArray.at(1) = { 1, PlayerType::_Computer, CharacterType::_Soccer };
+        param.PlayerArray.at(1) = { 1, PlayerType::_Computer, CharacterType::_Baseball };
         param.PlayerArray.at(2) = { 2, PlayerType::_Computer, CharacterType::_Soccer };
         param.PlayerArray.at(3) = { 3, PlayerType::_Computer, CharacterType::_Baseball };
 

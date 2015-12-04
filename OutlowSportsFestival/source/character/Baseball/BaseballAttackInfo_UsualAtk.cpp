@@ -138,3 +138,9 @@ void BaseballAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
 		m_pOwner->m_PlayerInfo.number
 		);
 }
+
+//カウンターヒットかどうか
+bool BaseballAttackInfo_UsualAtk::isCounterHitFrame(int Frame)
+{
+    return Frame < m_Param.DamageEnableEnd;
+}

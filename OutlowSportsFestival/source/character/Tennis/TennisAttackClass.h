@@ -66,6 +66,9 @@ public:
 
         //ヒットストップ時更新
         virtual void HitStopUpdate() = 0;
+
+        //カウンターヒットフレームかどうか
+        virtual bool isCounterHitFrame(int Frame) = 0;
     };
 
     typedef std::vector<AttackInfo*> AttackInfoArray;

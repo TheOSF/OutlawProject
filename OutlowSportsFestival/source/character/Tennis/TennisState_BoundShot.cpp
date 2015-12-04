@@ -147,6 +147,9 @@ void TennisState_BoundShot::Execute(TennisPlayer* t)
                 0
                 );
         }
+
+        //後ろに移動
+        chr_func::AddMoveFront(t, 0.25f, 0.5f);
     }
 
     //ステート終了

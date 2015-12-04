@@ -153,7 +153,7 @@ void TennisAttackClass::State_Attack()
 
     //キャラクタ更新
     {
-        TennisHitEvent HitEvent(m_pOwner);
+        TennisHitEvent HitEvent(m_pOwner, pNowAtk->isCounterHitFrame(m_Timer));
 
         chr_func::UpdateAll(m_pOwner, &HitEvent);
     }

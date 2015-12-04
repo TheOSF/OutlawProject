@@ -7,10 +7,12 @@
 
 BaseballState_DamageMotion_Weak::BaseballState_DamageMotion_Weak(
 	BaseballPlayer* pBaseball,
-	const Vector3& Damage_vec  //ダメージを受けた方向
+	const Vector3& Damage_vec,  //ダメージを受けた方向
+    bool           Counter
 	) :
 	m_pBaseball(pBaseball),
-	m_Damage_vec(Damage_vec)
+	m_Damage_vec(Damage_vec),
+    m_Counter(Counter)
 {
 
 }
@@ -49,6 +51,7 @@ void BaseballState_DamageMotion_Weak::Enter(BaseballPlayer* t)
 	CharacterDamageMotion::Params Param;
 
 	Param.damage_vec = m_Damage_vec;
+    Param.counter_hit = m_Counter;
 
 	//ひるみクラスを作成
 	m_pDamageMotionClass = new CharacterDamageMotion(

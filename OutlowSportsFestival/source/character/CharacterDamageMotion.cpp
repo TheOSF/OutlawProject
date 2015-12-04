@@ -3,7 +3,8 @@
 #include "CharacterBase.h"
 #include "../Camera/Camera.h"
 #include "../Sound/Sound.h"
-
+#include "../Effect/ImpactLightObject.h"
+#include "../Effect/EffectFactory.h"
 
 CharacterDamageMotion::CharacterDamageMotion(
 	CharacterBase* pCharacter,
@@ -20,7 +21,6 @@ CharacterDamageMotion::CharacterDamageMotion(
 {
 	m_Params = params;
     m_Pos = m_pCharacter->m_Params.pos;
-
 
     //ひるむ方向がない場合今向いている方向のまま
     if (m_Params.damage_vec.x == 0 && m_Params.damage_vec.z)
@@ -43,11 +43,12 @@ CharacterDamageMotion::~CharacterDamageMotion()
 // 更新
 void CharacterDamageMotion::Update()
 {
-    const int AllFrame = 25;
-    const int NoDamageFrame = 5;
+    const float AllFrame = 25;
+    const float NoDamageFrame = 5;
+    const float AddSpeed = (m_Params.counter_hit) ? (0.33333f) : (1);
 
 	//フレーム更新
-	++m_Timer;
+    m_Timer += AddSpeed;
 
 	if (m_Start == false)
 	{
@@ -65,6 +66,40 @@ void CharacterDamageMotion::Update()
             chr_func::AddMoveFront(m_pCharacter, -val, val);
         }
 
+        //カウンター演出
+        if (m_Params.counter_hit)
+        {
+            const Vector3 EffectPos = m_pCharacter->m_Params.pos + Vector3(0, 2, 0);
+            const Vector3 Glavity(0, -0.02f, 0);
+            const COLORf  EffectColor(1.0f, 0, 0.8f, 1);
+
+            //ＳＥ
+            Sound::Play(Sound::Damage2);
+            Sound::Play(Sound::AtkHit1);
+
+            //エフェクト
+            new ImpactLightObject(
+                EffectPos,
+                25,
+                Vector3(0, 0.4f, 1),
+                0.1f
+                );
+
+            for (int i = 0; i < 10; ++i)
+            {
+                EffectFactory::LocusParticle(
+                    EffectPos,
+                    (Vector3Rand() - chr_func::GetFront(m_pCharacter))*0.5f,
+                    Glavity,
+                    0.05f,
+                    4,
+                    EffectColor,
+                    EffectColor,
+                    60
+                    );
+            }
+        }
+
         //カメラのゆれ
         DefCamera.SetShock(Vector2(0.05f, 0.05f), 15);
 
@@ -79,7 +114,7 @@ void CharacterDamageMotion::Update()
     {
         m_Pos = m_pCharacter->m_Params.pos;
 
-        if (m_Timer < 15)
+        if (m_Timer < 15 && m_Params.counter_hit == false)
         {
             m_pCharacter->m_Params.pos += Vector3Rand()*0.25f;
         }
@@ -87,11 +122,11 @@ void CharacterDamageMotion::Update()
 
     //キャラクタを若干光らせるパラメータを送る
     {
-        m_pEvent->SetLight(pow(1 - min(((float)m_Timer / 15.0f), 1), 2)*0.25f);
+        m_pEvent->SetLight(pow(1 - min((m_Timer / 15.0f), 1), 2)*0.25f);
     }
 
     //イベントクラス更新
-    m_pEvent->Update(1.0f);
+    m_pEvent->Update(AddSpeed);
 
     //終了判定
     if (m_End == false &&
@@ -119,13 +154,13 @@ void CharacterDamageMotion::Update()
     //キャラクタ更新
     {
         //ヒットバック減衰
-        chr_func::XZMoveDown(m_pCharacter, 0.1f);
+        chr_func::XZMoveDown(m_pCharacter, 0.1f*AddSpeed);
 
         //重力加算
-        chr_func::UpdateMoveY(m_pCharacter);
+        chr_func::UpdateMoveY(m_pCharacter, AddSpeed);
 
         //位置を更新
-        chr_func::PositionUpdate(m_pCharacter);
+        chr_func::PositionUpdate(m_pCharacter, AddSpeed);
 
         //壁との接触判定
         chr_func::CheckWall(m_pCharacter);

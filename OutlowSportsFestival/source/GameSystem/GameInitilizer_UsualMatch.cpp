@@ -93,9 +93,9 @@ void GameInitializer_UsualMatch::GameCreate()
     {
         new SkillGaugeItemEmitter(60 * 60 * 1);
 
-        new Item_BellEmitter(
-            60 * 60 * 2  //‚Q•ª
-            );
+        //new Item_BellEmitter(
+        //    60 * 60 * 2  //‚Q•ª
+        //    );
     }
 
 

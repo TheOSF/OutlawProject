@@ -10,9 +10,10 @@
 class BaseballState_DamageMotion_Weak : public BaseballState
 {
 public:
-	BaseballState_DamageMotion_Weak(
-		BaseballPlayer*  m_pBaseball,
-		const Vector3& Damage_vec  //ダメージを受けた方向
+    BaseballState_DamageMotion_Weak(
+        BaseballPlayer*  m_pBaseball,
+        const Vector3& Damage_vec,  //ダメージを受けた方向
+        bool           Counter = false
 		);
 
 	// ステート開始
@@ -28,6 +29,7 @@ private:
 	CharacterDamageMotion*   m_pDamageMotionClass;	//ひるみ更新クラス
 	BaseballPlayer*          m_pBaseball;
 	Vector3                  m_Damage_vec;
+    bool                     m_Counter;
 };
 
 #endif

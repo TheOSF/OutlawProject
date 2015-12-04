@@ -85,4 +85,7 @@ private:
 
 	//攻撃があたったときに呼ばれる
 	void HitAttack(DamageShpere* pDmg);
+    
+    //カウンターヒットかどうか
+    bool isCounterHitFrame(int Frame);
 };

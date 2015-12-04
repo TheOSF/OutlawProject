@@ -20,7 +20,8 @@ CharacterDamageVanish::CharacterDamageVanish(
     m_Rotate(0, 0, 0),
     m_pHitEvent(pHitEvent),
     m_WallHit(false),
-    m_FirstSlow(false)
+    m_FirstSlow(false),
+    m_VanishAngle(PI*0.25f)
 {
     m_Param = param;
 }
@@ -86,13 +87,26 @@ void CharacterDamageVanish::Flying()
         //”òs’†‚Ì‰ñ“]s—ñ‚ðì¬‚·‚é
         Matrix R;
 
-        m_Rotate += m_Param.rotate_speed;
+        //{
+        //    m_Rotate += m_Param.rotate_speed;
 
-        D3DXMatrixRotationYawPitchRoll(
-            &R,
-            m_Rotate.y, m_Rotate.x, m_Rotate.z
-            );
+        //    D3DXMatrixRotationYawPitchRoll(
+        //        &R,
+        //        m_Rotate.y, m_Rotate.x, m_Rotate.z
+        //        );
+        //}
 
+        {
+            float angle = Vector3Radian(m_pCharacter->m_Params.move, -chr_func::GetFront(m_pCharacter));
+            if (m_pCharacter->m_Params.move.y < 0)
+            {
+                angle = -angle;
+            }
+
+            m_VanishAngle += (angle - m_VanishAngle)*0.1f;
+            D3DXMatrixRotationX(&R, m_VanishAngle);
+            
+        }
         //‚«”ò‚Ñ’†ŠÖ”ŒÄ‚Ño‚µ
         m_pEvent->Flying(R, 1);
     }

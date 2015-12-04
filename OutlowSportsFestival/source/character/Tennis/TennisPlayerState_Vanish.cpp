@@ -9,6 +9,8 @@
 
 #include "../../GameSystem/GameController.h"
 #include "../../Effect/EffectFactory.h"
+#include "Tennis_DoCancelAction.h"
+
 
 TennisState_DamageVanish::TennisState_DamageVanish(
     TennisPlayer* pTennis,
@@ -25,8 +27,24 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
     //キャラクタ共通ひるみクラスのテニス固有イベントクラス
     class TennisEvent :public CharacterDamageVanish::Event
     {
+        Tennis_DoCancelAction* m_pDoCancelAction;
     public:
-        TennisEvent(TennisPlayer* pTennis) :m_pTennis(pTennis){}
+        TennisEvent(TennisPlayer* pTennis) :m_pTennis(pTennis)
+        {
+            if (pTennis->m_PlayerInfo.player_type == PlayerType::_Player)
+            {
+                m_pDoCancelAction = new Tennis_DoCancelAction_Player(pTennis);
+            }
+            else
+            {
+                m_pDoCancelAction = new Tennis_DoCancelAction_Computer(pTennis);
+            }
+        }
+
+        ~TennisEvent()
+        {
+            delete m_pDoCancelAction;
+        }
 
         void FlyStart()
         {
@@ -113,7 +131,7 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
         void CanActionUpdate()
         {
             //行動分岐が可能なときに呼ばれる
-            
+            m_pDoCancelAction->DoAction();
         }
 
     private:

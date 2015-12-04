@@ -66,6 +66,7 @@ private:
     int             m_Count;
     bool            m_WallHit;
     bool            m_FirstSlow;
+    float           m_VanishAngle;
 
     void(CharacterDamageVanish::*m_pStateFunc)();
 

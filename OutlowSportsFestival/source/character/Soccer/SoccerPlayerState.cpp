@@ -307,7 +307,7 @@ const CharacterBase* SoccerState_PlayerControll_Sliding::PlayerControllEvent::Ge
 }
 //-------------スライディング攻撃ステートクラス-------------
 SoccerState_PlayerControll_Sliding::SoccerState_PlayerControll_Sliding(SoccerPlayer* s) :
-m_Attack(s, new PlayerControllEvent(s),10)
+m_Attack(s, new PlayerControllEvent(s))
 {
 
 }
@@ -444,7 +444,7 @@ const CharacterBase* SoccerState_PlayerControll_Attack::PlayerControllEvent::Get
 
 //-------------近距離攻撃ステートクラス-------------
 SoccerState_PlayerControll_Attack::SoccerState_PlayerControll_Attack(SoccerPlayer* s) :
-m_Attack(s, new PlayerControllEvent(s),0)
+m_Attack(s, new PlayerControllEvent(s))
 {
 
 }

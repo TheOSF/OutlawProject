@@ -10,13 +10,16 @@
 
 SoccerState_SmallDamage::SoccerState_SmallDamage(
 	SoccerPlayer* pSoccer,
-	const Vector3& Damage_vec  //ダメージを受けた方向
+	const Vector3& Damage_vec,  //ダメージを受けた方向
+    bool           Counter
 	) :
 	m_pSoccer(pSoccer),
-	m_Damage_vec(Damage_vec)
+	m_Damage_vec(Damage_vec),
+    m_Counter(Counter)
 {
 
 }
+
 void SoccerState_SmallDamage::Enter(SoccerPlayer* s)
 {
 	//キャラクタ共通ひるみクラスのサッカー固有イベントクラス
@@ -54,11 +57,13 @@ void SoccerState_SmallDamage::Enter(SoccerPlayer* s)
 	CharacterDamageMotion::Params Param;
 
 	Param.damage_vec = m_Damage_vec;
+    Param.counter_hit = m_Counter;
+
 	//ひるみクラスを作成
-	m_pDamageMotionClass = new CharacterDamageMotion(
-		m_pSoccer,
-		new SoccerEvent(m_pSoccer),
-		new SoccerHitEvent(m_pSoccer),
+    m_pDamageMotionClass = new CharacterDamageMotion(
+        m_pSoccer,
+        new SoccerEvent(m_pSoccer),
+        new SoccerHitEvent(m_pSoccer, false), 
 		Param
 		);
 
@@ -164,11 +169,11 @@ void SoccerState_DamageVanish::Enter(SoccerPlayer* s)
 	Param.standup_frame = 50;
 
 	//ひるみクラスを作成
-	m_pDamageVanishClass = new CharacterDamageVanish(
-		m_pSoccer,
-		Param,
-		new SoccerEvent(s),
-		new SoccerHitEvent(s)
+    m_pDamageVanishClass = new CharacterDamageVanish(
+        m_pSoccer,
+        Param,
+        new SoccerEvent(s),
+        new SoccerHitEvent(s, false)
 		);
 
     //エフェクト

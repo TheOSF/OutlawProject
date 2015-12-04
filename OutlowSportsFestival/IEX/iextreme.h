@@ -107,6 +107,9 @@ public:
 	static DWORD ScreenHeight;		//	スクリーン高
 	static D3DFORMAT ScreenFormat;	//	スクリーンフォーマット
 
+    static float ScreenToX1600;     //  スクリーンＸ１９００に対する比率
+    static float ScreenToY900;     //  スクリーンＸ１９００に対する比率
+
 	//	３Ｄデバイス
 	static LPDEVICE	Device;			//	デバイス
 	static inline LPDEVICE GetDevice(){ return Device; };

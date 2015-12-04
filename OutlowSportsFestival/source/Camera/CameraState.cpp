@@ -87,33 +87,18 @@ void CameraStateGamePlay::Execute(Camera* c)
 
 		if (dRightLen < rlen)dRightLen = rlen;	//最大なら更新
 	}
-    
-    
-    ////どれだけカメラを引くかを算出する
-    //for (auto it = chr_map.begin();
-    //    it != chr_map.end();
-    //    ++it)
-    //{
-    //    if (it->first->m_Params.camera_draw == false)continue;
-    //    CrVector3 chrpos = it->first->m_Params.pos;
-
-    //    LineMostNear = first_pos + mVec * Vector3Dot(chrpos - first_pos, mVec);
-
-    //    //カメラ視線ベクトルからの距離を求める
-    //    float rlen = Vector3Distance(LineMostNear, chrpos);
-
-    //    if (dRightLen < rlen)
-    //    {
-    //        dRightLen = rlen;	//最大なら更新
-    //    }
-    //}
-    
 
 	//視野角のtanから目標を視野に入れるための後方距離を算出
 	float b = dRightLen / tanf(viewangle);
 
 	//移動目標を計算
 	moveTarget = center + mVec*b;
+
+    float L = Vector3Distance(center, moveTarget);
+    if (L < 30.0f)
+    {
+        moveTarget = center + Vector3Normalize(moveTarget-center)*30.0f;
+    }
 
 	//補間する
     c->m_Position += (moveTarget - c->m_Position)*m_PosSpeed;
@@ -130,77 +115,51 @@ void CameraStateGamePlay::Execute(Camera* c)
 
 }
 
-//
+
 //void CameraStateGamePlay::Execute(Camera* c)
 //{
 //
-//    const Vector3 first_pos(0, 50, -55);	//適当
-//    const CharacterManager::CharacterMap& chr_map = DefCharacterMgr.GetCharacterMap();
+//	const CharacterManager::CharacterMap& chr_map = DefCharacterMgr.GetCharacterMap();
 //
-//    //キャラクタがいない場合移動できない
-//    if (chr_map.empty())
+//	//キャラクタがいない場合移動できない
+//	if (chr_map.empty())
+//	{
+//		return;
+//	}
+//
+//	Vector3 center(0, 0, 0);
+//	int livecnt = 0;
+//    const float viewangle = D3DXToRadian(45);
+//	float dRightLen = 0;
+//
+//	//全キャラクタ座標の平均座標を算出する
+//	for (auto it = chr_map.begin();
+//		it != chr_map.end();
+//		++it)
+//	{
+//		if (chr_func::isDie(it->first))continue;
+//		center += it->first->m_Params.pos;
+//		livecnt++;
+//	}
+//
+//	if (livecnt > 1)
+//	{
+//		center /= (float)livecnt;
+//	}
+//
 //    {
-//        return;
+//        Vector3 axis;
+//        Vector3Cross(axis, Vector3AxisY, center - first_pos);
+//
+//        Vector3 NewCenter = Vector3RotateAxis(axis, D3DXToRadian(1), center - first_pos) + first_pos;
+//        center = NewCenter;
+//        //center = center - first_pos + first_pos;
 //    }
 //
-//    Vector3 center(0, 0, 0);
-//    const float viewangle = D3DXToRadian(45);	//カメラの視野角
-//    float dRightLen = 0;
-//
-//
-//    {
-//        //注視点を計算
-//        Vector3 MinPos(1000, 1000, 1000), MaxPos(-1000, -1000, -1000);
-//
-//        for (auto& it : chr_map)
-//        {
-//            const Vector3& p = it.first->m_Params.pos;
-//
-//            if (p.x < MinPos.x)MinPos.x = p.x;
-//            if (p.y < MinPos.y)MinPos.y = p.y;
-//            if (p.z < MinPos.z)MinPos.z = p.z;
-//
-//            if (p.x > MaxPos.x)MaxPos.x = p.x;
-//            if (p.y > MaxPos.y)MaxPos.y = p.y;
-//            if (p.z > MaxPos.z)MaxPos.z = p.z;
-//        }
-//
-//        center = (MinPos + MaxPos)*0.5f;
-//
-//        dRightLen = Vector3Distance(center, MaxPos);
-//    }
-//
-//    //カメラのターゲットを補間
+//	//カメラのターゲットを補間
 //    c->m_Target += (center - c->m_Target)*m_TargetSpeed;
 //
-//
-//    //どれだけカメラを引くかを算出する
-//    //for (auto it = chr_map.begin();
-//    //    it != chr_map.end();
-//    //    ++it)
-//    //{
-//    //    if (it->first->m_Params.camera_draw == false)continue;
-//    //    CrVector3 chrpos = it->first->m_Params.pos;
-//
-//    //    //カメラ注視点からの距離を求める
-//    //    float rlen = Vector3Length(chrpos - center);
-//
-//    //    if (dRightLen < rlen)dRightLen = rlen;	//最大なら更新
-//    //}
-//
-//
-//    Vector3 mVec = first_pos - center;
-//    Vector3 moveTarget;
-//    mVec.Normalize();
-//
-//    //視野角のtanから目標を視野に入れるための後方距離を算出
-//    float b = dRightLen / tanf(viewangle);
-//
-//    //移動目標を計算
-//    moveTarget = center + mVec*b;
-//
-//    //補間する
-//    c->m_Position += (moveTarget - c->m_Position)*m_PosSpeed;
+//    MoveCameraPosition(center, m_pCamera);
 //
 //#ifdef _DEBUG
 //    if (GetKeyState('Q') & 0x80)
@@ -208,14 +167,57 @@ void CameraStateGamePlay::Execute(Camera* c)
 //        c->SetNewState(new CameraStateFreeMove());
 //    }
 //#endif
-//    m_PosSpeed = 0.05f;
-//    m_TargetSpeed = 0.04f;
+//
+//    //m_PosSpeed = 0.05f;
+//    //m_TargetSpeed = 0.04f;
+//
+//    m_PosSpeed = 0.01f;
+//    m_TargetSpeed = 0.01f;
+//
+//    //m_PosSpeed = 1;
+//    //m_TargetSpeed = 1;
+//
 //}
-
 
 void CameraStateGamePlay::Exit(Camera* c)
 {
 
+
+}
+
+void CameraStateGamePlay::MoveCameraPosition(CrVector3 ViewTarget, Camera* c)
+{
+    const CharacterManager::CharacterMap& ChrMap = DefCharacterMgr.GetCharacterMap();
+    Vector3 MoveTarget, Work;
+    float   BackValue = 0;
+    bool    AllIn = true;
+    
+    for (auto &it : ChrMap)
+    {
+        if (it.first->m_Params.camera_draw == false)
+        {
+            continue;
+        }
+
+        if (c->WorldToProjection(&Work, it.first->m_Params.pos) == false ||
+            Vector3XYLength(Work) > 0.75f || 
+            Work.y < -0.8f)
+        {
+            AllIn = false;
+            BackValue = max(BackValue, max(fabsf(Work.x), fabsf(Work.y)));
+        }
+    }
+
+    if (AllIn)
+    {
+        //補間する
+        c->m_Position += (ViewTarget - c->m_Position)*m_PosSpeed;
+    }
+    else
+    {
+        //補間する
+        c->m_Position += (first_pos - ViewTarget)*m_PosSpeed;
+    }
 
 }
 

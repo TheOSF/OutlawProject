@@ -218,3 +218,9 @@ bool TennisAttackInfo_UsualAtk::isHitStopFrame()
 {
     return m_HitStopCount > 0;
 }
+
+//カウンターヒットフレームかどうか
+bool TennisAttackInfo_UsualAtk::isCounterHitFrame(int Frame)
+{
+    return Frame < m_Param.DamageEnableEnd;
+}

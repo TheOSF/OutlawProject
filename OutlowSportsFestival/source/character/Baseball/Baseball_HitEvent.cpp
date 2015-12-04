@@ -10,8 +10,9 @@
 
 
 
-BaseballHitEvent::BaseballHitEvent(BaseballPlayer* pt) :
-m_pBaseball(pt)
+BaseballHitEvent::BaseballHitEvent(BaseballPlayer* pt,bool CounterHit) :
+m_pBaseball(pt),
+m_CounterHit(CounterHit)
 {
 
 }
@@ -31,7 +32,7 @@ bool BaseballHitEvent::Hit(DamageBase* pDmg)
 
     case CharacterHitEventFunc::SetType::Weak_Hit:
         //弱ひるみステートへ
-        m_pBaseball->SetState(new BaseballState_DamageMotion_Weak(m_pBaseball, DamageVec), 1);
+        m_pBaseball->SetState(new BaseballState_DamageMotion_Weak(m_pBaseball, DamageVec, m_CounterHit), 1);
         break;
 
 

@@ -11,12 +11,13 @@
 class BaseballHitEvent :public DamageManager::HitEventBase
 {
 public:
-	BaseballHitEvent(BaseballPlayer* pt);
+    BaseballHitEvent(BaseballPlayer* pt, bool CounterHit = false);
 
 	bool Hit(DamageBase* pDmg);//“–‚½‚Á‚½‚ÉŒÄ‚Î‚ê‚éŠÖ”(–ß‚è’lF“–‚½‚Á‚½‚©‚Ç‚¤‚©)
 
 private:
 	BaseballPlayer* m_pBaseball;
+    bool            m_CounterHit;
 };
 
 #endif

@@ -27,6 +27,8 @@ private:
     float m_PosSpeed;
     float m_TargetSpeed;
 
+    void MoveCameraPosition(CrVector3 ViewTarget,Camera* C);
+
     bool isViewIn(CrVector3 pos);
 };
 

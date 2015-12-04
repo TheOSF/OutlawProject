@@ -90,6 +90,12 @@ bool Item_WallBoundBall::Update()
     //F‚½‚¢‚Ü[
     m_ColorTimer += 0.1f;
 
+    //‰º‚·‚¬‚½‚çÁ‚·
+    if (m_LiveFlg && m_Params.pos.Length() > 150.0f)
+    {
+        m_LiveFlg = false;
+    }
+
     return m_LiveFlg;
 }
 
