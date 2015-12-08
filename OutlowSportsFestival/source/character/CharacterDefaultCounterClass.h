@@ -108,5 +108,6 @@ private:
     Vector3     m_MoveTargetPos;
     Vector2     m_Stick;
     float       m_MoveValue;
+    BallBase::BallID m_counterBallID;
 };
 
