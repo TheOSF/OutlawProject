@@ -61,7 +61,6 @@ void AmefootPlayerState_ReceiveVanishDamage::Enter(AmefootPlayer* pCharacter)
      params.rotate_speed = Vector3(0.0f , 0.0f , 0.0);
      params.move = m_damageVec;
      params.down_frame = 18;
-     params.down_muteki_frame = 18;
      params.move.y = 0.15f;
      params.standup_frame = 60;
 

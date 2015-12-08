@@ -146,9 +146,7 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
     Param.move = m_Damage_vec;
 
     Param.down_frame = 15;
-    Param.down_muteki_frame = 15;
     Param.standup_frame = 50;
-    Param.standup_muteki_frame = 10;
 
 
     //‚Ğ‚é‚İƒNƒ‰ƒX‚ğì¬

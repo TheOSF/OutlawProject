@@ -3,6 +3,7 @@
 #include "../CharacterFunction.h"
 #include "Tennis_HitEvent.h"
 #include "../../GameSystem/ResourceManager.h"
+#include "../../Effect/LocusBarObject.h"
 
 TennisAttackClass::TennisAttackClass(
     TennisPlayer*   pOwner,
@@ -21,22 +22,27 @@ TennisAttackClass::TennisAttackClass(
     m_Locus.m_Division = 5;
 //    m_Locus.m_pTexture = DefResource.Get(Resource::TextureType::Locus1);
 
-    Vector4 EffectColor = Vector4(1, 1, 1, 0.6f);// CharacterBase::GetPlayerColorF(m_pOwner->m_PlayerInfo.number).toVector4();
+    Vector4 EffectColor = Vector4(1, 1, 1, 1);// CharacterBase::GetPlayerColorF(m_pOwner->m_PlayerInfo.number).toVector4();
     EffectColor.w = 0.5f;
 
-    m_Locus.m_StartParam.Color = EffectColor;
-    m_Locus.m_StartParam.HDRColor = EffectColor;
-    m_Locus.m_StartParam.Width = 0.8f;
+    {
+        m_Locus.m_StartParam.Color = Vector4(1, 1, 1, 0.8f);
 
-    EffectColor.w = 0;
+        m_Locus.m_EndParam.Color = m_Locus.m_StartParam.Color;
+        m_Locus.m_EndParam.Color.w = 0.0f;
+    }
 
-    m_Locus.m_EndParam.Color = EffectColor;
-    m_Locus.m_EndParam.HDRColor = EffectColor;
+    {
+        m_Locus.m_StartParam.HDRColor = Vector4(1,1,1, 0.0f);
 
-    m_Locus.m_EndParam.Color.w = 0;
-    m_Locus.m_EndParam.HDRColor.w = 0;
+        m_Locus.m_EndParam.HDRColor = m_Locus.m_StartParam.HDRColor;
+        m_Locus.m_EndParam.HDRColor.w = 0.0f;
+    }
 
-    m_Locus.m_EndParam.Width = 0.5f;
+    {
+        m_Locus.m_StartParam.Width = 0.8f;
+        m_Locus.m_EndParam.Width = 0.5f;
+    }   
 }
 
 TennisAttackClass::~TennisAttackClass()
@@ -180,6 +186,10 @@ void TennisAttackClass::State_NextAtk()
     m_DamageHitCount = 0;
 
     m_pStateFunc = &TennisAttackClass::State_Attack;
+
+
+
+    //ApperLocus();
 }
 
 void TennisAttackClass::State_End()
@@ -187,6 +197,21 @@ void TennisAttackClass::State_End()
 
 }
 
+void TennisAttackClass::ApperLocus()
+{
+    LocusBarObject::InitParams p;
+
+    p.origin = m_pOwner->m_Params.pos + Vector3(0, 2, 0);
+    p.start_vec = chr_func::GetRight(m_pOwner);
+    p.end_vec = chr_func::GetFront(m_pOwner);
+    p.LocusPosLen = 4.5f;
+    p.speed = 0.1f;
+
+    new LocusBarObject(
+        p,
+        10
+        );
+}
 
 //ç≈èIíiçUåÇÇ©Ç«Ç§Ç©
 bool TennisAttackClass::isLastAtk()

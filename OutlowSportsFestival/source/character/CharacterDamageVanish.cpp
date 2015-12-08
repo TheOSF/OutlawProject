@@ -199,13 +199,6 @@ void CharacterDamageVanish::Dowing()
         m_Count = 0;
     }
 
-    //移動更新
-    if (m_Count > m_Param.down_muteki_frame)
-    {
-        //通常当たり判定
-        chr_func::UpdateAll(m_pCharacter, m_pHitEvent);
-    }
-    else
     {
         //ノーダメージ版
         chr_func::UpdateAll(m_pCharacter, &DamageManager::HitEventBase());
@@ -233,13 +226,6 @@ void CharacterDamageVanish::StandUping()
         m_Count = 0;
     }
 
-    //移動更新
-    if (m_Count > m_Param.standup_muteki_frame)
-    {
-        //通常当たり判定
-        chr_func::UpdateAll(m_pCharacter, m_pHitEvent);
-    }
-    else
     {
         //ノーダメージ版
         chr_func::UpdateAll(m_pCharacter, &DamageManager::HitEventBase());

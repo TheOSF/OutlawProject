@@ -257,6 +257,7 @@
     <ClCompile Include="source\Effect\GlavityLocus.cpp" />
     <ClCompile Include="source\Effect\HitEffectObject.cpp" />
     <ClCompile Include="source\Effect\ImpactLightObject.cpp" />
+    <ClCompile Include="source\Effect\LocusBarObject.cpp" />
     <ClCompile Include="source\Effect\ParticleBase.cpp" />
     <ClCompile Include="source\Effect\ParticleHDRRenderer.cpp" />
     <ClCompile Include="source\Effect\ParticleManager.cpp" />
@@ -491,6 +492,7 @@
     <ClInclude Include="source\Effect\GlavityLocus.h" />
     <ClInclude Include="source\Effect\HitEffectObject.h" />
     <ClInclude Include="source\Effect\ImpactLightObject.h" />
+    <ClInclude Include="source\Effect\LocusBarObject.h" />
     <ClInclude Include="source\Effect\ParticleBase.h" />
     <ClInclude Include="source\Effect\ParticleHDRRenderer.h" />
     <ClInclude Include="source\Effect\ParticleManager.h" />

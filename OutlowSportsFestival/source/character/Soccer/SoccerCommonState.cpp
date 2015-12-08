@@ -164,8 +164,6 @@ void SoccerState_DamageVanish::Enter(SoccerPlayer* s)
 
 	Param.rotate_speed = Vector3(0.0f, 0.0f, 0.0);
 	Param.move = m_Damage_vec;
-	Param.down_frame = 15;
-	Param.down_muteki_frame = 15;
 	Param.standup_frame = 50;
 
 	//ひるみクラスを作成
@@ -275,10 +273,7 @@ void SoccerState_DamageMotion_Die::Enter(SoccerPlayer* t)
 	Param.move = Vector3Normalize(m_Damage_vec) * 0.7f;
 	Param.move.y = 0.2f;
 
-	Param.down_frame = 15;
-	Param.down_muteki_frame = 15;
 	Param.standup_frame = 50;
-	Param.standup_muteki_frame = 10;
 
 
 	//ひるみクラスを作成

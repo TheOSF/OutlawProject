@@ -23,6 +23,7 @@ public:
 
     bool    m_CheckWall;    //壁との判定をとるかどうか
     RATIO   m_BoundRatio;   //バウンドする率
+    RATIO   m_SpeedDownValue;//スピードを落とす値
 
     LocusHDR m_Locus;        //軌跡クラス
 

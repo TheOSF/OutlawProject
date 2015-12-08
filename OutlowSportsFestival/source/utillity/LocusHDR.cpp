@@ -88,6 +88,12 @@ void LocusHDR::Update()
     }
 }
 
+//‹OÕ‚Ì“_‚ğ•Û‚Å‚«‚é”‚ğ•Ô‚·
+size_t LocusHDR::GetNumPoint()const
+{
+    return m_NumPoint;
+}
+
 //‰Šú‰»
 void LocusHDR::Initialize()
 {

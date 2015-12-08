@@ -206,6 +206,7 @@
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerUtilityClass.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerAttackClass.cpp" />
     <ClCompile Include="source\character\Tennis\Tennis_DoCancelAction.cpp" />
+    <ClCompile Include="source\Effect\LocusBarObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -422,6 +423,7 @@
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerUtilityClass.h" />
     <ClInclude Include="source\character\Tennis\Tennis_DoCancelAction.h" />
     <ClInclude Include="source\character\Tennis\TennisUtillityClass.h" />
+    <ClInclude Include="source\Effect\LocusBarObject.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DATA\Shader\3DEx.fx" />

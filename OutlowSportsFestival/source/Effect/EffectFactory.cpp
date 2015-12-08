@@ -359,7 +359,8 @@ void EffectFactory::LocusParticle(
     COLORf    color,
     COLORf    HDRcolor,
     UINT      live_frame,
-    RATIO     bound
+    RATIO     bound,
+    RATIO     speedDown
     )
 {
     GlavityLocus* g;
@@ -392,5 +393,5 @@ void EffectFactory::LocusParticle(
     g->m_Locus.m_StartParam.Width = width;
     g->m_Locus.m_EndParam.Width = 0.0f;
 
-
+    g->m_SpeedDownValue = speedDown;
 }

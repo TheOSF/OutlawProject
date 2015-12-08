@@ -104,5 +104,6 @@ private:
     void State_NextAtk();
     void State_End();
 
+    void ApperLocus();
     bool isLastAtk();
 };

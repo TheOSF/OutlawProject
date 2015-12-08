@@ -16,10 +16,7 @@ public:
 		Vector3 rotate_speed; //ŠeŽ²‚Ì‰ñ“]‘¬“x
 
         int     down_frame;
-        int     down_muteki_frame;
-
         int     standup_frame;
-        int     standup_muteki_frame;
 	};
 
     class Event

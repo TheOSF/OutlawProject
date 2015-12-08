@@ -10,6 +10,18 @@
 class SceneOption : public Scene
 {
 public:
+    class Renderer
+    {
+    public:
+        enum class DrawType
+        {
+
+        };
+
+        void Render(
+            const 
+            );
+    };
     SceneOption();
     ~SceneOption();
 

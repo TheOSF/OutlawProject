@@ -108,6 +108,7 @@ namespace EffectFactory
         COLORf    color,
         COLORf    HDRcolor,
         UINT      live_frame,
-        RATIO     bound = 0.2f
+        RATIO     bound = 0.2f,
+        RATIO     speedDown = 0.0f
         );
 }

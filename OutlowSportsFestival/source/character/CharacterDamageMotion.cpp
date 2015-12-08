@@ -80,7 +80,7 @@ void CharacterDamageMotion::Update()
             //エフェクト
             new ImpactLightObject(
                 EffectPos,
-                25,
+                45,
                 Vector3(0, 0.4f, 1),
                 0.1f
                 );
@@ -89,13 +89,15 @@ void CharacterDamageMotion::Update()
             {
                 EffectFactory::LocusParticle(
                     EffectPos,
-                    (Vector3Rand() - chr_func::GetFront(m_pCharacter))*0.5f,
+                    (Vector3Rand() - chr_func::GetFront(m_pCharacter))*1.5f,
                     Glavity,
-                    0.05f,
-                    4,
+                    0.1f,
+                    8,
                     EffectColor,
                     EffectColor,
-                    60
+                    45,
+                    0.1f,
+                    0.2f
                     );
             }
         }

@@ -52,6 +52,9 @@ public:
     //ˆÚ“®XV
     void Update();
 
+    //‹OÕ‚Ì“_‚ğ•Û‚Å‚«‚é”‚ğ•Ô‚·
+    size_t GetNumPoint()const;
+
 private:
 
     struct Point
