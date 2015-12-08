@@ -218,6 +218,7 @@ void SoccerState_ComputerControll_Move::Execute(SoccerPlayer* s)
 	
 	
 	//モデルのワールド変換行列を更新
+
 	chr_func::CreateTransMatrix(s, s->m_ModelSize, &s->m_Renderer.m_TransMatrix);
 
 }
