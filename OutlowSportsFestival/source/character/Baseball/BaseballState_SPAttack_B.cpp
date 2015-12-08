@@ -133,7 +133,7 @@ void BaseballState_SPAttack_B::State_Atk1()
 			m_Damage.m_Param.pos *= 3.0f;
 			m_Damage.m_Param.pos += m_pBaseBall->m_Params.pos;
 			m_Damage.m_VecPower.x = 0.2f;
-            m_Damage.m_VecPower.y = 0.0f;
+			m_Damage.m_VecPower.y = 0.0f;
 		}
 		else
 		{
@@ -195,14 +195,14 @@ void BaseballState_SPAttack_B::State_Atk2()
 	if (m_Timer == 56)
 	{
 		m_Damage.m_Enable = true;
-        m_Damage.ResetCounts();
+		m_Damage.ResetCounts();
 		m_Damage.Value = 50.0f;
 		m_Damage.ResetCounts();
 		m_Damage.type = DamageBase::Type::_VanishDamage;
 		m_Damage.HitCount = 0;
 		chr_func::GetFront(m_pBaseBall, &m_Damage.m_Param.pos);
-        m_Damage.m_Vec = m_Damage.m_Param.pos;
-        m_Damage.m_Vec.y = 0.8f;//　飛ぶ角度
+		m_Damage.m_Vec = m_Damage.m_Param.pos;
+		m_Damage.m_Vec.y = 0.8f;//　飛ぶ角度
 		m_Damage.m_VecPower.x = 1.0f;
 		m_Damage.m_VecPower.y = 1.5f;
 
@@ -232,7 +232,7 @@ void BaseballState_SPAttack_B::State_Atk2()
 			stHdCol(1, 1, 1, 0.5f),
 			endHdCol(1, 1, 1, 0);
 
-        const Vector3 move = Vector3Normalize(m_Damage.m_Vec)*0.8f;
+		const Vector3 move = Vector3Normalize(m_Damage.m_Vec)*0.8f;
 
 		Vector3 pos = m_Damage.m_Param.pos + Vector3(0, 3, 0);
 
@@ -263,7 +263,7 @@ void BaseballState_SPAttack_B::State_Atk2()
 		{
 			new ThunderEffect
 				(pos/* - move*0.2f*i,*/,
-				pos + move * 10 + Vector3Rand() * 10, 
+				pos + move * 10 + Vector3Rand() * 10,
 				4.5f,
 				0.1f,
 				10,
@@ -271,7 +271,7 @@ void BaseballState_SPAttack_B::State_Atk2()
 				15);
 		}
 
-		m_Light.param.color = Vector3(0,0.4f, 0.8f);
+		m_Light.param.color = Vector3(0, 0.4f, 0.8f);
 		m_Light.param.pos = pos;
 		m_Light.param.size = 50.0f;
 		m_Light.Visible = true;
@@ -302,6 +302,11 @@ void BaseballState_SPAttack_B::State_Atk2()
 	if (m_Timer == 80)
 	{
 		m_pStateFunc = &BaseballState_SPAttack_B::State_Finish;
+
+		if (m_pBaseBall->m_PlayerInfo.player_type == PlayerType::_Computer)
+		{
+			m_pBaseBall->setChangeFlg(true);
+		}
 	}
 }
 
@@ -312,7 +317,7 @@ void BaseballState_SPAttack_B::FreezeGame(UINT frame)
 
 	UpdateObjList.push_back(m_pBaseBall);
 
-    DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, frame, true);
+	DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, frame, true);
 }
 
 //　雷エフェクト発動
