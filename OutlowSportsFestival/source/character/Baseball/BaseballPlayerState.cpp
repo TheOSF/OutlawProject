@@ -48,9 +48,9 @@ public:
 				return Vector3Zero;
 			}
 
-			vec = Vector3MulMatrix3x3(vec, matView);
+			vec = DefCamera.GetRight()*vec.x + DefCamera.GetForward()*vec.z;
+			vec.y = 0;
 			vec.Normalize();
-
 			return vec;
 		}
 	};
@@ -251,10 +251,11 @@ void BaseballState_PlayerControll_Move::Enter(BaseballPlayer* b)
 	//　移動パラメータを代入
 	CharacterUsualMove::Params p;
 
-	p.Acceleration = 0.2f;
-	p.MaxSpeed = 0.2f;
+	p.Acceleration = 0.15f;
+	p.MaxSpeed = 0.32f;
 	p.TurnSpeed = 0.3f;
-	p.DownSpeed = 0.2f;
+	p.DownSpeed = 0.08f;
+	p.RunEndFrame = 35;
 
 	//　移動クラスの作成
 	m_pMoveClass = new CharacterUsualMove(
@@ -328,10 +329,14 @@ void BaseballState_PlayerControll_Move::Batter(BaseballPlayer* b){
 		b->SetState(new BaseballState_Rolling(new BallBall_Utillity::PlayerRollingControll(b)));
 		return;
 	}
-	//　必殺技[○]
-	if (controller::GetTRG(controller::button::maru, b->m_PlayerInfo.number)){
-		b->SetState(new BaseballState_SPAttack_B(b));
-		return;
+	//　必殺打てるなら
+	if (chr_func::isCanSpecialAttack(b))
+	{
+		//　必殺技[○]
+		if (controller::GetTRG(controller::button::maru, b->m_PlayerInfo.number)){
+			b->SetState(new BaseballState_SPAttack_B(b));
+			return;
+		}
 	}
 	// カウンター[R1]
 	if (controller::GetTRG(controller::button::_R1, b->m_PlayerInfo.number))
@@ -364,10 +369,14 @@ void  BaseballState_PlayerControll_Move::Pitcher(BaseballPlayer* b){
 		b->SetState(new BaseballState_Rolling(new BallBall_Utillity::PlayerRollingControll(b)));
 		return;
 	}
-	//　必殺技[○]
-	if (controller::GetTRG(controller::button::maru, b->m_PlayerInfo.number)){
-		b->SetState(new BaseballState_SPAttack_P());
-		return;
+	//　必殺打てるなら
+	if (chr_func::isCanSpecialAttack(b))
+	{
+		//　必殺技[○]
+		if (controller::GetTRG(controller::button::maru, b->m_PlayerInfo.number)){
+			b->SetState(new BaseballState_SPAttack_P());
+			return;
+		}
 	}
 	// カウンター[R1]
 	if (controller::GetTRG(controller::button::_R1, b->m_PlayerInfo.number))

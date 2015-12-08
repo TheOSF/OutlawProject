@@ -6,8 +6,9 @@
 
 
 
-SoccerHitEvent::SoccerHitEvent(SoccerPlayer* ps) :
-m_pSoccer(ps)
+SoccerHitEvent::SoccerHitEvent(SoccerPlayer* ps, bool CounterHit) :
+m_pSoccer(ps),
+m_CounterHit(CounterHit)
 {
 
 }
@@ -27,7 +28,7 @@ bool SoccerHitEvent::Hit(DamageBase* pDmg)
 
     case CharacterHitEventFunc::SetType::Weak_Hit:
         //弱ひるみステートへ
-        m_pSoccer->SetState(new SoccerState_SmallDamage(m_pSoccer, DamageVec), 1);
+        m_pSoccer->SetState(new SoccerState_SmallDamage(m_pSoccer, DamageVec, m_CounterHit), 1);
         break;
 
 

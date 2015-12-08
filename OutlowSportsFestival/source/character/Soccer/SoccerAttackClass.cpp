@@ -7,8 +7,7 @@
 
 SoccerAttackClass::SoccerAttackClass(
 	SoccerPlayer*   pOwner,
-	ControllEvent*  pEvent,
-	int Frame
+	ControllEvent*  pEvent
 	) :
 	m_pOwner(pOwner),
 	m_pEvent(pEvent),
@@ -17,8 +16,7 @@ SoccerAttackClass::SoccerAttackClass(
 	m_DoHit(false),
 	m_pStateFunc(&SoccerAttackClass::State_NextAtk),
 	m_Locus(7),
-	m_DamageHitCount(0),
-	NoDamageFrame(Frame)
+	m_DamageHitCount(0)
 {
 	m_Damage.m_Enable = false;
 
@@ -45,22 +43,8 @@ SoccerAttackClass::~SoccerAttackClass()
 void SoccerAttackClass::Update()
 {
 	m_pOwner->m_Renderer.Update(1);
-	DamageManager::HitEventBase NoDmgHitEvent;   //ノーダメージ
-	SoccerHitEvent              UsualHitEvent(m_pOwner);//通常
-	(this->*m_pStateFunc)();
 
-
-	//キャラクタ更新
-	{
-		if (m_Timer < NoDamageFrame)
-		{
-			chr_func::UpdateAll(m_pOwner, &NoDmgHitEvent);
-		}
-		else
-		{
-			chr_func::UpdateAll(m_pOwner, &UsualHitEvent);
-		}
-	}
+    (this->*m_pStateFunc)();
 
 	chr_func::CreateTransMatrix(m_pOwner, m_pOwner->m_ModelSize, &m_pOwner->m_Renderer.m_TransMatrix);
 }
@@ -172,6 +156,12 @@ void SoccerAttackClass::State_Attack()
 		m_pStateFunc = &SoccerAttackClass::State_End;
 		m_DoHit = false;
 	}
+
+
+    //キャラクタ更新
+    {
+        chr_func::UpdateAll(m_pOwner, &SoccerHitEvent(m_pOwner, pNowAtk->isCounterFrame(m_Timer)));
+    }
 }
 
 

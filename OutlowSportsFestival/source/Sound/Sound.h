@@ -27,6 +27,7 @@ namespace Sound
 
         Counter, //カウンター音
         Explode, //爆発(旧サッカー必殺技の爆発)
+        Explode2,//爆発(爆撃音？
         Skill,   //スキル技発動(シュイーン)
         Beam1,    //ビーム音(前作の野球必殺技)
         Beam2,   //ビーム音(前作のサッカー必殺技)

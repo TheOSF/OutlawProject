@@ -14,6 +14,7 @@ public:
 	struct Params
 	{
 		Vector3 damage_vec;	//ダメージの方向
+        bool    counter_hit;//カウンターヒットしたかどうか
 	};
 
 	// ひるみイベントクラス
@@ -46,7 +47,7 @@ private:
 	bool				           m_End;
 	Params		                   m_Params;      // パラメータ
 	CharacterBase*                 m_pCharacter;  // キャラクター
-	int                            m_Timer;       // タイマー
+	float                          m_Timer;       // タイマー
 	Event*                         m_pEvent;      // イベント
 	DamageManager::HitEventBase*   m_pHitEvent;   //　ヒットイベント
     Vector3                        m_Pos;

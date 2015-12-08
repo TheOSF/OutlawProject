@@ -4,9 +4,7 @@
 #include "../../CharacterFunction.h"
 #include "../AmefootUsualHitEvent.h"
 #include "AmefootPlayerState_UsualMove.h"
-#include "../../../Effect/HitEffectObject.h"
-#include "../../../Effect/BlurImpact.h"
-
+#include "../../../Effect/EffectFactory.h"
 
 //-----------------------------------------------------------------------------------------
 // VanishEvent
@@ -63,7 +61,6 @@ void AmefootPlayerState_ReceiveVanishDamage::Enter(AmefootPlayer* pCharacter)
      params.rotate_speed = Vector3(0.0f , 0.0f , 0.0);
      params.move = m_damageVec;
      params.down_frame = 18;
-     params.down_muteki_frame = 18;
      params.move.y = 0.15f;
      params.standup_frame = 60;
 
@@ -76,21 +73,10 @@ void AmefootPlayerState_ReceiveVanishDamage::Enter(AmefootPlayer* pCharacter)
           );
 
      //ヒットエフェクト作成
-     new HitEffectObject(
-          pCharacter->m_Params.pos + Vector3(0 , 3 , 0) ,
-          m_damageVec ,
-          0.05f ,
-          0.15f ,
-          Vector3(1.0f , 1.0f , 1.0f)
-          );
-
-     //ブラーエフェクト
-     new BlurImpactSphere(
-          pCharacter->m_Params.pos + Vector3(0 , 3 , 0) ,
-          25 ,
-          10 ,
-          30
-          );
+     EffectFactory::VanishEffect(
+         pCharacter,
+         m_damageVec
+         );
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveVanishDamage::Execute(AmefootPlayer* pCharacter)

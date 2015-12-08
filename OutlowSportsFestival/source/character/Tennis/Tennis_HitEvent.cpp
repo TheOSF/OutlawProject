@@ -9,8 +9,9 @@
 #include "../CharacterHitEventFunc.h"  //ひるみ分岐関数を使用するため
 
 
-TennisHitEvent::TennisHitEvent(TennisPlayer* pt) :
-m_pTennis(pt)
+TennisHitEvent::TennisHitEvent(TennisPlayer* pt, bool CounterHit) :
+m_pTennis(pt),
+m_CounterHit(CounterHit)
 {
 
 }
@@ -30,7 +31,7 @@ bool TennisHitEvent::Hit(DamageBase* pDmg)
 
     case CharacterHitEventFunc::SetType::Weak_Hit:
         //弱ひるみステートへ
-        m_pTennis->SetState(new TennisState_DamageMotion_Weak(m_pTennis, DamageVec), 1);
+        m_pTennis->SetState(new TennisState_DamageMotion_Weak(m_pTennis, DamageVec, m_CounterHit), 1);
         break;
 
 

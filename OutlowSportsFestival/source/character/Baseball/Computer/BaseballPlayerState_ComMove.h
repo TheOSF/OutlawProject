@@ -20,7 +20,7 @@ class BaseballPlayerState_ComMove :public BaseballState
 private:
 	bool batterflg;//　(true:バッター,false:投手)
 	Vector3 nearpos;//　一番近いキャラのpos
-	//BaseballEquip* equip;
+	int changeTime;//　切り替えタイミング用
 public:
 
 	class MoveControllClass
@@ -32,7 +32,7 @@ public:
 	};
 public:
 	//　コンストラクタ
-	BaseballPlayerState_ComMove() :batterflg(true), nearpos(Vector3Zero){
+	BaseballPlayerState_ComMove() :batterflg(true), nearpos(Vector3Zero), changeTime(0){
 
 	}
 	//　ステート開始

@@ -33,10 +33,11 @@ public:
 
 	//コンストラクタ
     UsualBall(
-        BallBase::Params	params,			//ボールパラメータ
-        DamageBase::Type	damage_type,	//ダメージ判定のタイプ
-        float				damage_val,		//ダメージ量
-        UINT                hit_num = 1   //ヒット数
+        BallBase::Params	params,			 //ボールパラメータ
+        DamageBase::Type	damage_type,	 //ダメージ判定のタイプ
+        float				damage_val,		 //ダメージ量
+        UINT                hit_num = 1,     //ヒット数
+        UINT                live_frame = 240 //飛行時間
 		);
 	~UsualBall();
 
@@ -77,10 +78,12 @@ private:
     const UINT                  m_HitNum;
     UINT                        m_HitCountSave;
     UINT                        m_HitStopFrame;
+    int                         m_FlyLiveFrame;
     Vector3                     m_RotateSpeed;
     const CharacterType::Value  m_FirstParentType;
     BallEffect                  m_BallEffect;
     float                       m_MeshScale;
+
 
 	bool isOutofField()const;  //フィールド外に出ているか
 

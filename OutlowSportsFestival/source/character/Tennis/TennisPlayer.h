@@ -25,38 +25,38 @@ public:
         _mt_Run = 2,
         _mt_RunEnd = 4,
 
-        _mt_UpBall = 5,
-        _mt_Smash = 6,
-        _mt_CutShot = 7,
+        _mt_UpBall = 37,
+        _mt_Smash = 7,
+        _mt_CutShot = 8,
         _mt_ShotCancel = 9,
 
         _mt_EscapeStep = 10,
 
         _mt_Attack1 = 11,
         _mt_Attack2 = 13,
-        _mt_Attack3 = 33,
+        _mt_Attack3 = 34,
 
         _mt_CounterPose = 15,
 
-        _mt_CounterRight = 17,
-        _mt_CounterLeft = 18,
+        _mt_CounterRight = 16,
+        _mt_CounterLeft = 17,
 
-        _mt_SpecialAtk = 19,
+        _mt_SpecialAtk = 38,
 
-        _mt_Damage_Weak = 21,
+        _mt_Damage_Weak = 19,
 
-        _mt_Damage_Vanish_Fly = 22, 
-        _mt_Damage_Vanish_Down = 23,
-        _mt_Damage_Vanish_StandUp = 24,
+        _mt_Damage_Vanish_Fly = 20, 
+        _mt_Damage_Vanish_Down = 22,
+        _mt_Damage_Vanish_StandUp = 23,
 
-        _mt_Damage_Vanish_HitWallAndDown = 25,
+        _mt_Damage_Vanish_HitWallAndDown = 26,
         _mt_Damage_Vanish_HitFloor = 27,
         _mt_Damage_Vanish_HitFloorAndStandUp = 28, 
 
         _mt_WinPose = 29,
         _mt_LosePose = 31,
 
-        _mt_Shot = 35, //無いモーション
+        _mt_Shot = 36, //無いモーション
 
     };
 
@@ -67,7 +67,7 @@ public:
 	
 	const float         m_ModelSize;
 
-    void SetState(TennisState* state, bool Important = false);
+    void SetState(TennisState* state, int Important = 0);
 
 	bool Update();
     bool CharacterMsg(MsgType mt);

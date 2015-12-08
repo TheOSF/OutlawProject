@@ -1,5 +1,6 @@
 #include	"iextreme.h"
 #include	"Framework.h"
+#include "IEX_Input.h"
 #include	"../SceneOption/SceneOption.h"
 #include	"../debug/DebugFunction.h"
 
@@ -31,7 +32,7 @@ BOOL	InitApp( HWND hWnd )
 	IEX_InitAudio();
 
     // 初期化
-#ifdef OUTLAW2_CONTROLL_TYPE_KEY_BORD
+#ifdef OUTLAW2_CONTROLL_TYPE_IEX_INPUT
 	IEX_InitInput();
 #else
 	GamePadManager::Initialize(hWnd);
@@ -41,7 +42,7 @@ BOOL	InitApp( HWND hWnd )
 	//	システムの初期化
 	SYSTEM_Initialize();
 	//	メインフレームワーク生成
-    MainFrame = new Framework(FPS_60);
+    MainFrame = new Framework(FPS_FLEX);
 	//	初期シーン登録
 	MainFrame->ChangeScene(new SceneOption());
 
@@ -155,7 +156,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	iexSystem::CloseDebugWindow();
 
     // 解放
-#ifdef OUTLAW2_CONTROLL_TYPE_KEY_BORD
+#ifdef OUTLAW2_CONTROLL_TYPE_IEX_INPUT
     IEX_ReleaseInput();
 #else
     GamePadManager::Release();

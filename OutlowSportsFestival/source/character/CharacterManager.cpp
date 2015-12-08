@@ -27,6 +27,11 @@ const CharacterManager::CharacterMap&
 	return m_CharacterMap;
 }
 
+CharacterManager::CharacterMap& CharacterManager::GetCharacterMap()
+{
+    return m_CharacterMap;
+}
+
 //キャラクタの生存人数を取得
 UINT CharacterManager::GetCharacterLiveCount()const
 {

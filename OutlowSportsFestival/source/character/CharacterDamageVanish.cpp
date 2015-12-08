@@ -7,6 +7,16 @@
 #include "../Collision/Collision.h"
 #include "../Camera/Camera.h"
 
+
+CharacterDamageVanish::Param::Param() :
+move(Vector3AxisY),
+rotate_speed(Vector3Zero),
+down_frame(0),
+standup_frame(0)
+{
+
+}
+
 CharacterDamageVanish::CharacterDamageVanish(
     CharacterBase*    pCharacter,   //吹き飛ぶキャラクタ
     const Param&      param,        //吹きとびパラメーター
@@ -20,7 +30,8 @@ CharacterDamageVanish::CharacterDamageVanish(
     m_Rotate(0, 0, 0),
     m_pHitEvent(pHitEvent),
     m_WallHit(false),
-    m_FirstSlow(false)
+    m_FirstSlow(false),
+    m_VanishAngle(PI*0.25f)
 {
     m_Param = param;
 }
@@ -86,13 +97,26 @@ void CharacterDamageVanish::Flying()
         //飛行中の回転行列を作成する
         Matrix R;
 
-        m_Rotate += m_Param.rotate_speed;
+        //{
+        //    m_Rotate += m_Param.rotate_speed;
 
-        D3DXMatrixRotationYawPitchRoll(
-            &R,
-            m_Rotate.y, m_Rotate.x, m_Rotate.z
-            );
+        //    D3DXMatrixRotationYawPitchRoll(
+        //        &R,
+        //        m_Rotate.y, m_Rotate.x, m_Rotate.z
+        //        );
+        //}
 
+        {
+            float angle = Vector3Radian(m_pCharacter->m_Params.move, -chr_func::GetFront(m_pCharacter));
+            if (m_pCharacter->m_Params.move.y < 0)
+            {
+                angle = -angle;
+            }
+
+            m_VanishAngle += (angle - m_VanishAngle)*0.1f;
+            D3DXMatrixRotationX(&R, m_VanishAngle);
+            
+        }
         //吹き飛び中関数呼び出し
         m_pEvent->Flying(R, 1);
     }
@@ -185,13 +209,6 @@ void CharacterDamageVanish::Dowing()
         m_Count = 0;
     }
 
-    //移動更新
-    if (m_Count > m_Param.down_muteki_frame)
-    {
-        //通常当たり判定
-        chr_func::UpdateAll(m_pCharacter, m_pHitEvent);
-    }
-    else
     {
         //ノーダメージ版
         chr_func::UpdateAll(m_pCharacter, &DamageManager::HitEventBase());
@@ -219,13 +236,6 @@ void CharacterDamageVanish::StandUping()
         m_Count = 0;
     }
 
-    //移動更新
-    if (m_Count > m_Param.standup_muteki_frame)
-    {
-        //通常当たり判定
-        chr_func::UpdateAll(m_pCharacter, m_pHitEvent);
-    }
-    else
     {
         //ノーダメージ版
         chr_func::UpdateAll(m_pCharacter, &DamageManager::HitEventBase());

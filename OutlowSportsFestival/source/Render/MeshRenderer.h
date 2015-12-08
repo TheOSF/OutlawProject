@@ -71,6 +71,9 @@ public:
 
     //ŒÌˆÓ‚ÉŒõ‚ç‚¹‚éÛ‚Ìƒpƒ‰ƒ[ƒ^(xyz = rgb)
     Vector3 m_Lighting;
+
+    //•`‰æ‚·‚é‚©‚Ç‚¤‚©
+    bool m_Visible;
 private:
     Matrix               m_TransMatrix;
 	bool		const	 m_MeshDelete;

@@ -51,7 +51,6 @@ m_DontBoundBallAtkTimer(0)
 
     m_Params.maxHP = m_Params.HP = 100;
 
-
     //描画指定
     CharacterRenderer::RenderType Types[3]=
     {
@@ -78,7 +77,7 @@ TennisPlayer::~TennisPlayer()
 	delete m_pStateMachine;
 }
 
-void TennisPlayer::SetState(TennisState* state, bool Important)
+void TennisPlayer::SetState(TennisState* state, int Important)
 {
 	//新しいステートをセット
     m_pStateMachine->set_state(state, Important);

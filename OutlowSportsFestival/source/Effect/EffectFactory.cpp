@@ -151,7 +151,8 @@ void EffectFactory::CircleAnimation(
     CrVector3   power,
     CrVector2   size,
     DWORD       color,
-    DWORD       hdr_col
+    DWORD       hdr_col,
+    RATIO       speed
     )
 {
     Vector3 tvec(vec);
@@ -189,7 +190,7 @@ void EffectFactory::CircleAnimation(
 
     m->animation_end_delete = true;
     m->animation_loop = false;
-    m->animation_speed = 1.0f;
+    m->animation_speed = speed;
 
     m->move_power = power;
     m->move_speed = move;
@@ -264,6 +265,53 @@ void EffectFactory::ParticleHDR(
 		);
 }
 
+//攻撃ヒット時のエフェクト
+void EffectFactory::HitEffect(
+    CharacterBase* pDieCharacter,
+    CrVector3      Damage_Vec
+    )
+{
+    COLORf EffectColor(CharacterBase::GetPlayerColor(pDieCharacter->m_PlayerInfo.number));
+
+    //ヒットエフェクト作成
+    new HitEffectObject(
+        pDieCharacter->m_Params.pos + Vector3(0, 3, 0) + Damage_Vec*3.5f,
+        Damage_Vec,
+        0.045f,
+        0.15f,
+        Vector3(1.0f, 0.8f, 0.25f),
+        2
+        );
+
+}
+
+//吹き飛び攻撃くらい時のエフェクト
+void EffectFactory::VanishEffect(
+    CharacterBase* pDieCharacter,
+    CrVector3      Damage_Vec
+    )
+{
+    COLORf EffectColor(CharacterBase::GetPlayerColor(pDieCharacter->m_PlayerInfo.number));
+
+
+    //ヒットエフェクト作成
+    new HitEffectObject(
+        pDieCharacter->m_Params.pos + Vector3(0, 3, 0),
+        Damage_Vec,
+        0.045f,
+        0.15f,
+        Vector3(1.0f, 0.8f, 0.25f),
+        8
+        );
+
+    //ブラーエフェクト
+    new BlurImpactSphere(
+        pDieCharacter->m_Params.pos + Vector3(0, 3, 0),
+        25,
+        30,
+        30
+        );
+}
 
 //死亡時のエフェクト
 void EffectFactory::DieEffect(
@@ -311,7 +359,8 @@ void EffectFactory::LocusParticle(
     COLORf    color,
     COLORf    HDRcolor,
     UINT      live_frame,
-    RATIO     bound
+    RATIO     bound,
+    RATIO     speedDown
     )
 {
     GlavityLocus* g;
@@ -344,5 +393,5 @@ void EffectFactory::LocusParticle(
     g->m_Locus.m_StartParam.Width = width;
     g->m_Locus.m_EndParam.Width = 0.0f;
 
-
+    g->m_SpeedDownValue = speedDown;
 }

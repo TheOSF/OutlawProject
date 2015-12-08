@@ -1,4 +1,4 @@
-#include	"iextreme.h"
+#include "IEX_Input.h"
 
 //*****************************************************************************
 //
@@ -429,7 +429,7 @@ static iexInput*	input[4];
 //		ƒL[î•ñŠÖ˜A
 //*****************************************************************************************************************************
 
-#ifdef OUTLAW2_CONTROLL_TYPE_KEY_BORD
+#ifdef OUTLAW2_CONTROLL_TYPE_IEX_INPUT
 
 void KEY_PadAsign(PADSET& padset, int n){ input[n]->PadAsign(padset); }
 void KEY_Asign(KEYSET& keyset, int n){ input[n]->Asign(keyset); }

@@ -18,7 +18,8 @@ GlavityLocus::GlavityLocus(
     m_Power(power),
     m_Pos(pos),
     m_Move(vec),
-    m_InitStartAlpha(-10)
+    m_InitStartAlpha(-10),
+    m_SpeedDownValue(0)
 {
     
 }
@@ -82,6 +83,7 @@ bool GlavityLocus::Update()
     //ˆÚ“®
     {
         m_Move += m_Power;
+        m_Move *= fClamp(1 - m_SpeedDownValue, 1, 0);
         m_Pos += m_Move;
     }
 

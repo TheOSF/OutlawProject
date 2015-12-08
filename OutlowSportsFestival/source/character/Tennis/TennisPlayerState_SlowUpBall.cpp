@@ -24,7 +24,8 @@ TennisPlayerState_SlowUpBall::TennisPlayerState_SlowUpBall(
     m_pUpBall(nullptr),
     m_pControllClass(pControllClass),
     m_Timer(0),
-    m_pStateFunc(&TennisPlayerState_SlowUpBall::State_SlowUp)
+    m_pStateFunc(&TennisPlayerState_SlowUpBall::State_SlowUp),
+    m_isDoShot(false)
 {
 
 }
@@ -68,15 +69,15 @@ void TennisPlayerState_SlowUpBall::Exit(TennisPlayer* p)
 TennisPlayerState_SlowUpBall::ShotType TennisPlayerState_SlowUpBall::GetShotType(int Timer)const
 {
     //撃ち始め
-    if (Timer < 10)
+    if (Timer < 20)
     {
         return ShotType::Weak;
     }
-    else if (Timer < 25)//通常
+    else if (Timer < 32)//通常
     {
         return ShotType::Usual;
     }
-    if (Timer < 35) //ボール最頂点
+    if (Timer < 50) //ボール最頂点
     {
         return ShotType::Smash;
     }
@@ -95,7 +96,7 @@ void TennisPlayerState_SlowUpBall::SetState(void(TennisPlayerState_SlowUpBall::*
 
 void TennisPlayerState_SlowUpBall::State_SlowUp()
 {
-    const int SlowFrame = 5;
+    const int SlowFrame = 10;
 
     ++m_Timer;
 
@@ -103,6 +104,12 @@ void TennisPlayerState_SlowUpBall::State_SlowUp()
     if (m_Timer < SlowFrame)
     {
         chr_func::XZMoveDown(m_pTennis, 0.2f);
+    }
+
+    //打ちフラグの更新
+    if (m_isDoShot == false)
+    {
+        m_isDoShot = m_pControllClass->isShot();
     }
 
 
@@ -119,7 +126,7 @@ void TennisPlayerState_SlowUpBall::State_SlowUp()
 
         //移動は上向き
         param.move = m_pTennis->m_Params.move;
-        param.move.y = 0.40f;
+        param.move.y = 0.4f;
 
         //キャラの場所に(最終的に腕の位置に？)
         param.pos = m_pTennis->m_Params.pos + Vector3(0, 2.0f, 0);
@@ -138,7 +145,7 @@ void TennisPlayerState_SlowUpBall::State_SlowUp()
         Sound::Play(Sound::Swing1);
     }
 
-    if (m_Timer == 55)
+    if (m_Timer == 60)
     {
         SetState(&TennisPlayerState_SlowUpBall::State_Finish);
         return;
@@ -152,8 +159,11 @@ void TennisPlayerState_SlowUpBall::State_SlowUp()
             return;
         }
 
+        //角度調整
+        AngleControll(D3DXToRadian(8), 100.0f);
+
         //うち命令が出たら
-        if (m_pControllClass->isShot())
+        if (m_isDoShot)
         {
             //ショット分岐
             switch (GetShotType(m_Timer))
@@ -175,15 +185,15 @@ void TennisPlayerState_SlowUpBall::State_SlowUp()
 void TennisPlayerState_SlowUpBall::State_Weak()
 {
     const RADIAN angle_speed = D3DXToRadian(15);
-    const int ShotFrame = 3;
-    const int EndFrame = 13;
+    const int ShotFrame = 9;
+    const int EndFrame = 36;
 
     ++m_Timer;
 
     if (m_Timer == 1)
     {
         //モーション
-        m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Smash);
+        m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Shot);
     }
 
 
@@ -199,7 +209,7 @@ void TennisPlayerState_SlowUpBall::State_Weak()
         //移動は前向き
         chr_func::GetFront(m_pTennis, &param.move);
         //スピードは適当
-        param.move *= 0.3f;
+        param.move *= 0.5f;
 
         //キャラの場所に(最終的に腕の位置に？)
         param.pos = m_pTennis->m_Params.pos + Vector3(0, UsualBall::UsualBallShotY, 0);
@@ -212,7 +222,7 @@ void TennisPlayerState_SlowUpBall::State_Weak()
         param.type = BallBase::Type::_Usual;
 
         //生成
-        new UsualBall(param, DamageBase::Type::_WeekDamage, 3);
+        new UsualBall(param, DamageBase::Type::_WeekDamage, 3, 1, 120);
 
 
         //コントローラを振動
@@ -238,6 +248,12 @@ void TennisPlayerState_SlowUpBall::State_Weak()
         }
     }
 
+    //キャンセル
+    if (m_Timer > ShotFrame + 3)
+    {
+        m_pControllClass->DoOtherAction();
+    }
+
     if (m_Timer < ShotFrame)
     {
         //角度調整
@@ -255,7 +271,7 @@ void TennisPlayerState_SlowUpBall::State_Usual()
 {
     const RADIAN angle_speed = D3DXToRadian(15);
     const int ShotFrame = 3;
-    const int EndFrame = 24;
+    const int EndFrame = 15;
 
     ++m_Timer;
 
@@ -334,7 +350,7 @@ void TennisPlayerState_SlowUpBall::State_Smash()
 {
     const RADIAN angle_speed = D3DXToRadian(15);
     const int SmashFrame = 3;
-    const int EndFrame = 30;
+    const int EndFrame = 15;
 
     ++m_Timer;
 
@@ -419,15 +435,14 @@ void TennisPlayerState_SlowUpBall::State_Finish()
 void TennisPlayerState_SlowUpBall::AngleControll(RADIAN Speed, float CheckLen)
 {
     //角度調整
-    Vector3 v = m_pControllClass->GetVec();
     CharacterBase* pTarget = nullptr;
 
-    if (chr_func::CalcAtkTarget(m_pTennis, D3DXToRadian(33), CheckLen, &pTarget))
+    if (chr_func::CalcAtkTarget(m_pTennis, D3DXToRadian(45), CheckLen, &pTarget))
     {
         chr_func::AngleControll(m_pTennis, pTarget->m_Params.pos, D3DXToRadian(10));
     }
     else
     {
-        chr_func::AngleControll(m_pTennis, m_pTennis->m_Params.pos + v, Speed);
+        chr_func::AngleControll(m_pTennis, m_pTennis->m_Params.pos + m_pControllClass->GetVec(), Speed);
     }
 }

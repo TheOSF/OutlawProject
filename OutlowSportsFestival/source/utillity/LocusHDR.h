@@ -37,6 +37,7 @@ public:
         CrVector3 speed = Vector3Zero //速度
         );
 
+
     //帯の長さを０に
     void Clear();
 
@@ -50,6 +51,9 @@ public:
 
     //移動更新
     void Update();
+
+    //軌跡の点を保持できる数を返す
+    size_t GetNumPoint()const;
 
 private:
 

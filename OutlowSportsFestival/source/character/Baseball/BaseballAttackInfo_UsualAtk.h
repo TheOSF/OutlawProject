@@ -39,6 +39,13 @@ public:
 		RADIAN             AngleControllValue;
 
 		int                LocusBoneNum;
+
+		float              AddSkillValue;
+
+		Vector2            VanishValue;
+
+		bool			   changeFlg;
+
 	};
 
 	Param m_Param;
@@ -53,7 +60,7 @@ private:
 
 	BaseballPlayer * const  m_pOwner;
 	Vector3               m_LocusPos, m_LocusVec;
-
+	bool				  VanishFlg;
 	//ダメージパラメータをセット
 	void DamageParamSet(DamageShpere* pDmg);
 
@@ -83,4 +90,7 @@ private:
 
 	//攻撃があたったときに呼ばれる
 	void HitAttack(DamageShpere* pDmg);
+    
+    //カウンターヒットかどうか
+    bool isCounterHitFrame(int Frame);
 };

@@ -5,12 +5,13 @@
 #include "../../Damage/Damage.h"
 #include "../../utillity/LocusHDR.h"
 #include "../../Render/MeshRenderer.h"
+#include "../../Effect/SpeedEffect.h"
 
 //***************************************************
 //		テニス＿必殺技用ボールクラス
 //***************************************************
 
-class TennisSpecialBall :public GameObjectBase, public BallBase
+class TennisSpecialBall :public GameObjectBase
 {
 public:
 
@@ -22,21 +23,21 @@ public:
     bool Msg(MsgType mt);
 
 private:
+    void(TennisSpecialBall::*m_pStatefunc)();
     TennisPlayer* const m_pTennis;
     LpMeshRenderer		m_pMeshRenderer;
-    DamageShpere		m_Damage;
     LocusHDR            m_Locus;
-    RADIAN              m_Rotate;
-    const float         m_FirstMoveVal;
-    int                 m_NoDamageFrame;
     int                 m_Timer;
+    Vector3             m_Pos, m_Move;
+    DamageShpere        m_Damage;
 
-    void UpdateDamageClass();
+    void StateMove();
+    void StateStop();
+    void StateFinish();
+
     void UpdateMesh();
     void UpdateMove();
-    void UpdateWallCheck();
-
-    void Counter(CharacterBase* pCounterCharacter)override;
+    void ApperEffect();
 };
 
 //***************************************************
@@ -60,9 +61,11 @@ public:
     void Exit(TennisPlayer* t)override;
 
 private:
+    bool CalcToBestTargetVec(CrVector3 ShotPos,CrVector3 ShotVec, Vector3& out);
 
     TennisPlayer* const  m_pTennis;
     int                  m_Timer;
+    SpeedEffect          m_SpeedEffect;
 
 };
 

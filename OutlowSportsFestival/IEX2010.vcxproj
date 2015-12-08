@@ -150,6 +150,7 @@
     <ClCompile Include="source\Ball\BallTemplate.cpp" />
     <ClCompile Include="source\character\Amefoot\AmefootUsualHitEvent.cpp" />
     <ClCompile Include="source\character\Amefoot\MoveClass\AmefootEvasionStandUpClass.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_Counter.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_Evasion.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveVanishDamage.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveWeakDamage.cpp" />
@@ -236,6 +237,7 @@
     <ClCompile Include="source\character\Tennis\TennisState_BoundBall.cpp" />
     <ClCompile Include="source\character\Tennis\TennisState_Rolling.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_Vanish.cpp" />
+    <ClCompile Include="source\character\Tennis\Tennis_DoCancelAction.cpp" />
     <ClCompile Include="source\character\Tennis\Tennis_HitEvent.cpp" />
     <ClCompile Include="source\character\Tennis\TennisState_BoundShot.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_Attack.cpp" />
@@ -255,6 +257,7 @@
     <ClCompile Include="source\Effect\GlavityLocus.cpp" />
     <ClCompile Include="source\Effect\HitEffectObject.cpp" />
     <ClCompile Include="source\Effect\ImpactLightObject.cpp" />
+    <ClCompile Include="source\Effect\LocusBarObject.cpp" />
     <ClCompile Include="source\Effect\ParticleBase.cpp" />
     <ClCompile Include="source\Effect\ParticleHDRRenderer.cpp" />
     <ClCompile Include="source\Effect\ParticleManager.cpp" />
@@ -280,6 +283,9 @@
     <ClCompile Include="source\IexSystem\Framework.cpp" />
     <ClCompile Include="source\IexSystem\System.cpp" />
     <ClCompile Include="source\IexSystem\WinMain.cpp" />
+    <ClCompile Include="source\Item\Item_BellEmitter.cpp" />
+    <ClCompile Include="source\Item\Item_Bell.cpp" />
+    <ClCompile Include="source\Item\Item_WallBoundBall.cpp" />
     <ClCompile Include="source\Item\SkillGaugeItemEmitter.cpp" />
     <ClCompile Include="source\Item\SkillGaugeUpItem.cpp" />
     <ClCompile Include="source\Library\Bullet\BulletDebug.cpp" />
@@ -332,6 +338,7 @@
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
     <ClInclude Include="IEX\iextreme.h" />
+    <ClInclude Include="IEX\IEX_Input.h" />
     <ClInclude Include="Input\GamePad\GamePad.h">
       <SubType>
       </SubType>
@@ -372,6 +379,7 @@
     <ClInclude Include="source\Ball\BallTemplate.h" />
     <ClInclude Include="source\character\Amefoot\AmefootUsualHitEvent.h" />
     <ClInclude Include="source\character\Amefoot\MoveClass\AmefootEvasionStandUpClass.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_Counter.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_Evasion.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveVanishDamage.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveWeakDamage.h" />
@@ -463,6 +471,8 @@
     <ClInclude Include="source\character\Tennis\TennisState_Rolling.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Vanish.h" />
     <ClInclude Include="source\character\Tennis\TennisState_BoundShot.h" />
+    <ClInclude Include="source\character\Tennis\TennisUtillityClass.h" />
+    <ClInclude Include="source\character\Tennis\Tennis_DoCancelAction.h" />
     <ClInclude Include="source\character\Tennis\Tennis_HitEvent.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Attack.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Counter.h" />
@@ -482,6 +492,7 @@
     <ClInclude Include="source\Effect\GlavityLocus.h" />
     <ClInclude Include="source\Effect\HitEffectObject.h" />
     <ClInclude Include="source\Effect\ImpactLightObject.h" />
+    <ClInclude Include="source\Effect\LocusBarObject.h" />
     <ClInclude Include="source\Effect\ParticleBase.h" />
     <ClInclude Include="source\Effect\ParticleHDRRenderer.h" />
     <ClInclude Include="source\Effect\ParticleManager.h" />
@@ -510,6 +521,9 @@
     <ClInclude Include="source\IexSystem\Framework.h" />
     <ClInclude Include="source\IexSystem\Scene.h" />
     <ClInclude Include="source\IexSystem\System.h" />
+    <ClInclude Include="source\Item\Item_BellEmitter.h" />
+    <ClInclude Include="source\Item\Item_Bell.h" />
+    <ClInclude Include="source\Item\Item_WallBoundBall.h" />
     <ClInclude Include="source\Item\SkillGaugeItemEmitter.h" />
     <ClInclude Include="source\Item\SkillGaugeUpItem.h" />
     <ClInclude Include="source\Library\Bullet\BulletDebug.h" />

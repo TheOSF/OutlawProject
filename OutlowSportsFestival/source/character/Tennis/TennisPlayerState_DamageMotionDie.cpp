@@ -122,10 +122,7 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
     Param.move = m_Damage_vec * 0.7f;
     Param.move.y = 0.2f;
 
-    Param.down_frame = 15;
-    Param.down_muteki_frame = 15;
     Param.standup_frame = 50;
-    Param.standup_muteki_frame = 10;
 
     //‚Ğ‚é‚İƒNƒ‰ƒX‚ğì¬
     m_pDamageVanishClass = new CharacterDamageVanish(

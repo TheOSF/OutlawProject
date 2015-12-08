@@ -10,9 +10,10 @@
 class TennisState_DamageMotion_Weak : public TennisState
 {
 public:
-	TennisState_DamageMotion_Weak(
-		TennisPlayer*  pTennis,
-		const Vector3& Damage_vec  //ダメージを受けた方向
+    TennisState_DamageMotion_Weak(
+        TennisPlayer*  pTennis,
+        const Vector3& Damage_vec,  //ダメージを受けた方向
+        bool           CounterHit
 		);
 
 	// ステート開始
@@ -28,6 +29,7 @@ private:
 	CharacterDamageMotion*   m_pDamageMotionClass;	//ひるみ更新クラス
 	TennisPlayer*            m_pTennis;
 	Vector3                  m_Damage_vec;
+    bool                     m_CounterHit;
 };
 
 #endif

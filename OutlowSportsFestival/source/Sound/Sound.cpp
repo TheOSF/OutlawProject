@@ -29,6 +29,7 @@ void Sound::Initialize()
     RegistSE(Counter, "Counter");
 
     RegistSE(Explode, "Explode");
+    RegistSE(Explode2, "Explode2");
 
     RegistSE(Skill, "Skill");
 
@@ -73,7 +74,7 @@ void Sound::Initialize()
 
 void Sound::Play(Type type, RATIO volume , bool loop)
 {
-    return;  //これ！！
+    //return;  //これ！！
 
     IEX_PlaySound(
         (int)type,

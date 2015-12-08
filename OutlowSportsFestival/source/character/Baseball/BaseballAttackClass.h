@@ -60,6 +60,9 @@ public:
 
 		//攻撃があたったときに呼ばれる
 		virtual void HitAttack(DamageShpere* pDmg) = 0;
+
+        //カウンターヒットかどうか
+        virtual bool isCounterHitFrame(int Frame) = 0;
 	};
 
 	typedef std::vector<AttackInfo*> AttackInfoArray;

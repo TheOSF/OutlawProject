@@ -95,4 +95,6 @@ private:
 	//ヒットストップかどうか
 	bool isHitStopFrame();
 
+    //カウンターヒットするかどうか
+    bool isCounterFrame(int Timer);
 };

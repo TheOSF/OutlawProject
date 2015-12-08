@@ -1,8 +1,9 @@
 #ifndef __BALL_H__
 #define __BALL_H__
 
-#include <map>
+#include <array>
 #include <list>
+#include <bitset>
 #include "iextreme.h"
 #include "../GameSystem/ForwardDecl.h"
 
@@ -15,6 +16,12 @@ class BallBase
 public:
 	//通常ボール打ちのワールド座標上でのyの値
 	static const float UsualBallShotY;
+
+    //ボール固有ID
+    enum BallID :int
+    {
+        ErrorID = -1 //エラー値
+    };
 
 	//球の機能のタイプ
 	enum Type
@@ -42,7 +49,6 @@ public:
 
 	//コンストラクタ・デストラクタで自動的にマネージャに登録・削除を行う
 	BallBase();
-	virtual ~BallBase();
 
     //カウンターを行ったときに自動的に呼ばれる関数
     virtual void Counter(CharacterBase* pCounterCharacter){}
@@ -54,6 +60,16 @@ public:
 
 	//引数のボールがカウンター可能かどうか
 	static bool isCanCounter(const BallBase* pBall);
+
+    //固有ＩＤのゲッタ
+    BallID GetID()const;
+
+protected:
+    virtual ~BallBase();
+
+private:
+    //ボール固有ＩＤ
+    BallID m_ID;
 };
 
 
@@ -63,7 +79,8 @@ public:
 class BallManager
 {
 public:
-	typedef std::map<BallBase*, BallBase*> BallMap;
+    enum :size_t{ MaxBallNum = 30 };  //ボールが同時に出現できる最大数
+    typedef std::array<BallBase*, MaxBallNum> BallArray;
 
 	//登録・削除をBallBaseのみ可能にするため
 	friend class BallBase;
@@ -73,7 +90,7 @@ public:
 	static void Release();
 
 	//ボールデータ取得
-	BallMap* GetBallMap();
+  //  BallArray* GetBallData();
 
 	//もっともカウンターするのに適したボールを得る
 	bool GetCounterBall(
@@ -84,15 +101,26 @@ public:
 		int			move_frame		//キャッチまでの移動フレーム
 		);
 
+    //引数のIDのボールが存在しているかどうか
+    bool isBallEnable(BallBase::BallID Id);
+
 private:
-	static BallManager*		m_pInstance;
-	BallMap					m_BallMap;
+    enum :size_t
+    {
+        MaxBallRegistId = 256  //(1ラウンドに撃てる最大玉数)
+    };
+    typedef std::bitset<MaxBallRegistId> BallIDFlags;
+
+	static BallManager*		             m_pInstance;
+    BallArray				             m_BallData;
+    BallIDFlags                          m_BallIDFlags;
+    size_t                               m_IdSetCount;
 
 	BallManager();
 	~BallManager();
 
-	bool AddBall(BallBase* pBall);
-	bool EraceBall(BallBase* pBall);
+    BallBase::BallID    AddBall(BallBase* pBall);
+	bool                EraceBall(BallBase* pBall);
 };
 
 #define DefBallMgr (BallManager::GetInstance())

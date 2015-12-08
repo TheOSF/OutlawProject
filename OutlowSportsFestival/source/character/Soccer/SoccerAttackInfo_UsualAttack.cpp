@@ -182,3 +182,9 @@ bool SoccerAttackInfo_UsualAtk::isHitStopFrame()
 {
 	return m_HitStopCount > 0;
 }
+
+//カウンターヒットするかどうか
+bool SoccerAttackInfo_UsualAtk::isCounterFrame(int Timer)
+{
+    return Timer < m_Param.DamageEnableEnd;
+}

@@ -39,7 +39,7 @@ SoccerPlayer::~SoccerPlayer()
 	delete m_pStateMachine;
 }
 
-void SoccerPlayer::SetState(SoccerState* state,bool Important)
+void SoccerPlayer::SetState(SoccerState* state,int Important)
 {
 	//新しいステートをセット
 	m_pStateMachine->set_state(state,Important);

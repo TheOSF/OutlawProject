@@ -10,7 +10,8 @@ class SoccerState_SmallDamage :public SoccerState
 public:
 	SoccerState_SmallDamage(
 		SoccerPlayer*  pSoccer,
-		const Vector3& Damage_vec  //ダメージを受けた方向
+		const Vector3& Damage_vec, //ダメージを受けた方向
+        bool           Counter
 		);
 public:
 	void Enter(SoccerPlayer* s);
@@ -20,6 +21,7 @@ private:
 	CharacterDamageMotion*   m_pDamageMotionClass;	//ひるみ更新クラス
 	SoccerPlayer*            m_pSoccer;
 	Vector3                  m_Damage_vec;
+    bool                     m_Counter;
 };
 
 class SoccerState_DamageVanish : public SoccerState

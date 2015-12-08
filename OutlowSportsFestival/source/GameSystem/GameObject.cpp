@@ -2,6 +2,7 @@
 #include <typeinfo>
 #include <time.h>
 #include <chrono>
+#include "IEX_Input.h"
 
 GameObjectManager*	GameObjectManager::m_pInstance = nullptr;
 
@@ -224,6 +225,11 @@ void GameObjectManager::UsualUpdate()
 
     while (it != m_GameObjectMap.end())
     {
+        if (isFreezeFrame())
+        {
+            return;
+        }
+
         if (it->second->Update() == false)
         {
 #ifdef _DEBUG

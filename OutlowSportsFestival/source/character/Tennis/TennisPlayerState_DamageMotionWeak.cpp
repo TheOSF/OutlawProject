@@ -5,13 +5,16 @@
 #include "../../Effect/HitEffectObject.h"
 #include "../../Effect/BlurImpact.h"
 #include "../../GameSystem/GameController.h"
+#include "../../Effect/EffectFactory.h"
 
 TennisState_DamageMotion_Weak::TennisState_DamageMotion_Weak(
 	TennisPlayer*  pTennis,
-	const Vector3& Damage_vec  //ダメージを受けた方向
+	const Vector3& Damage_vec,  //ダメージを受けた方向
+    bool           CounterHit
 	):
 	m_pTennis(pTennis),
-	m_Damage_vec(Damage_vec)
+	m_Damage_vec(Damage_vec),
+    m_CounterHit(CounterHit)
 {
 
 }
@@ -27,14 +30,16 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
 		void Update(float speed)
 		{
 			//モデルの更新のみ
-			m_pTennis->m_Renderer.Update(1);
+            m_pTennis->m_Renderer.Update(speed);
 			chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
 		}
+
 		void Start()
 		{
 			//ひるみモーションをセット
 			m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Damage_Weak);
 		}
+
 		void End()
 		{
 			//通常ステートをセット
@@ -57,6 +62,7 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
 	CharacterDamageMotion::Params Param;
 
 	Param.damage_vec = m_Damage_vec;
+    Param.counter_hit = m_CounterHit;
 
 	//ひるみクラスを作成
 	m_pDamageMotionClass = new CharacterDamageMotion(
@@ -66,28 +72,11 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
 		Param
         );
 
-    {
-        Vector3 pos, vec;
-        
-        vec = m_Damage_vec;
-        vec.y = 0;
-        vec.Normalize();
-
-
-        pos = m_pTennis->m_Params.pos + Vector3(0, 3.5f, 0) + vec*1.5f;
-
-        //ヒットエフェクト作成
-        new HitEffectObject(
-            pos,
-            vec,
-            0.045f,
-            0.15f,
-            Vector3(1.0f, 0.8f, 0.25f),
-            2
-            );
-
-    }
-
+    //エフェクト
+    EffectFactory::HitEffect(
+        m_pTennis,
+        m_Damage_vec
+        );
 
     //コントローラを振動
     controller::SetVibration(

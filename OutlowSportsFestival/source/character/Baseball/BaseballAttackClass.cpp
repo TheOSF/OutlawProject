@@ -49,7 +49,7 @@ void BaseballAttackClass::Update()
 
 	//キャラクタ更新
 	{
-		BaseballHitEvent HitEvent(m_pOwner);
+        BaseballHitEvent HitEvent(m_pOwner, (isLastAtk()) ? (false) : (m_AttackInfoArray.at(m_ComboCount)->isCounterHitFrame(m_Timer)));
 
 		chr_func::UpdateAll(m_pOwner, &HitEvent);
 	}

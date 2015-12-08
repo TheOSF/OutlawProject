@@ -5,22 +5,21 @@
 #include "../../Sound/Sound.h"
 
 #include "../CharacterFunction.h"
-
-#include "../../Effect/BlurImpact.h"
-
-#include "../../Effect/HitEffectObject.h"
-
+#include "../../Effect/EffectFactory.h"
 #include "../../Camera/Camera.h"
 
 SoccerState_SmallDamage::SoccerState_SmallDamage(
 	SoccerPlayer* pSoccer,
-	const Vector3& Damage_vec  //ダメージを受けた方向
+	const Vector3& Damage_vec,  //ダメージを受けた方向
+    bool           Counter
 	) :
 	m_pSoccer(pSoccer),
-	m_Damage_vec(Damage_vec)
+	m_Damage_vec(Damage_vec),
+    m_Counter(Counter)
 {
 
 }
+
 void SoccerState_SmallDamage::Enter(SoccerPlayer* s)
 {
 	//キャラクタ共通ひるみクラスのサッカー固有イベントクラス
@@ -58,30 +57,21 @@ void SoccerState_SmallDamage::Enter(SoccerPlayer* s)
 	CharacterDamageMotion::Params Param;
 
 	Param.damage_vec = m_Damage_vec;
+    Param.counter_hit = m_Counter;
+
 	//ひるみクラスを作成
-	m_pDamageMotionClass = new CharacterDamageMotion(
-		m_pSoccer,
-		new SoccerEvent(m_pSoccer),
-		new SoccerHitEvent(m_pSoccer),
+    m_pDamageMotionClass = new CharacterDamageMotion(
+        m_pSoccer,
+        new SoccerEvent(m_pSoccer),
+        new SoccerHitEvent(m_pSoccer, false), 
 		Param
 		);
 
-	//ヒットエフェクト作成
-	new HitEffectObject(
-		m_pSoccer->m_Params.pos + Vector3(0, 3, 0),
-		m_Damage_vec,
-		0.05f,
-		0.15f,
-		Vector3(1.0f, 1.0f, 1.0f)
-		);
-
-	//ブラーエフェクト
-	new BlurImpactSphere(
-		m_pSoccer->m_Params.pos + Vector3(0, 3, 0),
-		10,
-		15,
-		30
-		);
+    //エフェクト
+    EffectFactory::HitEffect(
+        m_pSoccer,
+        m_Damage_vec
+        );
 
 }
 void SoccerState_SmallDamage::Execute(SoccerPlayer* t)
@@ -174,32 +164,21 @@ void SoccerState_DamageVanish::Enter(SoccerPlayer* s)
 
 	Param.rotate_speed = Vector3(0.0f, 0.0f, 0.0);
 	Param.move = m_Damage_vec;
-	Param.down_frame = 15;
-	Param.down_muteki_frame = 15;
 	Param.standup_frame = 50;
 
 	//ひるみクラスを作成
-	m_pDamageVanishClass = new CharacterDamageVanish(
-		m_pSoccer,
-		Param,
-		new SoccerEvent(s),
-		new SoccerHitEvent(s)
+    m_pDamageVanishClass = new CharacterDamageVanish(
+        m_pSoccer,
+        Param,
+        new SoccerEvent(s),
+        new SoccerHitEvent(s, false)
 		);
-	//ヒットエフェクト作成
-	new HitEffectObject(
-		m_pSoccer->m_Params.pos + Vector3(0, 3, 0),
-		m_Damage_vec,
-		0.05f,
-		0.15f,
-		Vector3(1.0f, 1.0f, 1.0f)
-		);
-	//ブラーエフェクト
-	new BlurImpactSphere(
-		m_pSoccer->m_Params.pos + Vector3(0, 3, 0),
-		25,
-		10,
-		30
-		);
+
+    //エフェクト
+    EffectFactory::VanishEffect(
+        m_pSoccer,
+        m_Damage_vec
+        );
 
 }
 void SoccerState_DamageVanish::Execute(SoccerPlayer* s)
@@ -294,10 +273,7 @@ void SoccerState_DamageMotion_Die::Enter(SoccerPlayer* t)
 	Param.move = Vector3Normalize(m_Damage_vec) * 0.7f;
 	Param.move.y = 0.2f;
 
-	Param.down_frame = 15;
-	Param.down_muteki_frame = 15;
 	Param.standup_frame = 50;
-	Param.standup_muteki_frame = 10;
 
 
 	//ひるみクラスを作成
@@ -308,34 +284,12 @@ void SoccerState_DamageMotion_Die::Enter(SoccerPlayer* t)
 		new DamageManager::HitEventBase()
 		);
 
-	{
-		COLORf EffectColor(CharacterBase::GetPlayerColor(t->m_PlayerInfo.number));
+    //エフェクト
+    EffectFactory::DieEffect(
+        m_pSoccer,
+        m_Damage_vec
+        );
 
-		//ヒットエフェクト作成
-		new HitEffectObject(
-			m_pSoccer->m_Params.pos + Vector3(0, 3, 0) + Vector3Normalize(m_Damage_vec)*3.5f,
-			m_Damage_vec,
-			0.05f,
-			0.15f,
-			Vector3(EffectColor.r, EffectColor.g, EffectColor.b),
-			5,
-			50
-			);
-	}
-
-	//ブラーエフェクト
-	new BlurImpactSphere(
-		m_pSoccer->m_Params.pos + Vector3(0, BallBase::UsualBallShotY, 0),
-		20,
-		50,
-		15
-		);
-
-	//カメラショック
-	DefCamera.SetShock(
-		Vector2(1, 1)*0.22f,
-		20
-		);
 }
 
 void SoccerState_DamageMotion_Die::Execute(SoccerPlayer* s)
@@ -405,7 +359,7 @@ void SoccerState_brake::Enter(SoccerPlayer* s)
 			Vector3Zero,
 			1.8f,
 			0.2f,
-			true
+			false
 			);
 	}
 

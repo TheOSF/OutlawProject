@@ -5,19 +5,20 @@
 //**************************************************************************
 
 MeshRenderer::MeshRenderer(
-	LPIEXMESH	pMesh,
-	bool		MeshDelete,
+    LPIEXMESH	pMesh,
+    bool		MeshDelete,
     RenderType  type,
     GbufRenderType    gbuf_Type,
     PreRenderCallBack* pCallBack
-	) :
-	m_pMesh(pMesh),
-	m_MeshDelete(MeshDelete),
+    ) :
+    m_pMesh(pMesh),
+    m_MeshDelete(MeshDelete),
     m_RenderType(type),
     m_Gbuf_Type(gbuf_Type),
-    m_HDR(0,0,0),
+    m_HDR(0, 0, 0),
     m_pCallBack(pCallBack),
-    m_Lighting(0,0,0)
+    m_Lighting(0, 0, 0),
+    m_Visible(true)
 {
     D3DXMatrixIdentity(&m_TransMatrix);
 
@@ -42,6 +43,11 @@ void MeshRenderer::GbufRender(
     DeferredGbufRenderer::TechniqueSetter*  pSetter  //テクニック管理クラス
     )
 {
+    if (m_Visible == false)
+    {
+        return;
+    }
+
     char str[256];
 
     switch (m_Gbuf_Type)
@@ -75,6 +81,11 @@ void MeshRenderer::GbufRender(
 
 void MeshRenderer::MasterRender()
 {
+    if (m_Visible == false)
+    {
+        return;
+    }
+
     shader->SetValue("g_HDR_Color", m_HDR);
     shader->SetValue("g_Lighting_Color", m_Lighting);
     
@@ -105,7 +116,7 @@ void MeshRenderer::MasterRender()
 void MeshRenderer::DepthRender(iexShader* pShader, const char* pTec, DepthRenderType type)
 {
 
-    if (type != DepthRenderType::DirLight)
+    if (m_Visible == false||type != DepthRenderType::DirLight)
     {
         return;
     }

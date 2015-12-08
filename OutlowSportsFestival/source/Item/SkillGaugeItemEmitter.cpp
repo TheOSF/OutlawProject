@@ -20,7 +20,7 @@ SkillGaugeItemEmitter::~SkillGaugeItemEmitter()
 bool SkillGaugeItemEmitter::CheckLosePlayer(CharacterBase** ppOut)
 {
     //平均よりも一定以下の体力のプレイヤーを算出
-    const RATIO MinRatio = 0.01f;
+    const RATIO MinRatio = 0.2f;
     CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
 
     RATIO avg = 0, MostMin = 1, Temp;

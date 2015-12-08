@@ -5,14 +5,14 @@
 PlayerGauge::PlayerGauge(CharacterBase* pOwnerCharacter) :
 m_pOwnerCharacter(pOwnerCharacter)
 {
-    const int ScreenLeftSpace = 50;
+    const int ScreenLeftSpace = (int)(50.0f * iexSystem::ScreenToX1600);
 
-    m_Renderer.m_Size = Vector2(1.00f, 1.00f);
+    m_Renderer.m_Size = Vector2(iexSystem::ScreenToX1600, iexSystem::ScreenToY900);
     m_Renderer.m_Color     = COLORf(1, 1, 1, 1);
     m_Renderer.m_FaceColor = COLORf(1, 1, 1, 1);
 
     m_Renderer.m_Pos.x = ScreenLeftSpace+(float)((int)pOwnerCharacter->m_PlayerInfo.number * ((iexSystem::ScreenWidth - ScreenLeftSpace * 2) / 4));
-    m_Renderer.m_Pos.y = 765;
+    m_Renderer.m_Pos.y = 765 * iexSystem::ScreenToY900;
 
     m_Renderer.m_Num = pOwnerCharacter->m_PlayerInfo.number;
     m_Renderer.m_PlayerType = pOwnerCharacter->m_PlayerInfo.player_type;
@@ -110,8 +110,8 @@ void PlayerGauge::GaugeRenderer::BackRender()
 
 void PlayerGauge::GaugeRenderer::LifeRender()
 {
-    const float SizeX = 191;
-    const float SizeY = 42;
+    const float SizeX = 191 ;
+    const float SizeY = 42 ;
     const float StartX = 80.0f;
     const float StartY = 1.0f;
 
@@ -201,8 +201,8 @@ void PlayerGauge::GaugeRenderer::FaceRender()
 
 void PlayerGauge::GaugeRenderer::PlayerNumRender()
 {
-    const float SizeX = 55;
-    const float SizeY = 42;
+    const float SizeX = 55 * iexSystem::ScreenToX1600;
+    const float SizeY = 42 * iexSystem::ScreenToY900;
 
     int TexX = 0;
     int TexY = 0;
@@ -219,7 +219,7 @@ void PlayerGauge::GaugeRenderer::PlayerNumRender()
     }
 
     m_pUItex->Render(
-        (int)m_Pos.x + (int)(272*m_Size.x),
+        (int)m_Pos.x + (int)(272 * m_Size.x),
         (int)m_Pos.y + (int)(1*m_Size.y),
         (int)(SizeX*m_Size.x),
         (int)(SizeY*m_Size.y),

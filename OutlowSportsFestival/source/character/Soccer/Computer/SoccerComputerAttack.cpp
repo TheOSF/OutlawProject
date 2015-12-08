@@ -149,7 +149,7 @@ const CharacterBase* SoccerState_ComputerControll_Attack::ComputerControllEvent:
 
 }
 SoccerState_ComputerControll_Attack::SoccerState_ComputerControll_Attack(SoccerPlayer* s) :
-	m_Attack(s, new ComputerControllEvent(s,&m_Attack), 0)
+	m_Attack(s, new ComputerControllEvent(s,&m_Attack))
 {
 
 }

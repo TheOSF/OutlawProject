@@ -11,12 +11,12 @@
 class SoccerHitEvent :public DamageManager::HitEventBase
 {
 public:
-	SoccerHitEvent(SoccerPlayer* ps);
+    SoccerHitEvent(SoccerPlayer* ps, bool CounterHit = false);
 
 	bool Hit(DamageBase* pDmg);//“–‚½‚Á‚½‚ÉŒÄ‚Î‚ê‚éŠÖ”(–ß‚è’lF“–‚½‚Á‚½‚©‚Ç‚¤‚©)
 private:
 	SoccerPlayer* m_pSoccer;
-
+    const bool    m_CounterHit;
 };
 
 #endif

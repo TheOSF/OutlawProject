@@ -18,6 +18,9 @@ D3DFORMAT	iexSystem::ScreenFormat;
 DWORD		iexSystem::ScreenWidth;
 DWORD		iexSystem::ScreenHeight;
 
+float iexSystem::ScreenToX1600;
+float iexSystem::ScreenToY900;
+
 //	３Ｄデバイス
 LPDEVICE	iexSystem::Device;
 HWND		iexSystem::Window;
@@ -97,6 +100,9 @@ BOOL iexSystem::Initialize( HWND hWnd, BOOL bFullScreen, DWORD ScreenMode )
     ScreenFormat = d3dpp.BackBufferFormat;
     ScreenWidth = d3dpp.BackBufferWidth;
     ScreenHeight = d3dpp.BackBufferHeight;
+
+    ScreenToX1600 = (float)ScreenWidth / 1600.0f;
+    ScreenToY900 = (float)ScreenHeight / 900.0f;
 
 	//	システム初期化
 	IEX_InitText();

@@ -9,6 +9,8 @@
 class AmefootPlayerState_UsualMove : public AmefootState
 {
 public:
+     AmefootPlayerState_UsualMove();
+
      void Enter(AmefootPlayer* pCharacter)override;
 
      void Execute(AmefootPlayer* pCharacter)override;

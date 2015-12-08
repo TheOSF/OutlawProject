@@ -66,6 +66,9 @@ public:
 
 		//ヒットストップ時更新
 		virtual void HitStopUpdate() = 0;
+
+        //カウンターヒットするかどうか
+        virtual bool isCounterFrame(int Timer) = 0;
 	};
 
 	typedef std::vector<AttackInfo*> AttackInfoArray;
@@ -75,8 +78,7 @@ public:
 
 	SoccerAttackClass(
 		SoccerPlayer*   pOwner,  //サッカープレイヤーへのポインタ
-		ControllEvent*  pEvent,   //イベントクラス(終了時にdeleteする)
-		int NoDamageFrame
+		ControllEvent*  pEvent   //イベントクラス(終了時にdeleteする)
 		);
 
 	~SoccerAttackClass();
@@ -99,7 +101,6 @@ private:
 	DamageShpere	      m_Damage;
 	int                   m_Timer;
 	int                   m_ComboCount;
-	int                   NoDamageFrame;
 	bool                  m_DoCombo;
 	bool                  m_DoHit;
 	Locus                 m_Locus;

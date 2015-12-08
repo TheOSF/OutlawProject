@@ -93,7 +93,7 @@ const CharacterBase* SoccerState_ComputerControll_Sliding::PlayerControllEvent::
 
 
 SoccerState_ComputerControll_Sliding::SoccerState_ComputerControll_Sliding(SoccerPlayer* s) :
-	m_Attack(s, new PlayerControllEvent(s), 10)
+	m_Attack(s, new PlayerControllEvent(s))
 {
 
 }

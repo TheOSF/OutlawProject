@@ -18,7 +18,8 @@ UsualBall::UsualBall(
     BallBase::Params	params,			//ボールパラメータ
     DamageBase::Type	damage_type,	//ダメージ判定のタイプ
     float				damage_val,		//ダメージ量
-    UINT                hit_num         //ヒット数
+    UINT                hit_num,        //ヒット数
+    UINT                live_frame   
     ) :
     m_DeleteFrame(180),
     m_Locus(15),
@@ -28,7 +29,8 @@ UsualBall::UsualBall(
     m_HitStopFrame(0),
     m_pStateFunc(&UsualBall::StateFlyMove),
     m_RotateSpeed(0.15f, 0.05f, 0.05f),
-    m_FirstParentType(params.pParent->m_PlayerInfo.chr_type)
+    m_FirstParentType(params.pParent->m_PlayerInfo.chr_type),
+    m_FlyLiveFrame((int)live_frame)
 {
 
 	LPIEXMESH		pBallMesh;
@@ -46,8 +48,8 @@ UsualBall::UsualBall(
         m_Damage.m_Enable = true;
         m_Damage.m_Param.pos1 = m_Params.pos;
         m_Damage.m_Param.pos2 = m_Params.pos;
-        m_Damage.m_VecPower.x = 0.1f;
-        m_Damage.m_VecPower.y = 0.0f;
+        m_Damage.m_VecPower.x = 0.4f;
+        m_Damage.m_VecPower.y = 0.2f;
 
         UpdateDamageClass();
     }
@@ -347,7 +349,9 @@ void UsualBall::Counter(CharacterBase* pCounterCharacter)
 
     UpdateColor();
 
-    m_Damage.m_VecPower.x = 0.5f;
+    m_FlyLiveFrame = 180;
+
+    m_Damage.m_VecPower.x = Vector3XZLength(m_Params.move)*1.2f;
     m_Damage.type = DamageBase::Type::_VanishDamage;
     m_Damage.Value += 1.0f; //ダメージを増やす
 
@@ -438,7 +442,7 @@ bool UsualBall::StateFlyMove()
 
         //ダメージ判定の位置を現在の位置に更新
         UpdateDamageClass();
-    }
+}
 
     //ステージとのあたり判定
     {
@@ -450,6 +454,16 @@ bool UsualBall::StateFlyMove()
             //新しい移動値をセット
             m_Params.move = NewMoveVec;
 
+            //攻撃判定のない状態にする
+            ToNoWork();
+        }
+    }
+
+    //飛行時間カウント
+    {
+        //飛行時間が終了なら
+        if (--m_FlyLiveFrame <= 0)
+        {
             //攻撃判定のない状態にする
             ToNoWork();
         }

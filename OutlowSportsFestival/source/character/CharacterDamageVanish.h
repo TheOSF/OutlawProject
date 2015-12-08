@@ -12,14 +12,13 @@ class CharacterDamageVanish
 public:
 	struct Param
 	{
+        Param();
+
 		Vector3 move;         //ˆÚ“®‘¬“x
 		Vector3 rotate_speed; //ŠeŽ²‚Ì‰ñ“]‘¬“x
 
         int     down_frame;
-        int     down_muteki_frame;
-
         int     standup_frame;
-        int     standup_muteki_frame;
 	};
 
     class Event
@@ -66,6 +65,7 @@ private:
     int             m_Count;
     bool            m_WallHit;
     bool            m_FirstSlow;
+    float           m_VanishAngle;
 
     void(CharacterDamageVanish::*m_pStateFunc)();
 
