@@ -24,7 +24,8 @@ public:
 
 	Vector2 StateMoveFront(SoccerPlayer* s);//　ターゲットに前進
 	Vector2 StateMoveDistance(SoccerPlayer* s);//　ターゲットとの距離をとる
-	Vector2 StateStop(SoccerPlayer* s);//　立ち止まる
+	Vector2 StateMoveCenter(SoccerPlayer* s);
+	Vector2 StateWait(SoccerPlayer* s);//　立ち止まる
 
 	static bool SwitchGameState(SoccerPlayer* ps);
 	Vector2 SwitchAction(SoccerPlayer* s);
@@ -36,6 +37,8 @@ private:
 		Stop,
 		Forward,
 		Distance,
+		MoveCenter,
+		Wait
 	};
 	CharacterComputerMove::Param m_cParam;
 	MoveMode movemode;

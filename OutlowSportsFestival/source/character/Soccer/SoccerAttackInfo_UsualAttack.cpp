@@ -2,13 +2,16 @@
 #include "../CharacterFunction.h"
 #include "../../Sound/Sound.h"
 
+#include "../CharacterManager.h"
+
 #include "../../GameSystem/GameController.h"
 
 
 SoccerAttackInfo_UsualAtk::SoccerAttackInfo_UsualAtk(
 	SoccerPlayer* pOwner
 	) :
-	m_pOwner(pOwner)
+	m_pOwner(pOwner),
+	m_HitStopCount(0)
 {
 
 }
@@ -126,6 +129,11 @@ void SoccerAttackInfo_UsualAtk::Update(int Frame, Locus* pLocus)
 		chr_func::AddMoveFront(m_pOwner, m_Param.MoveSpeed, 1000);
 	}
 }
+//ヒットストップ時
+void SoccerAttackInfo_UsualAtk::HitStopUpdate()
+{
+	m_HitStopCount = max(0, m_HitStopCount - 1);
+}
 //攻撃があたったときに呼ばれる
 void SoccerAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
 {
@@ -137,10 +145,40 @@ void SoccerAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
 		0.15f,
 		m_pOwner->m_PlayerInfo.number
 		);
+}//前方に敵がいるかどうか
+bool SoccerAttackInfo_UsualAtk::isFrontStayEnemy()
+{
+	const CharacterManager::CharacterMap& chr_map = DefCharacterMgr.GetCharacterMap();
+	Vector3 front, vec;
+
+	const float OKlen = 3.0f;
+	const RADIAN OKrad = D3DXToRadian(45);
+
+	chr_func::GetFront(m_pOwner, &front);
+
+	for (auto& it : chr_map)
+	{
+		if (chr_func::isDie(it.first) ||
+			it.first == m_pOwner)
+		{
+			continue;
+		}
+
+
+		vec = it.first->m_Params.pos - m_pOwner->m_Params.pos;
+
+		if (vec.Length() < OKlen && Vector3Radian(vec, front) < OKrad)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
-//カウンターフレームかどうか
-bool SoccerAttackInfo_UsualAtk::isCounterHitFrame(int Frame)
+
+//ヒットストップかどうか
+bool SoccerAttackInfo_UsualAtk::isHitStopFrame()
 {
-    return Frame < m_Param.DamageEnableEnd;
+	return m_HitStopCount > 0;
 }

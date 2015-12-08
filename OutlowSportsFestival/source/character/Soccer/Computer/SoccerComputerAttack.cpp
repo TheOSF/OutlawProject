@@ -13,15 +13,77 @@ SoccerState_ComputerControll_Attack::ComputerControllEvent::ComputerControllEven
 }
 bool SoccerState_ComputerControll_Attack::ComputerControllEvent::isDoCombo()
 {
-	if (m_Attack->getDoHit())
+	int FoolPoint = rand() % 100;
+	switch (m_pSoccer->m_PlayerInfo.strong_type)
 	{
-		return true;
-	}
-	else
-	{
+	case StrongType::_Strong:
+		if (m_Attack->getDoHit())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		break;
+	case StrongType::_Usual:
+		if (m_Attack->getDoHit())
+		{
+			if (FoolPoint > 75)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+			
+		}
+		else
+		{
+			if (FoolPoint > 75)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+			
+		}
+		break;
+	case StrongType::_Weak:
+		if (m_Attack->getDoHit())
+		{
+
+			if (FoolPoint > 50)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+
+		}
+		else
+		{
+			if (FoolPoint > 50)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		break;
+	default:
 		return false;
+		break;
+
 	}
-		
+	return false;
 }
 void SoccerState_ComputerControll_Attack::ComputerControllEvent::AngleControll(RADIAN angle)
 {

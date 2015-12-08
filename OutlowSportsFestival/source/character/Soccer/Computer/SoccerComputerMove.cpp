@@ -54,7 +54,7 @@ bool SoccerState_ComputerControll_Move::SwitchGameState(SoccerPlayer* ps)
 void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 {
 	m_pMoveControllClass->GetParams(cParam, s->m_PlayerInfo.strong_type);
-	Dashpro = 200 - (int)(cParam.ActionFrequence * 100);
+	Dashpro = 300 - (int)(cParam.ActionFrequence * 100);
 	//移動イベントクラス
 	class SoccerMoveEvent :public CharacterUsualMove::MoveEvent
 	{
@@ -85,10 +85,12 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 	//移動パラメータを代入
 	CharacterUsualMove::Params Movep;
 
-	Movep.Acceleration = 0.2f;
-	Movep.MaxSpeed = 0.2f;
+	Movep.Acceleration = 0.25f;
+	Movep.MaxSpeed = 0.35f;
 	Movep.TurnSpeed = 0.3f;
-	Movep.DownSpeed = 0.2f;
+	Movep.DownSpeed = 0.08f;
+	Movep.RunEndFrame = 35;
+
 
 	//移動コントロールクラスの作成
 	m_pMoveControllClass = new CharacterComputerMove(s);
@@ -123,9 +125,9 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 			//if (m_cSoccer->m_Params.SP >= 0.6f)
 			if (chr_func::isCanSpecialAttack(m_cSoccer))
 			{
-				//m_cSoccer->SetState(new SoccerState_ComputerControll_Finisher());
+				m_cSoccer->SetState(new SoccerState_ComputerControll_Finisher());
 			}
-			if (len < 6.0f)
+			if (len < 5.0f)
 			{
 				if ((cParam.ActionFrequence * 100) > AttackPoint)
 				{
@@ -136,7 +138,7 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 			{
 				if ((cParam.ActionFrequence * 100) > AttackPoint)
 				{
-					//m_cSoccer->SetState(new SoccerState_ComputerControll_Shot);
+					m_cSoccer->SetState(new SoccerState_ComputerControll_Shot);
 				}
 			}
 		}
@@ -166,7 +168,6 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 		{
 			m_pMoveControllClass->GetParams(cParam, m_cSoccer->m_PlayerInfo.strong_type);
 			ReactionPoint = rand() % 100;
-		
 		}
 
 		//アニメーションの更新
@@ -178,8 +179,6 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 				{
 					m_cSoccer->SetState(new SoccerState_PlayerControll_Counter);
 				}
-				
-				
 			}
 			else
 			{
@@ -212,7 +211,7 @@ void SoccerState_ComputerControll_Move::Execute(SoccerPlayer* s)
 		m_pReactionClass->Update();
 		if (rand() %  Dashpro == 0)
 		{
-			//s->SetState(new SoccerState_ComputerControll_Dash(s));
+			s->SetState(new SoccerState_ComputerControll_Dash(s));
 		}
 	}
 	m_pMoveClass->Update();

@@ -3,10 +3,12 @@
 #include "../CharacterFunction.h"
 #include "SoccerHitEvent.h"
 #include "../../GameSystem/ResourceManager.h"
+#include "../../GameSystem/GameSystem.h"
 
 SoccerAttackClass::SoccerAttackClass(
 	SoccerPlayer*   pOwner,
-	ControllEvent*  pEvent
+	ControllEvent*  pEvent,
+	int Frame
 	) :
 	m_pOwner(pOwner),
 	m_pEvent(pEvent),
@@ -14,7 +16,9 @@ SoccerAttackClass::SoccerAttackClass(
 	m_ComboCount(-1),
 	m_DoHit(false),
 	m_pStateFunc(&SoccerAttackClass::State_NextAtk),
-	m_Locus(7)
+	m_Locus(7),
+	m_DamageHitCount(0),
+	NoDamageFrame(Frame)
 {
 	m_Damage.m_Enable = false;
 
@@ -41,14 +45,21 @@ SoccerAttackClass::~SoccerAttackClass()
 void SoccerAttackClass::Update()
 {
 	m_pOwner->m_Renderer.Update(1);
-
+	DamageManager::HitEventBase NoDmgHitEvent;   //ノーダメージ
+	SoccerHitEvent              UsualHitEvent(m_pOwner);//通常
 	(this->*m_pStateFunc)();
+
 
 	//キャラクタ更新
 	{
-        SoccerHitEvent UsualHitEvent(m_pOwner, (isEnd()) ? (false) : (m_AttackInfoArray.at(m_ComboCount)->isCounterHitFrame(m_Timer)));//通常
-
-        chr_func::UpdateAll(m_pOwner, &UsualHitEvent);
+		if (m_Timer < NoDamageFrame)
+		{
+			chr_func::UpdateAll(m_pOwner, &NoDmgHitEvent);
+		}
+		else
+		{
+			chr_func::UpdateAll(m_pOwner, &UsualHitEvent);
+		}
 	}
 
 	chr_func::CreateTransMatrix(m_pOwner, m_pOwner->m_ModelSize, &m_pOwner->m_Renderer.m_TransMatrix);
@@ -65,6 +76,32 @@ bool SoccerAttackClass::isEnd()const
 void SoccerAttackClass::State_Attack()
 {
 	AttackInfo* const pNowAtk = m_AttackInfoArray.at(m_ComboCount);
+
+
+	//コンボ実行フラグのチェック
+	if (m_DoCombo == false &&
+		pNowAtk->isComboButtonFrame(m_Timer))
+	{
+		m_DoCombo = m_pEvent->isDoCombo();
+
+	}
+	if (pNowAtk->isHitStopFrame())
+	{
+		SoccerHitEvent HitEvent(m_pOwner);
+
+		//壁との接触判定
+		chr_func::CheckWall(m_pOwner);
+
+		//床との接触判定
+		chr_func::CheckGround(m_pOwner);
+
+		//あたり判定を取る
+		chr_func::DamageCheck(m_pOwner, &HitEvent);
+
+		pNowAtk->HitStopUpdate();
+
+		return;
+	}
 
 	//カウント進行
 	++m_Timer;
@@ -101,22 +138,29 @@ void SoccerAttackClass::State_Attack()
 		}
 	}
 
-	//コンボ実行フラグのチェック
-	if (m_DoCombo == false &&
-		pNowAtk->isComboButtonFrame(m_Timer))
-	{
-		m_DoCombo = m_pEvent->isDoCombo();
-
-	}
 
 	//コンボ移行
-	if (!isLastAtk() &&
-		m_DoCombo    &&
-		pNowAtk->isComboSwitchFrame(m_Timer) &&
-		m_DoHit == true)
+
+
+	if (m_pOwner->m_PlayerInfo.player_type == PlayerType::_Player)
 	{
-		m_DoHit = false;
-		m_pStateFunc = &SoccerAttackClass::State_NextAtk;
+		if (!isLastAtk() &&
+			m_DoCombo    &&
+			pNowAtk->isComboSwitchFrame(m_Timer))
+		{
+		
+			m_pStateFunc = &SoccerAttackClass::State_NextAtk;
+		}
+	}
+	else if (m_pOwner->m_PlayerInfo.player_type == PlayerType::_Computer)
+	{
+		if (!isLastAtk() &&
+			m_DoCombo    &&
+			pNowAtk->isComboSwitchFrame(m_Timer) &&
+			m_DoHit==true)
+		{
+			m_pStateFunc = &SoccerAttackClass::State_NextAtk;
+		}
 	}
 
 	//ダメージ有効・無効
