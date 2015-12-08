@@ -15,11 +15,11 @@ public:
     public:
         enum class DrawType
         {
-
+            
         };
 
         void Render(
-           // const 
+
             );
     };
     SceneOption();

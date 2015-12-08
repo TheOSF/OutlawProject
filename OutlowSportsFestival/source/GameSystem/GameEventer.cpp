@@ -563,6 +563,9 @@ void MatchState::TimeUp::Execute(_Client_type_ptr p)
             }
         }
 
+        //ƒ‰ƒEƒ“ƒhŸ—˜”‚ğ‰ÁZ
+        chr_func::AddWinPoint(m_pWinCharacter);
+
         Sound::Play(Sound::Kira_n);
         DefCamera.SetNewState(new CameraStateCharacterZoom(m_pWinCharacter, 0.05f));
     }
