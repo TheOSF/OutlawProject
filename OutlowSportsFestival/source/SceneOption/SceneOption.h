@@ -19,7 +19,7 @@ public:
         };
 
         void Render(
-            const 
+           // const 
             );
     };
     SceneOption();

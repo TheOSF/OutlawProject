@@ -28,7 +28,8 @@ private:
 		Forward,
 		Distance,
 		MoveCenter,
-		Distance_B
+		Distance_B,
+        Keep
 	};
 
 	MoveMode movemode;
@@ -47,7 +48,8 @@ public:
 	Vector2 StateMoveDistance(CharacterBase* cb);//　ターゲットとの距離をとる
 	Vector2 StateMoveCenter(CharacterBase* cb);//　中心に戻ろうとする
 	Vector2 StateStop(CharacterBase* cb);//　立ち止まる
-	
+    Vector2 StateKeepLen(CharacterBase* cb);
+    
 	Vector2 SwitchAction(CharacterBase* cb);
 	static Vector3 GetMoveTargetPos(CharacterBase* cb);
 

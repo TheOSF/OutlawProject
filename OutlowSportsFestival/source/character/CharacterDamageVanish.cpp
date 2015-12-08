@@ -7,6 +7,16 @@
 #include "../Collision/Collision.h"
 #include "../Camera/Camera.h"
 
+
+CharacterDamageVanish::Param::Param() :
+move(Vector3AxisY),
+rotate_speed(Vector3Zero),
+down_frame(0),
+standup_frame(0)
+{
+
+}
+
 CharacterDamageVanish::CharacterDamageVanish(
     CharacterBase*    pCharacter,   //吹き飛ぶキャラクタ
     const Param&      param,        //吹きとびパラメーター

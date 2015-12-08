@@ -12,6 +12,8 @@ class CharacterDamageVanish
 public:
 	struct Param
 	{
+        Param();
+
 		Vector3 move;         //ˆÚ“®‘¬“x
 		Vector3 rotate_speed; //ŠeŽ²‚Ì‰ñ“]‘¬“x
 
