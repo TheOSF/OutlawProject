@@ -30,7 +30,8 @@ CharacterDefaultCounter::CharacterDefaultCounter(
     m_pNowState(&CharacterDefaultCounter::Pose),
     m_Count(0),
     m_Stick(0, 0),
-    m_pCounterBall(nullptr)
+    m_pCounterBall(nullptr),
+     m_counterBallID(BallBase::BallID::ErrorID)
 {
 
 }
@@ -123,7 +124,7 @@ void CharacterDefaultCounter::Pose()
 
         //イベントクラス通知
         m_pEventClass->Pose();
-
+        
         //移動量を初期化
         chr_func::XZMoveDown(m_pOwner, 1);
     }
@@ -146,6 +147,8 @@ void CharacterDefaultCounter::Pose()
             Vector3 V = Vector3Normalize(m_pCounterBall->m_Params.move);
             V.y = 0;
             m_MoveTargetPos += V*m_pOwner->m_Params.size;
+
+            m_counterBallID = m_pCounterBall->GetID();
 
             //カウンターできるボールが見つかった場合、ステートを移動ステートに移行する
             SetState(&CharacterDefaultCounter::Move);
@@ -181,6 +184,15 @@ void CharacterDefaultCounter::Move()
     //カウンタ更新
     ++m_Count;
 
+    //カウンターするボールがカウンターできない状態なら打ち返し失敗ステートへ移行
+    if ( DefBallMgr.isBallEnable(m_counterBallID) == false ||
+         BallBase::isCanCounter(m_pCounterBall) == false
+         )
+    {
+         SetState(&CharacterDefaultCounter::Failed);
+         return;
+    }
+
     //イベントクラス通知
     if (m_Count == 1)
     {
@@ -191,13 +203,6 @@ void CharacterDefaultCounter::Move()
     if (m_Count == 1)
     {
         m_MoveValue = 1.0f / (float)m_Param.ShotFrame;
-    }
-
-    //カウンターするボールがカウンターできない状態なら打ち返し失敗ステートへ移行
-    if (BallBase::isCanCounter(m_pCounterBall) == false)
-    {
-        SetState(&CharacterDefaultCounter::Failed);
-        return;
     }
 
     //移動値をセット
@@ -287,6 +292,15 @@ void CharacterDefaultCounter::Catch()
      //カウンタ更新
      ++m_Count;
 
+     //カウンターするボールがカウンターできない状態なら打ち返し失敗ステートへ移行
+     if ( DefBallMgr.isBallEnable(m_counterBallID) == false ||
+          BallBase::isCanCounter(m_pCounterBall) == false
+          )
+     {
+          SetState(&CharacterDefaultCounter::Failed);
+          return;
+     }
+
      if ( m_Count == 1 )
      {
           // イベントクラス通知
@@ -303,11 +317,13 @@ void CharacterDefaultCounter::Catch()
      // ボールをボーンに引っ付ける
      Vector3 bonePos = m_pOwner->m_Renderer.GetWorldBonePos(m_Param.CatchBoneNumber);
      m_pCounterBall->m_Params.pos = bonePos;
+
      // とりあえず移動量はゼロに
      //m_pCounterBall->m_Params.move = Vector3Zero;
 
      //**************************************************************
      // @TODO  ボールのあたり判定を消さないと持ってるときに当たってしまう！！！
+     // とりあえず置いておく
      //**************************************************************
 
      // 時間で打ち返しステートへ
