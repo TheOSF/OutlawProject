@@ -31,8 +31,6 @@ void BaseballState_SPAttack_P::Enter(BaseballPlayer* b)
 	m_pBaseBall = b;
 	timeflg = false;
 
-	//エフェクト
-	new SpecialAttackEffect(b, 55);
 	//　スキルゲージリセット
 	chr_func::ResetSkillGauge(b);
 }
@@ -48,6 +46,8 @@ void BaseballState_SPAttack_P::Execute(BaseballPlayer* b){
 		{
 			Sound::Play(Sound::Skill);
 			FreezeGame(55);
+			//エフェクト
+			new SpecialAttackEffect(b, 55);
 		}
 		if (m_Timer == 56)
 		{
@@ -62,17 +62,17 @@ void BaseballState_SPAttack_P::Execute(BaseballPlayer* b){
 		{
 			m_pSpAttack_P->SetStickValue(
 				controller::GetStickValue(controller::stick::left, b->m_PlayerInfo.number));
-		}
-		target = nullptr;
-		target = CalcTarget();
-		const float AngleSpeed = D3DXToRadian(3);
 
-		//ターゲットがいたら
-		if (target != nullptr)
-		{
-			chr_func::AngleControll(b, target->m_Params.pos, AngleSpeed*2.0f);
-		}
+			target = nullptr;
+			target = CalcTarget();
+			const float AngleSpeed = D3DXToRadian(3);
 
+			//ターゲットがいたら
+			if (target != nullptr)
+			{
+				chr_func::AngleControll(b, target->m_Params.pos, AngleSpeed*2.0f);
+			}
+		}
 		// 更新
 		if (m_pSpAttack_P->Update() == false)
 		{
@@ -125,7 +125,8 @@ CharacterShotAttack* BaseballState_SPAttack_P::CreateSpAttack_P(BaseballPlayer* 
 		}
 
 		//　遠距離攻撃開始
-		void AttackStart()override{
+		void AttackStart()override
+		{
 			//　☆モーション
 			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Shot);
 		}

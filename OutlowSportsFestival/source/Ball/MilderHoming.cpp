@@ -7,12 +7,12 @@
 #include "../Effect/ParticleHDRRenderer.h"
 #include "character/CharacterFunction.h"
 #include "character/CharacterManager.h"
-#include "Ball/BallFadeOutRenderer.h"
+#include "BallFadeOutRenderer.h"
 #include "../GameSystem/ResourceManager.h"
 #include "../Effect/EffectFactory.h"
 
 //　最大加速度
-#define MaxAcceleration 1.0f
+#define MaxAcceleration 1.4f
 
 const float MilderHoming::AddSkillValueRatio = 0.01f;
 
@@ -21,15 +21,14 @@ MilderHoming::MilderHoming(
 	float				damage_val,   	//ダメージ量
 	BaseballPlayer* b
 	) :
-	acc(0.2f),
+	acc(0.21f),
 	homingcounter(0),
 	m_DeleteFrame(180),
-	m_Locus(15),
+	m_Locus(25),
 	frontflg(true),
 	m_Baseball(b),
 	m_EffectFrameCount(0),
 	m_FirstParentType(params.pParent->m_PlayerInfo.chr_type),
-	//m_pStateFunc(&MilderHoming::State_TargetDecision),
 	m_pRigitBody(nullptr)
 {
 	LPIEXMESH		pBallMesh;
@@ -48,8 +47,8 @@ MilderHoming::MilderHoming(
 		m_Damage.m_Enable = true;
 		m_Damage.m_Param.pos1 = m_Params.pos;
 		m_Damage.m_Param.pos2 = m_Params.pos;
-		m_Damage.m_VecPower.x = 0.1f;
-		m_Damage.m_VecPower.y = 0.0f;
+		m_Damage.m_VecPower.x = 0.4f;
+		m_Damage.m_VecPower.y = 0.2f;
 
 		UpdateDamageClass();
 	}
@@ -76,32 +75,14 @@ MilderHoming::MilderHoming(
 
 		m_pMeshRenderer->SetMatrix(m);
 	}
-	////ボールのメッシュを作成
-	//UsualBall::GetBallMesh(params.pParent->m_PlayerInfo.chr_type, &pBallMesh);
-
-	////メッシュのレンダラー作成(最終的にメッシュを使いまわして描画するべき)
-	//m_pMeshRenderer = new MeshRenderer(
-	//	pBallMesh,
-	//	false,
-	//	MeshRenderer::RenderType::UseColorSpecular
-	//	);
-
-
-	//UpdateMesh();
+	
 
 	//軌跡の設定
 	m_Locus.m_Division = 0;
 	m_Locus.m_StartParam.Width = 0.4f;
 	m_Locus.m_EndParam.Width = 0.1f;
 
-
 	UpdateLocusColor();
-
-	//物理パラメータ初期化
-	/*PhysicsParam.Friction = 0.4f;
-	PhysicsParam.Restitution = 0.25f;
-	PhysicsParam.Mass = 1.5f;*/
-
 
 	m_pStatefunc = &MilderHoming::State_TargetDecision;
 }
@@ -182,6 +163,7 @@ void MilderHoming::State_ToTagetMove()
 	//　追尾！
 	Homing(m_pTarget->m_Params.pos);
 
+
 }
 
 void MilderHoming::State_NoWork()
@@ -258,6 +240,26 @@ void MilderHoming::State_Normal()
 	}
 }
 
+void MilderHoming::State_Counter()
+{
+	if (chr_func::isDie(m_Baseball))
+	{
+		m_pStatefunc = &MilderHoming::State_NoWork;
+	}
+	else
+	{
+		//　当たり判定とか
+		Cheak();
+		//移動は前向き
+		if (frontflg)
+		{
+			m_Params.move *= 0.6f;
+			frontflg = false;
+		}
+		m_Params.pos += m_Params.move;
+
+	}
+}
 void MilderHoming::State_Delete()
 {
 	//何もしない
@@ -274,9 +276,14 @@ void MilderHoming::Cheak()
 		m_pStatefunc = &MilderHoming::State_NoWork;
 	}
 
+	//もし壁に当たっていたらダメージ判定のない状態へ移行する
+	Vector3 NewMoveVec(0, 0, 0);
+
 	//　壁に当たっていたら攻撃判定をなくす
-	if (isHitWall())
+	if (isHitWall(NewMoveVec))
 	{
+		//新しい移動値をセット
+		m_Params.move = NewMoveVec;
 		//攻撃判定のない状態にする
 		m_pStatefunc = &MilderHoming::State_NoWork;
 	}
@@ -384,7 +391,7 @@ void MilderHoming::SetHDR()
 		);
 }
 
-bool MilderHoming::isHitWall()
+bool MilderHoming::isHitWall(Vector3& outNewMove)
 {
 	Vector3 Out, Pos(m_Params.pos), Vec(m_Params.move);
 	float Dist = m_Params.move.Length()*2.0f;
@@ -402,6 +409,8 @@ bool MilderHoming::isHitWall()
 		)
 		)
 	{
+		outNewMove = Vector3Refrect(m_Params.move, Vec);
+		outNewMove *= GetBallPhysics(m_FirstParentType).Restitution;
 		//移動量を反射
 		return true;
 	}
@@ -412,18 +421,20 @@ bool MilderHoming::isHitWall()
 
 void MilderHoming::Counter(CharacterBase* pCounterCharacter)
 {
+
 	m_Damage.pParent = m_Params.pParent = pCounterCharacter;
 
 	UpdateLocusColor();
 
-	//　カウンターされたら吹き飛ぶ&ダメージ1.3倍
+	m_Damage.m_VecPower.x = Vector3XZLength(m_Params.move)*1.2f;
 	m_Damage.type = DamageBase::Type::_VanishDamage;
 	m_Damage.Value += 1.0f; //ダメージを増やす
 
-	//エフェクトカウント設定
+	////エフェクトカウント設定
 	m_EffectFrameCount = 45;
+	m_pStatefunc = &MilderHoming::State_Counter;
 
-	m_pStatefunc = &MilderHoming::State_TargetDecision;
+	
 }
 
 void MilderHoming::ToNoWork()
@@ -473,7 +484,7 @@ void MilderHoming::Homing(Vector3 TargetPos)
 	//　追尾時間増加
 	homingcounter++;
 
-	if (homingcounter <= 60)
+	if (homingcounter <= 120)
 	{
 		//引数の位置に向かって移動する(ホーミング)
 		const RADIAN HomingRad = D3DXToRadian(1);
@@ -493,14 +504,14 @@ void MilderHoming::Homing(Vector3 TargetPos)
 		}
 
 		//　加速度増加
-		if (acc <= 0.36f)
+		if (acc <= 0.5f)
 		{
-			acc += 0.018f;
+			acc += 0.01f;
 		}
 		//　一定以上でさらに加速&ホーミング開始
 		else
 		{
-			acc += 0.04f;
+			acc += 0.02f;
 		}
 		//　最大加速度
 		if (acc >= MaxAcceleration){
@@ -511,6 +522,7 @@ void MilderHoming::Homing(Vector3 TargetPos)
 		m_Params.move.Normalize();
 		m_Params.move *= 0.7f*acc;
 	}
+
 	m_Params.pos += m_Params.move;
 
 }

@@ -27,7 +27,7 @@ void CharacterComputerDoAction::Update()
 
 
 	//UŒ‚‚·‚éŽž‚È‚ç‚Î
-	if (rand() % 50 == 0)
+	if (rand() % 10 == 0)
 	{
 		//‹——£‚ð‘ª‚èAUŒ‚‚·‚é
 		m_ActionEvent->Attack(GetMoveTargetLength());

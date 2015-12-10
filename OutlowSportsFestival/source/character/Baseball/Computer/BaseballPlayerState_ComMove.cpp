@@ -97,7 +97,7 @@ void BaseballPlayerState_ComMove::Execute(BaseballPlayer* b)
 
 	if (SwitchGameState(b) == false)
 	{
-	
+
 		//スティック値をセット
 		m_pMoveClass->SetStickValue(m_pMoveControllClass->SwitcAction_Baseball(b, b->getBatterFlg()));
 		//　攻撃
@@ -105,14 +105,22 @@ void BaseballPlayerState_ComMove::Execute(BaseballPlayer* b)
 		//　反応
 		m_pReactionClass->Update();
 		//　切り替え
-		doChange(b);
+		if (changeTime >= 60)
+		{
+			doChange(b);
+		}
+	}
+	else
+	{
+		//スティックの値セット
+		m_pMoveClass->SetStickValue(Vector2(0, 0));
 	}
 	if (!chr_func::isDie(b))
 	{
 		changeTime++;
 		//　動き
 		m_pMoveClass->Update();
-		
+
 	}
 
 	//モデルのワールド変換行列を更新
@@ -194,7 +202,7 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 		BaseballDoEvent(BaseballPlayer* cBaseball) :
 			m_cBaseball(cBaseball)
 		{
-			AttackPoint = rand() % 100;
+			AttackPoint = rand() % 500;
 			m_pMoveControllClass->GetParams(cParam, m_cBaseball->m_PlayerInfo.strong_type);
 		}
 
@@ -212,7 +220,7 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 				//　バッター時
 				if (len < 7.0f)
 				{
-					if ((cParam.ActionFrequence * 100) > AttackPoint)
+					if ((cParam.ActionFrequence * 400) > AttackPoint)
 					{
 						//　必殺
 						if (len <= 6.0f && chr_func::isCanSpecialAttack(m_cBaseball))
@@ -221,11 +229,7 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 						}
 						else
 						{
-							//攻撃する時ならば
-							if (rand() % 20 == 0)
-							{
-								m_cBaseball->SetState(new Baseball_PlayerControll_Attack_B(m_cBaseball));
-							}
+							m_cBaseball->SetState(new Baseball_PlayerControll_Attack_B(m_cBaseball));
 						}
 					}
 
@@ -233,13 +237,12 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 				else if (len >= 6.0f && len < 25.0f)
 				{
 					//攻撃する時ならば
-					if (rand() % 50 == 0)
+
+					if ((cParam.ActionFrequence * 320) > AttackPoint)
 					{
-						if ((cParam.ActionFrequence * 100) > AttackPoint)
-						{
-							m_cBaseball->SetState(new BaseballState_PlayerControll_ShotAttack_B(new PlayerShotControllClass_B(m_cBaseball)));
-						}
+						m_cBaseball->SetState(new BaseballState_PlayerControll_ShotAttack_B(new PlayerShotControllClass_B(m_cBaseball)));
 					}
+
 				}
 			}
 			else{
@@ -255,25 +258,21 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 				if (len < 6.0f)
 				{
 					//攻撃する時ならば
-					if (rand() % 20 == 0)
+					if ((cParam.ActionFrequence * 400) > AttackPoint)
 					{
-						if ((cParam.ActionFrequence * 100) > AttackPoint)
-						{
-							m_cBaseball->SetState(new Baseball_PlayerControll_Attack_P(m_cBaseball));
-						}
+						m_cBaseball->SetState(new Baseball_PlayerControll_Attack_P(m_cBaseball));
 					}
+
 				}
 				else if (len >= 6.0f && len < 35.0f)
 				{
 					//攻撃する時ならば
-					if (rand() % 50 == 0)
+					if ((cParam.ActionFrequence * 320) > AttackPoint)
 					{
-						if ((cParam.ActionFrequence * 100) > AttackPoint)
-						{
-							m_cBaseball->SetState(new BaseballState_PlayerControll_ShotAttack_P());
-						}
+						m_cBaseball->SetState(new BaseballState_PlayerControll_ShotAttack_P());
 					}
 				}
+
 			}
 
 		}
@@ -346,10 +345,10 @@ void BaseballPlayerState_ComMove::doChange(BaseballPlayer* b)
 	if (!chr_func::isDie(b))
 	{
 		nearpos = GetNearTargetPos(b) - b->m_Params.pos;
-		
+
 		//　ターゲットと一定距離以下・以上なら切り替え
 		if (nearpos.Length() < 15.0f && !b->getBatterFlg() ||
-			nearpos.Length() >= 30.0f && b->getBatterFlg() ||
+			nearpos.Length() >= 32.0f && b->getBatterFlg() ||
 			changeTime >= 600 || b->getChangeFlg())
 		{
 			b->SetState(new BaseballState_Change());
@@ -384,7 +383,7 @@ void  BaseballPlayerState_ComMove::doReaction(BaseballPlayer* b)
 		//アニメーションの更新
 		void Reaction(CharacterComputerReactionHitEvent::HitType hittype, Vector3 vec)override
 		{
-			
+
 			//　遠距離攻撃なら
 			if (hittype == CharacterComputerReactionHitEvent::HitType::CanCounter)
 			{

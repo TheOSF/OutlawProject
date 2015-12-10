@@ -16,13 +16,15 @@ public:
 	class PlayerControllEvent :public BaseballAttackClass::ControllEvent
 	{
 	public:
-		PlayerControllEvent(BaseballPlayer*const pBaseball);
+		PlayerControllEvent(BaseballPlayer*const pBaseball, BaseballAttackClass* Attack);
 
 		bool isDoCombo();
 		void AngleControll(RADIAN angle);
+		bool ComDoCombo();
 
 	private:
 		BaseballPlayer*const m_pBaseball;
+		BaseballAttackClass* m_Attack;
 
 		const CharacterBase* GetFrontTargetEnemy();
 	};

@@ -77,6 +77,11 @@ public:
 
 	~BaseballAttackClass();
 
+	bool getDoHit()
+	{
+		return m_DoHit;
+	}
+
 	void Update();	//更新
 
 	bool isEnd()const;   //終了確認
@@ -91,6 +96,7 @@ private:
 	int                   m_Timer;
 	int                   m_ComboCount;
 	bool                  m_DoCombo;
+	bool                  m_DoHit;
 	LocusHDR              m_Locus;
 	int                   m_DamageHitCount;
 	int                   m_HitStopCount;
