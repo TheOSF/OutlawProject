@@ -226,10 +226,10 @@ void TennisPlayerState_SlowUpBall::State_Weak()
 
 
         //コントローラを振動
-        controller::SetVibration(
-            5000,
-            0.15f,
-            m_pTennis->m_PlayerInfo.number
+        chr_func::SetControllerShock(
+            m_pTennis,
+            0.5f,
+            0.15f
             );
 
         //サウンド
@@ -311,10 +311,10 @@ void TennisPlayerState_SlowUpBall::State_Usual()
 
 
         //コントローラを振動
-        controller::SetVibration(
-            5000,
-            0.15f,
-            m_pTennis->m_PlayerInfo.number
+        chr_func::SetControllerShock(
+            m_pTennis,
+            0.5f,
+            0.15f
             );
 
         //サウンド
@@ -390,10 +390,10 @@ void TennisPlayerState_SlowUpBall::State_Smash()
 
 
         //コントローラを振動
-        controller::SetVibration(
-            10000,
-            0.15f,
-            m_pTennis->m_PlayerInfo.number
+        chr_func::SetControllerShock(
+            m_pTennis,
+            1.0f,
+            0.15f
             );
 
         //サウンド

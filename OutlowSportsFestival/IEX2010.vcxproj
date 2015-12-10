@@ -286,6 +286,7 @@
     <ClCompile Include="source\Item\Item_BellEmitter.cpp" />
     <ClCompile Include="source\Item\Item_Bell.cpp" />
     <ClCompile Include="source\Item\Item_WallBoundBall.cpp" />
+    <ClCompile Include="source\Item\RainbowSkillBall.cpp" />
     <ClCompile Include="source\Item\SkillGaugeItemEmitter.cpp" />
     <ClCompile Include="source\Item\SkillGaugeUpItem.cpp" />
     <ClCompile Include="source\Library\Bullet\BulletDebug.cpp" />
@@ -310,6 +311,7 @@
     <ClCompile Include="source\SceneResult\SceneResult.cpp" />
     <ClCompile Include="source\SceneTitle\SceneTitle.cpp" />
     <ClCompile Include="source\Sound\Sound.cpp" />
+    <ClCompile Include="source\Stage\Ground_Manager.cpp" />
     <ClCompile Include="source\Stage\HitStageObject.cpp" />
     <ClCompile Include="source\Stage\Kasenziki_Manager.cpp" />
     <ClCompile Include="source\Stage\PhysicsMeshObject.cpp" />
@@ -524,6 +526,7 @@
     <ClInclude Include="source\Item\Item_BellEmitter.h" />
     <ClInclude Include="source\Item\Item_Bell.h" />
     <ClInclude Include="source\Item\Item_WallBoundBall.h" />
+    <ClInclude Include="source\Item\RainbowSkillBall.h" />
     <ClInclude Include="source\Item\SkillGaugeItemEmitter.h" />
     <ClInclude Include="source\Item\SkillGaugeUpItem.h" />
     <ClInclude Include="source\Library\Bullet\BulletDebug.h" />
@@ -547,6 +550,7 @@
     <ClInclude Include="source\SceneResult\SceneResult.h" />
     <ClInclude Include="source\SceneTitle\SceneTitle.h" />
     <ClInclude Include="source\Sound\Sound.h" />
+    <ClInclude Include="source\Stage\Ground_Manager.h" />
     <ClInclude Include="source\Stage\HitStageObject.h" />
     <ClInclude Include="source\Stage\Kasenziki_Manager.h" />
     <ClInclude Include="source\Stage\PhysicsMeshObject.h" />

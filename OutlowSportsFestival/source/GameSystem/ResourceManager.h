@@ -25,16 +25,22 @@ public:
         Volley_ball,
 
         //ステージ１
-        Stage1_Hit,
+        //Stage1_Hit,
         Stage1_HitPhysic,
         Bus,
         Car1,
 
+        River,
+
+        //ステージ２
+        //Stage2_Hit,
+        Stage2_HitPhysic,
+
+        //共通
         Cone,
         Bench,
         Pipe,
 
-        River,
 
         _MaxType
     };

@@ -59,6 +59,9 @@ private:
 	Camera(const Camera&);
 	~Camera();
 
+
+    void WriteParam();
+
 	//カメラ行列を更新する
 	void UpdateMatrix(Vector3 pos, Vector3 target);
 

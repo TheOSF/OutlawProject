@@ -11,7 +11,8 @@ public:
 	SoccerState_SmallDamage(
 		SoccerPlayer*  pSoccer,
 		const Vector3& Damage_vec, //ƒ_ƒ[ƒW‚ğó‚¯‚½•ûŒü
-        bool           Counter
+        bool           Counter,
+        int            Frame
 		);
 public:
 	void Enter(SoccerPlayer* s);
@@ -22,6 +23,7 @@ private:
 	SoccerPlayer*            m_pSoccer;
 	Vector3                  m_Damage_vec;
     bool                     m_Counter;
+    int                      m_Frame;
 };
 
 class SoccerState_DamageVanish : public SoccerState

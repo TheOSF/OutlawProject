@@ -134,11 +134,11 @@ void BaseballAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
 	chr_func::AddSkillGauge(m_pOwner, m_Param.AddSkillValue);
 
 	//ƒRƒ“ƒgƒ[ƒ‰‚ðU“®
-	controller::SetVibration(
-		5000,
-		0.15f,
-		m_pOwner->m_PlayerInfo.number
-		);
+    chr_func::SetControllerShock(
+        m_pOwner,
+        0.5f,
+        0.15f
+        );
 	m_pOwner->setChangeFlg(m_Param.changeFlg);
 }
 

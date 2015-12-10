@@ -116,12 +116,13 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 			param.type = BallBase::Type::_Milder;
 			//生成
 			new MilderHoming(param, 5, m_pBaseball);
-			//コントローラを振動
-			controller::SetVibration(
-				5000,
-				0.15f,
-				m_pBaseball->m_PlayerInfo.number
-				);
+
+            //コントローラを振動
+            chr_func::SetControllerShock(
+                m_pBaseball,
+                0.5f,
+                0.15f
+                );
 		}
 
 		//　遠距離攻撃開始

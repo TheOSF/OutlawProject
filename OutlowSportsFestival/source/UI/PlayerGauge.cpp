@@ -280,7 +280,7 @@ Vector2 PlayerGauge::GaugeRenderer::CalcIconPos(int n)
 void PlayerGauge::GaugeRenderer::UpdateRoundIcon()
 {
     Vector2 v;
-    const float Speed = 0.05f;
+    const float Speed = 0.1f;
     const int MoveFrame = 60;
     Vector2 Move;
 

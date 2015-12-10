@@ -126,10 +126,10 @@ void TennisState_BoundShot::Execute(TennisPlayer* t)
             );
 
         //コントローラを振動
-        controller::SetVibration(
-            5000,
-            0.15f,
-            t->m_PlayerInfo.number
+        chr_func::SetControllerShock(
+            t,
+            0.5f,
+            0.15f
             );
 
         //エフェクト

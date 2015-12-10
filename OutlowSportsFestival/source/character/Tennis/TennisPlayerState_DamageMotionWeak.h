@@ -13,7 +13,8 @@ public:
     TennisState_DamageMotion_Weak(
         TennisPlayer*  pTennis,
         const Vector3& Damage_vec,  //ダメージを受けた方向
-        bool           CounterHit
+        bool           CounterHit,
+        int            Frame
 		);
 
 	// ステート開始
@@ -30,6 +31,7 @@ private:
 	TennisPlayer*            m_pTennis;
 	Vector3                  m_Damage_vec;
     bool                     m_CounterHit;
+    int                      m_Frame;
 };
 
 #endif

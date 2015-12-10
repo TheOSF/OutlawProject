@@ -51,7 +51,7 @@ bool Tennis_DoCancelAction_Player::DoAction()
 
     if (isCanAction(NearAtk) && controller::GetTRG(controller::button::shikaku, t->m_PlayerInfo.number))
     {// [ ] ‚Å [‹ß‹——£UŒ‚]
-        t->SetState(new TennisState_PlayerControll_Attack(t));
+        t->SetState(new TennisState_PlayerControll_Attack(t,true));
         return true;
     }
 

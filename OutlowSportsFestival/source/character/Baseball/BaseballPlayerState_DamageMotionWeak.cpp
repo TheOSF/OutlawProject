@@ -8,11 +8,13 @@
 BaseballState_DamageMotion_Weak::BaseballState_DamageMotion_Weak(
 	BaseballPlayer* pBaseball,
 	const Vector3& Damage_vec,  //ダメージを受けた方向
-    bool           Counter
+    bool           Counter,
+    int            Frame
 	) :
 	m_pBaseball(pBaseball),
 	m_Damage_vec(Damage_vec),
-    m_Counter(Counter)
+    m_Counter(Counter),
+    m_Frame(Frame)
 {
 
 }
@@ -52,6 +54,7 @@ void BaseballState_DamageMotion_Weak::Enter(BaseballPlayer* t)
 
 	Param.damage_vec = m_Damage_vec;
     Param.counter_hit = m_Counter;
+    Param.frame = m_Frame;
 
 	//ひるみクラスを作成
 	m_pDamageMotionClass = new CharacterDamageMotion(
@@ -67,12 +70,12 @@ void BaseballState_DamageMotion_Weak::Enter(BaseballPlayer* t)
         m_Damage_vec
         );
 
-	//コントローラを振動
-	controller::SetVibration(
-		5000,
-		0.15f,
-		m_pBaseball->m_PlayerInfo.number
-		);
+    //コントローラを振動
+    chr_func::SetControllerShock(
+        m_pBaseball,
+        0.5f,
+        0.15f
+        );
 }
 
 void BaseballState_DamageMotion_Weak::Execute(BaseballPlayer* t)

@@ -92,53 +92,36 @@ void MatchState::StartCountdown::SetCamera()
 {
 
 	const CharacterManager::CharacterMap& ChrMap = DefCharacterMgr.GetCharacterMap();
-	CameraState* pSetState, *pNext;
+    CameraState* pSetState;
 
-	Vector3 pos, target, front;
+    struct CameraPoint
+    {
+        Vector3 pos, target;
+        float speed;
+    };
 
-	DefCamera.m_Position = pos;
-	DefCamera.m_Target = target;
+    std::list<CameraPoint> CposList;
 
-	//最後のキャラクタから順番にカメラを生成
-	for (int i = 3; i >= 0; --i)
-	{
-		for (auto& it : ChrMap)
-		{
-			if ((int)it.first->m_PlayerInfo.number != i)
-			{
-				continue;
-			}
+    CposList.push_front({ Vector3(18.710548f, 13.073265f, -40.158432f), Vector3(18.517427f, 12.809369f, -39.213413f),0.2f, });
+    CposList.push_front({ Vector3(-7.837331f, 13.073265f, -44.821030f), Vector3(-7.887062f, 12.809370f, -43.857761f),0.2f });
 
-			//カメラ位置を設定
-			pos = target = it.first->m_Params.pos;
+    pSetState = new CameraStateGamePlay(true);
 
-			target.y += 3.0f;
-			pos.y += 3.5f;
+    for (auto& it : CposList)
+    {
+        pSetState =
+        new CameraStateMovetoPoint(
+            it.pos,
+            it.target,
+            it.speed,
+            300,
+            CameraStateMovetoPoint::CalcType::_Linear,
+            pSetState
+            );
+    }
 
-			//位置をキャラクタのちょっと前方に
-			chr_func::GetFront(it.first, &front);
-			pos += front*8.0f;
-
-			//最後のカメラだった場合は試合カメラを次に設定
-			if (i == 3)
-			{
-				pNext = new CameraStateGamePlay();
-			}
-			else
-			{
-				pNext = pSetState;
-			}
-
-			pSetState = new CameraStateMovetoPoint(
-				pos,
-				target,
-				0.8f,
-				80,
-				CameraStateMovetoPoint::CalcType::_Linear,
-				pNext
-				);
-		}
-	}
+    //CameraStateGamePlay
+    //CameraStateMovetoPoint
 
 	DefCamera.SetNewState(pSetState);
 }

@@ -31,7 +31,9 @@ CharacterDefaultCounter::CharacterDefaultCounter(
     m_Count(0),
     m_Stick(0, 0),
     m_pCounterBall(nullptr),
-     m_counterBallID(BallBase::BallID::ErrorID)
+     m_counterBallID(BallBase::BallID::ErrorID),
+     m_HitStopFrame(0),
+     m_BallFreezePos(Vector3Zero)
 {
 
 }
@@ -47,6 +49,14 @@ CharacterDefaultCounter::~CharacterDefaultCounter()
 void CharacterDefaultCounter::Update()
 {
     (this->*m_pNowState)();
+
+    if (m_pNowState != &CharacterDefaultCounter::HitStop)
+    {
+        m_pEventClass->ModelUpdate(1);
+    }
+    else{
+        m_pEventClass->ModelUpdate(0.2f);
+    }
 }
 
 //スティック値のセット(打ち返し時の方向を決める)
@@ -148,6 +158,27 @@ void CharacterDefaultCounter::Pose()
             V.y = 0;
             m_MoveTargetPos += V*m_pOwner->m_Params.size;
 
+            {
+                Matrix R;
+                Vector3 V;
+
+                V = m_pCounterBall->m_Params.pParent->m_Params.pos - m_MoveTargetPos;
+
+                RADIAN angle = acosf(fClamp(V.z, 1, -1));
+
+                if (angle < 0)
+                {
+                    angle = -angle;
+                }
+
+                D3DXMatrixRotationY(&R, angle);
+
+                m_MoveTargetPos -= Vector3MulMatrix(m_pEventClass->ClacLocalOffset(
+                    chr_func::isRight(m_MoveTargetPos, m_MoveTargetPos - m_pCounterBall->m_Params.pParent->m_Params.pos, m_pOwner->m_Params.pos)
+                    ), R);
+
+            }
+
             m_counterBallID = m_pCounterBall->GetID();
 
             //カウンターできるボールが見つかった場合、ステートを移動ステートに移行する
@@ -176,7 +207,6 @@ void CharacterDefaultCounter::Pose()
     }
 }
 
-
 //移動中
 void CharacterDefaultCounter::Move()
 {
@@ -185,7 +215,7 @@ void CharacterDefaultCounter::Move()
     ++m_Count;
 
     //カウンターするボールがカウンターできない状態なら打ち返し失敗ステートへ移行
-    if ( DefBallMgr.isBallEnable(m_counterBallID) == false ||
+    if (DefBallMgr.isBallEnable(m_counterBallID) == false ||
          BallBase::isCanCounter(m_pCounterBall) == false
          )
     {
@@ -233,15 +263,14 @@ void CharacterDefaultCounter::Move()
     //時間で打ちステートへ移行
     if (m_Count > m_Param.ShotFrame)
     {
-         if ( m_Param.CatchFrame == 0 )
-         {
-              SetState(&CharacterDefaultCounter::Shot);
-         }
-         else
-         {
-              SetState(&CharacterDefaultCounter::Catch);
-         }
-        
+        //ヒットストップカウント
+        //m_HitStopFrame = (UINT)fClamp(m_pCounterBall->m_Params.move.Length(), 8,8);
+        m_HitStopFrame = 0;
+        m_BallFreezePos = m_pCounterBall->m_Params.pos;
+
+        EffectApper();
+
+        SetState(&CharacterDefaultCounter::HitStop);
     }
 
     ////すでにボールとの距離が一定以下なら打ちステートへ移行
@@ -258,6 +287,35 @@ void CharacterDefaultCounter::Move()
         chr_func::UpdateAll(m_pOwner, &BallDmgFilter);
     }
 }
+
+
+void CharacterDefaultCounter::HitStop() //ヒットストップ
+{
+    //カウンターするボールがカウンターできない状態なら打ち返し失敗ステートへ移行
+    if (DefBallMgr.isBallEnable(m_counterBallID) == false)
+    {
+        SetState(&CharacterDefaultCounter::Failed);
+        return;
+    }
+
+    m_pCounterBall->m_Params.pos = m_BallFreezePos;
+
+    ++m_Count;
+
+    //ステート分岐
+    if (m_Count >= m_HitStopFrame)
+    {
+        if (m_Param.CatchFrame == 0)
+        {
+            SetState(&CharacterDefaultCounter::Shot);
+        }
+        else
+        {
+            SetState(&CharacterDefaultCounter::Catch);
+        }
+    }
+}
+
 
 //打ち返し失敗
 void CharacterDefaultCounter::Failed()
@@ -307,11 +365,11 @@ void CharacterDefaultCounter::Catch()
           m_pEventClass->Catch(m_pCounterBall);
 
           //コントローラを振動
-          controller::SetVibration(
-               10000,
-               0.10f,
-               m_pOwner->m_PlayerInfo.number
-               );
+          chr_func::SetControllerShock(
+              m_pOwner,
+              1,
+              0.10f
+              );
      }
 
      // ボールをボーンに引っ付ける
@@ -337,6 +395,7 @@ void CharacterDefaultCounter::Catch()
           HitEventClass_NoBallDamageFileter BallDmgFilter(m_pHitEventClass, m_pCounterBall);
           chr_func::UpdateAll(m_pOwner, &BallDmgFilter);
      }
+
 }
 
 
@@ -346,15 +405,27 @@ void CharacterDefaultCounter::Shot()
     //カウンタ更新
     ++m_Count;
 
-    //イベントクラス通知
-    if (m_Count == 1)
-    {
-        m_pEventClass->Shot(m_pCounterBall);
-    }
 
     //ボール打ち返すぜ！
     if (m_Count == 1)
     {
+        //ボールの移動値を計算
+        float m = m_pCounterBall->m_Params.move.Length()*1.1f;
+        m = min(m, 2.5f);
+
+        m_pEventClass->Shot(m_pCounterBall);
+
+        {
+            //座標戻し
+            Vector3 m = m_pCounterBall->m_Params.move;
+            Vector3 v = Vector3Normalize(m)*Vector3Dot(Vector3Normalize(m), m_pOwner->m_Params.pos - m_pCounterBall->m_Params.pos);
+        
+            v.y = 0;
+            m_pCounterBall->m_Params.pos += v;
+            m_pCounterBall->m_Params.pos.y = UsualBall::UsualBallShotY;
+        }
+
+        
 
         //スティックによる角度調整
         if (m_pCounterBall->m_Params.pParent == m_pOwner)
@@ -362,6 +433,9 @@ void CharacterDefaultCounter::Shot()
             Vector3 vec;
             chr_func::GetFront(m_pOwner, &vec);
             SetStickAngle(vec, m_Param.ControllRadian);
+
+            //ボールの設定
+            chr_func::GetFront(m_pOwner, &m_pCounterBall->m_Params.move);
         }
         else
         {
@@ -370,19 +444,13 @@ void CharacterDefaultCounter::Shot()
         }
 
         {
-            float m = m_pCounterBall->m_Params.move.Length()*1.1f;
-            m = min(m, 2.5f);
-
-            //ボールの設定
-            chr_func::GetFront(m_pOwner, &m_pCounterBall->m_Params.move);
-
             m_pCounterBall->m_Params.move *= m;
         }
 
 
         {
-            m_pCounterBall->m_Params.pos = m_pOwner->m_Params.pos;
-            m_pCounterBall->m_Params.pos.y = UsualBall::UsualBallShotY;
+            //m_pCounterBall->m_Params.pos = m_pOwner->m_Params.pos;
+            //m_pCounterBall->m_Params.pos.y = UsualBall::UsualBallShotY;
         }
 
         //ゲージ上昇
@@ -390,27 +458,12 @@ void CharacterDefaultCounter::Shot()
             chr_func::AddSkillGauge(m_pOwner, m_SkillUpValue);
         }
 
+        //振動
+
+
         //ボール側のカウンター処理
         m_pCounterBall->Counter(m_pOwner);
 
-        //エフェクトの設定
-        new HitEffectObject(
-            m_pCounterBall->m_Params.pos,
-            Vector3Normalize(m_pCounterBall->m_Params.move),
-            0.1f,
-            0.1f,
-            Vector3(1, 1, 1)
-            );
-
-        //カウンター音再生
-        Sound::Play(Sound::AtkHit2);
-
-        //コントローラを振動
-        controller::SetVibration(
-            10000,
-            0.10f,
-            m_pOwner->m_PlayerInfo.number
-            );
 
         //若干前に進む
         chr_func::AddMoveFront(m_pOwner, 0.2f, 1.0f);
@@ -462,10 +515,6 @@ void CharacterDefaultCounter::End()
         chr_func::UpdateAll(m_pOwner, m_pHitEventClass);
     }
 }
-
-
-
-
 
 //ステートセット
 void CharacterDefaultCounter::SetState(void(CharacterDefaultCounter::*pNewState)())
@@ -602,9 +651,36 @@ void CharacterDefaultCounter::SetStickAngle(CrVector3 OriginVec, RADIAN controll
     }
 }
 
+void CharacterDefaultCounter::EffectApper()
+{
 
+    //エフェクトの設定
+    new HitEffectObject(
+        m_pCounterBall->m_Params.pos,
+        -Vector3Normalize(m_pCounterBall->m_Params.move),
+        0.1f,
+        0.1f,
+        Vector3(1, 1, 1)
+        );
+
+    //カウンター音再生
+    Sound::Play(Sound::AtkHit2);
+
+    //コントローラを振動
+
+    chr_func::SetControllerShock(
+        m_pOwner,
+        1,
+        0.10f
+        );
+}
 
 void CharacterDefaultCounter::SetAutoCounter()
 {
-    chr_func::AngleControll(m_pOwner, m_pCounterBall->m_Params.pParent->m_Params.pos);
+    Vector3 target = m_pCounterBall->m_Params.pParent->m_Params.pos;
+    chr_func::AngleControll(m_pOwner, target);
+    m_pCounterBall->m_Params.move = target - m_pCounterBall->m_Params.pos;
+    m_pCounterBall->m_Params.move.y = 0;
+
+    m_pCounterBall->m_Params.move.Normalize();
 }

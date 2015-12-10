@@ -204,7 +204,7 @@ void TennisState_PlayerControll_Move::ActionStateSwitch(TennisPlayer* t)
 
     if (controller::GetTRG(controller::button::shikaku, t->m_PlayerInfo.number))
     {// [ ] ‚Å [‹ß‹——£UŒ‚]
-        t->SetState(new TennisState_PlayerControll_Attack(t));
+        t->SetState(new TennisState_PlayerControll_Attack(t, false));
         return;
     }
 

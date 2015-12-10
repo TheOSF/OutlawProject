@@ -11,7 +11,8 @@ type(_WeekDamage),
 Value(1),
 HitCount(0),
 m_OptionFlags(),
-MaxChrHit(1)
+MaxChrHit(1),
+HitMotionFrame(25)
 {
 #ifdef _DEBUG
 	MyAssert(DefDamageMgr.AddDamage(this), "É_ÉÅÅ[ÉWìoò^ÇÃé∏îs");

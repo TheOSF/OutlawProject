@@ -59,7 +59,7 @@ public:
 
             if (controller::GetTRG(controller::button::shikaku, pt->m_PlayerInfo.number))
             {// [ ] ‚Å [‹ß‹——£UŒ‚]
-                pt->SetState(new TennisState_PlayerControll_Attack(pt));
+                pt->SetState(new TennisState_PlayerControll_Attack(pt,true));
                 return;
             }
 
@@ -100,7 +100,7 @@ public:
         {
             if (controller::GetTRG(controller::button::shikaku, m_pTennis->m_PlayerInfo.number))
             {// [ ] ‚Å [‹ß‹——£UŒ‚]
-                m_pTennis->SetState(new TennisState_PlayerControll_Attack(m_pTennis));
+                m_pTennis->SetState(new TennisState_PlayerControll_Attack(m_pTennis,true));
                 return true;
             }
 
@@ -124,7 +124,7 @@ public:
 
             if (controller::GetTRG(controller::button::shikaku, m_pTennis->m_PlayerInfo.number))
             {// [ ] ‚Å [‹ß‹——£UŒ‚]
-                m_pTennis->SetState(new TennisState_PlayerControll_Attack(m_pTennis));
+                m_pTennis->SetState(new TennisState_PlayerControll_Attack(m_pTennis, true));
                 return true;
             }
 
@@ -167,7 +167,7 @@ public:
         {
             if (controller::GetTRG(controller::button::shikaku, m_pTennis->m_PlayerInfo.number))
             {// [ ] ‚Å [‹ß‹——£UŒ‚]
-                m_pTennis->SetState(new TennisState_PlayerControll_Attack(m_pTennis));
+                m_pTennis->SetState(new TennisState_PlayerControll_Attack(m_pTennis,true));
                 return true;
             }
 
@@ -197,7 +197,7 @@ public:
 
             if (controller::GetTRG(controller::button::shikaku, m_pTennis->m_PlayerInfo.number))
             {// [ ] ‚Å [‹ß‹——£UŒ‚]
-                m_pTennis->SetState(new TennisState_PlayerControll_Attack(m_pTennis));
+                m_pTennis->SetState(new TennisState_PlayerControll_Attack(m_pTennis,true));
                 return true;
             }
 

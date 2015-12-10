@@ -164,10 +164,10 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
         );
 
     //ƒRƒ“ƒgƒ[ƒ‰‚ðU“®
-    controller::SetVibration(
-        8000,
-        0.2f,
-        m_pTennis->m_PlayerInfo.number
+    chr_func::SetControllerShock(
+        m_pTennis,
+        0.8f,
+        0.2f
         );
 }
 

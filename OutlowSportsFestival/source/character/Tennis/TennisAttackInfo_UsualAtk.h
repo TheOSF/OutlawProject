@@ -44,6 +44,8 @@ public:
         int                HitStopFrame;
 
         float              HitBack;
+
+        int                HitMotionFrame;
     };
 
     Param m_Param;

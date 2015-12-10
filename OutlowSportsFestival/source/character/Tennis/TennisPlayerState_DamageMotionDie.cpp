@@ -138,12 +138,11 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
         m_Damage_vec
         );
 
-
     //ƒRƒ“ƒgƒ[ƒ‰‚ðU“®
-    controller::SetVibration(
-        8000,
-        0.5f,
-        m_pTennis->m_PlayerInfo.number
+    chr_func::SetControllerShock(
+        m_pTennis,
+        0.8f,
+        0.5f
         );
 }
 

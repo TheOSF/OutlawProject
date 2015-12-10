@@ -13,7 +13,7 @@
 #include "Effect/BlurImpact.h"
 
 #include "../Camera/Camera.h"
-
+#include "../character/CharacterFunction.h"
 #include "GlavityLocus.h"
 
 
@@ -271,7 +271,6 @@ void EffectFactory::HitEffect(
     CrVector3      Damage_Vec
     )
 {
-    COLORf EffectColor(CharacterBase::GetPlayerColor(pDieCharacter->m_PlayerInfo.number));
 
     //ヒットエフェクト作成
     new HitEffectObject(
@@ -283,6 +282,26 @@ void EffectFactory::HitEffect(
         2
         );
 
+    //const Vector3 EffectPos = pDieCharacter->m_Params.pos + Vector3(0, 2, 0);
+    //const Vector3 Glavity(0, -0.02f, 0);
+    //const COLORf  EffectColor(1.0f, 1, 0.8f, 0);
+    //const Vector3 Vec(Vector3Normalize(Damage_Vec));
+
+    //for (int i = 0; i < 6; ++i)
+    //{
+    //    EffectFactory::LocusParticle(
+    //        EffectPos,
+    //        Vec + Vector3Rand()*0.5f,
+    //        Vector3Zero,
+    //        0.15f,
+    //        8,
+    //        EffectColor,
+    //        EffectColor,
+    //        45,
+    //        0.1f,
+    //        0.05f
+    //        );
+    //}
 }
 
 //吹き飛び攻撃くらい時のエフェクト

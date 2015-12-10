@@ -10,11 +10,13 @@
 TennisState_DamageMotion_Weak::TennisState_DamageMotion_Weak(
 	TennisPlayer*  pTennis,
 	const Vector3& Damage_vec,  //ダメージを受けた方向
-    bool           CounterHit
+    bool           CounterHit,
+    int            Frame
 	):
 	m_pTennis(pTennis),
 	m_Damage_vec(Damage_vec),
-    m_CounterHit(CounterHit)
+    m_CounterHit(CounterHit),
+    m_Frame(Frame)
 {
 
 }
@@ -63,6 +65,7 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
 
 	Param.damage_vec = m_Damage_vec;
     Param.counter_hit = m_CounterHit;
+    Param.frame = m_Frame;
 
 	//ひるみクラスを作成
 	m_pDamageMotionClass = new CharacterDamageMotion(
@@ -79,12 +82,11 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
         );
 
     //コントローラを振動
-    controller::SetVibration(
-        5000,
-        0.15f,
-        m_pTennis->m_PlayerInfo.number
+    chr_func::SetControllerShock(
+        m_pTennis,
+        0.5f,
+        0.15f
         );
-
 }
 
 void TennisState_DamageMotion_Weak::Execute(TennisPlayer* t)

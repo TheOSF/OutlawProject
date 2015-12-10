@@ -6,6 +6,14 @@
 #include "../Effect/ImpactLightObject.h"
 #include "../Effect/EffectFactory.h"
 
+
+CharacterDamageMotion::Params::Params()
+{
+    frame = 25;
+    damage_vec = Vector3AxisX;
+    counter_hit = false;
+}
+
 CharacterDamageMotion::CharacterDamageMotion(
 	CharacterBase* pCharacter,
 	Event* pEvent,
@@ -45,7 +53,7 @@ void CharacterDamageMotion::Update()
 {
     const float AllFrame = 25;
     const float NoDamageFrame = 5;
-    const float AddSpeed = (m_Params.counter_hit) ? (0.33333f) : (1);
+    const float AddSpeed = (m_Params.counter_hit) ? (0.33333f) : (25.0f / (float)m_Params.frame);
 
 	//フレーム更新
     m_Timer += AddSpeed;
@@ -118,7 +126,8 @@ void CharacterDamageMotion::Update()
 
         if (m_Timer < 15 && m_Params.counter_hit == false)
         {
-            m_pCharacter->m_Params.pos += Vector3Rand()*0.25f;
+            m_pCharacter->m_Params.pos.x += (frand() - 0.5f)*0.35f;
+            m_pCharacter->m_Params.pos.z += (frand() - 0.5f)*0.35f;
         }
     }
 
@@ -138,16 +147,12 @@ void CharacterDamageMotion::Update()
         m_pEvent->End();
     }
 
-
-
     //無敵フレーム判定
     if (m_Timer > NoDamageFrame)
     {
         //ダメージ判定
         chr_func::DamageCheck(m_pCharacter, m_pHitEvent);
     }
-
-    
 
     //前回のフレームで揺れて動いた分を元に戻す
     m_pCharacter->m_Params.pos = m_Pos;

@@ -12,7 +12,7 @@ public:
     enum class StageType
     {
         Kasennziki,   //‰Íì•~
-
+        School,       //ŠwZ
     };
 
     GameInitializer_UsualMatch(StageType Stage, sceneGamePlay::InitParams& param);

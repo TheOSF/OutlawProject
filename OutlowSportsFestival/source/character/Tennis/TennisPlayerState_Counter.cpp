@@ -22,9 +22,11 @@ void TennisState_PlayerControll_Counter::Enter(TennisPlayer* t)
     class CounterEvent :public CharacterDefaultCounter::Event
     {
         TennisPlayer* const m_pTennis;
+        bool MotionRight;
     public:
-        CounterEvent(TennisPlayer* pTennis):
-            m_pTennis(pTennis)
+        CounterEvent(TennisPlayer* pTennis) :
+            m_pTennis(pTennis),
+            MotionRight(false)
         {
 
         }
@@ -39,7 +41,7 @@ void TennisState_PlayerControll_Counter::Enter(TennisPlayer* t)
         void Move(BallBase* pCounterBall)
         {
             //ボールの位置によってモーション分岐
-            if (chr_func::isRight(m_pTennis, pCounterBall->m_Params.pos))
+            if (MotionRight)
             {
                 m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_CounterRight);
             }
@@ -47,6 +49,11 @@ void TennisState_PlayerControll_Counter::Enter(TennisPlayer* t)
             {
                 m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_CounterLeft);
             }
+        }
+
+        void ModelUpdate(float t)
+        {
+            m_pTennis->m_Renderer.Update(t);
         }
 
         //打つ
@@ -67,6 +74,22 @@ void TennisState_PlayerControll_Counter::Enter(TennisPlayer* t)
         {
             //通常移動クラスへ
             m_pTennis->SetState(TennisState_PlayerControll_Move::GetPlayerControllMove(m_pTennis));
+        }
+
+        Vector3 ClacLocalOffset(bool Right)
+        {
+            Vector3 ret(0, 0, 0);
+            MotionRight = Right;
+            //ボールの位置によってモーション分岐
+            if (Right)
+            {
+                ret = Vector3(1.5f, 0, 0);
+            }
+            else
+            {
+                ret = Vector3(-2.0f, 0, 0);
+            }
+            return ret;
         }
     };
 
@@ -104,7 +127,7 @@ void TennisState_PlayerControll_Counter::Execute(TennisPlayer* t)
 	chr_func::CreateTransMatrix(t, t->m_ModelSize, &t->m_Renderer.m_TransMatrix);
 
     //モデル更新
-    t->m_Renderer.Update(1);
+   // t->m_Renderer.Update(1);
 }
 
 

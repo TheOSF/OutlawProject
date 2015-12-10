@@ -11,11 +11,13 @@
 SoccerState_SmallDamage::SoccerState_SmallDamage(
 	SoccerPlayer* pSoccer,
 	const Vector3& Damage_vec,  //ダメージを受けた方向
-    bool           Counter
+    bool           Counter,
+    int            Frame
 	) :
 	m_pSoccer(pSoccer),
 	m_Damage_vec(Damage_vec),
-    m_Counter(Counter)
+    m_Counter(Counter),
+    m_Frame(Frame)
 {
 
 }
@@ -58,6 +60,7 @@ void SoccerState_SmallDamage::Enter(SoccerPlayer* s)
 
 	Param.damage_vec = m_Damage_vec;
     Param.counter_hit = m_Counter;
+    Param.frame = m_Frame;
 
 	//ひるみクラスを作成
     m_pDamageMotionClass = new CharacterDamageMotion(

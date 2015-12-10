@@ -8,6 +8,7 @@
 #include "../Sound/Sound.h"
 #include "../Effect/EffectFactory.h"
 #include "CharacterManager.h"
+#include "../GameSystem/GameController.h"
 
 //基本的な更新(座標更新、壁との判定など)をすべて行う
 void chr_func::UpdateAll(
@@ -425,12 +426,18 @@ void chr_func::ResetMove(CharacterBase* p)
 //引数の場所が引数のキャラクタからみて右かどうか
 bool chr_func::isRight(CharacterBase* p, CrVector3 pos)
 {
-    Vector3 v1 = pos - p->m_Params.pos, v2;
-    GetRight(p, &v2);
+    return isRight(p->m_Params.pos,GetFront(p),pos);
+}
+
+bool chr_func::isRight(CrVector3 from, CrVector3 view_vec, CrVector3 judge_target)
+{
+    Vector3 v1, v2;
+
+    v1 = judge_target - from;
+    Vector3Cross(v2, Vector3AxisY, view_vec);
 
     return Vector3Dot(v1, v2) > 0.0f;
 }
-
 
 //引数の場所が引数のキャラクタからみて前かどうか
 bool chr_func::isFront(CharacterBase* p, CrVector3 pos)
@@ -584,3 +591,18 @@ bool chr_func::isCanSpecialAttack(RATIO value)
     return value >= 0.5f;
 }
 
+
+//コントローラの振動をセット
+void chr_func::SetControllerShock(CharacterBase* p, RATIO power, float second)
+{
+    if (p->m_PlayerInfo.player_type == PlayerType::_Computer)
+    {
+        return;
+    }
+
+    controller::SetVibration(
+        (DWORD)(power * 10000),
+        second,
+        p->m_PlayerInfo.number
+        );
+}

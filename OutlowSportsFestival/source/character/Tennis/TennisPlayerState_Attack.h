@@ -27,7 +27,7 @@ public:
         const CharacterBase* GetFrontTargetEnemy();
     };
 
-    TennisState_PlayerControll_Attack(TennisPlayer* t);
+    TennisState_PlayerControll_Attack(TennisPlayer* t, bool StartSecond);
     ~TennisState_PlayerControll_Attack();
 
 	// ステート開始
@@ -41,6 +41,7 @@ public:
 
 private:
     TennisAttackClass   m_Attack;        //攻撃クラスへのポインタ
+    bool                m_StartSecond;
 };
 
 #endif

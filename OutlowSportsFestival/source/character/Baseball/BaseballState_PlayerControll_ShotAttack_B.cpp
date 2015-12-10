@@ -216,12 +216,12 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 			//生成
 			new UsualBall(param, DamageBase::Type::_WeekDamage, 8);
 
-			//コントローラを振動
-			controller::SetVibration(
-				5000,
-				0.15f,
-				b->m_PlayerInfo.number
-				);
+            //コントローラを振動
+            chr_func::SetControllerShock(
+                b,
+                0.5f,
+                0.15f
+                );
 
 			//エフェクト
 			{

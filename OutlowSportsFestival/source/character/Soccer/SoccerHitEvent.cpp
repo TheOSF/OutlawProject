@@ -28,7 +28,7 @@ bool SoccerHitEvent::Hit(DamageBase* pDmg)
 
     case CharacterHitEventFunc::SetType::Weak_Hit:
         //弱ひるみステートへ
-        m_pSoccer->SetState(new SoccerState_SmallDamage(m_pSoccer, DamageVec, m_CounterHit), 1);
+        m_pSoccer->SetState(new SoccerState_SmallDamage(m_pSoccer, DamageVec, m_CounterHit, pDmg->HitMotionFrame), 1);
         break;
 
 

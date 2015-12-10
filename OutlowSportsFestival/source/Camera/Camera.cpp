@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "CameraState.h"
 #include "../IexSystem/System.h"
+#include "../../IEX/IEX_Input.h"
 
 Camera* Camera::m_pInstance = nullptr;
 
@@ -42,6 +43,11 @@ void Camera::Update()
 	UpdateMatrix(temp_pos, temp_target);
 
     shader->SetValue("g_CameraPos", temp_pos);
+
+    if (KEY(KEY_ENTER, 0) == 3)
+    {
+        WriteParam();
+    }
 }
 
 //âÊñ è¡ãé
@@ -180,6 +186,26 @@ void Camera::UpdateMatrix(Vector3 pos, Vector3 target)
 	m_Right.Normalize();
 	m_Up.Normalize();
 	m_Forward.Normalize();
+}
+
+void Camera::WriteParam()
+{
+    FILE* fp = nullptr;
+
+    if (fopen_s(&fp, "DATA\\CameraParams.txt", "a+") != 0)
+    {
+        return;
+    }
+
+    fprintf(
+        fp,
+        "P(%f,%f,%f) T(%f,%f,%f)\n",
+        m_Position.x, m_Position.y, m_Position.z,
+        m_Target.x, m_Target.y, m_Target.z
+        );
+
+    fclose(fp);
+
 }
 
 //è’åÇÇçXêVÇ∑ÇÈ

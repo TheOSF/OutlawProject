@@ -31,7 +31,7 @@ bool TennisHitEvent::Hit(DamageBase* pDmg)
 
     case CharacterHitEventFunc::SetType::Weak_Hit:
         //弱ひるみステートへ
-        m_pTennis->SetState(new TennisState_DamageMotion_Weak(m_pTennis, DamageVec, m_CounterHit), 1);
+        m_pTennis->SetState(new TennisState_DamageMotion_Weak(m_pTennis, DamageVec, m_CounterHit, pDmg->HitMotionFrame), 1);
         break;
 
 

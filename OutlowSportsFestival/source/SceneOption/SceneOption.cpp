@@ -24,7 +24,7 @@ void SceneOption::Update()
     {
         sceneGamePlay::InitParams param;
 
-        GameInitializer_UsualMatch::StageType Stage = GameInitializer_UsualMatch::StageType::Kasennziki;
+        GameInitializer_UsualMatch::StageType Stage = GameInitializer_UsualMatch::StageType::School;
         const UINT Round = 3;
         const UINT Frame = 60 * 60 * 2;
 
@@ -33,10 +33,10 @@ void SceneOption::Update()
         param.PlayerArray.fill({ -1, PlayerType::_Player, CharacterType::_Tennis });
 
         //ƒLƒƒƒ‰‘I‘ð
-        param.PlayerArray.at(0) = { 0, PlayerType::_Player, CharacterType::_Baseball };
-        param.PlayerArray.at(1) = { 1, PlayerType::_Player, CharacterType::_Soccer };
-        param.PlayerArray.at(2) = { 2, PlayerType::_Computer, CharacterType::_Soccer };
-        param.PlayerArray.at(3) = { 3, PlayerType::_Computer, CharacterType::_Soccer };
+        param.PlayerArray.at(0) = { 0, PlayerType::_Player, CharacterType::_Tennis };
+        param.PlayerArray.at(1) = { 1, PlayerType::_Computer, CharacterType::_Soccer };
+        param.PlayerArray.at(2) = { 2, PlayerType::_Computer, CharacterType::_Baseball };/*
+        param.PlayerArray.at(3) = { 3, PlayerType::_Computer, CharacterType::_Soccer };*/
 
         param.pInitializer = new GameInitializer_UsualMatch(Stage, param);
         MainFrame->ChangeScene(new sceneGamePlay(param));

@@ -107,12 +107,13 @@ void BaseballState_DamageMotion_Die::Enter(BaseballPlayer* b)
 		b,
 		m_Damage_vec
 		);
+
 	//ƒRƒ“ƒgƒ[ƒ‰‚ðU“®
-	controller::SetVibration(
-		8000,
-		0.5f,
-		m_pBaseball->m_PlayerInfo.number
-		);
+    chr_func::SetControllerShock(
+        m_pBaseball,
+        0.8f,
+        0.5f
+        );
 }
 
 void BaseballState_DamageMotion_Die::Execute(BaseballPlayer* b)

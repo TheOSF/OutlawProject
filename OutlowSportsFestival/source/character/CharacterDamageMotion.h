@@ -13,6 +13,9 @@ public:
 	// パラメータ
 	struct Params
 	{
+        Params();
+
+        int     frame;
 		Vector3 damage_vec;	//ダメージの方向
         bool    counter_hit;//カウンターヒットしたかどうか
 	};

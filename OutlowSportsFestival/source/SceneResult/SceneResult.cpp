@@ -20,8 +20,6 @@ SceneResult::SceneResult(
 SceneResult::~SceneResult()
 {
     DefGameObjMgr.Release(); //ゲームオブジェクト削除は一番初めに
-
-
 }
 
 void SceneResult::Update()

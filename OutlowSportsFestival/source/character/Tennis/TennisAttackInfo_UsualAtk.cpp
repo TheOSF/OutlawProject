@@ -30,6 +30,7 @@ void TennisAttackInfo_UsualAtk::DamageParamSet(DamageShpere* pDmg)
     pDmg->pParent = m_pOwner;
     pDmg->type = m_Param.DamageType;
     pDmg->Value = m_Param.DamageValue;
+    pDmg->HitMotionFrame = m_Param.HitMotionFrame;
 
     DamagePosSet(pDmg,m_pOwner);
 }
@@ -171,10 +172,10 @@ void TennisAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
     chr_func::AddSkillGauge(m_pOwner, pDmg->Value*0.01f);
 
     //ƒRƒ“ƒgƒ[ƒ‰‚ðU“®
-    controller::SetVibration(
-        5000,
-        0.15f,
-        m_pOwner->m_PlayerInfo.number
+    chr_func::SetControllerShock(
+        m_pOwner,
+        0.5f,
+        0.15f
         );
 
     m_HitStopCount = m_Param.HitStopFrame;

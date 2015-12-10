@@ -13,7 +13,8 @@ public:
     BaseballState_DamageMotion_Weak(
         BaseballPlayer*  m_pBaseball,
         const Vector3& Damage_vec,  //ダメージを受けた方向
-        bool           Counter = false
+        bool           Counter,
+        int            Frame
 		);
 
 	// ステート開始
@@ -30,6 +31,7 @@ private:
 	BaseballPlayer*          m_pBaseball;
 	Vector3                  m_Damage_vec;
     bool                     m_Counter;
+    int                      m_Frame;
 };
 
 #endif

@@ -59,6 +59,7 @@ public:
 	float			    Value;		    //値
 	int				    HitCount;	    //当たった回数
     int                 MaxChrHit;      //１キャラクタに当たる総数
+    int                 HitMotionFrame; //ひるみフレーム(弱ひるみのみ有効、デフォルトでは25が入っている
 
 	DamageBase();
 	virtual ~DamageBase();

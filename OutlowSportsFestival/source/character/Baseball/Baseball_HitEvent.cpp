@@ -32,7 +32,7 @@ bool BaseballHitEvent::Hit(DamageBase* pDmg)
 
     case CharacterHitEventFunc::SetType::Weak_Hit:
         //弱ひるみステートへ
-        m_pBaseball->SetState(new BaseballState_DamageMotion_Weak(m_pBaseball, DamageVec, m_CounterHit), 1);
+        m_pBaseball->SetState(new BaseballState_DamageMotion_Weak(m_pBaseball, DamageVec, m_CounterHit,pDmg->HitMotionFrame), 1);
         break;
 
 

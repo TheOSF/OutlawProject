@@ -114,10 +114,10 @@ bool SkillGaugeUpItem::Update()
         chr_func::AddSkillGauge(HitChr, 0.5f);
 
         //ƒRƒ“ƒgƒ[ƒ‰‚ðU“®
-        controller::SetVibration(
-            10000,
-            0.15f,
-            HitChr->m_PlayerInfo.number
+        chr_func::SetControllerShock(
+            HitChr,
+            1.0f,
+            0.15f
             );
     }
     else

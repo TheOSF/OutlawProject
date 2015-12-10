@@ -14,6 +14,7 @@
 #include "../GameSystem/GameEventer.h"
 #include "../Item/SkillGaugeItemEmitter.h"
 
+#include "../Stage/Ground_Manager.h"
 #include "../Stage/Kasenziki_Manager.h"
 #include "../Item/Item_BellEmitter.h"
 
@@ -106,6 +107,10 @@ void GameInitializer_UsualMatch::GameCreate()
     {
     case StageType::Kasennziki:
         (new Kasennziki_Manager(m_Param.Round))->CreateStage();
+        break;
+
+    case StageType::School:
+        (new Ground_Manager(m_Param.Round))->CreateStage();
         break;
 
     default:

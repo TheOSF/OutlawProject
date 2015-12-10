@@ -12,20 +12,6 @@ void StageResourceLoadFaction::LoadStage1Object()
         );
 
 
-    //プレスチックコーン
-    DefResource.Regist(
-        Resource::MeshType::Cone,
-        new iexMesh("DATA\\Stages\\Stage1\\Cone.imo")
-        );
-
-
-    //青いベンチ
-    DefResource.Regist(
-        Resource::MeshType::Bench,
-        new iexMesh("DATA\\Stages\\Stage1\\Bench.imo")
-        );
-
-
     //バス
     DefResource.Regist(
         Resource::MeshType::Bus,
@@ -39,13 +25,6 @@ void StageResourceLoadFaction::LoadStage1Object()
         );
 
 
-    //鉄パイプ
-    DefResource.Regist(
-        Resource::MeshType::Pipe,
-        new iexMesh("DATA\\Stages\\Stage1\\Pipe.imo")
-        );
-
-
     //川
     DefResource.Regist(
         Resource::MeshType::River,
@@ -53,22 +32,17 @@ void StageResourceLoadFaction::LoadStage1Object()
         );
 
 
+
+    LoadCommonObject();
 }
 
 //ステージ１のメッシュをリソースから削除
 void StageResourceLoadFaction::ReleaseStage1Object()
 {
-    //プレスチックコーン
+    //ステージ１物理エンジン用メッシュ
     DefResource.Erace(
-        Resource::MeshType::Cone
+        Resource::MeshType::Stage1_HitPhysic
         );
-
-
-    //青いベンチ
-    DefResource.Erace(
-        Resource::MeshType::Bench
-        );
-
 
     //バス
     DefResource.Erace(
@@ -81,14 +55,84 @@ void StageResourceLoadFaction::ReleaseStage1Object()
         );
 
 
-    //鉄パイプ
-    DefResource.Erace(
-        Resource::MeshType::Pipe
-        );
-
-
     //川
     DefResource.Erace(
         Resource::MeshType::River
+        );
+
+    ReleaseCommonObject();
+}
+
+
+
+
+
+//ステージ２のメッシュをリソースに登録
+void StageResourceLoadFaction::LoadStage2Object()
+{
+    //ステージ１物理エンジン用メッシュ
+    DefResource.Regist(
+        Resource::MeshType::Stage2_HitPhysic,
+        new iexMesh("DATA\\Stages\\Stage2\\Ground.imo")
+        );
+
+
+    LoadCommonObject();
+
+}
+
+//ステージ２のメッシュをリソースから削除
+void StageResourceLoadFaction::ReleaseStage2Object()
+{
+    DefResource.Erace(
+        Resource::MeshType::Stage2_HitPhysic
+        );
+
+
+    ReleaseCommonObject();
+}
+
+
+
+void StageResourceLoadFaction::LoadCommonObject()
+{
+    //プラスチックコーン
+    DefResource.Regist(
+        Resource::MeshType::Cone,
+        new iexMesh("DATA\\Stages\\Stage1\\Cone.imo")
+        );
+
+
+    //青いベンチ
+    DefResource.Regist(
+        Resource::MeshType::Bench,
+        new iexMesh("DATA\\Stages\\Stage1\\Bench.imo")
+        );
+
+
+    //鉄パイプ
+    DefResource.Regist(
+        Resource::MeshType::Pipe,
+        new iexMesh("DATA\\Stages\\Stage1\\Pipe.imo")
+        );
+}
+
+void StageResourceLoadFaction::ReleaseCommonObject()
+{
+    //プラスチックコーン
+    DefResource.Erace(
+        Resource::MeshType::Cone
+        );
+
+
+    //青いベンチ
+    DefResource.Erace(
+        Resource::MeshType::Bench
+        );
+
+
+    //鉄パイプ
+    DefResource.Erace(
+        Resource::MeshType::Pipe
         );
 }

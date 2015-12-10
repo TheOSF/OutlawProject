@@ -206,7 +206,6 @@ void	sceneGamePlay::Update()
     //カメラ更新
 	DefCamera.Update();
 
-
     if (!GetKeyState('M'))
     {
         //全ゲームオブジェクト更新
@@ -229,7 +228,6 @@ void	sceneGamePlay::Update()
     {
         // Bullet Physics
         DefBulletSystem.DebugDrawWorld();
-
     }
     
 }

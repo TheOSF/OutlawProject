@@ -24,9 +24,11 @@ public:
         virtual void Catch(BallBase* pCounterBall) {} // キャッチ時
 
         virtual void Shot(BallBase* pCounterBall) = 0;      //打ち返し時
-        
+        virtual void ModelUpdate(float t){}
 
         virtual void ShotFaild() = 0; //移動時にボールが打ち返せない状態になった時
+
+        virtual Vector3 ClacLocalOffset(bool Right){ return Vector3Zero; }
 
         virtual void End() = 0;       //クラス終了
     };
@@ -82,6 +84,7 @@ private:
 
     void Pose();  //構え中
     void Move();  //移動中
+    void HitStop(); //ヒットストップ
     void Catch(); // キャッチ中
     void Shot();  //打ち返し中
     void Failed();//打ち返し失敗
@@ -93,7 +96,9 @@ private:
     //スティックによる角度調整
     void SetStickAngle(CrVector3 OriginVec,RADIAN controllRad);
 
-    
+    void EffectApper();
+        
+
     void SetAutoCounter();
 
     static const float                  m_SkillUpValue; //スキルゲージが上がる量
@@ -101,11 +106,13 @@ private:
     Param  const                        m_Param;        //カウンターパラメタ
     Event* const                        m_pEventClass;  //イベントクラスへのポインタ(中でdeleteする)
     DamageManager::HitEventBase* const  m_pHitEventClass;//ヒットイベント(中でdeleteする)
+    UINT                                m_HitStopFrame;
 
     void(CharacterDefaultCounter::*m_pNowState)();       //ステート関数
     UINT        m_Count;
     BallBase*   m_pCounterBall;
     Vector3     m_MoveTargetPos;
+    Vector3     m_BallFreezePos;
     Vector2     m_Stick;
     float       m_MoveValue;
     BallBase::BallID m_counterBallID;

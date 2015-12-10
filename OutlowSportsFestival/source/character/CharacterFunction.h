@@ -78,6 +78,7 @@ namespace chr_func
 
     //引数の場所が引数のキャラクタからみて右かどうか
     bool isRight(CharacterBase* p, CrVector3 pos);
+    bool isRight(CrVector3 from, CrVector3 view_vec, CrVector3 judge_target);
 
     //引数の場所が引数のキャラクタからみて前かどうか
     bool isFront(CharacterBase* p, CrVector3 pos);
@@ -105,6 +106,9 @@ namespace chr_func
 
     //キャラクタのラウンド勝利数を加算する
     void AddWinPoint(CharacterBase* p);
+
+    //コントローラの振動をセット
+    void SetControllerShock(CharacterBase* p, RATIO power, float second);
 }
 
 #endif

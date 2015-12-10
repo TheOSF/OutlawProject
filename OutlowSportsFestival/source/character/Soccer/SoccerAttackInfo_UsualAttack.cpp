@@ -139,12 +139,12 @@ void SoccerAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
 {
 	chr_func::AddSkillGauge(m_pOwner, pDmg->Value*0.01f);
 
-	//コントローラを振動
-	controller::SetVibration(
-		5000,
-		0.15f,
-		m_pOwner->m_PlayerInfo.number
-		);
+    //コントローラを振動
+    chr_func::SetControllerShock(
+        m_pOwner,
+        0.5f,
+        0.15f
+        );
 }//前方に敵がいるかどうか
 bool SoccerAttackInfo_UsualAtk::isFrontStayEnemy()
 {
