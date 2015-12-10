@@ -4,7 +4,7 @@
 #include "../CharacterEvasionClass.h"
 
 //***************************************************
-//		テニスポーズモーションクラス
+//		野球ポーズモーションクラス
 //***************************************************
 
 class BaseballState_PoseMotion : public BaseballState

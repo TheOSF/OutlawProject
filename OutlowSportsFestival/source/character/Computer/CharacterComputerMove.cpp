@@ -114,7 +114,7 @@ Vector2 CharacterComputerMove::StateMoveDistance(CharacterBase* cb)
 	if (Vector3Distance(m_MoveTargetPos, m_cCharacter->m_Params.pos) > Bestlen)
 	{
 		m_Count = (int)(m_cParam.RunStop * 100.0f);
-		movemode = Stop;
+		movemode = Forward;
 		m_Count = 0;
 	}
 
@@ -122,7 +122,7 @@ Vector2 CharacterComputerMove::StateMoveDistance(CharacterBase* cb)
 	//目標に到達できない or 新目標があればそこに変更する
 	if (m_Count > 300)
 	{
-		movemode = Stop;
+		movemode = Forward;
 		m_Count = 0;
 	}
 	//壁に向かって進むの防止
@@ -283,6 +283,7 @@ Vector3 CharacterComputerMove::GetMoveTargetPos(CharacterBase* cb)
 Vector2 CharacterComputerMove::SwitcAction_Baseball(CharacterBase* cb, bool flg)
 {
 
+
 	Vector2 xz;
 	switch (movemode)
 	{
@@ -298,9 +299,10 @@ Vector2 CharacterComputerMove::SwitcAction_Baseball(CharacterBase* cb, bool flg)
 	case Distance_B:
 		xz = StateMoveDistance_Baseball(cb);
 		break;
-	case Keep:
-		xz = StateKeepLen(cb);
+	case MoveCenter:
+		xz = StateMoveCenter(cb);
 		break;
+
 	}
 	return xz;
 }
@@ -309,13 +311,17 @@ Vector2 CharacterComputerMove::SwitcAction_Baseball(CharacterBase* cb, bool flg)
 
 Vector2 CharacterComputerMove::StateStop_Baseball(CharacterBase* cb, bool flg)
 {
-	const int NextMove = rand() % 4;
+	const int NextMove = (int)(rand() % (int)(m_cParam.RunStop * 20) + m_cParam.RunStop * 50);
 	++m_Count;
 	m_MoveTargetPos = GetMoveTargetPos(cb);
 
 	if (m_Count > NextMove)
 	{
-		if (Vector3Distance(m_MoveTargetPos, m_cCharacter->m_Params.pos) > 20.0f)
+		if (Vector3Distance(Vector3(0, 0, 0), m_cCharacter->m_Params.pos) > 30.0f)
+		{
+			movemode = MoveCenter;
+		}
+		else if (Vector3Distance(m_MoveTargetPos, m_cCharacter->m_Params.pos) > 20.0f)
 		{
 			movemode = Forward;
 		}
@@ -325,25 +331,25 @@ Vector2 CharacterComputerMove::StateStop_Baseball(CharacterBase* cb, bool flg)
 			if (flg && cb->m_PlayerInfo.chr_type == CharacterType::_Baseball)
 			{
 				movemode = Distance_B;
-				//movemode = Keep;
+				
 			}
 			//　ちょっと遠く
 			else
 			{
 				movemode = Distance_B;
-				//movemode = Keep;
+				
 			}
 		}
 	}
 
-	return Vector2(0, 0);
+	return Vector2Normalize(Vector2(0, 0));
 }
 
 Vector2 CharacterComputerMove::StateMoveDistance_Baseball(CharacterBase* cb)
 {
 
 	++m_Count;
-	const float Bestlen =35.0f + rand() % 5; //そのキャラのベスト距離(今は固定)
+	const float Bestlen = 37.0f + rand() % 5; //そのキャラのベスト距離(今は固定)
 
 
 
@@ -355,16 +361,17 @@ Vector2 CharacterComputerMove::StateMoveDistance_Baseball(CharacterBase* cb)
 		m_Count = 0;
 	}
 
-	//　移動中壁に当たったら
-	if (chr_func::CheckWall(cb))
+	//目標に到達できない or 新目標があればそこに変更する
+	if (m_Count > 280)
 	{
 		movemode = Forward;
+		m_Count = 0;
 	}
-
-	//目標に到達できない or 新目標があればそこに変更する
-	if (m_Count > 160)
+	//壁に向かって進むの防止
+	if (chr_func::CheckWall(cb))
 	{
-		movemode = Stop;
+		m_Count = (int)(m_cParam.RunStop * 100.0f);
+		movemode = MoveCenter;
 		m_Count = 0;
 	}
 
@@ -378,38 +385,3 @@ Vector2 CharacterComputerMove::StateMoveDistance_Baseball(CharacterBase* cb)
 	return Vector2Normalize(Vector2(v.x, v.z));
 }
 
-//　ターゲットとの距離を保つ
-Vector2 CharacterComputerMove::StateKeepLen(CharacterBase* cb)
-{
-	++m_Count;
-	const float Bestlen = 35.0f + rand() % 5; //そのキャラのベスト距離(今は固定)
-	//目標設定
-	m_MoveTargetPos = GetMoveTargetPos(cb);
-	Vector3 v = m_MoveTargetPos - cb->m_Params.pos;
-	float len = v.Length();
-
-	if (len < Bestlen)
-	{
-		v *= -1;
-	}
-	else
-	{
-		m_Count = (int)(m_cParam.RunStop * 100.0f);
-		movemode = Forward;
-		m_Count = 0;
-	}
-
-	//　移動中壁に当たったら
-	if (chr_func::CheckWall(cb))
-	{
-		cb->m_Params.pos = Vector3(0, 0, 0);
-	}
-	//一定時間後
-	if (m_Count > 180)
-	{
-		movemode = Stop;
-		m_Count = 0;
-	}
-
-	return Vector2Normalize(Vector2(v.x, v.z));
-}

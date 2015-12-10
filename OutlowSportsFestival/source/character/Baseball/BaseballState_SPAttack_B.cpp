@@ -49,8 +49,7 @@ void  BaseballState_SPAttack_B::Enter(BaseballPlayer* b)
 
 	chr_func::XZMoveDown(b, 1);
 
-	//エフェクト
-	new SpecialAttackEffect(b, 55);
+	
 	Sound::Play(Sound::Skill);
 	//　スキルゲージリセット
 	chr_func::ResetSkillGauge(b);
@@ -101,11 +100,11 @@ void BaseballState_SPAttack_B::State_Atk1()
 	if (!timeflg)
 	{
 		//　発動音再生&The World
-		if (m_Timer == 1)
-		{
-			//Sound::Play(Sound::Skill);
-			//FreezeGame(55);
-		}
+		//if (m_Timer == 1)
+		//{
+		//	//Sound::Play(Sound::Skill);
+		//	//FreezeGame(55);
+		//}
 
 		if (m_Timer >= 56)
 		{
@@ -143,6 +142,8 @@ void BaseballState_SPAttack_B::State_Atk1()
 		if (m_Damage.HitCount > 0 && m_Timer == 12)
 		{
 			FreezeGame(61);
+			//エフェクト
+			new SpecialAttackEffect(m_pBaseBall, 55);
 		}
 
 		if (m_Timer == 20)

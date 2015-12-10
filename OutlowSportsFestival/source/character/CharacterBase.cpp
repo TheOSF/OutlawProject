@@ -128,7 +128,9 @@ bool CharacterBase::Msg(MsgType mt)
     case MsgType::_GameSet:
         m_StateType = State::Freeze;
         break;
-
+	case MsgType::_LosePose:
+		m_StateType = State::Freeze;
+		break;
     case MsgType::_WinPose:
         m_StateType = State::WinPose;
         break;

@@ -13,6 +13,7 @@ BaseballAttackClass::BaseballAttackClass(
 	m_pEvent(pEvent),
 	m_Timer(0),
 	m_ComboCount(-1),
+	m_DoHit(false),
 	m_pStateFunc(&BaseballAttackClass::State_NextAtk),
 	m_DamageHitCount(0),
 	m_HitStopCount(0),
@@ -83,6 +84,8 @@ void BaseballAttackClass::State_Attack()
 	{
 		m_DamageHitCount = m_Damage.HitCount;
 		pNowAtk->HitAttack(&m_Damage);
+		m_DoHit = true;
+
 		
 		//    m_HitStopCount = 5;
 	}
@@ -112,13 +115,25 @@ void BaseballAttackClass::State_Attack()
 
 	//☆変更予定点(必殺技時->当たったらにする)
 	//コンボ移行
-	if (!isLastAtk() &&
-		m_DoCombo    &&
-		pNowAtk->isComboSwitchFrame(m_Timer))
+	if (m_pOwner->m_PlayerInfo.player_type == PlayerType::_Player)
 	{
-		m_pStateFunc = &BaseballAttackClass::State_NextAtk;
+		if (!isLastAtk() &&
+			m_DoCombo    &&
+			pNowAtk->isComboSwitchFrame(m_Timer))
+		{
+			m_pStateFunc = &BaseballAttackClass::State_NextAtk;
+		}
 	}
-
+	else
+	{
+		if (!isLastAtk() &&
+			m_DoCombo    &&
+			pNowAtk->isComboSwitchFrame(m_Timer) &&
+			m_DoHit == true)
+		{
+			m_pStateFunc = &BaseballAttackClass::State_NextAtk;
+		}
+	}
 	//ダメージ有効・無効
 	m_Damage.m_Enable = pNowAtk->isDamageEnable(m_Timer);
 
@@ -126,6 +141,7 @@ void BaseballAttackClass::State_Attack()
 	if (pNowAtk->isEnd(m_Timer))
 	{
 		m_pStateFunc = &BaseballAttackClass::State_End;
+		m_DoHit = false;
 	}
 }
 

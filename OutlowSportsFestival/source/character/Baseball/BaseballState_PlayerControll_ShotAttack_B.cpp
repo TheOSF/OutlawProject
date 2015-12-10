@@ -141,7 +141,7 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 	if (m_Timer < ShotFrame)
 	{
 		const CharacterBase* const pTargetCharacter = GetFrontTarget(b);
-		const float AngleSpeed = D3DXToRadian(3);
+		const float AngleSpeed = D3DXToRadian(10);
 
 		//　Comならこっち
 		if (b->m_PlayerInfo.player_type == PlayerType::_Computer)
@@ -201,7 +201,7 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 			//移動は前向き
 			chr_func::GetFront(b, &param.move);
 			//スピードは適当
-			param.move *= 0.6f;
+			param.move *= 0.68f;
 
 			//キャラの場所に(最終的に腕の位置に？)
 			param.pos = m_pUpBall->m_Params.pos;

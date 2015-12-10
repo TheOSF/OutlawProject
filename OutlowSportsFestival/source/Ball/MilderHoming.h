@@ -18,7 +18,7 @@
 //		追尾玉クラス
 //*****************************************************
 
-class BallBase;
+//class BallBase;
 
 class MilderHoming :public BallBase, public GameObjectBase
 {
@@ -27,8 +27,9 @@ private:
     int homingcounter;//　追尾時間
 	bool frontflg;//　前向きにするよう
 	BaseballPlayer* m_Baseball;
+
 public:
-    //物理パラメータ
+ 
 	//物理パラメータ
 	struct PhysicsParam
 	{
@@ -50,6 +51,7 @@ public:
 
     bool Update();
     bool Msg(MsgType mt);
+public:
 	//bool(UsualBal::*m_pStateFunc)();
     LpMeshRenderer		m_pMeshRenderer;
 	DamageCapsure		m_Damage;
@@ -58,7 +60,6 @@ public:
     RigidBody*          m_pRigitBody;
     LocusHDR            m_Locus;
 	int                         m_EffectFrameCount;
-    BallBase			m_BallBase;
     CharacterBase*      m_pTarget;
 	const CharacterType::Value  m_FirstParentType;
 
@@ -69,14 +70,14 @@ public:
     void State_NoWork();
     void State_Delete();
 	void State_Normal();
-
+	void State_Counter();
 
     bool isOutofField()const;
     void UpdateDamageClass();
     void UpdateMesh();
     void UpdateLocusColor();
     void SetHDR();
-    bool isHitWall();
+	bool isHitWall(Vector3& outNewMove);
 
 	void Cheak();
 

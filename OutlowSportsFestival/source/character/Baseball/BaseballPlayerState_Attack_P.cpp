@@ -8,8 +8,8 @@
 
 //------------プレイヤー操作の攻撃操作クラス--------------
 
-Baseball_PlayerControll_Attack_P::PlayerControllEvent::PlayerControllEvent(BaseballPlayer*const pBaseball) :
-m_pBaseball(pBaseball)
+Baseball_PlayerControll_Attack_P::PlayerControllEvent::PlayerControllEvent(BaseballPlayer*const pBaseball, BaseballAttackClass* Attack) :
+m_pBaseball(pBaseball), m_Attack(Attack)
 {
 
 }
@@ -19,14 +19,7 @@ bool Baseball_PlayerControll_Attack_P::PlayerControllEvent::isDoCombo()
 	//　コンピューターなら
 	if (m_pBaseball->m_PlayerInfo.player_type == PlayerType::_Computer)
 	{
-		if (rand() % 100 > 60)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return ComDoCombo();
 	}
 	return controller::GetTRG(controller::button::shikaku, m_pBaseball->m_PlayerInfo.number);
 }
@@ -135,7 +128,7 @@ const CharacterBase*  Baseball_PlayerControll_Attack_P::PlayerControllEvent::Get
 //-------------近距離攻撃ステートクラス-------------
 
 Baseball_PlayerControll_Attack_P::Baseball_PlayerControll_Attack_P(BaseballPlayer* b) :
-m_Attack(b, new PlayerControllEvent(b))
+m_Attack(b, new PlayerControllEvent(b, &m_Attack))
 {
 
 }
@@ -186,4 +179,80 @@ void Baseball_PlayerControll_Attack_P::Execute(BaseballPlayer* b)
 void Baseball_PlayerControll_Attack_P::Exit(BaseballPlayer* b)
 {
 
+}
+
+
+bool Baseball_PlayerControll_Attack_P::PlayerControllEvent::ComDoCombo()
+{
+	int FoolPoint = rand() % 100;
+	switch (m_pBaseball->m_PlayerInfo.strong_type)
+	{
+	case StrongType::_Strong:
+		if (m_Attack->getDoHit())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		break;
+	case StrongType::_Usual:
+		if (m_Attack->getDoHit())
+		{
+			if (FoolPoint > 75)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+
+		}
+		else
+		{
+			if (FoolPoint > 75)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+
+		}
+		break;
+	case StrongType::_Weak:
+		if (m_Attack->getDoHit())
+		{
+
+			if (FoolPoint > 50)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+
+		}
+		else
+		{
+			if (FoolPoint > 50)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		break;
+	default:
+		return false;
+		break;
+
+	}
+	return false;
 }
