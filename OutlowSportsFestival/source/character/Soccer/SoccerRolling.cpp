@@ -36,17 +36,19 @@ void SoccerState_Rolling::Execute(SoccerPlayer* s)
 	const int EndFrame = 52;          //終了までのフレーム
 	const int CanControllFrame = 2;   //移動方向をコントロールできるフレーム
 	const int NoDamageFrame = 10;     //無敵時間
-	float MoveValue;
-	float DownValue;
+
+	float DownValue = 0.5f;
+	float MoveValue = 0.05f;
+	
 	if (Dash)
 	{
-		 MoveValue = 0.9f;    //移動量
-		 DownValue = 0.04f;     //減速量
+		 MoveValue = 0.6f;    //移動量
+		 DownValue = 0.1f;     //減速量
 	}
 	else
 	{
-		 MoveValue = 0.7f;    //移動量
-		 DownValue = 0.05f;     //減速量
+		 MoveValue = 0.4f;    //移動量
+		 DownValue = 0.09f;     //減速量
 	}
 
 	
@@ -69,14 +71,15 @@ void SoccerState_Rolling::Execute(SoccerPlayer* s)
 		if (Vec != Vector3Zero)
 		{
 			m_Vec = Vec;
+			chr_func::AngleControll(s, s->m_Params.pos + m_Vec, 0.3f);
 		}
 	}
 
 	//コントロールできるフレームが終わった場合向きと移動を設定
 	if (m_Timer == CanControllFrame)
 	{
-		m_Vec.y = 0;
-		m_Vec.Normalize();
+		/*m_Vec.y = 0;
+		m_Vec.Normalize();*/
 
 		chr_func::AngleControll(s, s->m_Params.pos + m_Vec);
 
@@ -149,7 +152,10 @@ void SoccerState_Rolling::Execute(SoccerPlayer* s)
 
 
 		//移動量の減衰
-		chr_func::XZMoveDown(s, DownValue);
+		if (m_Timer > EndFrame - 13)
+		{
+			chr_func::XZMoveDown(s, DownValue);
+		}
 
 		//無敵フレームかによってヒットイベントクラスの分岐
 		if (m_Timer < NoDamageFrame)

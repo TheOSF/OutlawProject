@@ -34,5 +34,6 @@ public:
 	SpeedEffect     m_SpeedEffect;
 	bool			m_isRun;
 	bool            m_Init;
+	int             m_count;
 };
 #endif

@@ -38,7 +38,8 @@ private:
 		Forward,
 		Distance,
 		MoveCenter,
-		Wait
+		Wait,
+		clash
 	};
 	CharacterComputerMove::Param m_cParam;
 	MoveMode movemode;

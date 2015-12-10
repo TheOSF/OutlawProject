@@ -5,6 +5,7 @@
 #include "../Snakeshot.h"
 #include "../SoccerHitEvent.h"
 #include "../../../Sound/Sound.h"
+#include "../../../Effect/SpecialAttackEffect.h"
 
 //CharacterShotAttack * SoccerState_ComputerControll_Finisher::SnakeShotClass(SoccerPlayer * s)
 //{
@@ -14,12 +15,14 @@
 SoccerState_ComputerControll_Finisher::SoccerState_ComputerControll_Finisher() :
 	m_pSnakeShotClass(nullptr)
 {
-	m_Timer = 0;
-	timeflg = false;
+	
 }
 void SoccerState_ComputerControll_Finisher::Enter(SoccerPlayer* s)
 {
 	m_pSnakeShotClass = this->SnakeShotClass(s);
+
+	m_Timer = 0;
+	timeflg = false;
 	chr_func::ResetSkillGauge(s);
 }
 void SoccerState_ComputerControll_Finisher::Execute(SoccerPlayer* s)
@@ -32,10 +35,15 @@ void SoccerState_ComputerControll_Finisher::Execute(SoccerPlayer* s)
 		if (m_Timer == 1)
 		{
 			Sound::Play(Sound::Skill);
-			FreezeGame(30,s);
+			FreezeGame(55,s);
+			new SpecialAttackEffect(s, 55);
 		}
 
-		if (m_Timer >= 31)
+		if (m_Timer == 60)
+		{
+			s->m_Renderer.SetMotion(SoccerPlayer::_ms_Shot);
+		}
+		if (m_Timer >= 80)
 		{
 			timeflg = true;
 			m_Timer = 0;
@@ -86,6 +94,7 @@ CharacterShotAttack* SoccerState_ComputerControll_Finisher::SnakeShotClass(Socce
 		// ダメージ判定開始 & ボール発射
 		void Shot()
 		{
+
 			//　遠距離攻撃(param計算)
 			Vector3 pos, vec;
 
@@ -102,7 +111,7 @@ CharacterShotAttack* SoccerState_ComputerControll_Finisher::SnakeShotClass(Socce
 		//　遠距離攻撃開始
 		void AttackStart()override {
 			//　☆モーション
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Shot);
+			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Command);
 		}
 
 		void AttackEnd()
@@ -114,11 +123,11 @@ CharacterShotAttack* SoccerState_ComputerControll_Finisher::SnakeShotClass(Socce
 
 	CharacterShotAttack::AttackParams atk;
 
-	atk.AllFrame = 40;
+	atk.AllFrame = 80;
 	atk.AttackPower = 8;
 	atk.MaxTurnRadian = PI / 4;
-	atk.MoveDownSpeed = 0.8f;
-	atk.ShotFrame = 15;
+	atk.MoveDownSpeed = 0.3f;
+	atk.ShotFrame = 70;
 
 	return m_pSnakeShotClass = new CharacterShotAttack(
 		s,

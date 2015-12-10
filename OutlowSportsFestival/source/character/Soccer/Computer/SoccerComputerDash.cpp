@@ -96,7 +96,7 @@ void SoccerState_ComputerControll_Dash::Enter(SoccerPlayer* s)
 		SoccerDoEvent(SoccerPlayer* cSoccer) :
 			m_cSoccer(cSoccer) 
 		{
-			AttackPoint = rand() % 100;
+			AttackPoint = rand() % 500;
 			m_pMoveControllClass->GetParams(cParam, m_cSoccer->m_PlayerInfo.strong_type);
 		}
 
@@ -110,14 +110,14 @@ void SoccerState_ComputerControll_Dash::Enter(SoccerPlayer* s)
 			}
 			if (len < 6.0f)
 			{
-				if ((cParam.ActionFrequence * 100) > AttackPoint)
+				if ((cParam.ActionFrequence * 400) > AttackPoint)
 				{
 					m_cSoccer->SetState(new SoccerState_ComputerControll_Sliding(m_cSoccer));
 				}
 			}
 			else if (len < 22.0f)
 			{
-				if ((cParam.ActionFrequence * 100) > AttackPoint)
+				if ((cParam.ActionFrequence * 150) > AttackPoint)
 				{
 					m_cSoccer->SetState(new SoccerState_ComputerControll_Shot);
 				}
@@ -191,9 +191,13 @@ void SoccerState_ComputerControll_Dash::Execute(SoccerPlayer* s)
 	Vector2 st;
 	
 
-
+	//　壁に激突したら激突ステート
 	// 一定時間走る / 移動しなくなったら戻る
-	if (m_Count>100  || movemode== Stop)
+	if (movemode == clash)
+	{
+		s->SetState(new SoccerState_clash(s));
+	}
+	else if (m_Count>100  || movemode== Stop)
 	{
 		s->SetState(new SoccerState_brake(s));
 	}
@@ -205,6 +209,10 @@ void SoccerState_ComputerControll_Dash::Execute(SoccerPlayer* s)
 		m_pDashClass->Update();
 		m_pDoActionClass->Update();
 		m_pReactionClass->Update();
+	}
+	else
+	{
+		m_pDashClass->SetStickValue(Vector2(0, 0));
 	}
 
 	if (m_Count % 19 == 5)
@@ -253,7 +261,7 @@ Vector2 SoccerState_ComputerControll_Dash::StateMoveFront(SoccerPlayer* s)
 	if (chr_func::CheckWall(s))
 	{
 		m_Count = (int)(m_cParam.RunStop * 100.0f);
-		movemode = Stop;
+		movemode = clash;
 		m_Count = 0;
 	}
 
@@ -291,11 +299,11 @@ Vector2 SoccerState_ComputerControll_Dash::StateMoveDistance(SoccerPlayer* s)
 		movemode = Stop;
 		m_Count = 0;
 	}
-
+	//壁に当たると激突
 	if (chr_func::CheckWall(m_cSoccer))
 	{
 		m_Count = (int)(m_cParam.RunStop * 100.0f);
-		movemode = Stop;
+		movemode = clash;
 		m_Count = 0;
 	}
 
@@ -370,6 +378,7 @@ Vector2 SoccerState_ComputerControll_Dash::StateWait(SoccerPlayer* s)
 
 	return Vector2Normalize(Vector2(0, 0));
 }
+
 Vector2 SoccerState_ComputerControll_Dash::SwitchAction(SoccerPlayer* s)
 {
 

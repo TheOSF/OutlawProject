@@ -8,7 +8,7 @@
 #include "../Soccer/Computer/SoccerComputerMove.h"
 #include "../Soccer/Computer/SoccerComputerFinisher.h"
 
-
+#include "../../Effect/SpecialAttackEffect.h"
 #include "../CharacterDefaultCounterClass.h"
 #include "../../GameSystem/GameController.h"
 #include "../CharacterManager.h"
@@ -39,7 +39,8 @@ public:
 				return Vector3Zero;
 			}
 
-			vec = Vector3MulMatrix3x3(vec, matView);
+			vec = DefCamera.GetRight()*vec.x + DefCamera.GetForward()*vec.z;
+			vec.y = 0;
 			vec.Normalize();
 
 			return vec;
@@ -126,7 +127,10 @@ void SoccerState_PlayerControll_Move::ActionStateSwitch(SoccerPlayer*s)
 	// [〇] で 必殺技
 	if (controller::GetTRG(controller::button::maru, s->m_PlayerInfo.number))
 	{
-		s->SetState(new SoccerState_PlayerControll_Finisher);
+		if (chr_func::isCanSpecialAttack(s))
+		{
+			s->SetState(new SoccerState_PlayerControll_Finisher);
+		}
 	}
 	// [R1] で カウンター
 	if (controller::GetTRG(controller::button::_R1, s->m_PlayerInfo.number))
@@ -575,9 +579,9 @@ void SoccerState_PlayerControll_Shot::Enter(SoccerPlayer* s)
 	};
 	CharacterShotAttack::AttackParams p;
 
-	p.ShotFrame = 10;
+	p.ShotFrame = 15;
 	p.AllFrame = 35;
-	p.MoveDownSpeed = 0.2f;
+	p.MoveDownSpeed = 0.1f;
 
 	m_pShotClass = new CharacterShotAttack(s, new SoccerShotEvent(s), p, new SoccerHitEvent(s));
 }
@@ -593,6 +597,7 @@ void SoccerState_PlayerControll_Shot::Execute(SoccerPlayer* s)
 	SoccerHitEvent HitEvent(s);
 	chr_func::UpdateAll(s, &HitEvent);
 	//モデル関連の更新
+	
 	s->m_Renderer.Update(1);
 	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
 }
@@ -761,9 +766,12 @@ void SoccerState_PlayerControll_Dash::Execute(SoccerPlayer* s)
 	// [〇] で 必殺技
 	if (controller::GetTRG(controller::button::maru, s->m_PlayerInfo.number))
 	{
-		s->SetState(new SoccerState_PlayerControll_Finisher);
+		if (chr_func::isCanSpecialAttack(s))
+		{
+			s->SetState(new SoccerState_PlayerControll_Finisher);
+		}
 	}
-	// [R1] で 必殺技
+	// [R1] で カウンター
 	if (controller::GetTRG(controller::button::_R1, s->m_PlayerInfo.number))
 	{
 		s->SetState(new SoccerState_PlayerControll_Counter());
@@ -803,6 +811,7 @@ m_pSnakeShotClass(nullptr)
 void SoccerState_PlayerControll_Finisher::Enter(SoccerPlayer* s)
 {
 	m_pSnakeShotClass = this->SnakeShotClass(s);
+	
 	timeflg = false;
 	m_Timer = 0;
 	chr_func::ResetSkillGauge(s);
@@ -817,10 +826,14 @@ void SoccerState_PlayerControll_Finisher::Execute(SoccerPlayer* s)
 		if (m_Timer == 1)
 		{
 			Sound::Play(Sound::Skill);
-			SoccerState_ComputerControll_Finisher::FreezeGame(30, s);
+			SoccerState_ComputerControll_Finisher::FreezeGame(55, s);
+			new SpecialAttackEffect(s, 55);
 		}
-
-		if (m_Timer >= 31)
+		if (m_Timer == 60)
+		{
+			s->m_Renderer.SetMotion(SoccerPlayer::_ms_Shot);
+		}
+		if (m_Timer >= 80)
 		{
 			timeflg = true;
 			m_Timer = 0;
@@ -845,7 +858,7 @@ void SoccerState_PlayerControll_Finisher::Exit(SoccerPlayer* s)
 //　遠距離クラス
 CharacterShotAttack* SoccerState_PlayerControll_Finisher::SnakeShotClass(SoccerPlayer* s){
 	class ShotAttackEvent :public CharacterShotAttack::Event{
-		SoccerPlayer* m_pSoccer;//　野球
+		SoccerPlayer* m_pSoccer;
 		Snakeshot* snake;
 	public:
 		//　ボール
@@ -887,7 +900,7 @@ CharacterShotAttack* SoccerState_PlayerControll_Finisher::SnakeShotClass(SoccerP
 		//　遠距離攻撃開始
 		void AttackStart()override{
 			//　☆モーション
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Shot);
+			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Command);
 		}
 
 		void AttackEnd()
@@ -899,11 +912,11 @@ CharacterShotAttack* SoccerState_PlayerControll_Finisher::SnakeShotClass(SoccerP
 
 	CharacterShotAttack::AttackParams atk;
 
-	atk.AllFrame = 40;
+	atk.AllFrame = 80;
 	atk.AttackPower = 8;
 	atk.MaxTurnRadian = PI / 4;
-	atk.MoveDownSpeed = 0.8f;
-	atk.ShotFrame = 15;
+	atk.MoveDownSpeed = 0.3f;
+	atk.ShotFrame = 70;
 
 	return m_pSnakeShotClass = new CharacterShotAttack(
 		s,

@@ -380,3 +380,83 @@ void SoccerState_brake::Exit(SoccerPlayer* s)
 {
 	delete m_pMoveClass;
 }
+
+SoccerState_clash::SoccerState_clash(
+	SoccerPlayer* pSoccer
+	) :
+	m_pSoccer(pSoccer)
+{
+
+}
+void SoccerState_clash::Enter(SoccerPlayer* s)
+{
+	class SoccerMoveEvent :public CharacterUsualMove::MoveEvent
+	{
+		SoccerPlayer* m_pSoccer;
+	public:
+		SoccerMoveEvent(SoccerPlayer* pSoccer) :
+			m_pSoccer(pSoccer) {}
+
+		//アニメーションの更新
+		void Update(bool isRun, RATIO speed_ratio)
+		{
+			m_pSoccer->m_Renderer.Update(1);
+		}
+		//走り始めにモーションをセット
+		void RunStart()
+		{
+			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Damage);
+		}
+		//立ちはじめにモーションをセット
+		void StandStart()
+		{
+			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Damage);
+		}
+	};
+	CharacterUsualMove::Params p;
+
+	p.Acceleration = 0.0f;
+	p.MaxSpeed = 0.2f;
+	p.TurnSpeed = 0.0f;
+	p.DownSpeed = 0.2f;
+
+	m_pMoveClass = new CharacterUsualMove(
+		s,
+		p,
+		new SoccerMoveEvent(s),
+		new SoccerHitEvent(s)
+		);
+	//初期のたちモーションセット
+	s->m_Renderer.SetMotion(SoccerPlayer::_ms_Guard);
+	Sound::Play(Sound::AtkHit1);
+	m_count = 0;
+
+	for (int i = 0; i < 3; ++i)
+	{
+		EffectFactory::Smoke(
+			s->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
+			Vector3Zero,
+			1.8f,
+			0.2f,
+			false
+			);
+	}
+
+}
+void SoccerState_clash::Execute(SoccerPlayer* s)
+{
+	++m_count;
+	if (m_count>40)
+	{
+		s->SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(s));
+	}
+
+
+	m_pMoveClass->Update();
+
+	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
+}
+void SoccerState_clash::Exit(SoccerPlayer* s)
+{
+	delete m_pMoveClass;
+}
