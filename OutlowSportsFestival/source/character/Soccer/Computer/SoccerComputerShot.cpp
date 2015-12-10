@@ -98,7 +98,7 @@ void SoccerState_ComputerControll_Shot::Enter(SoccerPlayer* s)
 
 	p.ShotFrame = 10;
 	p.AllFrame = 35;
-	p.MoveDownSpeed = 0.2f;
+	p.MoveDownSpeed = 0.1f;
 
 	m_pShotClass = new CharacterShotAttack(s, new SoccerShotEvent(s), p, new SoccerHitEvent(s));
 }

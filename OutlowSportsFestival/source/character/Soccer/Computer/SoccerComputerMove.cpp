@@ -14,6 +14,7 @@
 #include "../../CharacterManager.h"
 #include "../../../Camera/Camera.h"
 #include "../SoccerHitEvent.h"
+#include "../../CharacterManager.h"
 
 #include "../Computer/SoccerComputerUtilityClass.h"
 
@@ -54,7 +55,7 @@ bool SoccerState_ComputerControll_Move::SwitchGameState(SoccerPlayer* ps)
 void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 {
 	m_pMoveControllClass->GetParams(cParam, s->m_PlayerInfo.strong_type);
-	Dashpro = 300 - (int)(cParam.ActionFrequence * 100);
+	Dashpro = 250 - (int)(cParam.ActionFrequence * 100);
 	//移動イベントクラス
 	class SoccerMoveEvent :public CharacterUsualMove::MoveEvent
 	{
@@ -115,28 +116,38 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 		SoccerDoEvent(SoccerPlayer* cSoccer) :
 			m_cSoccer(cSoccer) 
 		{
-			AttackPoint = rand() % 100;
+			AttackPoint = rand() % 500;
 			m_pMoveControllClass->GetParams(cParam, m_cSoccer->m_PlayerInfo.strong_type);
 		}
 
 		//アニメーションの更新
 		void Attack(float len)override
 		{
-			//if (m_cSoccer->m_Params.SP >= 0.6f)
 			if (chr_func::isCanSpecialAttack(m_cSoccer))
 			{
-				m_cSoccer->SetState(new SoccerState_ComputerControll_Finisher());
+				if (SoccerState_ComputerControll_Move::calcTarget(m_cSoccer))
+				{
+					m_cSoccer->SetState(new SoccerState_ComputerControll_Finisher());
+				}
 			}
 			if (len < 5.0f)
 			{
-				if ((cParam.ActionFrequence * 100) > AttackPoint)
+				if (450 > AttackPoint)
+				{
+					const Vector3 avoidvec(0, 0, 0);
+					m_cSoccer->SetState(
+						new SoccerState_Rolling
+						(new SocceComputerrUtillityClass::ComputerRollingControll(m_cSoccer, avoidvec),
+							false));
+				}
+				else if ((cParam.ActionFrequence * 400) > AttackPoint)
 				{
 					m_cSoccer->SetState(new SoccerState_ComputerControll_Attack(m_cSoccer));
 				}
 			}
 			else if (len < 20.0f)
 			{
-				if ((cParam.ActionFrequence * 100) > AttackPoint)
+				if ((cParam.ActionFrequence * 150) > AttackPoint)
 				{
 					m_cSoccer->SetState(new SoccerState_ComputerControll_Shot);
 				}
@@ -214,6 +225,10 @@ void SoccerState_ComputerControll_Move::Execute(SoccerPlayer* s)
 			s->SetState(new SoccerState_ComputerControll_Dash(s));
 		}
 	}
+	else
+	{
+		m_pMoveClass->SetStickValue(Vector2(0,0));
+	}
 	m_pMoveClass->Update();
 	
 	
@@ -223,10 +238,69 @@ void SoccerState_ComputerControll_Move::Execute(SoccerPlayer* s)
 
 }
 
-void SoccerState_ComputerControll_Move::Exit(SoccerPlayer* t)
+void SoccerState_ComputerControll_Move::Exit(SoccerPlayer* s)
 {
 	delete m_pMoveClass;
 	delete m_pMoveControllClass; 
 	delete m_pDoActionClass;
 	delete m_pReactionClass;
+}
+bool SoccerState_ComputerControll_Move::calcTarget(SoccerPlayer* s)
+{
+	//ターゲット選定＆向き補正
+
+	CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
+
+	const float  AutoDistance = 400.0f;               //自動ができる最大距離
+	const RADIAN AutoMaxAngle = D3DXToRadian(90);   //自動ができる最大角度
+
+	const CharacterBase* pTargetEnemy = nullptr;    //ターゲット保持のポインタ
+	RADIAN MostMinAngle = PI;                       //もっとも狭い角度
+	RADIAN TempAngle;
+
+	Vector3 MyFront;      //自身の前方ベクトル
+	chr_func::GetFront(s, &MyFront);
+
+	auto it = ChrMap.begin();
+
+	while (it != ChrMap.end())
+	{
+		//自身を除外
+		if (s->m_PlayerInfo.number == it->first->m_PlayerInfo.number ||
+			chr_func::isDie(it->first)
+			)
+		{
+			++it;
+			continue;
+		}
+
+		//距離が一定以上のキャラクタを除外する
+		if (Vector3Distance(it->first->m_Params.pos, s->m_Params.pos) > AutoDistance)
+		{
+			it = ChrMap.erase(it);
+			continue;
+		}
+
+		//前ベクトルと敵へのベクトルの角度を計算する
+		TempAngle = Vector3Radian(MyFront, (it->first->m_Params.pos - s->m_Params.pos));
+
+		//角度が一番狭かったら更新
+		if (TempAngle < MostMinAngle)
+		{
+			pTargetEnemy = it->first;
+			MostMinAngle = TempAngle;
+		}
+
+		++it;
+	}
+	if (MostMinAngle < 1.0f)
+	{
+		//return pTargetEnemy->m_Params.pos;
+		return true;
+	}
+	else
+	{
+		//return Vector3(0, 0, 0);
+		return false;
+	}
 }

@@ -9,6 +9,7 @@
 #include "SoccerPlayerState.h"
 #include "SoccerRolling.h"
 #include "SoccerHitEvent.h"
+#include "SoccerCommonState.h"
 //****************************************************************
 //		ƒLƒƒƒ‰ƒNƒ^‹¤’Ê‚Ì“®‚«ƒNƒ‰ƒX
 //****************************************************************
@@ -21,7 +22,8 @@ SoccerDash::SoccerDash(
 	m_isRun(false),
 	m_Init(false),
 	m_Locus(20),
-	m_SpeedEffect(1)
+	m_SpeedEffect(1),
+	m_count(0)
 {
 	m_Locus.m_Division = 1;
 	//‹OÕ‚ÌÝ’è
@@ -59,6 +61,7 @@ void SoccerDash::Update()
 	const float Acceleration = 0.4f;
 	const float MaxSpeed = 0.7f;
 	const float TurnSpeed = 0.05f;
+	++m_count;
 
 	{
 		Vector3 v;
@@ -81,6 +84,13 @@ void SoccerDash::Update()
 			m_pParent->m_Params.pos + Vector3(m_StickValue.x, 0, m_StickValue.y),//DefCamera.GetRight()*m_StickValue.x + DefCamera.GetForward()*m_StickValue.y,
 			TurnSpeed
 			);
+	}
+
+	//•Ç‚ÉŒü‚©‚Á‚Äi‚Þ‚Ì–hŽ~
+	if (chr_func::CheckWall(m_pParent) && m_count>10)
+	{
+		m_pParent->SetState(new SoccerState_clash(m_pParent));
+
 	}
 
 	{

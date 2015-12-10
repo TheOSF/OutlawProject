@@ -90,5 +90,25 @@ private:
 	SoccerPlayer*            m_pSoccer;
 	CharacterUsualMove*		m_pMoveClass;
 };
+//サッカーの激突クラス
+class SoccerState_clash : public SoccerState
+{
+public:
+	SoccerState_clash(
+		SoccerPlayer*  pSoccer
+		);
+	// ステート開始
+	void Enter(SoccerPlayer* s)override;
+
+	// ステート実行
+	void Execute(SoccerPlayer* s)override;
+
+	// ステート終了
+	void Exit(SoccerPlayer* s)override;
+private:
+	int m_count;
+	SoccerPlayer*            m_pSoccer;
+	CharacterUsualMove*		m_pMoveClass;
+};
 
 #endif
