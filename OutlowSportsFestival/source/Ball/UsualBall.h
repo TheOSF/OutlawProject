@@ -22,6 +22,7 @@ public:
     //物理パラメータ
     struct PhysicsParam
     {
+        float Height;
         float Mass;
         float Friction;
         float Radius;
@@ -56,6 +57,12 @@ public:
     static PhysicsParam GetBallPhysics(
         CharacterType::Value	type	//ボールのキャラクタタイプ
         );
+
+    // RigidBodyを生成する
+    static RigidBody* CreateRigidBody(
+        CharacterType::Value type, //ボールのキャラクタタイプ
+        Params params // ボールのパラメータ
+    );
 
 	bool Update();
 	bool Msg(MsgType mt);
