@@ -207,6 +207,8 @@
     <ClCompile Include="source\character\Soccer\SoccerAttackClass.cpp" />
     <ClCompile Include="source\character\Tennis\Tennis_DoCancelAction.cpp" />
     <ClCompile Include="source\Effect\LocusBarObject.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_ThrowBall.cpp" />
+    <ClCompile Include="source\character\Amefoot\MoveClass\AmefootThrowBall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -424,6 +426,9 @@
     <ClInclude Include="source\character\Tennis\Tennis_DoCancelAction.h" />
     <ClInclude Include="source\character\Tennis\TennisUtillityClass.h" />
     <ClInclude Include="source\Effect\LocusBarObject.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ThrowBall.h" />
+    <ClInclude Include="source\character\Amefoot\MoveClass\AmefootThrowBall.h" />
+    <ClInclude Include="source\Ball\AmefootBoundBall.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DATA\Shader\3DEx.fx" />

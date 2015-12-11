@@ -189,6 +189,56 @@ UsualBall::PhysicsParam UsualBall::GetBallPhysics(
     return params[(int)type];
 }
 
+// RigidBodyを生成する
+RigidBody* UsualBall::CreateRigidBody(
+    CharacterType::Value type, //ボールのキャラクタタイプ
+    Params params // ボールのパラメータ
+    )
+{
+    PhysicsParam physics = GetBallPhysics(type);
+
+    switch ( type )
+    {
+    case CharacterType::_Baseball:
+    case CharacterType::_Soccer:
+    case CharacterType::_Tennis:
+    case CharacterType::_Lacrosse:
+    case CharacterType::_Volleyball:
+        return DefBulletSystem.AddRigidSphere(
+            physics.Mass,
+            RigidBody::ct_dynamic,
+            params.pos,
+            Vector3Zero,
+            physics.Radius,
+            physics.Friction,
+            physics.Restitution,
+            params.move * 45.0f
+            );
+
+    case CharacterType::_Americanfootball:
+        return DefBulletSystem.AddRigidCapsure(
+            physics.Mass,
+            RigidBody::ct_dynamic,
+            params.pos,
+            Vector3Zero, // とりあえずゼロ
+            physics.Radius,
+            physics.Height,
+            physics.Friction,
+            physics.Restitution,
+            params.move * 45.0f
+            );
+
+    default:
+        break;
+    }
+
+    // エラー
+    MyAssert(false, "存在しないタイプのキャラクタタイプがUsualBall::GetBallPhysicsに渡されました　type= %d ", (int)type);
+
+    return nullptr;
+}
+
+
 bool UsualBall::Update()
 {
     return (this->*m_pStateFunc)();       
@@ -383,15 +433,9 @@ void UsualBall::ToNoWork()
 
     const PhysicsParam p = GetBallPhysics(m_FirstParentType);
 
-    m_pRigitBody = DefBulletSystem.AddRigidSphere(
-        p.Mass,
-        RigidBody::ct_dynamic,
-        m_Params.pos,
-        Vector3Zero,
-        p.Radius,
-        p.Friction,
-        p.Restitution,
-        m_Params.move * 45.0f
+    m_pRigitBody = CreateRigidBody(
+        m_FirstParentType,
+        m_Params
         );
 }
 

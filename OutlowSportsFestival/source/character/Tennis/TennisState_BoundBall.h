@@ -17,7 +17,6 @@
 class TennisBoundBall :public GameObjectBase, public BallBase
 {
 public:
-
     //コンストラクタ
     TennisBoundBall(
         CrVector3  pos,         //初期座標
