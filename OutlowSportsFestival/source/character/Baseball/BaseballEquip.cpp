@@ -289,14 +289,6 @@ void BaseballEquip::UpdateColor()
 //@“®‚«
 void BaseballEquip::UpdateMove()
 {
-	//@Å‘å’lÝ’è
-	const float MaxMove = 0.06f;
-	if (m_Baseball->m_Params.move.Length() > MaxMove)
-	{
-		m_Baseball->m_Params.move.Normalize();
-		m_Baseball->m_Params.move *= MaxMove;
-	}
-
 	param.Move.y += m_Glavity;
 	param.Pos += param.Move;
 

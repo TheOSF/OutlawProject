@@ -31,7 +31,7 @@ helmetEquip(nullptr), capEquip(nullptr), batEquip(nullptr), groveEquip(nullptr),
 	SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(this));
 	//　体力低下(デバック用)
 	m_Params.maxHP = m_Params.HP = 100;
-
+	
 	temp_batterflg = batterflg;
 	helmetEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Helmet);
 	batEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Bat);
@@ -62,7 +62,10 @@ bool BaseballPlayer::Update()
 	// ステート実行
 	m_pStateMachine->state_execute();
 	//　装備品切替
-	CheangeEquip();
+	if (temp_batterflg != batterflg)
+	{
+		CheangeEquip();
+	}
 	//キャラクタ基本更新
 	BaseUpdate();
 	
@@ -83,8 +86,6 @@ bool  BaseballPlayer::CharacterMsg(MsgType mt)
 
 void BaseballPlayer::CheangeEquip()
 {
-	if (temp_batterflg != batterflg)
-	{
 		//　バッターへ
 		if (batterflg)
 		{
@@ -112,7 +113,7 @@ void BaseballPlayer::CheangeEquip()
 		}
 		//　一時保存に今のフラグを代入
 		temp_batterflg = batterflg;
-	}
+	
 }
 
 //　リセット

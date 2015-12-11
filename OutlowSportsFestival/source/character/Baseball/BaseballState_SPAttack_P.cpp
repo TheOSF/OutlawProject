@@ -178,7 +178,7 @@ CharacterBase* BaseballState_SPAttack_P::CalcTarget()const
 {
 	Vector3 v1, v2;
 
-	const float HomingAngle = PI / 7;
+	const float HomingAngle = PI / 4;
 	float MostNear = 10000;
 	float TempLen;
 	CharacterBase* pTarget = nullptr;
