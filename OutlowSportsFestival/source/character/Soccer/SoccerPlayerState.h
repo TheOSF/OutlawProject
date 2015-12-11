@@ -132,6 +132,7 @@ private:
 	SoccerDash*		m_pMoveClass;
 	int m_timer;
 public:
+
 	void Enter(SoccerPlayer* s);
 	void Execute(SoccerPlayer* s);
 	void Exit(SoccerPlayer* s);

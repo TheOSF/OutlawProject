@@ -46,6 +46,8 @@ void SoccerState_ComputerControll_Shot::Enter(SoccerPlayer* s)
 			//new Snakeshot(param, DamageBase::Type::_WeekDamage, 10);
 		}
 	};
+
+	
 	CharacterShotAttack::AttackParams p;
 
 	p.ShotFrame = 10;

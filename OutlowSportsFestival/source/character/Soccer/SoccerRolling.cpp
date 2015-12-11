@@ -42,13 +42,13 @@ void SoccerState_Rolling::Execute(SoccerPlayer* s)
 	
 	if (Dash)
 	{
-		 MoveValue = 0.6f;    //移動量
-		 DownValue = 0.1f;     //減速量
+		 MoveValue = 0.5f;    //移動量
+		 DownValue = 0.05f;     //減速量
 	}
 	else
 	{
 		 MoveValue = 0.4f;    //移動量
-		 DownValue = 0.09f;     //減速量
+		 DownValue = 0.08f;     //減速量
 	}
 
 	
@@ -78,8 +78,8 @@ void SoccerState_Rolling::Execute(SoccerPlayer* s)
 	//コントロールできるフレームが終わった場合向きと移動を設定
 	if (m_Timer == CanControllFrame)
 	{
-		/*m_Vec.y = 0;
-		m_Vec.Normalize();*/
+		m_Vec.y = 0;
+		m_Vec.Normalize();
 
 		chr_func::AngleControll(s, s->m_Params.pos + m_Vec);
 
@@ -111,15 +111,15 @@ void SoccerState_Rolling::Execute(SoccerPlayer* s)
 		}
 
 		//軌跡
-		if (m_Timer < 5)
+		if (m_Timer < 1)
 		{
-			for (int i = 0; i < 2; ++i)
+			for (int i = 0; i < 4; ++i)
 			{
 				EffectFactory::Smoke(
 					s->m_Params.pos + Vector3(0, 2, 0) + Vector3Rand() * 0.2f,
 					Vector3Zero,
-					1.0f + frand()*0.5f,
-					0.6f
+					1.5f + frand()*0.5f,
+					1.6f
 					);
 			}
 		}
@@ -127,7 +127,7 @@ void SoccerState_Rolling::Execute(SoccerPlayer* s)
 		//着地時
 		if (m_Timer == 43)
 		{
-			for (int i = 0; i < 2; ++i)
+			for (int i = 0; i < 3; ++i)
 			{
 				EffectFactory::Smoke(
 					s->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,

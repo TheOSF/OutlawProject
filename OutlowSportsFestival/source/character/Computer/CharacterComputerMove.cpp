@@ -88,6 +88,13 @@ Vector2 CharacterComputerMove::StateMoveFront(CharacterBase* cb)
 		movemode = Stop;
 		m_Count = 0;
 	}
+	//•Ç‚ÉŒü‚©‚Á‚Äi‚Ş‚Ì–h~
+	if (chr_func::IsHitWall(cb))
+	{
+		m_Count = (int)(m_cParam.RunStop * 100.0f);
+		movemode = MoveCenter;
+		m_Count = 0;
+	}
 
 
 	//–Ú•W‚ÉŒü‚©‚Á‚ÄˆÚ“®
@@ -126,7 +133,7 @@ Vector2 CharacterComputerMove::StateMoveDistance(CharacterBase* cb)
 		m_Count = 0;
 	}
 	//•Ç‚ÉŒü‚©‚Á‚Äi‚Ş‚Ì–h~
-	if (chr_func::CheckWall(cb))
+	if (chr_func::IsHitWall(cb))
 	{
 		m_Count = (int)(m_cParam.RunStop * 100.0f);
 		movemode = MoveCenter;

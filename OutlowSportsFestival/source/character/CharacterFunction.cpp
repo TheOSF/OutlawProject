@@ -408,6 +408,78 @@ bool chr_func::CheckWall(CharacterBase* p)
 
     return isHit;
 }
+//XZ方向の壁との接触判定を行う(レイピック1本＆位置調整なしver)
+bool chr_func::IsHitWall(CharacterBase* p)
+{
+	//戻り値
+	bool isHit = false;
+
+	//レイを飛ばす基準ベクトル
+	Vector3 CheckVec;
+
+	//移動している場合はその方向をチェック、違う場合は前方向をチェック
+	if (Vector3XZLength(p->m_Params.move) > 0)
+	{
+		CheckVec = Vector3Normalize(Vector3(p->m_Params.move.x, 0, p->m_Params.move.z));
+	}
+	else
+	{
+		GetFront(p, &CheckVec);
+	}
+
+	//基準からの回転角度
+	float RotateCheckVec[] =
+	{
+		0,
+		PI / 3,
+		-PI / 3,
+
+		
+	};
+
+	//計算用パラメータ
+	Vector3 out, pos, vec;
+	float dist;
+	int material;
+
+	const float Character_size = 2.0f;
+	Vector3 calc_out = p->m_Params.pos;
+	for (int i = 0; i < (int)ARRAYSIZE(RotateCheckVec); ++i)
+	{
+		pos = p->m_Params.pos;
+		pos.y = 2.0f;
+		vec = Vector3RotateAxis(Vector3AxisY, RotateCheckVec[i], CheckVec);
+		dist = 100;
+
+		pos = p->m_Params.pos;
+		pos.y = 2.0f;
+		vec = Vector3RotateAxis(Vector3AxisY, RotateCheckVec[i], CheckVec);
+		dist = 100;
+
+
+		if (DefCollisionMgr.RayPick(
+			&out,
+			&pos,
+			&vec,
+			&dist,
+			&material,
+			CollisionManager::RayType::_Character
+			))
+		{
+			vec.y = 0;
+			vec.Normalize();
+			dist = Vector3Dot(vec, p->m_Params.pos - out);
+
+			if (dist < Character_size)
+			{
+				isHit = true;
+			}
+
+		}
+	}
+
+	return isHit;
+}
 
 
 //現在の体力の割合を得る（０～１）

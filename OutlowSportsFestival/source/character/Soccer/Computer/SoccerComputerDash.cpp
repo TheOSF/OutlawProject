@@ -257,7 +257,7 @@ Vector2 SoccerState_ComputerControll_Dash::StateMoveFront(SoccerPlayer* s)
 		m_Count = 0;
 	}
 	//ï«Ç…å¸Ç©Ç¡ÇƒêiÇﬁÇÃñhé~
-	if (chr_func::CheckWall(s))
+	if (chr_func::IsHitWall(s))
 	{
 		m_Count = (int)(m_cParam.RunStop * 100.0f);
 		movemode = clash;
@@ -299,7 +299,7 @@ Vector2 SoccerState_ComputerControll_Dash::StateMoveDistance(SoccerPlayer* s)
 		m_Count = 0;
 	}
 	//ï«Ç…ìñÇΩÇÈÇ∆åÉìÀ
-	if (chr_func::CheckWall(m_cSoccer))
+	if (chr_func::IsHitWall(m_cSoccer))
 	{
 		m_Count = (int)(m_cParam.RunStop * 100.0f);
 		movemode = clash;
