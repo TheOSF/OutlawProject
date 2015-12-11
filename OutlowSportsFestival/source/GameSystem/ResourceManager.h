@@ -22,6 +22,7 @@ public:
         Soccer_Special_Hit,
 
         Tennis_ball,
+        Tennis_Heart,
         Volley_ball,
 
         //ステージ１
@@ -52,6 +53,7 @@ public:
         Locus1,
         Locus2,
         Konoha,
+        Heart,
 
         UI_strings,
         UI_player_name,

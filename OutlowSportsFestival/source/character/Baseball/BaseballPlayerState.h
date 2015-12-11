@@ -6,7 +6,7 @@
 
 #include "../CharacterMoveClass.h"
 #include "../CharacterShotAttackClass.h"
-#include "../CharacterCounterClass.h"
+
 //****************************************************
 //	野球プレイヤーの操作クラスヘッダー
 //****************************************************

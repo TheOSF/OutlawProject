@@ -22,12 +22,13 @@ bool BallBase::isOutOfField()const
     return m_Params.pos.Length() > 150.f;
 }
 
-bool BallBase::isCanCounter(const BallBase* pBall)
+bool BallBase::isCanCounter(const BallBase* pBall, CharacterBase* Me)
 {
 	//カウンター可能なボールかどうか
     return
         pBall->m_Params.type == BallBase::Type::_Usual ||
-        pBall->m_Params.type == BallBase::Type::_Milder;
+        pBall->m_Params.type == BallBase::Type::_Milder ||
+        (pBall->m_Params.type == BallBase::Type::_ICantCounter && pBall->m_Params.pParent != Me);
 }
 
 //固有ＩＤのゲッタ
@@ -76,7 +77,8 @@ bool BallManager::GetCounterBall(
 	CrVector3	character_pos,	//キャラクタの場所
 	Vector3*	pOutAfterFrameBallPos,//キャッチまでの移動フレーム後のボールの位置
 	float		catch_area_size,//キャッチ可能な範囲
-	int			move_frame		//キャッチまでの移動フレーム
+	int			move_frame,		//キャッチまでの移動フレーム
+    CharacterBase* Me           //カウンターするキャラクタ
 	)
 {
 	
@@ -92,7 +94,7 @@ bool BallManager::GetCounterBall(
 
     for (auto& it : m_BallData)
 	{
-        if (it == nullptr || !BallBase::isCanCounter(it))
+        if (it == nullptr || !BallBase::isCanCounter(it, Me))
 		{
 			continue;
 		}

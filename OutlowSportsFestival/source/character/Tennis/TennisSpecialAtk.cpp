@@ -496,7 +496,7 @@ bool TennisState_SpecialAtk::CalcToBestTargetVec(CrVector3 ShotPos, CrVector3 Sh
     //ターゲット選定＆向き補正
     CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
 
-    RADIAN MostMinAngle = D3DXToRadian(20);   //もっとも狭い角度
+    RADIAN MostMinAngle = D3DXToRadian(30);   //もっとも狭い角度
     RADIAN TempAngle;
 
     Vector3 toEnemy;

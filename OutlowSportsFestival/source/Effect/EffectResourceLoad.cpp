@@ -43,6 +43,11 @@ void EffectResource::Load()
         new iex2DObj("DATA\\Effect\\konoha.png")
         );
     
+    //ハートテクスチャ
+    DefResource.Regist(
+        Resource::TextureType::Heart,
+        new iex2DObj("DATA\\Effect\\hart_mini.png")
+        );
 
     //円アニメーションエフェクト
     DefResource.Regist(

@@ -197,7 +197,6 @@
     <ClCompile Include="source\character\Baseball\BaseballState_SPAttack_P.cpp" />
     <ClCompile Include="source\character\Baseball\Baseball_HitEvent.cpp" />
     <ClCompile Include="source\character\CharacterBase.cpp" />
-    <ClCompile Include="source\character\CharacterCounterClass.cpp" />
     <ClCompile Include="source\character\CharacterDamageMotion.cpp" />
     <ClCompile Include="source\character\CharacterDamageVanish.cpp" />
     <ClCompile Include="source\character\CharacterFunction.cpp" />
@@ -228,6 +227,7 @@
     <ClCompile Include="source\character\Tennis\Computer\TennisPlayerState_ComMove.cpp" />
     <ClCompile Include="source\character\Tennis\TennisAttackClass.cpp" />
     <ClCompile Include="source\character\Tennis\TennisAttackInfo_UsualAtk.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisHeartBall.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayer.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_DamageMotionDie.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_DamageMotionWeak.cpp" />
@@ -279,6 +279,7 @@
     <ClCompile Include="source\GameSystem\GameObject.cpp" />
     <ClCompile Include="source\GameSystem\LightEventExecuter.cpp" />
     <ClCompile Include="source\GameSystem\MatchLightManager.cpp" />
+    <ClCompile Include="source\GameSystem\MatchManager.cpp" />
     <ClCompile Include="source\GameSystem\ResourceManager.cpp" />
     <ClCompile Include="source\IexSystem\Framework.cpp" />
     <ClCompile Include="source\IexSystem\System.cpp" />
@@ -431,7 +432,6 @@
     <ClInclude Include="source\character\Baseball\BaseballState_SPAttack_P.h" />
     <ClInclude Include="source\character\Baseball\Baseball_HitEvent.h" />
     <ClInclude Include="source\character\CharacterBase.h" />
-    <ClInclude Include="source\character\CharacterCounterClass.h" />
     <ClInclude Include="source\character\CharacterDamageMotion.h" />
     <ClInclude Include="source\character\CharacterDamageVanish.h" />
     <ClInclude Include="source\character\CharacterFunction.h" />
@@ -463,6 +463,7 @@
     <ClInclude Include="source\character\Tennis\Computer\TennisPlayerState_ComMove.h" />
     <ClInclude Include="source\character\Tennis\TennisAttackClass.h" />
     <ClInclude Include="source\character\Tennis\TennisAttackInfo_UsualAtk.h" />
+    <ClInclude Include="source\character\Tennis\TennisHeartBall.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayer.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_DamageMotionDie.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_DamageMotionWeak.h" />
@@ -519,6 +520,7 @@
     <ClInclude Include="source\GameSystem\GameSystem.h" />
     <ClInclude Include="source\GameSystem\LightEventExecuter.h" />
     <ClInclude Include="source\GameSystem\MatchLightManager.h" />
+    <ClInclude Include="source\GameSystem\MatchManager.h" />
     <ClInclude Include="source\GameSystem\ResourceManager.h" />
     <ClInclude Include="source\IexSystem\Framework.h" />
     <ClInclude Include="source\IexSystem\Scene.h" />

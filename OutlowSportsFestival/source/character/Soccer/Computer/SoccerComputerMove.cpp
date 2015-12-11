@@ -1,7 +1,6 @@
 #include "../Computer/SoccerComputerMove.h"
 #include "../../Computer/CharacterComputerReactionHitEvent.h"
 #include "../../CharacterFunction.h"
-#include "../../CharacterCounterClass.h"
 #include "../../CharacterMoveClass.h"
 #include "SoccerComputerAttack.h"
 #include "SoccerComputerDash.h"
@@ -132,7 +131,7 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 			}
 			if (len < 5.0f)
 			{
-				if (450 > AttackPoint)
+				if (450 < AttackPoint)
 				{
 					const Vector3 avoidvec(0, 0, 0);
 					m_cSoccer->SetState(

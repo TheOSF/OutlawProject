@@ -29,7 +29,7 @@ TennisBoundBall::TennisBoundBall(
     m_Params.pos = pos;
     m_Params.move = first_move;
     m_Params.pParent = pOwner;
-    m_Params.scale = 0.1f;
+    m_Params.scale = 0.3f;
     m_Params.type = BallBase::Type::_CantCounter;
 
     //初期ステートを設定
@@ -63,10 +63,11 @@ TennisBoundBall::TennisBoundBall(
         m_Damage.Value = 2.5f;
         m_Damage.type = DamageBase::Type::_WeekDamage;
         m_Damage.pParent = pOwner;
-        m_Damage.m_Enable = false;
+        m_Damage.m_Enable = true;
         m_Damage.pBall = this;
         m_Damage.m_Param.size = 1.0f;
         m_Damage.MaxChrHit = 1;
+        m_Damage.HitMotionFrame = 35;
 
         UpdateDamage();
     }
@@ -145,6 +146,7 @@ void TennisBoundBall::StateFly()
 
             //高さを床の位置に補正する
             m_Params.pos.y = out.y + m_Params.scale;
+            return;
         }
     }
 
@@ -167,54 +169,64 @@ void TennisBoundBall::StateFly()
 
 void TennisBoundBall::StateGroundTouch()
 {
-    //放ったプレイヤーに向けて帰っていくように設定
-    m_Params.move = m_Params.pParent->m_Params.pos - m_Params.pos;
-    m_Params.move.y = 0;
+    //軌跡の点を追加
+    AddLocusPoint();
 
-    m_Params.move.Normalize();
-    m_Params.move *= 0.55f;
-
-    m_Params.type = BallBase::Type::_Usual;
-
-    //エフェクト
-    {
-        COLORf EffectColor(CharacterBase::GetPlayerColor(m_Params.pParent->m_PlayerInfo.number));
-
-        //エフェクトの設定
-        new HitEffectObject(
-            m_Params.pos,
-            Vector3Normalize(m_Params.move),
-            0.1f,
-            0.1f,
-            Vector3(EffectColor.r, EffectColor.g, EffectColor.b)
-            );
-
-        //パーティクル
-        EffectFactory::Smoke(
-            m_Params.pos,
-            Vector3Zero,
-            2.0f,
-            1.0f,
-            true
-            );
-    }
-
-    {
-        //メッシュを光らせる
-        COLORf Color = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number);
-
-        m_pBallRenderer->m_HDR = Vector3(1, 1, 1) * 0.1f;
-        m_pBallRenderer->m_Lighting = Vector3(1, 1, 1) * 0.1f;
-    }
-
-    //ＳＥ
-    Sound::Play(Sound::Swing2);
+    m_Params.move = Vector3Zero;
 
     //あたり判定を有効化
     m_Damage.m_Enable = true;
 
-    //移動ステートに移行
-    SetState(&TennisBoundBall::StateMove);
+    if (++m_Timer > 50)
+    {
+
+        //放ったプレイヤーに向けて帰っていくように設定
+        m_Params.move = m_Params.pParent->m_Params.pos - m_Params.pos;
+        m_Params.move.y = 0;
+
+        m_Params.move.Normalize();
+        m_Params.move *= 0.55f;
+
+        m_Params.type = BallBase::Type::_Usual;
+
+        //エフェクト
+        {
+            COLORf EffectColor(CharacterBase::GetPlayerColor(m_Params.pParent->m_PlayerInfo.number));
+
+            //エフェクトの設定
+            new HitEffectObject(
+                m_Params.pos,
+                Vector3Normalize(m_Params.move),
+                0.1f,
+                0.1f,
+                Vector3(EffectColor.r, EffectColor.g, EffectColor.b)
+                );
+
+            //パーティクル
+            EffectFactory::Smoke(
+                m_Params.pos,
+                Vector3Zero,
+                2.0f,
+                1.0f,
+                true
+                );
+        }
+
+        {
+            //メッシュを光らせる
+            COLORf Color = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number);
+
+            m_pBallRenderer->m_HDR = Vector3(1, 1, 1) * 0.1f;
+            m_pBallRenderer->m_Lighting = Vector3(1, 1, 1) * 0.1f;
+        }
+
+        //ＳＥ
+        Sound::Play(Sound::Swing2);
+
+        //移動ステートに移行
+        SetState(&TennisBoundBall::StateMove);
+
+    }
 }
 
 void TennisBoundBall::StateMove()

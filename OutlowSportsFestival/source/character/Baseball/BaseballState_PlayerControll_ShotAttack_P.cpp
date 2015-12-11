@@ -13,7 +13,6 @@
 #include "../../Ball/UsualBall.h"
 #include "../../Ball/MilderHoming.h"
 #include "../../Damage/Damage.h"
-#include "../CharacterCounterClass.h"
 
 #include "Sound/Sound.h"
 #include "../../GameSystem/GameController.h"

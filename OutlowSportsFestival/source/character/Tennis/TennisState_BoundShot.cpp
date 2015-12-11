@@ -5,7 +5,6 @@
 #include "../CharacterFunction.h"
 #include "../../Ball/UsualBall.h"
 #include "../../Damage/Damage.h"
-#include "../CharacterCounterClass.h"
 #include "../CharacterMoveClass.h"
 #include "../CharacterShotAttackClass.h"
 #include "../CharacterManager.h"
@@ -16,6 +15,7 @@
 #include "../../Sound/Sound.h"
 #include "../../GameSystem/GameController.h"
 #include "TennisState_BoundBall.h"
+#include"TennisHeartBall.h"
 
 TennisState_BoundShot::TennisState_BoundShot(
     ControllClass*       pControllClass //終了時にdeleteする
@@ -87,6 +87,22 @@ void TennisState_BoundShot::Execute(TennisPlayer* t)
     //打つ！
     if (m_Timer == ShotFrame)
     {
+        Vector3 pos, move;
+
+        //キャラの場所に
+        pos = t->m_Params.pos;
+        //高さをキャラ共通ボール発射のYに
+        pos.y = BallBase::UsualBallShotY;
+
+
+        //移動は前向き
+        chr_func::GetFront(t, &move);
+        //スピードは適当
+        move *= 0.2f;
+
+        new TennisHeartBall(pos, move, t);
+         
+
         /*
         //ボール発射
         BallBase::Params param;
@@ -94,7 +110,7 @@ void TennisState_BoundShot::Execute(TennisPlayer* t)
         //移動は前向き
         chr_func::GetFront(t, &param.move);
         //スピードは適当
-        param.move *= 0.55f;
+        param.move *= 0.3f;
 
         //キャラの場所に(最終的に腕の位置に？)
         param.pos = t->m_Params.pos;
@@ -107,8 +123,14 @@ void TennisState_BoundShot::Execute(TennisPlayer* t)
         param.type = BallBase::Type::_Usual;
 
         //生成
-        new UsualBall(param, DamageBase::Type::_WeekDamage, 5);
+        new UsualBall(param, DamageBase::Type::_WeekDamage, 5, 2, 80);
+
         */
+        
+        /*
+
+
+        
 
         //ボール生成
         Vector3 pos, move;
@@ -116,8 +138,8 @@ void TennisState_BoundShot::Execute(TennisPlayer* t)
         pos = t->m_Params.pos + Vector3(0, BallBase::UsualBallShotY, 0) + chr_func::GetFront(t)*0.8f;
 
         chr_func::GetFront(t, &move);
-        move *= 0.3f;
-        move.y = 0.6f;
+        move *= 0.4f;
+        move.y = 0.3f;
 
         new TennisBoundBall(
             pos,
@@ -150,6 +172,8 @@ void TennisState_BoundShot::Execute(TennisPlayer* t)
 
         //後ろに移動
         chr_func::AddMoveFront(t, 0.25f, 0.5f);
+
+        */
     }
 
     //ステート終了

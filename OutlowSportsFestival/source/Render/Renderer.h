@@ -186,6 +186,9 @@ public:
     //描画
     void Render();
 
+    //テクスチャに描画(画面サイズと同じテクスチャじゃ無ければいけない)
+    void RenderToTexture(iex2DObj* pTarget);
+
     //Z値描画オブジェクトへのポインタを得る
     DepthRenderer* GetDepthRenderer();
 

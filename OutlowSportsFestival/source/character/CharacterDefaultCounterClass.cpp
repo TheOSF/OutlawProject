@@ -80,10 +80,12 @@ void CharacterDefaultCounter::SetStickValue(CrVector2 stick)
 
 CharacterDefaultCounter::HitEventClass_NoBallDamageFileter::HitEventClass_NoBallDamageFileter(
     DamageManager::HitEventBase* pInHitEvent,
-    BallBase*                    pCounterBall
+    BallBase*                    pCounterBall,
+    CharacterBase*               pOwner
     ):
 m_pInHitEvent(pInHitEvent),
-m_pCounterBall(pCounterBall)
+m_pCounterBall(pCounterBall),
+m_pOwner(pOwner)
 {
 
 }
@@ -92,7 +94,7 @@ bool CharacterDefaultCounter::HitEventClass_NoBallDamageFileter::Hit(DamageBase*
 {
     //カウンターする予定のボールだった場合は処理せずfalseを返す
     if (pDmg->pBall != nullptr &&
-        BallBase::isCanCounter(pDmg->pBall) &&
+        BallBase::isCanCounter(pDmg->pBall, m_pOwner) &&
         m_pCounterBall == pDmg->pBall
         )
     {
@@ -151,7 +153,8 @@ void CharacterDefaultCounter::Pose()
             m_pOwner->m_Params.pos,
             &m_MoveTargetPos,
             m_Param.CatchAriaSize,
-            (int)m_Param.ShotFrame))
+            (int)m_Param.ShotFrame,
+            m_pOwner))
         {
             //ボールの場所の少し先にずらす(2キャラ分)
             Vector3 V = Vector3Normalize(m_pCounterBall->m_Params.move);
@@ -197,7 +200,7 @@ void CharacterDefaultCounter::Pose()
     //基本的な更新
     if (m_Count < m_Param.CanCounterFrame)
     {
-        HitEventClass_NoBallDamageFileter BallDmgFilter(m_pHitEventClass, m_pCounterBall);
+        HitEventClass_NoBallDamageFileter BallDmgFilter(m_pHitEventClass, m_pCounterBall,m_pOwner);
 
         chr_func::UpdateAll(m_pOwner, &BallDmgFilter);
     }
@@ -216,7 +219,7 @@ void CharacterDefaultCounter::Move()
 
     //カウンターするボールがカウンターできない状態なら打ち返し失敗ステートへ移行
     if (DefBallMgr.isBallEnable(m_counterBallID) == false ||
-         BallBase::isCanCounter(m_pCounterBall) == false
+        BallBase::isCanCounter(m_pCounterBall, m_pOwner) == false
          )
     {
          SetState(&CharacterDefaultCounter::Failed);
@@ -282,7 +285,7 @@ void CharacterDefaultCounter::Move()
 
     //基本的な更新
     {
-        HitEventClass_NoBallDamageFileter BallDmgFilter(m_pHitEventClass, m_pCounterBall);
+        HitEventClass_NoBallDamageFileter BallDmgFilter(m_pHitEventClass, m_pCounterBall, m_pOwner);
 
         chr_func::UpdateAll(m_pOwner, &BallDmgFilter);
     }
@@ -352,7 +355,7 @@ void CharacterDefaultCounter::Catch()
 
      //カウンターするボールがカウンターできない状態なら打ち返し失敗ステートへ移行
      if ( DefBallMgr.isBallEnable(m_counterBallID) == false ||
-          BallBase::isCanCounter(m_pCounterBall) == false
+         BallBase::isCanCounter(m_pCounterBall, m_pOwner) == false
           )
      {
           SetState(&CharacterDefaultCounter::Failed);
@@ -392,7 +395,7 @@ void CharacterDefaultCounter::Catch()
 
      //基本的な更新
      {
-          HitEventClass_NoBallDamageFileter BallDmgFilter(m_pHitEventClass, m_pCounterBall);
+         HitEventClass_NoBallDamageFileter BallDmgFilter(m_pHitEventClass, m_pCounterBall, m_pOwner);
           chr_func::UpdateAll(m_pOwner, &BallDmgFilter);
      }
 
@@ -479,7 +482,7 @@ void CharacterDefaultCounter::Shot()
 
     //基本的な更新
     {
-        HitEventClass_NoBallDamageFileter BallDmgFilter(m_pHitEventClass, m_pCounterBall);
+        HitEventClass_NoBallDamageFileter BallDmgFilter(m_pHitEventClass, m_pCounterBall, m_pOwner);
 
         DamageManager::HitEventBase* pHitEvent = &BallDmgFilter;
 

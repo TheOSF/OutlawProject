@@ -583,8 +583,8 @@ DeferredLightBufRenderer::DeferredLightBufRenderer(
     m_ShadowViewport.Y = 0;
     m_ShadowViewport.MaxZ = 1;
     m_ShadowViewport.MinZ = 0;
-    m_ShadowViewport.Width = 1024 * 1;
-    m_ShadowViewport.Height = 1024 * 1;
+    m_ShadowViewport.Width = 512 * 2;
+    m_ShadowViewport.Height = 512 * 2;
 
     //影用デプスステンシルバッファ生成
     iexSystem::Device->CreateDepthStencilSurface(

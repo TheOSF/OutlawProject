@@ -189,6 +189,7 @@ UsualBall::PhysicsParam UsualBall::GetBallPhysics(
     return params[(int)type];
 }
 
+
 bool UsualBall::Update()
 {
     return (this->*m_pStateFunc)();       
@@ -215,10 +216,13 @@ bool UsualBall::isOutofField()const
 
 void UsualBall::UpdateDamageClass()
 {
+    //ダメージ方向を移動方向に
 	m_Damage.m_Vec = m_Params.move;
 
+    //現在の位置をカプセルの終点位置に
     m_Damage.m_Param.pos2 = m_Damage.m_Param.pos1;
 
+    //位置の更新
     {
         m_Damage.m_Param.pos1 = m_Params.pos;
 
@@ -231,7 +235,6 @@ void UsualBall::UpdateDamageClass()
             m_Damage.m_Param.pos2 = m_Damage.m_Param.pos1 + v*m_Damage.m_Param.width;
         }
     }
-	
 }
 
 

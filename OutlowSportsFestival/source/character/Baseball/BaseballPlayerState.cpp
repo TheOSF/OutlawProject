@@ -23,7 +23,6 @@
 #include "../../Ball/UsualBall.h"
 #include "../../Ball/MilderHoming.h"
 #include "../../Damage/Damage.h"
-#include "../CharacterCounterClass.h"
 #include "../../Camera/Camera.h"
 
 class BallBall_Utillity
