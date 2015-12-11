@@ -329,7 +329,7 @@ void SoccerState_PlayerControll_Sliding::Enter(SoccerPlayer* s)
 
 	SoccerAttackInfo_UsualAtk::Param AtkParam[] =
 	{
-		{ 6, 1.0f, 1.5f, DamageBase::Type::_VanishDamage, 5, 22, 0.17f, 5, 10, SoccerPlayer::_ms_Rolling, 35, 20, 27, 35, 0, 2, D3DXToRadian(1), 18 },
+		{ 6, 5.0f, 2.0f, DamageBase::Type::_VanishDamage, 5, 22, 0.05f, 5, 60, SoccerPlayer::_ms_Rolling, 60, 60, -1, -1, 0, 4, D3DXToRadian(1), 18 ,2 },
 	};
 	Sound::Play(Sound::Sand2);
 
@@ -466,9 +466,9 @@ void SoccerState_PlayerControll_Attack::Enter(SoccerPlayer* s)
 
 	SoccerAttackInfo_UsualAtk::Param AtkParam[] =
 	{
-		{ 6, 1.0f, 1.5f, DamageBase::Type::_WeekDamage, 3, 20, 0.07f, 5, 10, SoccerPlayer::_ms_Atk1, 50, 20, 27, 35, 0, 5, D3DXToRadian(5), 21,SoccerPlayer::skillparams.Attack1 },
-		{ 2, 1.0f, 1.5f, DamageBase::Type::_WeekDamage, 5, 18, 0.02f, 1, 5, SoccerPlayer::_ms_Atk2, 35, 5, 15, 20, 0, 5, D3DXToRadian(5), 3,SoccerPlayer::skillparams.Attack2 },
-		{ 8, 1.0f, 1.5f, DamageBase::Type::_VanishDamage, 8, 16, 0.05f, 1, 6, SoccerPlayer::_ms_Atk3, 40, -1, -1, -1, 0, 8, D3DXToRadian(5), 21 ,SoccerPlayer::skillparams.Attack3 },
+		{ 6, 2.0f, 2.5f, DamageBase::Type::_WeekDamage, 3, 20, 0.06f, 3, 9, SoccerPlayer::_ms_Atk1, 50, 10, 20, 35, 0, 5, D3DXToRadian(5), 21,SoccerPlayer::skillparams.Attack1 },
+		{ 6, 2.0f, 2.5f, DamageBase::Type::_WeekDamage, 5, 18, 0.04f, 1, 6, SoccerPlayer::_ms_Atk2, 35, 5, 15, 20, 0, 5, D3DXToRadian(5), 3,SoccerPlayer::skillparams.Attack2 },
+		{ 8, 2.0f, 2.5f, DamageBase::Type::_VanishDamage, 8, 16, 0.06f, 1, 7, SoccerPlayer::_ms_Atk3, 40, -1, -1, -1, 0, 8, D3DXToRadian(5), 21 ,SoccerPlayer::skillparams.Attack3 },
 	};
 
 	for (int i = 0; i < (int)ARRAYSIZE(AtkParam); ++i)
@@ -534,54 +534,12 @@ void SoccerState_PlayerControll_Shot::Enter(SoccerPlayer* s)
 		}
 	};
 
-	class SoccerHitEvent :public DamageManager::HitEventBase
-	{
-	public:
-		SoccerHitEvent(SoccerPlayer* ps) :m_pSoccer(ps){}
-
-		bool Hit(DamageBase* pDmg)
-		{
-			//当たった時に呼ばれる関数(戻り値：当たったかどうか)
-			//自分の作っているダメージだった場合は何もしない
-			if (pDmg->pParent->m_PlayerInfo.number == m_pSoccer->m_PlayerInfo.number)
-			{
-				return false;
-			}
-
-			//当たった時にそのダメージの種類から、それぞれのステートに派生させる
-			switch (pDmg->type)
-			{
-			case DamageBase::Type::_WeekDamage:
-				//弱攻撃
-				//m_pSoccer->SetState();
-				return true;
-
-				/*
-				//未作成
-				case DamageBase::Type::_VanishDamage:
-				//吹き飛びダメージ
-				m_pSoccer->SetState();
-				return true;
-				case DamageBase::Type::_UpDamage:
-				//上に吹き飛び
-				m_pSoccer->SetState();
-				return true;
-				*/
-
-			default:break;
-			}
-
-			return false;
-
-		}
-	private:
-		SoccerPlayer* m_pSoccer;
-	};
+	
 	CharacterShotAttack::AttackParams p;
-
+	p.AttackPower = 4;
 	p.ShotFrame = 15;
 	p.AllFrame = 35;
-	p.MoveDownSpeed = 0.1f;
+	p.MoveDownSpeed = 0.075f;
 
 	m_pShotClass = new CharacterShotAttack(s, new SoccerShotEvent(s), p, new SoccerHitEvent(s));
 }
@@ -593,11 +551,7 @@ void SoccerState_PlayerControll_Shot::Execute(SoccerPlayer* s)
 	{
 		s->SetState(new SoccerState_PlayerControll_Move);
 	}
-	//基本的な更新
-	SoccerHitEvent HitEvent(s);
-	chr_func::UpdateAll(s, &HitEvent);
 	//モデル関連の更新
-	
 	s->m_Renderer.Update(1);
 	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
 }
@@ -734,60 +688,77 @@ void SoccerState_PlayerControll_Dash::Execute(SoccerPlayer* s)
 
 	
 	++m_timer;
-
-
-	Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
-
-	
-	// [L1]離す / カーソル倒さないと戻る
-	if (!controller::GetPush(controller::button::_L1, s->m_PlayerInfo.number) || (st.x==0 &&st.y==0))
+	if (SoccerState_PlayerControll_Move::SwitchGameState(s) == false)
 	{
-		s->SetState(new SoccerState_brake(s));
+		Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
+
+		// [L1]離す / カーソル倒さないと戻る
+		if (!controller::GetPush(controller::button::_L1, s->m_PlayerInfo.number) || (st.x == 0 && st.y == 0))
+		{
+			s->SetState(new SoccerState_brake(s));
+		}
+		else
+		{
+			m_pMoveClass->SetStickValue(st);
+		}
+		// [△] で ショット
+		if (controller::GetTRG(controller::button::sankaku, s->m_PlayerInfo.number))
+		{
+			s->SetState(new SoccerState_PlayerControll_Shot);
+		}
+		// [×] で ローリング
+		if (controller::GetTRG(controller::button::batu, s->m_PlayerInfo.number))
+		{
+			s->SetState(new SoccerState_Rolling(new SoccerUtillityClass::PlayerRollingControll(s), true));
+		}
+		// [□] で スライディング
+		if (controller::GetTRG(controller::button::shikaku, s->m_PlayerInfo.number))
+		{
+			s->SetState(new SoccerState_PlayerControll_Sliding(s));
+		}
+		// [〇] で 必殺技
+		if (controller::GetTRG(controller::button::maru, s->m_PlayerInfo.number))
+		{
+			if (chr_func::isCanSpecialAttack(s))
+			{
+				s->SetState(new SoccerState_PlayerControll_Finisher);
+			}
+		}
+		// [R1] で カウンター
+		if (controller::GetTRG(controller::button::_R1, s->m_PlayerInfo.number))
+		{
+			s->SetState(new SoccerState_PlayerControll_Counter());
+		}
+
+		if (m_timer % 19 == 5)
+		{
+			Sound::Play(Sound::Sand1);
+
+		}
+		if (m_timer % 3 == 2)
+		{
+			EffectFactory::Smoke(
+				s->m_Params.pos + Vector3(frand() - 0.5f, frand()+0.5f, frand() - 0.5f)*2.0f,
+				Vector3Zero,
+				1.8f,
+				1.0f,
+				true
+				);
+		}
+
+		
+
 	}
 	else
 	{
-		m_pMoveClass->SetStickValue(st);
-	}
-	// [△] で ショット
-	if (controller::GetTRG(controller::button::sankaku, s->m_PlayerInfo.number))
-	{
-		s->SetState(new SoccerState_PlayerControll_Shot);
-	}
-	// [×] で ローリング
-	if (controller::GetTRG(controller::button::batu, s->m_PlayerInfo.number))
-	{
-		s->SetState(new SoccerState_Rolling(new SoccerUtillityClass::PlayerRollingControll(s),true));
-	}
-	// [□] で スライディング
-	if (controller::GetTRG(controller::button::shikaku, s->m_PlayerInfo.number))
-	{
-		s->SetState(new SoccerState_PlayerControll_Sliding(s));
-	}
-	// [〇] で 必殺技
-	if (controller::GetTRG(controller::button::maru, s->m_PlayerInfo.number))
-	{
-		if (chr_func::isCanSpecialAttack(s))
-		{
-			s->SetState(new SoccerState_PlayerControll_Finisher);
-		}
-	}
-	// [R1] で カウンター
-	if (controller::GetTRG(controller::button::_R1, s->m_PlayerInfo.number))
-	{
-		s->SetState(new SoccerState_PlayerControll_Counter());
+		//スティックの値セット
+		m_pMoveClass->SetStickValue(Vector2(0, 0));
 	}
 
-	if (m_timer % 19==5)
-	{
-		Sound::Play(Sound::Sand1);
-		EffectFactory::Smoke(
-			s->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
-			Vector3Zero,
-			1.8f,
-			1.0f,
-			true
-			);
-	}
+
+	
+	
+	
 
 	
 	m_pMoveClass->Update();

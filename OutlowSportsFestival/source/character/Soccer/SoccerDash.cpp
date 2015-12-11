@@ -34,7 +34,7 @@ SoccerDash::SoccerDash(
 	m_pParent->m_Renderer.SetMotion(SoccerPlayer::_ms_Run);
 
 
-	UpdateLocusColor();
+	//UpdateLocusColor();
 }
 
 SoccerDash:: ~SoccerDash()
@@ -71,7 +71,7 @@ void SoccerDash::Update()
 		Vector3 BasePos = m_pParent->m_Params.pos;
 		BasePos.y += 2.0f;
 
-		m_Locus.AddPoint(BasePos, v);
+		//m_Locus.AddPoint(BasePos, v);
 	}
 
 	{
@@ -87,7 +87,7 @@ void SoccerDash::Update()
 	}
 
 	//•Ç‚ÉŒü‚©‚Á‚Äi‚Þ‚Ì–hŽ~
-	if (chr_func::CheckWall(m_pParent) && m_count>10)
+	if (chr_func::IsHitWall(m_pParent) && m_count>10)
 	{
 		m_pParent->SetState(new SoccerState_clash(m_pParent));
 

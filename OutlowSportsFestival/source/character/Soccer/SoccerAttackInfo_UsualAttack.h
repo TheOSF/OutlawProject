@@ -21,18 +21,18 @@ public:
 		int                DamageEnableStart;         //ダメージ有効スタートフレーム
 		int                DamageEnableEnd;           //ダメージ有効エンドフレーム
 
-		float              MoveSpeed;
-		int                MoveStartFrame;
-		int                MoveEndFrame;
+		float              MoveSpeed;                 //移動量
+		int                MoveStartFrame;            //移動開始フレーム
+		int                MoveEndFrame;              //移動終了フレーム
 
-		int                Motion;
+		int                Motion;                    //モーション番号
 
-		int                AllFrame;
+		int                AllFrame;                  //全フレーム
 
-		int                CanComboButtonPushFrame;
+		int                CanComboButtonPushFrame;   //コンボ受付開始フレーム
 
-		int                ComboSwitchStartFrame;
-		int                ComboSwitchEndFrame;
+		int                ComboSwitchStartFrame;     //コンボ開始フレーム
+		int                ComboSwitchEndFrame;       //コンボ終了フレーム
 
 		int                AngleControllStartFrame;
 		int                AngleControllEndFrame;

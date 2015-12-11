@@ -53,6 +53,22 @@ void SoccerState_ComputerControll_Finisher::Execute(SoccerPlayer* s)
 	{
 		m_pSnakeShotClass->SetStickValue(Vector2(0, 0));
 	}
+	//基本的な更新
+	{
+		DamageManager::HitEventBase NoDmgHitEvent;   //ノーダメージ
+		SoccerHitEvent              UsualHitEvent(s);//通常
+
+													 //無敵フレームかによってヒットイベントクラスの分岐
+		/*if (m_Timer < NoDamageFrame)
+		{
+			chr_func::UpdateAll(s, &NoDmgHitEvent);
+		}
+		else
+		{
+			chr_func::UpdateAll(s, &UsualHitEvent);
+		}*/
+		chr_func::UpdateAll(s, &NoDmgHitEvent);
+	}
 	
 
 	// 更新

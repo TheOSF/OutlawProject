@@ -70,6 +70,9 @@ namespace chr_func
     //XZ方向の壁との接触判定を行う(戻り値＝壁とあたっているかどうか)
     bool CheckWall(CharacterBase* p);
 
+	//XZ方向の壁との接触判定を行う(前方レイピックのみ＆位置調整なしver)
+	bool IsHitWall(CharacterBase* p);
+
     //現在の体力の割合を得る（０～１）
     RATIO GetLifeRatio(CharacterBase* p);
 

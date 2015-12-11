@@ -47,53 +47,7 @@ void SoccerState_ComputerControll_Shot::Enter(SoccerPlayer* s)
 		}
 	};
 
-	class SoccerHitEvent :public DamageManager::HitEventBase
-	{
-	public:
-		SoccerHitEvent(SoccerPlayer* ps) :m_pSoccer(ps) {}
-
-		bool Hit(DamageBase* pDmg)
-		{
-			if (pDmg->pParent == nullptr)
-			{
-				return false;
-			}
-			//当たった時に呼ばれる関数(戻り値：当たったかどうか)
-			//自分の作っているダメージだった場合は何もしない
-			if (pDmg->pParent->m_PlayerInfo.number == m_pSoccer->m_PlayerInfo.number)
-			{
-				return false;
-			}
-
-			//当たった時にそのダメージの種類から、それぞれのステートに派生させる
-			switch (pDmg->type)
-			{
-			case DamageBase::Type::_WeekDamage:
-				//弱攻撃
-				//m_pSoccer->SetState();
-				return true;
-
-				/*
-				//未作成
-				case DamageBase::Type::_VanishDamage:
-				//吹き飛びダメージ
-				m_pSoccer->SetState();
-				return true;
-				case DamageBase::Type::_UpDamage:
-				//上に吹き飛び
-				m_pSoccer->SetState();
-				return true;
-				*/
-
-			default:break;
-			}
-
-			return false;
-
-		}
-	private:
-		SoccerPlayer* m_pSoccer;
-	};
+	
 	CharacterShotAttack::AttackParams p;
 
 	p.ShotFrame = 10;

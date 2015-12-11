@@ -342,7 +342,7 @@ void SoccerState_brake::Enter(SoccerPlayer* s)
 	p.Acceleration = 0.0f;
 	p.MaxSpeed = 0.2f;
 	p.TurnSpeed = 0.0f;
-	p.DownSpeed = 0.2f;
+	p.DownSpeed = 0.08f;
 
 	m_pMoveClass = new CharacterUsualMove(
 		s,
@@ -366,12 +366,26 @@ void SoccerState_brake::Enter(SoccerPlayer* s)
 			);
 	}
 
+	m_Timer = 0;
+
 }
 void SoccerState_brake::Execute(SoccerPlayer* s)
 {
-	if (s->m_Params.move.Length() <= 0.001f)
+	++m_Timer;
+	if (s->m_Params.move.Length() <= 0.03f)
 	{
 		s->SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(s));
+	}
+
+	if (m_Timer % 6 == 2)
+	{
+		EffectFactory::Smoke(
+			s->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
+			Vector3Zero,
+			1.8f,
+			1.0f,
+			true
+			);
 	}
 	
 		

@@ -89,6 +89,7 @@ public:
 private:
 	SoccerPlayer*            m_pSoccer;
 	CharacterUsualMove*		m_pMoveClass;
+	int m_Timer;
 };
 //サッカーの激突クラス
 class SoccerState_clash : public SoccerState
