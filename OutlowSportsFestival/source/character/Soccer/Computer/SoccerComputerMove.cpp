@@ -1,7 +1,6 @@
 #include "../Computer/SoccerComputerMove.h"
 #include "../../Computer/CharacterComputerReactionHitEvent.h"
 #include "../../CharacterFunction.h"
-#include "../../CharacterCounterClass.h"
 #include "../../CharacterMoveClass.h"
 #include "SoccerComputerAttack.h"
 #include "SoccerComputerDash.h"

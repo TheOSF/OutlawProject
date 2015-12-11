@@ -25,8 +25,8 @@ void FightUI::Render()
 {
     const float ApperFrame = 10.0f;
     const float EndFrame = 35.0f;
-    const int SizeX = 480 * iexSystem::ScreenToX1600;
-    const int SizeY = 150 * iexSystem::ScreenToY900;
+    const int SizeX = (int)(480 * iexSystem::ScreenToX1600);
+    const int SizeY = (int)(150 * iexSystem::ScreenToY900);
 
     if (ApperFrame < m_Count)
     {
@@ -66,8 +66,8 @@ void FightUI::FightRender(
     )
 {
     m_pTexture->Render(
-        iexSystem::ScreenWidth / 2 - SizeX / 2,
-        iexSystem::ScreenHeight / 2 - SizeY / 2 + diffPosY - (50 * iexSystem::ScreenToX1600), 
+        (int)iexSystem::ScreenWidth / 2 - SizeX / 2,
+        (int)iexSystem::ScreenHeight / 2 - SizeY / 2 + diffPosY - (int)(50 * iexSystem::ScreenToX1600), 
         SizeX,
         SizeY,
 
