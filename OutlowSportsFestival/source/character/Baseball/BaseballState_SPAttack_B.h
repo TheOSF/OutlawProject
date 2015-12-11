@@ -34,11 +34,15 @@ private:
 	PointLight              m_Light;
 
 	
-	void State_Atk1();			 //　初撃
-	void State_Atk1End();		 //　初撃外れた
+	//void State_Atk1();			 //　初撃
+	//void State_Atk1End();		 //　初撃外れた
 	void State_Atk2();			 //　2撃目
 
-	void State_Finish(){}		 //　必殺終わり
+	void State_Finish()
+	{
+		//　雷エフェクト発動
+		ThunderInvoke(8);
+	}		 //　必殺終わり
 
 	void FreezeGame(UINT frame); //　The World
 

@@ -4,9 +4,10 @@
 
 class BaseballState_Change : public BaseballState
 {
-protected:
+private:
 	bool batterflg;//　(true:バッター,false:投手)
-
+	int m_Timer;
+	BaseballPlayer* m_pBaseball;
 public:
 	BaseballState_Change();
 	~BaseballState_Change();
@@ -20,4 +21,11 @@ public:
 
 	// ステート終了
 	void Exit(BaseballPlayer* b)override;
+
+private:
+	void(BaseballState_Change::*m_pStateFunc)();
+
+	void State_Change();
+	void State_End();
+
 };

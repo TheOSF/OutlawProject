@@ -151,9 +151,6 @@
     <ClCompile Include="source\GameSystem\LightEventExecuter.cpp" />
     <ClCompile Include="source\GameSystem\MatchLightManager.cpp" />
     <ClCompile Include="source\GameSystem\ResourceManager.cpp" />
-    <ClCompile Include="source\IexSystem\Framework.cpp" />
-    <ClCompile Include="source\IexSystem\System.cpp" />
-    <ClCompile Include="source\IexSystem\WinMain.cpp" />
     <ClCompile Include="source\Item\SkillGaugeItemEmitter.cpp" />
     <ClCompile Include="source\Item\SkillGaugeUpItem.cpp" />
     <ClCompile Include="source\Library\Bullet\BulletDebug.cpp" />
@@ -209,6 +206,9 @@
     <ClCompile Include="source\Effect\LocusBarObject.cpp" />
     <ClCompile Include="source\Item\RainbowSkillBall.cpp" />
     <ClCompile Include="source\Stage\Ground_Manager.cpp" />
+    <ClCompile Include="source\IexSystem\Framework.cpp" />
+    <ClCompile Include="source\IexSystem\System.cpp" />
+    <ClCompile Include="source\IexSystem\WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -360,9 +360,6 @@
     <ClInclude Include="source\GameSystem\LightEventExecuter.h" />
     <ClInclude Include="source\GameSystem\MatchLightManager.h" />
     <ClInclude Include="source\GameSystem\ResourceManager.h" />
-    <ClInclude Include="source\IexSystem\Framework.h" />
-    <ClInclude Include="source\IexSystem\Scene.h" />
-    <ClInclude Include="source\IexSystem\System.h" />
     <ClInclude Include="source\Item\SkillGaugeItemEmitter.h" />
     <ClInclude Include="source\Item\SkillGaugeUpItem.h" />
     <ClInclude Include="source\Library\Bullet\BulletDebug.h" />
@@ -428,6 +425,9 @@
     <ClInclude Include="source\Effect\LocusBarObject.h" />
     <ClInclude Include="source\Item\RainbowSkillBall.h" />
     <ClInclude Include="source\Stage\Ground_Manager.h" />
+    <ClInclude Include="source\IexSystem\Framework.h" />
+    <ClInclude Include="source\IexSystem\Scene.h" />
+    <ClInclude Include="source\IexSystem\System.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DATA\Shader\3DEx.fx" />

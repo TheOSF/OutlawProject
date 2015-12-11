@@ -9,8 +9,8 @@
 
 //-------------切り替えステートクラス-------------
 
-BaseballState_Change::BaseballState_Change():
-batterflg(false)
+BaseballState_Change::BaseballState_Change() :
+batterflg(false), m_Timer(0)
 {
 
 }
@@ -24,36 +24,72 @@ BaseballState_Change::~BaseballState_Change()
 // ステート開始
 void  BaseballState_Change::Enter(BaseballPlayer* b)
 {
-	chr_func::XZMoveDown(b, 1);
+	m_pBaseball = b;
+	m_pStateFunc = &BaseballState_Change::State_Change;
 }
 
 
 // ステート実行
 void BaseballState_Change::Execute(BaseballPlayer* b)
 {
-	batterflg = b->getBatterFlg();
-	if (b->getChangeTime() >= 20)
-	{
-		//　エフェクト
-		EffectFactory::Change(Vector3(b->m_Params.pos.x, b->m_Params.pos.y + 2.0f, b->m_Params.pos.z), 10.0f);
-		//　効果音
-		Sound::Play(Sound::Change);
-		if (batterflg)
-		{
-			b->setBatterFlg(false);
-		}
-		else{
-			b->setBatterFlg(true);
-		}
-		//　リセット
-		b->setChangeTime(0);
-	}
+	MyDebugString("Now=%f \n", b->m_Params.move.Length());
 
-	b->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(b));
+	chr_func::XZMoveDown(b, 0.05f);
+	(this->*m_pStateFunc)();
+	chr_func::UpdateAll(b, &DamageManager::HitEventBase());
+	b->m_Renderer.Update(1);
+	chr_func::CreateTransMatrix(b,b->m_ModelSize,&b->m_Renderer.m_TransMatrix);
 }
 
 // ステート終了
 void BaseballState_Change::Exit(BaseballPlayer* b)
 {
 
+}
+
+void BaseballState_Change::State_Change()
+{
+	
+	
+	if (m_pBaseball->getChangeTime() >= 20)
+	{
+		m_Timer++;
+		if (m_Timer == 1)
+		{
+			batterflg = m_pBaseball->getBatterFlg();
+
+			//　エフェクト
+			EffectFactory::Change(Vector3(m_pBaseball->m_Params.pos.x, m_pBaseball->m_Params.pos.y + 2.0f, m_pBaseball->m_Params.pos.z), 10.0f);
+			//　効果音
+			Sound::Play(Sound::Change);
+			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_WinPose);
+		}
+
+		if (m_Timer == 3)
+		{
+			if (batterflg)
+			{
+				m_pBaseball->setBatterFlg(false);
+			}
+			else{
+				m_pBaseball->setBatterFlg(true);
+			}
+			m_pStateFunc = &BaseballState_Change::State_End;
+		}
+
+	}
+
+}
+
+void BaseballState_Change::State_End()
+{
+	const int EndFrame = 20;
+
+	if (++m_Timer > EndFrame)
+	{
+		//　リセット
+		m_Timer = 0;
+		m_pBaseball->setChangeTime(0);
+		m_pBaseball->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(m_pBaseball));
+	}
 }
