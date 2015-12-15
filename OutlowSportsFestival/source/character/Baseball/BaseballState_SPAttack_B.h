@@ -33,10 +33,7 @@ private:
 	UINT                    m_ChrLiveCount;
 	PointLight              m_Light;
 
-	
-	//void State_Atk1();			 //　初撃
-	//void State_Atk1End();		 //　初撃外れた
-	void State_Atk2();			 //　2撃目
+	void State_Atk();			 //　攻撃
 
 	void State_Finish()
 	{

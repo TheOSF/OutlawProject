@@ -31,7 +31,7 @@ helmetEquip(nullptr), capEquip(nullptr), batEquip(nullptr), groveEquip(nullptr),
 	SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(this));
 	//　体力低下(デバック用)
 	m_Params.maxHP = m_Params.HP = 100;
-	
+
 	temp_batterflg = batterflg;
 	helmetEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Helmet);
 	batEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Bat);

@@ -219,7 +219,7 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 				//　バッター時
 				if (len < 7.0f)
 				{
-					if ((cParam.ActionFrequence * 400) > AttackPoint)
+					if ((cParam.ActionFrequence * 500) > AttackPoint)
 					{
 						//　必殺
 						if (len <= 6.0f && chr_func::isCanSpecialAttack(m_cBaseball))
@@ -237,7 +237,7 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 				{
 					//攻撃する時ならば
 
-					if ((cParam.ActionFrequence * 320) > AttackPoint)
+					if ((cParam.ActionFrequence * 350) > AttackPoint)
 					{
 						m_cBaseball->SetState(new BaseballState_PlayerControll_ShotAttack_B(new PlayerShotControllClass_B(m_cBaseball)));
 					}
@@ -257,7 +257,7 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 				if (len < 6.0f)
 				{
 					//攻撃する時ならば
-					if ((cParam.ActionFrequence * 400) > AttackPoint)
+					if ((cParam.ActionFrequence * 500) > AttackPoint)
 					{
 						m_cBaseball->SetState(new Baseball_PlayerControll_Attack_P(m_cBaseball));
 					}
@@ -266,7 +266,7 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 				else if (len >= 6.0f && len < 35.0f)
 				{
 					//攻撃する時ならば
-					if ((cParam.ActionFrequence * 320) > AttackPoint)
+					if ((cParam.ActionFrequence * 350) > AttackPoint)
 					{
 						m_cBaseball->SetState(new BaseballState_PlayerControll_ShotAttack_P());
 					}

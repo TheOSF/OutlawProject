@@ -153,7 +153,8 @@ bool sceneGamePlay::Initialize()
 
         DefResource.Regist(
             Resource::MeshType::Tennis_Heart,
-            new iexMesh("DATA\\CHR\\SanoTennis\\Heart\\Heart.imo")
+            //new iexMesh("DATA\\CHR\\SanoTennis\\Heart\\Heart.imo")
+			new iexMesh("DATA\\CHR\\Ball\\Tennis_ball.imo")
             );
 
         DefResource.Regist(
