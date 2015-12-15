@@ -26,7 +26,10 @@
 #include "../Library/Bullet/BulletUpdateGameobject.h"
 
 #include    "../Effect/EffectResourceLoad.h"
-
+#include "../GameSystem/MatchManager.h"
+#include "../SceneResult/SceneResult.h"
+#include "../IexSystem/Framework.h"
+#include "../character/CharacterBase.h"
 
 //*****************************************************************************************************************************
 //
@@ -149,6 +152,11 @@ bool sceneGamePlay::Initialize()
             );
 
         DefResource.Regist(
+            Resource::MeshType::Tennis_Heart,
+			new iexMesh("DATA\\CHR\\Ball\\Tennis_ball.imo")
+            );
+
+        DefResource.Regist(
             Resource::MeshType::Volley_ball,
             new iexMesh("DATA\\CHR\\Ball\\soccer_ball.imo")
             );
@@ -230,6 +238,90 @@ void	sceneGamePlay::Update()
         DefBulletSystem.DebugDrawWorld();
     }
     
+    //シーン移行チェック
+    UpdateSceneChange();
+}
+
+void sceneGamePlay::UpdateSceneChange()
+{
+    MatchManager::NextSceneType NextSceneType;
+
+    if (DefMatchManager.GetNextScene(NextSceneType) == false)
+    {
+        return;
+    }
+
+
+    switch (NextSceneType)
+    {
+    case MatchManager::NextSceneType::GoResult:
+
+        break;
+
+    case MatchManager::NextSceneType::ReturnToOption:
+
+        break;
+
+    case MatchManager::NextSceneType::ReturnToTitle:
+
+        break;
+    }
+
+}
+
+void sceneGamePlay::GoResult()
+{
+    //画面テクスチャを作成し、リザルトシーンに渡す
+    iex2DObj* pScreenTexture = new iex2DObj((ULONG)iexSystem::ScreenWidth, (ULONG)iexSystem::ScreenHeight, IEX2D_RENDERTARGET);
+
+    //テクスチャに描画
+    DefRendererMgr.RenderToTexture(pScreenTexture);
+
+
+    //パラメータ作成
+    SceneResult::ResultStartParam param;
+
+    {
+        CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
+        auto it = ChrMap.begin();
+        UINT MostHighRound = 0;
+        int  Rank = 1;
+
+        while (ChrMap.size() > 0)
+        {
+            it = ChrMap.begin();
+
+            //もっとも高い勝利数を探す
+            while (it != ChrMap.end())
+            {
+                if (MostHighRound < it->first->m_Params.win)
+                {
+                    MostHighRound = it->first->m_Params.win;
+                }
+                ++it;
+            }
+
+            it = ChrMap.begin();
+
+            //一番勝利しているキャラクタ
+            while (it != ChrMap.end())
+            {
+                if (MostHighRound == it->first->m_Params.win)
+                {
+                    param.PlayerList.push_back({ Rank, it->first->m_PlayerInfo.number, it->first->m_PlayerInfo.player_type, it->first->m_PlayerInfo.chr_type });
+                    ChrMap.erase(it);
+                    continue;
+                }
+                ++it;
+            }
+
+            MostHighRound = 0;
+            ++Rank;
+        }
+    }
+
+    //リザルトシーンセット
+    MainFrame->ChangeScene(new SceneResult(pScreenTexture, param));
 }
 
 //*****************************************************************************************************************************

@@ -98,7 +98,10 @@ Vector2 CharacterComputerMove::StateMoveFront(CharacterBase* cb)
 
 
 	//目標に向かって移動
-	m_MoveTargetPos = GetMoveTargetPos(cb);
+	if (m_Count % 8 == 0)
+	{
+		m_MoveTargetPos = GetMoveTargetPos(cb);
+	}
 
 	Vector3 v = m_MoveTargetPos - cb->m_Params.pos;
 
@@ -114,7 +117,7 @@ Vector2 CharacterComputerMove::StateMoveFront(CharacterBase* cb)
 Vector2 CharacterComputerMove::StateMoveDistance(CharacterBase* cb)
 {
 	++m_Count;
-	const float Bestlen = 22.0f + rand() % 10; //そのキャラのベスト距離(今は固定)
+	const float Bestlen = 32.0f + rand() % 10; //そのキャラのベスト距離(今は固定)
 
 
 	//目標に到達していたらとまる

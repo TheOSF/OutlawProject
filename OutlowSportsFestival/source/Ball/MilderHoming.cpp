@@ -189,9 +189,18 @@ void MilderHoming::State_NoWork()
 	//軌跡
 	m_Locus.m_StartParam.Color.w *= 0.95f;
 
-	if (m_Locus.m_StartParam.Color.w < 0.1f)
+	m_Locus.m_StartParam.HDRColor.w *= 0.95f;
+
+	//太さが一定以下なら描画しない
+	if (m_Locus.m_StartParam.Color.w < 0.01f)
 	{
 		m_Locus.m_Visible = false;
+	}
+
+	if (m_Locus.m_Visible)
+	{
+		//軌跡の点を追加
+		AddLocusPoint();
 	}
 
 	//消滅タイマー
@@ -427,7 +436,7 @@ void MilderHoming::Counter(CharacterBase* pCounterCharacter)
 	UpdateLocusColor();
 
 	m_Damage.m_VecPower.x = Vector3XZLength(m_Params.move)*1.2f;
-	m_Damage.type = DamageBase::Type::_VanishDamage;
+	//m_Damage.type = DamageBase::Type::_VanishDamage;
 	m_Damage.Value += 1.0f; //ダメージを増やす
 
 	////エフェクトカウント設定

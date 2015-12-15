@@ -19,6 +19,7 @@ public:
             int number;
             PlayerType::Value player_type;
             CharacterType::Value chr_type;
+            StrongType::Value strong_type;
         };
 
         IGameInitializer*         pInitializer;
@@ -40,5 +41,8 @@ public:
 
 private:
     InitParams  m_Params;
+
+    void UpdateSceneChange();
+    void GoResult();
 };
 

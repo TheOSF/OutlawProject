@@ -4,6 +4,8 @@
 #include "../SoccerPlayerState.h"
 #include "SoccerComputerSliding.h"
 #include "../../../Sound/Sound.h"
+#include "../../../GameSystem/GameController.h"
+
 SoccerState_ComputerControll_Sliding::PlayerControllEvent::PlayerControllEvent(SoccerPlayer*const pSoccer) :
 	m_pSoccer(pSoccer)
 {

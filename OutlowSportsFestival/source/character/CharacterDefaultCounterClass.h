@@ -73,10 +73,12 @@ private:
     {
         DamageManager::HitEventBase*const m_pInHitEvent;
         BallBase*                         m_pCounterBall;
+        CharacterBase*                    m_pOwner;
     public:
         HitEventClass_NoBallDamageFileter(
             DamageManager::HitEventBase* pInHitEvent,
-            BallBase*                    m_pCounterBall
+            BallBase*                    pCounterBall,
+            CharacterBase*               pOwner
             );
         
         bool Hit(DamageBase* pDmg)override;

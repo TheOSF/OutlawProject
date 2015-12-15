@@ -127,7 +127,7 @@ void SoccerState_PlayerControll_Move::ActionStateSwitch(SoccerPlayer*s)
 	// [Z] ‚Å •KŽE‹Z
 	if (controller::GetTRG(controller::button::maru, s->m_PlayerInfo.number))
 	{
-		if (chr_func::isCanSpecialAttack(s))
+		//if (chr_func::isCanSpecialAttack(s))
 		{
 			s->SetState(new SoccerState_PlayerControll_Finisher);
 		}
@@ -815,6 +815,13 @@ void SoccerState_PlayerControll_Finisher::Execute(SoccerPlayer* s)
 		m_pSnakeShotClass->SetStickValue(
 			controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number));
 	}
+	//–³“G
+	{
+		DamageManager::HitEventBase NoDmgHitEvent;   //ƒm[ƒ_ƒ[ƒW
+
+		chr_func::UpdateAll(s, &NoDmgHitEvent);
+	}
+	
 	// XV
 	if (m_pSnakeShotClass->Update() == false)
 	{
@@ -893,7 +900,7 @@ CharacterShotAttack* SoccerState_PlayerControll_Finisher::SnakeShotClass(SoccerP
 		s,
 		new ShotAttackEvent(s),
 		atk,
-		new  SoccerHitEvent(s)
+		new  DamageManager::HitEventBase()
 		);
 }
 

@@ -23,7 +23,6 @@
 #include "../../Ball/UsualBall.h"
 #include "../../Ball/MilderHoming.h"
 #include "../../Damage/Damage.h"
-#include "../CharacterCounterClass.h"
 #include "../../Camera/Camera.h"
 
 class BallBall_Utillity
@@ -215,39 +214,6 @@ void BaseballState_PlayerControll_Move::Enter(BaseballPlayer* b)
 		}
 	};
 
-	//　ダメージイベントクラスの作成
-	class BaseballDamageHitEvent :public DamageManager::HitEventBase
-	{
-		BaseballPlayer* m_pBaseball;
-	public:
-		BaseballDamageHitEvent(BaseballPlayer* pBaseball) :
-			m_pBaseball(pBaseball){}
-
-		//当たった時にそのダメージの種類から、それぞれのステートに派生させる
-		bool Hit(DamageBase* pDmg)
-		{
-			bool ret = true;
-
-			switch (pDmg->type)
-			{
-			case DamageBase::Type::_WeekDamage:
-				//m_pTennis->SetState();	ステートができていないため
-				break;
-			case DamageBase::Type::_VanishDamage:
-				//m_pTennis->SetState();
-				break;
-			case DamageBase::Type::_UpDamage:
-				//m_pTennis->SetState();
-				break;
-			default:
-				ret = false;
-				break;
-			}
-
-			return ret;
-		}
-	};
-
 	//　移動パラメータを代入
 	CharacterUsualMove::Params p;
 
@@ -308,7 +274,8 @@ void BaseballState_PlayerControll_Move::Execute(BaseballPlayer* b)
 }
 
 //　ステートの終了
-void BaseballState_PlayerControll_Move::Exit(BaseballPlayer* b){
+void BaseballState_PlayerControll_Move::Exit(BaseballPlayer* b)
+{
 	delete m_pMoveClass;
 }
 
@@ -347,6 +314,7 @@ void BaseballState_PlayerControll_Move::Batter(BaseballPlayer* b){
 	// 切り替え[L1]
 	if (controller::GetTRG(controller::button::_L1, b->m_PlayerInfo.number))
 	{
+		MyDebugString("Start=%3.3f \n", b->m_Params.move.Length());
 		b->SetState(new BaseballState_Change());
 		return;
 	}
@@ -387,6 +355,7 @@ void  BaseballState_PlayerControll_Move::Pitcher(BaseballPlayer* b){
 	// 切り替え[L1]
 	if (controller::GetTRG(controller::button::_L1, b->m_PlayerInfo.number))
 	{
+		MyDebugString("Start=%3.3f \n", b->m_Params.move.Length());
 		b->SetState(new BaseballState_Change());
 		return;
 	}

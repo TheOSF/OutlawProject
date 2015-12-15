@@ -391,6 +391,23 @@ void RendererManager::Render()
     m_DeferredLightManager.TextureRender();
 }
 
+//テクスチャに描画
+void RendererManager::RenderToTexture(iex2DObj* pTarget)
+{
+    //画面ポインタを保持
+    Surface* pScreen = nullptr;
+    iexSystem::Device->GetRenderTarget(0, &pScreen);
+
+    //引数のテクスチャをターゲットに
+    pTarget->RenderTarget(0);
+
+    //描画
+    this->Render();
+
+    //元に戻す
+    iexSystem::Device->SetRenderTarget(0, pScreen);
+    pScreen->Release();
+}
 
 //---------------------------------------------------------------------
 //   レンダラー

@@ -72,7 +72,6 @@
     <ClCompile Include="source\character\Baseball\BaseballState_SPAttack_P.cpp" />
     <ClCompile Include="source\character\Baseball\Baseball_HitEvent.cpp" />
     <ClCompile Include="source\character\CharacterBase.cpp" />
-    <ClCompile Include="source\character\CharacterCounterClass.cpp" />
     <ClCompile Include="source\character\CharacterDamageMotion.cpp" />
     <ClCompile Include="source\character\CharacterDamageVanish.cpp" />
     <ClCompile Include="source\character\CharacterFunction.cpp" />
@@ -209,6 +208,8 @@
     <ClCompile Include="source\Effect\LocusBarObject.cpp" />
     <ClCompile Include="source\Item\RainbowSkillBall.cpp" />
     <ClCompile Include="source\Stage\Ground_Manager.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisHeartBall.cpp" />
+    <ClCompile Include="source\GameSystem\MatchManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -275,7 +276,6 @@
     <ClInclude Include="source\character\Baseball\BaseballState_SPAttack_P.h" />
     <ClInclude Include="source\character\Baseball\Baseball_HitEvent.h" />
     <ClInclude Include="source\character\CharacterBase.h" />
-    <ClInclude Include="source\character\CharacterCounterClass.h" />
     <ClInclude Include="source\character\CharacterDamageMotion.h" />
     <ClInclude Include="source\character\CharacterDamageVanish.h" />
     <ClInclude Include="source\character\CharacterFunction.h" />
@@ -348,7 +348,6 @@
     <ClInclude Include="source\Effect\ThunderEffect.h" />
     <ClInclude Include="source\Effect\TornadoEffect.h" />
     <ClInclude Include="source\Effect\WindBallEffect.h" />
-    <ClInclude Include="source\GameScene\SceneGamePlay.h" />
     <ClInclude Include="source\GameScene\sceneMain.h" />
     <ClInclude Include="source\GameSystem\ForwardDecl.h" />
     <ClInclude Include="source\GameSystem\GameController.h" />
@@ -428,6 +427,9 @@
     <ClInclude Include="source\Effect\LocusBarObject.h" />
     <ClInclude Include="source\Item\RainbowSkillBall.h" />
     <ClInclude Include="source\Stage\Ground_Manager.h" />
+    <ClInclude Include="source\character\Tennis\TennisHeartBall.h" />
+    <ClInclude Include="source\GameScene\SceneGamePlay.h" />
+    <ClInclude Include="source\GameSystem\MatchManager.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DATA\Shader\3DEx.fx" />

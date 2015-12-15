@@ -6,7 +6,6 @@
 #include "../../Damage/Damage.h"
 #include "Baseball_HitEvent.h"
 
-#include "../CharacterCounterClass.h"
 #include "../CharacterMoveClass.h"
 #include "../CharacterDefaultCounterClass.h"
 

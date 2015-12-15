@@ -5,7 +5,6 @@
 #include "../CharacterFunction.h"
 #include "../../Ball/UsualBall.h"
 #include "../../Damage/Damage.h"
-#include "../CharacterCounterClass.h"
 #include "../CharacterMoveClass.h"
 #include "../CharacterShotAttackClass.h"
 #include "Tennis_HitEvent.h"

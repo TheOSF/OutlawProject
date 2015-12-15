@@ -22,7 +22,9 @@
 static void CreateCharacter(
     PlayerNum::Value      n,
     PlayerType::Value     pl,
-    CharacterType::Value  chr)
+    CharacterType::Value  chr,
+    StrongType::Value     str
+    )
 {
     CharacterBase* pChr = nullptr;
 
@@ -31,7 +33,7 @@ static void CreateCharacter(
     info.chr_type = chr;
     info.number = n;
     info.player_type = pl;
-    info.strong_type = (pl == PlayerType::_Player) ? (StrongType::__ErrorType) : (StrongType::_Strong);
+    info.strong_type = (pl == PlayerType::_Player) ? (StrongType::__ErrorType) : (str);
 
     switch (chr)
     {
@@ -128,6 +130,6 @@ void GameInitializer_UsualMatch::GameCreate()
             continue;
         }
 
-        CreateCharacter((PlayerNum::Value)it.number, it.player_type, it.chr_type);
+        CreateCharacter((PlayerNum::Value)it.number, it.player_type, it.chr_type,it.strong_type);
     }
 }

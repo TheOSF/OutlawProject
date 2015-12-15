@@ -3,6 +3,7 @@
 #include "SoccerComputerMove.h"
 #include "../SoccerPlayerState.h"
 #include "../SoccerHitEvent.h"
+#include "../../../GameSystem/GameController.h"
 
 //-------------カウンターステートクラス-------------
 void SoccerState_ComputerControll_Counter::Enter(SoccerPlayer* s)

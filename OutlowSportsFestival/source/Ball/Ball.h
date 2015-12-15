@@ -28,9 +28,8 @@ public:
 	{
 		_DontWork,				//描画はしているが、あたり判定のないボール
 		_Usual,					//通常のボール
+        _ICantCounter,          //打ったプレイヤーのみカウンターできない
 		_CantCounter,			//カウンターできない通常のボール
-		_CanVolleySmash,		//バレーキャラクタでスマッシュすることができる状態のボール
-		_TennisSpecialAtk,		//テニス
         _Milder,                //野球ホーミング
 		_BaseballSpecialAtk     //野球必殺
 	};
@@ -59,7 +58,7 @@ public:
     bool isOutOfField()const;
 
 	//引数のボールがカウンター可能かどうか
-	static bool isCanCounter(const BallBase* pBall);
+    static bool isCanCounter(const BallBase* pBall, CharacterBase* Me);
 
     //固有ＩＤのゲッタ
     BallID GetID()const;
@@ -98,7 +97,8 @@ public:
 		CrVector3	character_pos,	//キャラクタの場所
 		Vector3*	pOutAfterFrameBallPos,//キャッチまでの移動フレーム後のボールの位置
 		float		catch_area_size,//キャッチ可能な範囲
-		int			move_frame		//キャッチまでの移動フレーム
+		int			move_frame,		//キャッチまでの移動フレーム
+        CharacterBase* Me           //カウンターするキャラクタ
 		);
 
     //引数のIDのボールが存在しているかどうか
