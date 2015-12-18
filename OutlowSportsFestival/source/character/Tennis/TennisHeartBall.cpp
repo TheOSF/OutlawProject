@@ -38,6 +38,9 @@ TennisHeartBall::TennisHeartBall(
         m_Damage.m_VecType = DamageShpere::DamageVecType::MemberParam;
         m_Damage.pParent = pTennis;
         m_Damage.pBall = this;
+
+        m_Damage.Value = 1000;
+        m_Damage.m_Param.size = 100.0f;
     }
 
     {

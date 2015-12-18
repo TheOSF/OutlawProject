@@ -23,7 +23,7 @@ const SoccerPlayer::SkillParam SoccerPlayer::skillparams =
 
 
 SoccerPlayer::SoccerPlayer(const CharacterBase::PlayerInfo& info) :
-CharacterBase(info, new BlendAnimationMesh("DATA\\CHR\\Soccer\\Player_S.iem")),
+CharacterBase(info, new BlendAnimationMesh(GetCharacterModelPath(CharacterType::_Soccer))),
 m_ModelSize(0.05f)
 {
 	

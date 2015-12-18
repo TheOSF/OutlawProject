@@ -8,9 +8,7 @@
 #include "../GameSystem/ResourceManager.h"
 #include "../Collision/Collision.h"
 #include "../Effect/FadeGameObject.h"
-
 #include "../Effect/BlurImpact.h"
-
 #include "../Stage/PhysicsMeshObject.h"
 
 #include "../UI/RoundUI.h"
@@ -19,6 +17,7 @@
 
 #include "../Sound/Sound.h"
 #include "MatchLightManager.h"
+#include "MatchManager.h"
 
 
 //----------------------------------------------------
@@ -56,6 +55,26 @@ void GameEventer::SetLightChange()
         10,
         Vector3(0.6f, 0.6f, 0.6f)
         );
+}
+
+void GameEventer::ResultCheck(CharacterBase* pNowWinCharacter)
+{
+    for (auto& it : DefCharacterMgr.GetCharacterMap())
+    {
+        UINT Point = it.first->m_Params.win;
+
+        if (it.first == pNowWinCharacter)
+        {
+            ++Point;
+        }
+
+        if (Point >= m_Param.round)
+        {
+            ++it.first->m_Params.win;
+            DefMatchManager.SceneChange(MatchManager::NextSceneType::GoResult);
+            break;
+        }
+    }
 }
 
 bool GameEventer::Update()
@@ -465,7 +484,7 @@ void MatchState::WinPose::Execute(_Client_type_ptr p)
         std::list<LpGameObjectBase> UpdateList;
 
         UpdateList.push_back(new GameSetUI());
-   //     UpdateList.push_back(m_pLastDieCharacter);
+        UpdateList.push_back(p);
       
         DefGameObjMgr.FreezeOtherObjectUpdate(UpdateList, 120);
 
@@ -475,10 +494,17 @@ void MatchState::WinPose::Execute(_Client_type_ptr p)
             10,
             Vector3(0.8f, 0.8f, 0.8f)
             );
+
     }
 
+    
+    if (m_Frame == 124)
+    {
+        //リザルト画面に移行可能な場合は移行
+        p->ResultCheck(m_pWinCharacter);
+    }
 
-    if (m_Frame == 120)
+    if (m_Frame == 240)
     {
         //勝利ポーズメッセージを送信
         m_pWinCharacter->Msg(GameObjectBase::MsgType::_WinPose);
@@ -490,7 +516,7 @@ void MatchState::WinPose::Execute(_Client_type_ptr p)
         chr_func::AddWinPoint(m_pWinCharacter);
     }
 
-    if (m_Frame == 300)
+    if (m_Frame == 520)
     {
         p->SetState(new ResetRound());
     }
@@ -528,8 +554,10 @@ void MatchState::TimeUp::Execute(_Client_type_ptr p)
 
         //ＴｉｍｅＵｐ　ＵＩを表示
         new GameSetUI();
-    }
 
+        //リザルト画面に移行可能な場合は移行
+        p->ResultCheck(m_pWinCharacter);
+    }
 
     if (m_Frame == 120)
     {

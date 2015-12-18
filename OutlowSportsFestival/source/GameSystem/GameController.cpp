@@ -2,6 +2,13 @@
 #include "IEX_Input.h"
 
 
+//スティックを倒したかどうかの記録(４つまで)
+static bool g_SaveStickValues[4][2] = 
+{
+    false
+};
+
+static const float g_AdjustStickValue = 0.3f;
 
 #ifdef OUTLAW2_CONTROLL_TYPE_IEX_INPUT
 
@@ -85,8 +92,8 @@ Vector2 controller::GetStickValue(stick::stick_type x, CONTROLLER_NUM num)
     Vector2 ret(KEY(stick_key_code[x][0],num)*0.001f, KEY(stick_key_code[x][1],num)*-0.001f);
 
     //補正
-    if (fabsf(ret.x)<0.3f)ret.x = 0;
-    if (fabsf(ret.y)<0.3f)ret.y = 0;
+    if (fabsf(ret.x)<g_AdjustStickValue)ret.x = 0;
+    if (fabsf(ret.y)<g_AdjustStickValue)ret.y = 0;
 
     if (Vector2Length(ret) > 1)return Vector2Normalize(ret);
 
@@ -134,6 +141,22 @@ static const GamePadIndex stick_key_code[][2]=
 };
 
 
+
+//方向キーの方向を得る
+static Vector2 GetCursorValue(controller::CONTROLLER_NUM num)
+{
+    Vector2 ret(0, 0);
+
+    ret.x += (GamePadManager::GetState(num, button_key_code[controller::button::right]) > 0) ? (1) : (0);
+    ret.x += (GamePadManager::GetState(num, button_key_code[controller::button::left]) > 0) ? (-1) : (0);
+
+    ret.y += (GamePadManager::GetState(num, button_key_code[controller::button::up]) > 0) ? (1) : (0);
+    ret.y += (GamePadManager::GetState(num, button_key_code[controller::button::down]) > 0) ? (-1) : (0);
+
+    return ret;
+}
+
+
 // 押した瞬間かどうか
 bool controller::GetTRG(button::button_type x, CONTROLLER_NUM num)
 {
@@ -154,7 +177,7 @@ bool controller::GetPush(button::button_type x, CONTROLLER_NUM num)
 //押しているかどうか(誰かが)
 bool controller::GetPushAnyController(button::button_type x)
 {
-    for (int i = 0; i<4; ++i)
+    for (int i = 0; i < 4; ++i)
     {
         if (GamePadManager::GetState((size_t)i, button_key_code[x]) != 0)
         {
@@ -162,6 +185,12 @@ bool controller::GetPushAnyController(button::button_type x)
         }
     }
     return false;
+}
+
+//引数の値がスティックの誤差の値以内かどうか
+bool controller::isStickAdjustValue(float value)
+{
+    return fabsf(value) < g_AdjustStickValue;
 }
 
 // コントローラの状態取得
@@ -179,6 +208,14 @@ controller::button::button_state controller::GetButtonState(controller::button::
     return controller::button::button_state::bs_up;
 }
 
+//スティック(またはカーソル)を倒した瞬間かどうかを得る
+bool controller::GetStickJustMove(stick::stick_type x, CONTROLLER_NUM num)
+{
+    return 
+        g_SaveStickValues[num][x] == false &&
+        Vector2LengthSq(GetStickValue(x, num)) > g_AdjustStickValue;
+}
+
 // スティックの傾きの値を得る
 Vector2 controller::GetStickValue(stick::stick_type x, CONTROLLER_NUM num)
 {
@@ -186,15 +223,32 @@ Vector2 controller::GetStickValue(stick::stick_type x, CONTROLLER_NUM num)
 		GamePadManager::GetState(num, stick_key_code[x][0])*0.001f,
 		GamePadManager::GetState(num, stick_key_code[x][1])*-0.001f
 		);
+
+    //左スティックならカーソルも考慮する
+    if (x == stick::left)
+    {
+        Vector2 cur = GetCursorValue(num);
+
+        if (fabsf(ret.x) < fabsf(cur.x))
+        {
+            ret.x = cur.x;
+        }
+
+        if (fabsf(ret.y) < fabsf(cur.y))
+        {
+            ret.y = cur.y;
+        }
+    }
 	
 	//補正
-	if (fabsf(ret.x)<0.3f)ret.x = 0;
-	if (fabsf(ret.y)<0.3f)ret.y = 0;
+    if (fabsf(ret.x)<g_AdjustStickValue)ret.x = 0;
+    if (fabsf(ret.y)<g_AdjustStickValue)ret.y = 0;
 
 	if (Vector2Length(ret) > 1)return Vector2Normalize(ret);
 
 	return ret;
 }
+
 
 
 // 指定したコントローラーを振動させる
@@ -203,6 +257,17 @@ void controller::SetVibration(DWORD power, float second,  CONTROLLER_NUM num, in
     GamePadManager::Vibration(num, pattern, (DWORD)(second*(float)DI_SECONDS), power);
 }
 
-
+//更新(全体で１フレームに一回呼び出すだけ、使わないで！)
+void controller::UpdateInfo()
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        for (int j = 0; j < 2; ++j)
+        {
+            g_SaveStickValues[i][j] = Vector2LengthSq(GetStickValue((stick::stick_type)j, i)) > g_AdjustStickValue;
+        }
+    }
+    
+}
 
 #endif

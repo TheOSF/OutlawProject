@@ -5,6 +5,11 @@
 #include "../Ball/UsualBall.h"
 #include "../UI/PlayerGauge.h"
 
+#include "Tennis\TennisPlayer.h"
+#include "Baseball\BaseballPlayer.h"
+#include "Soccer\SoccerPlayer.h"
+#include "Amefoot\AmefootPlayer.h"
+
 //***************************************************
 //		キャラクタクラス
 //***************************************************
@@ -42,6 +47,8 @@ m_Renderer(pMesh)
 	//マネージャに登録
 	DefCharacterMgr.Add(this);
   
+    //モデル構築
+    CharacterBase::CreateCharacterModel(&m_Renderer, m_PlayerInfo.chr_type, m_PlayerInfo.number);
 }
 
 CharacterBase::~CharacterBase()
@@ -83,6 +90,94 @@ COLORf CharacterBase::GetPlayerColorF(PlayerNum::Value number)
     }
 
     return ret;
+}
+
+const char* CharacterBase::GetCharacterModelPath(CharacterType::Value chr_type)
+{
+    static const char* Paths[] = 
+    {
+        "DATA\\CHR\\SanoTennis\\tennis.iem",
+        "DATA\\CHR\\BaseBall\\player_B.iem",
+        "DATA\\CHR\\Soccer\\Player_S.iem",
+        "DATA\\CHR\\Soccer\\Player_S.iem",
+    };
+
+    MyAssert((int)chr_type >= 0 && (int)chr_type < 4, "存在しないキャラクタタイプが引数に送られました type= %d ", (int)chr_type);
+
+    return Paths[(int)chr_type];
+
+}
+
+void CharacterBase::CreateCharacterModel(CharacterRenderer* pOut, CharacterType::Value chr_type, PlayerNum::Value PlNum)
+{
+
+    //マテリアル指定
+    switch (chr_type)
+    {
+    case CharacterType::_Tennis:
+        pOut->SetMaterialRenderType(0, CharacterRenderer::RenderType::Face);
+        pOut->SetMaterialRenderType(1, CharacterRenderer::RenderType::Skin);
+        pOut->SetMaterialRenderType(2, CharacterRenderer::RenderType::Clothes);
+        break;
+
+    case CharacterType::_Baseball:
+        pOut->SetMaterialRenderType(0, CharacterRenderer::RenderType::Face);
+        pOut->SetMaterialRenderType(1, CharacterRenderer::RenderType::Skin);
+        pOut->SetMaterialRenderType(2, CharacterRenderer::RenderType::Clothes);
+        break;
+
+    case CharacterType::_Soccer:
+        pOut->SetMaterialRenderType(0, CharacterRenderer::RenderType::Face);
+        pOut->SetMaterialRenderType(1, CharacterRenderer::RenderType::Skin);
+        pOut->SetMaterialRenderType(2, CharacterRenderer::RenderType::Clothes);
+        break;
+
+    case CharacterType::_Americanfootball:
+        pOut->SetMaterialRenderType(0, CharacterRenderer::RenderType::Face);
+        pOut->SetMaterialRenderType(1, CharacterRenderer::RenderType::Skin);
+        pOut->SetMaterialRenderType(2, CharacterRenderer::RenderType::Clothes);
+        break;
+
+    default:
+        MyAssert(false, "存在しないキャラクタタイプが引数に送られました type= %d ", (int)chr_type);
+        break;
+    }
+
+    //服の色
+    {
+        COLORf col = GetPlayerColorF(PlNum);
+        pOut->m_ClothesColor = Vector3(col.r, col.g, col.b);
+    }
+}
+
+int CharacterBase::GetWinMotion(CharacterType::Value chr_type)
+{
+    int Motions[]=
+    {
+        (int)TennisPlayer::_mt_WinPose,
+        (int)baseball_player::_mb_WinPose,
+        (int)SoccerPlayer::_ms_Win,
+        (int)AmefootPlayer::Motion_Counter,
+    };
+
+    MyAssert((int)chr_type >= 0 && (int)chr_type < 4, "存在しないキャラクタタイプが引数に送られました type= %d ", (int)chr_type);
+
+    return Motions[(int)chr_type];
+}
+
+int CharacterBase::GetLoseMotion(CharacterType::Value chr_type)
+{
+    int Motions[] =
+    {
+        (int)TennisPlayer::_mt_LosePose,
+        (int)baseball_player::_mb_LosePose,
+        (int)SoccerPlayer::_ms_Lose,
+        (int)AmefootPlayer::Motion_CounterFailed,
+    };
+
+    MyAssert((int)chr_type >= 0 && (int)chr_type < 4, "存在しないキャラクタタイプが引数に送られました type= %d ", (int)chr_type);
+
+    return Motions[(int)chr_type];
 }
 
 //当たり判定をとる座標を得る

@@ -157,6 +157,12 @@ void	iexPolygon::Rect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, u32 dwFlags, COLO
 {
 	TLVERTEX	v[4];
 
+    for (int i = 0; i < 4; ++i)
+    {
+        v[i].tu = 0;
+        v[i].tv = 0;
+    }
+
 	v[0].sx = v[2].sx = (FLOAT)DstX;
 	v[1].sx = v[3].sx = (FLOAT)(DstX+DstW);
 

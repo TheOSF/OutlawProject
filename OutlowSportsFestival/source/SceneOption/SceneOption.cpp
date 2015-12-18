@@ -25,7 +25,7 @@ void SceneOption::Update()
         sceneGamePlay::InitParams param;
 
         GameInitializer_UsualMatch::StageType Stage = GameInitializer_UsualMatch::StageType::Kasennziki;
-        const UINT Round = 3;
+        const UINT Round = 1;
         const UINT Frame = 60 * 60 * 2;
 
         param.Round = Round;
@@ -34,7 +34,7 @@ void SceneOption::Update()
 
         //ƒLƒƒƒ‰‘I‘ð
         param.PlayerArray.at(0) = { 0, PlayerType::_Player, CharacterType::_Tennis, StrongType::_Usual };
-        param.PlayerArray.at(1) = { 1, PlayerType::_Computer, CharacterType::_Soccer, StrongType::_Weak };
+        param.PlayerArray.at(1) = { 1, PlayerType::_Computer, CharacterType::_Soccer, StrongType::_Usual };
         param.PlayerArray.at(2) = { 2, PlayerType::_Computer, CharacterType::_Soccer, StrongType::_Usual };
         param.PlayerArray.at(3) = { 3, PlayerType::_Computer, CharacterType::_Soccer, StrongType::_Strong };
 

@@ -210,6 +210,11 @@
     <ClCompile Include="source\Stage\Ground_Manager.cpp" />
     <ClCompile Include="source\character\Tennis\TennisHeartBall.cpp" />
     <ClCompile Include="source\GameSystem\MatchManager.cpp" />
+    <ClCompile Include="source\character\Amefoot\MoveClass\AmefootThrowBall.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_ThrowBall.cpp" />
+    <ClCompile Include="source\SceneResult\CharacterResultUpdater.cpp" />
+    <ClCompile Include="source\UI\SelectMenuUI.cpp" />
+    <ClCompile Include="source\UI\SelectMenuUI_ControllerPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -430,6 +435,12 @@
     <ClInclude Include="source\character\Tennis\TennisHeartBall.h" />
     <ClInclude Include="source\GameScene\SceneGamePlay.h" />
     <ClInclude Include="source\GameSystem\MatchManager.h" />
+    <ClInclude Include="source\Ball\AmefootBoundBall.h" />
+    <ClInclude Include="source\character\Amefoot\MoveClass\AmefootThrowBall.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ThrowBall.h" />
+    <ClInclude Include="source\SceneResult\CharacterResultUpdater.h" />
+    <ClInclude Include="source\UI\SelectMenuUI.h" />
+    <ClInclude Include="source\UI\SelectMenuUI_ControllerPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DATA\Shader\3DEx.fx" />

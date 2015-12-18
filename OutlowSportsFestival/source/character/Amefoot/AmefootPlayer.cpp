@@ -6,7 +6,7 @@
 // [ アメフト ] キャラクタークラス
 //-----------------------------------------------------------------------------------------
 AmefootPlayer::AmefootPlayer(const PlayerInfo& info) :
-CharacterBase(info, new BlendAnimationMesh("DATA\\CHR\\Soccer\\Player_S.iem")),
+CharacterBase(info, new BlendAnimationMesh(GetCharacterModelPath(CharacterType::_Americanfootball))),
      m_ModelSize(0.052f) ,
      m_pStateMachine(new AmefootStateMachine(this))
 {

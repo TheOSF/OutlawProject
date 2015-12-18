@@ -13,14 +13,19 @@
 //------------------------------------------------------
 //	コンストラクタ
 //------------------------------------------------------
-BlendAnimationMesh::BlendAnimationMesh(char* filename)
+BlendAnimationMesh::BlendAnimationMesh(const char* cfilename)
 {
+    char* filename = new char[strlen(cfilename) + 1];
+    strcpy(filename, cfilename);
+
     bLoad = LoadObject(filename);
     MyAssert(bLoad, "読み込みに失敗しました。ファイル名 %s \n", filename);
 
 	for (int i = 0; i<16; i++) Param[i] = 0;
 
 	bLoad = TRUE;
+
+    delete[]filename;
 }
 
 //------------------------------------------------------

@@ -51,7 +51,7 @@ public:
 		bLoad = FALSE;
 		for (int i = 0; i<16; i++) Param[i] = 0;
 	}
-	BlendAnimationMesh(char* filename);
+	BlendAnimationMesh(const char* filename);
 	~BlendAnimationMesh();
 
 	BlendAnimationMesh*	Clone();

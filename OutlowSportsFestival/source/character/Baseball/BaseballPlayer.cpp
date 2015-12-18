@@ -24,7 +24,7 @@ const BaseballPlayer::SkillParam BaseballPlayer::skillparams =
 
 //　コンストラクタ
 BaseballPlayer::BaseballPlayer(const CharacterBase::PlayerInfo& info) :
-CharacterBase(info, new  BlendAnimationMesh("DATA\\CHR\\BaseBall\\player_B.iem")), batterflg(true), m_ModelSize(0.05f), changetime(20),
+CharacterBase(info, new  BlendAnimationMesh(GetCharacterModelPath(CharacterType::_Baseball))), batterflg(true), m_ModelSize(0.05f), changetime(20),
 helmetEquip(nullptr), capEquip(nullptr), batEquip(nullptr), groveEquip(nullptr), changeflg(false)
 {
 	m_pStateMachine = new BaseballStateMachine(this);

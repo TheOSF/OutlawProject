@@ -326,7 +326,7 @@ void EffectFactory::VanishEffect(
     //ブラーエフェクト
     new BlurImpactSphere(
         pDieCharacter->m_Params.pos + Vector3(0, 3, 0),
-        25,
+        10,
         30,
         30
         );

@@ -17,6 +17,7 @@ MatchLightManager& MatchLightManager::GetInstance()
 void MatchLightManager::Release()
 {
     delete m_pInstance;
+    m_pInstance = nullptr;
 }
 
 

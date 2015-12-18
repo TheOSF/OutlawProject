@@ -70,6 +70,12 @@ public:
     static COLOR  GetPlayerColor (PlayerNum::Value number);
     static COLORf GetPlayerColorF(PlayerNum::Value number);
 
+    static const char* GetCharacterModelPath(CharacterType::Value chr_type);
+    static void CreateCharacterModel(CharacterRenderer* pOut, CharacterType::Value chr_type, PlayerNum::Value PlNum);
+
+    static int GetWinMotion(CharacterType::Value chr_type);
+    static int GetLoseMotion(CharacterType::Value chr_type);
+
     //“–‚½‚è”»’è‚ğ‚Æ‚éÀ•W‚ğ“¾‚é
     Vector3 CalcHitCheckPos()const;
 

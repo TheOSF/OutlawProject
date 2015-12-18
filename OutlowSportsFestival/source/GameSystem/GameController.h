@@ -14,6 +14,12 @@ namespace controller
 {
 	typedef int CONTROLLER_NUM;	//コントローラ番号
 
+
+    enum :CONTROLLER_NUM
+    {
+        __ERROR_CONTROLLER_NUM = -1  //コントローラ番号のエラー地値
+    };
+
 	namespace button
 	{
 		enum button_type
@@ -68,11 +74,16 @@ namespace controller
     //押しているかどうか(誰かが)
     bool	GetPushAnyController(button::button_type x);
 
+    //引数の値がスティックの誤差の値以内かどうか
+    bool    isStickAdjustValue(float value);
+
 	// コントローラの状態取得
 	button::button_state GetButtonState(button::button_type x, CONTROLLER_NUM num);
 
+    //スティック(またはカーソル)を倒した瞬間かどうかを得る
+    bool GetStickJustMove(stick::stick_type x, CONTROLLER_NUM num);
 
-	//スティックの傾きの値を得る
+	//スティック(またはカーソル)の傾きの値を得る
 	Vector2 GetStickValue(stick::stick_type x, CONTROLLER_NUM num);
 
 	//指定したコントローラーを振動させる
@@ -82,6 +93,10 @@ namespace controller
         CONTROLLER_NUM num,
         int pattern = 0     //とりあえず０でおｋ
         );
+
+
+    //更新(全体で１フレームに一回呼び出すだけ、使わないで！)
+    void UpdateInfo();
 }
 
 //デフォルトのbuttonセットを設定する

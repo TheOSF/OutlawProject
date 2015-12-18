@@ -6,7 +6,7 @@
 #include    "../../Input/GamePad/GamePadManager.h"
 
 #include <time.h>
-
+#include "../GameSystem/GameController.h"
 
 //*****************************************************************************************************************************
 //
@@ -71,7 +71,9 @@ bool Framework::Update()
     dwCurFrame++;	//	フレーム数更新
     dwGameFrame++;	//	ゲームフレーム数更新
 
-    //	更新処理
+    //	キー更新処理
+    controller::UpdateInfo();
+
 #ifdef OUTLAW2_CONTROLL_TYPE_IEX_INPUT
     for (int i = 0; i < 4; i++)
     {

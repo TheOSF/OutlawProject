@@ -196,6 +196,7 @@ sceneGamePlay::~sceneGamePlay()
 	DefCollisionMgr.Release();
     DefResource.Release();
     DefMatchLightManager.Release();
+    DefMatchManager.Release();
 
     {// Bullet
         DefBulletSystem.ReleaseBulletPhysics();
@@ -255,7 +256,7 @@ void sceneGamePlay::UpdateSceneChange()
     switch (NextSceneType)
     {
     case MatchManager::NextSceneType::GoResult:
-
+        GoResult();
         break;
 
     case MatchManager::NextSceneType::ReturnToOption:
@@ -276,7 +277,6 @@ void sceneGamePlay::GoResult()
 
     //テクスチャに描画
     DefRendererMgr.RenderToTexture(pScreenTexture);
-
 
     //パラメータ作成
     SceneResult::ResultStartParam param;
@@ -309,7 +309,7 @@ void sceneGamePlay::GoResult()
                 if (MostHighRound == it->first->m_Params.win)
                 {
                     param.PlayerList.push_back({ Rank, it->first->m_PlayerInfo.number, it->first->m_PlayerInfo.player_type, it->first->m_PlayerInfo.chr_type });
-                    ChrMap.erase(it);
+                    it = ChrMap.erase(it);
                     continue;
                 }
                 ++it;

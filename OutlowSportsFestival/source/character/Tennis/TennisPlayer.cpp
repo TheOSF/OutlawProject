@@ -43,33 +43,13 @@ enum MotionType
 //*************************************************************
 
 TennisPlayer::TennisPlayer(const CharacterBase::PlayerInfo& info) :
-CharacterBase(info, new BlendAnimationMesh("DATA\\CHR\\SanoTennis\\tennis.iem")),
+CharacterBase(info, new BlendAnimationMesh(GetCharacterModelPath(CharacterType::_Tennis))),
 m_ModelSize(0.055f),
 m_DontBoundBallAtkTimer(0)
 {
 	m_pStateMachine = new TennisStateMachine(this);
 
-    m_Params.maxHP = m_Params.HP = 100;
-
-    //•`‰æŽw’è
-    CharacterRenderer::RenderType Types[3]=
-    {
-        CharacterRenderer::RenderType::Face,
-        CharacterRenderer::RenderType::Skin,
-        CharacterRenderer::RenderType::Clothes,
-    };
-
-    for (int i = 0; i < ARRAYSIZE(Types); ++i)
-    {
-        m_Renderer.SetMaterialRenderType(i, Types[i]);
-    }
-
-    //•ž‚ÌF
-    {
-        COLORf col = GetPlayerColorF(m_PlayerInfo.number);
-        m_Renderer.m_ClothesColor = Vector3(col.r, col.g, col.b);
-    }
-     
+    m_Params.maxHP = m_Params.HP = 100; 
 }
 
 TennisPlayer::~TennisPlayer()

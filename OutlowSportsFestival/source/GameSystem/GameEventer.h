@@ -31,6 +31,7 @@ public:
 	
 	void SetState(State* pState);
     void SetLightChange();
+    void ResultCheck(CharacterBase* pNowWinCharacter);
 
 private:
 

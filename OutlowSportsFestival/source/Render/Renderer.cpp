@@ -1,7 +1,7 @@
 #include "Renderer.h"
 #include "../debug/DebugFunction.h"
 #include "../IexSystem/System.h"
-
+#include "../Camera/Camera.h"
 
 RendererManager* RendererManager::m_pInstance = nullptr;
 
@@ -400,6 +400,8 @@ void RendererManager::RenderToTexture(iex2DObj* pTarget)
 
     //引数のテクスチャをターゲットに
     pTarget->RenderTarget(0);
+
+    DefCamera.Clear();
 
     //描画
     this->Render();

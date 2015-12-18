@@ -17,7 +17,7 @@
 char*	AppTitle = "Outlaw Sports Festival";
 
 BOOL	bFullScreen = FALSE;
-DWORD	ScreenMode = SCREEN900p;
+DWORD	ScreenMode = SCREEN720p;
 
 Framework*	MainFrame = NULL;
 

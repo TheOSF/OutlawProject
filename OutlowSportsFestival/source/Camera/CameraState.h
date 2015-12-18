@@ -9,6 +9,15 @@
 //	カメラの動きクラスヘッダ
 //*********************************************************
 
+//何もしないカメラ
+class CameraStateNoWork :public CameraState
+{
+public:
+
+};
+
+
+
 //試合時のカメラステート
 class CameraStateGamePlay :public CameraState
 {

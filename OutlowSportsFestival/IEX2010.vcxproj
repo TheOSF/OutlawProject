@@ -311,6 +311,7 @@
     <ClCompile Include="source\Render\System\DeferredLightManager.cpp" />
     <ClCompile Include="source\Render\System\SmalBufBlurRenderer.cpp" />
     <ClCompile Include="source\SceneOption\SceneOption.cpp" />
+    <ClCompile Include="source\SceneResult\CharacterResultUpdater.cpp" />
     <ClCompile Include="source\SceneResult\SceneResult.cpp" />
     <ClCompile Include="source\SceneTitle\SceneTitle.cpp" />
     <ClCompile Include="source\Sound\Sound.cpp" />
@@ -332,6 +333,8 @@
     <ClCompile Include="source\UI\PlayerCursorBillbord.cpp" />
     <ClCompile Include="source\UI\PlayerGauge.cpp" />
     <ClCompile Include="source\UI\RoundUI.cpp" />
+    <ClCompile Include="source\UI\SelectMenuUI.cpp" />
+    <ClCompile Include="source\UI\SelectMenuUI_ControllerPlayer.cpp" />
     <ClCompile Include="source\utillity\ColorUtility.cpp" />
     <ClCompile Include="source\utillity\Locus.cpp" />
     <ClCompile Include="source\utillity\LocusBlur.cpp" />
@@ -554,6 +557,7 @@
     <ClInclude Include="source\Render\System\DeferredLightManager.h" />
     <ClInclude Include="source\Render\System\SmalBufBlurRenderer.h" />
     <ClInclude Include="source\SceneOption\SceneOption.h" />
+    <ClInclude Include="source\SceneResult\CharacterResultUpdater.h" />
     <ClInclude Include="source\SceneResult\SceneResult.h" />
     <ClInclude Include="source\SceneTitle\SceneTitle.h" />
     <ClInclude Include="source\Sound\Sound.h" />
@@ -575,6 +579,8 @@
     <ClInclude Include="source\UI\PlayerCursorBillbord.h" />
     <ClInclude Include="source\UI\PlayerGauge.h" />
     <ClInclude Include="source\UI\RoundUI.h" />
+    <ClInclude Include="source\UI\SelectMenuUI.h" />
+    <ClInclude Include="source\UI\SelectMenuUI_ControllerPlayer.h" />
     <ClInclude Include="source\utillity\Collision.h" />
     <ClInclude Include="source\utillity\ColorUtility.h" />
     <ClInclude Include="source\utillity\DebugControllGameObject.h" />
