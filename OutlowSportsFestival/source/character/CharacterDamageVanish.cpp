@@ -108,14 +108,19 @@ void CharacterDamageVanish::Flying()
 
         {
             float angle = Vector3Radian(m_pCharacter->m_Params.move, -chr_func::GetFront(m_pCharacter));
+
             if (m_pCharacter->m_Params.move.y < 0)
             {
                 angle = -angle;
             }
+            else
+            {
+                angle = 0.0f;
+            }
 
             m_VanishAngle += (angle - m_VanishAngle)*0.1f;
+
             D3DXMatrixRotationX(&R, m_VanishAngle);
-            
         }
         //吹き飛び中関数呼び出し
         m_pEvent->Flying(R, 1);
@@ -138,7 +143,7 @@ void CharacterDamageVanish::Flying()
     if (m_WallHit == false)
     {
         Vector3 out, pos(m_pCharacter->m_Params.pos), vec(m_pCharacter->m_Params.move);
-        float dist = m_pCharacter->m_Params.size+ Vector3XZLength(m_pCharacter->m_Params.move)*2.0f;
+        float dist = 10.0f;
         int material;
 
         vec.y = 0;
@@ -152,21 +157,28 @@ void CharacterDamageVanish::Flying()
             &vec,
             &dist,
             &material,
-            CollisionManager::RayType::_Usual
+            CollisionManager::RayType::_Character
             ) != nullptr)
         {
-            m_Count = 0;
-            vec.y = 0;
+            //最近傍点を算出
+            Vector3 ToChr = (m_pCharacter->m_Params.pos - out);
+
+            ToChr.y = 0.0f;
             vec.Normalize();
 
-            chr_func::AngleControll(m_pCharacter, m_pCharacter->m_Params.pos);
+            //壁から一定距離以下の場合
+            if (Vector3Dot(ToChr, vec) < m_pCharacter->m_Params.move.Length() + m_pCharacter->m_Params.size)
+            {
+                m_Count = 0;
 
-            m_pCharacter->m_Params.move = Vector3Zero;
+                m_pCharacter->m_Params.move = Vector3Refrect(m_pCharacter->m_Params.move, vec)*0.5f;
+                chr_func::AngleControll(m_pCharacter, m_pCharacter->m_Params.pos + m_pCharacter->m_Params.move);
 
-            m_pStateFunc = &CharacterDamageVanish::HitWallAndDown;
-            m_WallHit = true;
+                m_pStateFunc = &CharacterDamageVanish::HitWallAndDown;
+                m_WallHit = true;
 
-            DefCamera.SetShock(Vector2(0.3f, 0.3f), 15);
+                DefCamera.SetShock(Vector2(0.3f, 0.3f), 15);
+            }
         }
     }
 
@@ -340,6 +352,7 @@ void CharacterDamageVanish::HitFloorAndStandUp()
     
     //移動更新
     {
+        chr_func::XZMoveDown(m_pCharacter, 0.15f);
         chr_func::UpdateAll(m_pCharacter, m_pHitEvent);
     }
 

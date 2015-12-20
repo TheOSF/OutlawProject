@@ -79,7 +79,7 @@ void CharacterDamageMotion::Update()
         {
             const Vector3 EffectPos = m_pCharacter->m_Params.pos + Vector3(0, 2, 0);
             const Vector3 Glavity(0, -0.02f, 0);
-            const COLORf  EffectColor(1.0f, 0, 0.8f, 1);
+            const COLORf  EffectColor(1.0f, 1, 0.8f, 0);
 
             //‚r‚d
             Sound::Play(Sound::Damage2);
@@ -89,7 +89,7 @@ void CharacterDamageMotion::Update()
             new ImpactLightObject(
                 EffectPos,
                 45,
-                Vector3(0, 0.4f, 1),
+                Vector3(1, 0.4f, 0),
                 0.1f
                 );
 

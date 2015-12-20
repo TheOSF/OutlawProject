@@ -14,6 +14,7 @@ public:
 		CanCounter,
 		Escape
 	};
+
 	CharacterComputerReactionHitEvent(CharacterBase* cb);
 	bool HitDamage;
 	HitType hittype;

@@ -8,6 +8,7 @@
 #include "TennisState_BoundShot.h"
 #include "TennisPlayerState_UsualMove.h"
 
+#include "../CharacterMoveClass.h"
 #include "../../GameSystem/GameController.h"
 #include "../../Camera/Camera.h"
 
@@ -65,7 +66,7 @@ public:
 
             if (controller::GetTRG(controller::button::_R1, pt->m_PlayerInfo.number))
             {// [R1] で [カウンター]
-                pt->SetState(new TennisState_PlayerControll_Counter());
+                pt->SetState(new TennisState_Counter());
                 return;
             }
         }
@@ -112,7 +113,7 @@ public:
 
             if (controller::GetTRG(controller::button::_R1, m_pTennis->m_PlayerInfo.number))
             {// [R1] で [ダブルカウンター！？
-                m_pTennis->SetState(new TennisState_PlayerControll_Counter());
+                m_pTennis->SetState(new TennisState_Counter());
                 return true;
             }
 
@@ -179,7 +180,7 @@ public:
 
             if (controller::GetTRG(controller::button::_R1, m_pTennis->m_PlayerInfo.number))
             {// [R1] で [ダブルカウンター！？
-                m_pTennis->SetState(new TennisState_PlayerControll_Counter());
+                m_pTennis->SetState(new TennisState_Counter());
                 return true;
             }
 
@@ -205,5 +206,35 @@ public:
         }
     };
 
+    //移動イベントクラス
+    class TennisMoveEvent :public CharacterUsualMove::MoveEvent
+    {
+        TennisPlayer* m_pTennis;
+    public:
+        TennisMoveEvent(TennisPlayer* pTennis) :
+            m_pTennis(pTennis){}
+
+        //アニメーションの更新
+        void Update(bool isRun, RATIO speed_ratio)
+        {
+            m_pTennis->m_Renderer.Update(1);
+        }
+        //走り始めにモーションをセット
+        void RunStart()
+        {
+            m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Run);
+        }
+        //立ちはじめにモーションをセット
+        void StandStart()
+        {
+            m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Stand);
+        }
+
+        //走り終わりモーションをセット
+        void RunEnd()
+        {
+            m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_RunEnd);
+        }
+    };
 };
 

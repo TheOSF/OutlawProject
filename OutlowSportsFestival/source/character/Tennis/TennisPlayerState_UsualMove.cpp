@@ -93,37 +93,6 @@ bool TennisState_PlayerControll_Move::SwitchGameState(TennisPlayer* pt)
 //ステート開始
 void TennisState_PlayerControll_Move::Enter(TennisPlayer* t)
 {
-	//移動イベントクラス
-	class TennisMoveEvent :public CharacterUsualMove::MoveEvent
-	{
-		TennisPlayer* m_pTennis;
-	public:
-		TennisMoveEvent(TennisPlayer* pTennis) :
-			m_pTennis(pTennis){}
-
-		//アニメーションの更新
-		void Update(bool isRun, RATIO speed_ratio)
-		{
-			m_pTennis->m_Renderer.Update(1);
-		}
-		//走り始めにモーションをセット
-		void RunStart()
-		{
-			m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Run);
-		}
-		//立ちはじめにモーションをセット
-		void StandStart()
-		{
-			m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Stand);
-		}
-
-        //走り終わりモーションをセット
-        void RunEnd()
-        {
-            m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_RunEnd);
-        }
-	};
-
 	//移動パラメータを代入
 	CharacterUsualMove::Params p;
 
@@ -137,7 +106,7 @@ void TennisState_PlayerControll_Move::Enter(TennisPlayer* t)
 	m_pMoveClass = new CharacterUsualMove(
 		t,
 		p,
-		new TennisMoveEvent(t),
+		new TennisUtillityClass::TennisMoveEvent(t),
 		new TennisHitEvent(t)
 		);
 
@@ -153,7 +122,7 @@ void TennisState_PlayerControll_Move::Execute(TennisPlayer* t)
         //各アクションへ移行可能
         ActionStateSwitch(t);
 
-        //スティックの値をセット
+        //スティックの値を得る
         Vector2 st = controller::GetStickValue(controller::stick::left, t->m_PlayerInfo.number);
         Vector3 st_vec3;
 
@@ -215,13 +184,13 @@ void TennisState_PlayerControll_Move::ActionStateSwitch(TennisPlayer* t)
 
     if (controller::GetTRG(controller::button::_R1, t->m_PlayerInfo.number))
     {// [R1] で [カウンター]
-        t->SetState(new TennisState_PlayerControll_Counter());
+        t->SetState(new TennisState_Counter());
         return;
     }
 
     if (controller::GetTRG(controller::button::_L1, t->m_PlayerInfo.number) &&
         t->isCanBoundBallAtk())
-    {// [L1] で ボールを上に投げる攻撃
+    {// [L1] で ハートショット
         t->SetState(new TennisState_BoundShot(new TennisUtillityClass::PlayerShotControllClass(t)));
         return;
     }

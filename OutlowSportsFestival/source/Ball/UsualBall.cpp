@@ -49,7 +49,8 @@ UsualBall::UsualBall(
         m_Damage.m_Param.pos1 = m_Params.pos;
         m_Damage.m_Param.pos2 = m_Params.pos;
         m_Damage.m_VecPower.x = 0.4f;
-        m_Damage.m_VecPower.y = 0.2f;
+        m_Damage.m_VecPower.y = 0.5f;
+        m_Damage.m_Vec.y = 0.0f;
 
         UpdateDamageClass();
     }
@@ -265,7 +266,15 @@ bool UsualBall::isOutofField()const
 
 void UsualBall::UpdateDamageClass()
 {
-	m_Damage.m_Vec = m_Params.move;
+    
+    {
+        Vector3 DamageVec = m_Params.move;
+        DamageVec.Normalize();
+
+        m_Damage.m_Vec.x = DamageVec.x;
+        m_Damage.m_Vec.z = DamageVec.z;
+    }
+	
 
     m_Damage.m_Param.pos2 = m_Damage.m_Param.pos1;
 
@@ -404,6 +413,7 @@ void UsualBall::Counter(CharacterBase* pCounterCharacter)
     m_Damage.m_VecPower.x = Vector3XZLength(m_Params.move)*1.2f;
     m_Damage.type = DamageBase::Type::_VanishDamage;
     m_Damage.Value += 1.0f; //ダメージを増やす
+    m_Damage.m_Vec.y = 0.4f;
 
     //エフェクト設定
     m_BallEffect.Counter();

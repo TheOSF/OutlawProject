@@ -15,7 +15,7 @@
 //***************************************************
 
 // ステート開始
-void TennisState_PlayerControll_Counter::Enter(TennisPlayer* t)
+void TennisState_Counter::Enter(TennisPlayer* t)
 {
     //カウンターイベントクラス
     class CounterEvent :public CharacterDefaultCounter::Event
@@ -115,7 +115,7 @@ void TennisState_PlayerControll_Counter::Enter(TennisPlayer* t)
 
 
 // ステート実行
-void TennisState_PlayerControll_Counter::Execute(TennisPlayer* t)
+void TennisState_Counter::Execute(TennisPlayer* t)
 {
     
     m_pCounter->SetStickValue(controller::GetStickValue(controller::stick::left, t->m_PlayerInfo.number));
@@ -131,7 +131,7 @@ void TennisState_PlayerControll_Counter::Execute(TennisPlayer* t)
 
 
 // ステート終了
-void TennisState_PlayerControll_Counter::Exit(TennisPlayer* t)
+void TennisState_Counter::Exit(TennisPlayer* t)
 {
 	delete m_pCounter;
 }

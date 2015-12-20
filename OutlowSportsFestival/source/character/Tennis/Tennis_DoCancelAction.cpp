@@ -4,6 +4,7 @@
 
 #include "TennisSpecialAtk.h"
 #include "TennisUtillityClass.h"
+#include "Computer\TennisComputerReactionEvent.h"
 
 //ベースクラス
 Tennis_DoCancelAction::Tennis_DoCancelAction(TennisPlayer* pTennis) :
@@ -63,7 +64,7 @@ bool Tennis_DoCancelAction_Player::DoAction()
 
     if (isCanAction(Counter) && controller::GetTRG(controller::button::_R1, t->m_PlayerInfo.number))
     {// [R1] で [カウンター]
-        t->SetState(new TennisState_PlayerControll_Counter());
+        t->SetState(new TennisState_Counter());
         return true;
     }
 
@@ -81,6 +82,18 @@ bool Tennis_DoCancelAction_Player::DoAction()
 //コンピューター用
 Tennis_DoCancelAction_Computer::Tennis_DoCancelAction_Computer(TennisPlayer* pTennis) :
 Tennis_DoCancelAction(pTennis)
+{
+    {
+        //反応クラス
+        CharacterComputerMove::Param Param;
+
+        CharacterComputerMove::GetParams(Param, pTennis->m_PlayerInfo.strong_type);
+
+        m_pReaction = new CharacterComputerReaction(pTennis, Param, new TennisComputerReactionEvent(pTennis));
+    }
+}
+
+Tennis_DoCancelAction_Computer::~Tennis_DoCancelAction_Computer()
 {
 
 }

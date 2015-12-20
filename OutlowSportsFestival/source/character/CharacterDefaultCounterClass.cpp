@@ -63,14 +63,6 @@ void CharacterDefaultCounter::Update()
 void CharacterDefaultCounter::SetStickValue(CrVector2 stick)
 {
     m_Stick = stick;
-
-    //ƒJƒƒ‰Šî€‚É•ÏŠ·
-    Vector3 temp(m_Stick.x, m_Stick.y, 0);
-    
-    temp = Vector3MulMatrix3x3(temp, matView);
-
-    m_Stick.x = temp.x;
-    m_Stick.y = temp.y;
 }
 
 

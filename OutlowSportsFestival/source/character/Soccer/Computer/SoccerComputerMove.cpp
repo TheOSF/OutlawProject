@@ -53,7 +53,7 @@ bool SoccerState_ComputerControll_Move::SwitchGameState(SoccerPlayer* ps)
 //ステート開始
 void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 {
-	m_pMoveControllClass->GetParams(cParam, s->m_PlayerInfo.strong_type);
+    CharacterComputerMove::GetParams(cParam, s->m_PlayerInfo.strong_type);
 	Dashpro = 250 - (int)(cParam.ActionFrequence * 100);
 	//移動イベントクラス
 	class SoccerMoveEvent :public CharacterUsualMove::MoveEvent
@@ -154,8 +154,7 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 		}
 
 	};
-	CharacterComputerMove::Param cParam;
-	m_pMoveControllClass->GetParams(cParam, s->m_PlayerInfo.strong_type);
+
 	//攻撃クラスの作成
 	m_pDoActionClass = new CharacterComputerDoAction(
 		s, 
@@ -219,6 +218,7 @@ void SoccerState_ComputerControll_Move::Execute(SoccerPlayer* s)
 		m_pMoveClass->SetStickValue(m_pMoveControllClass->SwitchAction(s));
 		m_pDoActionClass->Update();
 		m_pReactionClass->Update();
+
 		if (rand() %  Dashpro == 0)
 		{
 			s->SetState(new SoccerState_ComputerControll_Dash(s));

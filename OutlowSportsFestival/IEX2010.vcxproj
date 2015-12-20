@@ -227,6 +227,7 @@
     <ClCompile Include="source\character\Soccer\SoccerRolling.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerSliding.cpp" />
     <ClCompile Include="source\character\Tennis\Computer\TennisPlayerState_ComMove.cpp" />
+    <ClCompile Include="source\character\Tennis\Computer\TennisComputerReactionEvent.cpp" />
     <ClCompile Include="source\character\Tennis\TennisAttackClass.cpp" />
     <ClCompile Include="source\character\Tennis\TennisAttackInfo_UsualAtk.cpp" />
     <ClCompile Include="source\character\Tennis\TennisHeartBall.cpp" />
@@ -310,6 +311,7 @@
     <ClCompile Include="source\Render\System\DeferredLightBufRenderer.cpp" />
     <ClCompile Include="source\Render\System\DeferredLightManager.cpp" />
     <ClCompile Include="source\Render\System\SmalBufBlurRenderer.cpp" />
+    <ClCompile Include="source\SceneCharacterSelect\SceneCharacterSelect.cpp" />
     <ClCompile Include="source\SceneOption\SceneOption.cpp" />
     <ClCompile Include="source\SceneResult\CharacterResultUpdater.cpp" />
     <ClCompile Include="source\SceneResult\SceneResult.cpp" />
@@ -468,7 +470,9 @@
     <ClInclude Include="source\character\Soccer\SoccerPlayerState_PoseMotion.h" />
     <ClInclude Include="source\character\Soccer\SoccerRolling.h" />
     <ClInclude Include="source\character\Soccer\SoccerSliding.h" />
+    <ClInclude Include="source\character\Tennis\Computer\TennisComputerUtillityClass.h" />
     <ClInclude Include="source\character\Tennis\Computer\TennisPlayerState_ComMove.h" />
+    <ClInclude Include="source\character\Tennis\Computer\TennisComputerReactionEvent.h" />
     <ClInclude Include="source\character\Tennis\TennisAttackClass.h" />
     <ClInclude Include="source\character\Tennis\TennisAttackInfo_UsualAtk.h" />
     <ClInclude Include="source\character\Tennis\TennisHeartBall.h" />
@@ -556,6 +560,7 @@
     <ClInclude Include="source\Render\System\DeferredLightBufRenderer.h" />
     <ClInclude Include="source\Render\System\DeferredLightManager.h" />
     <ClInclude Include="source\Render\System\SmalBufBlurRenderer.h" />
+    <ClInclude Include="source\SceneCharacterSelect\SceneCharacterSelect.h" />
     <ClInclude Include="source\SceneOption\SceneOption.h" />
     <ClInclude Include="source\SceneResult\CharacterResultUpdater.h" />
     <ClInclude Include="source\SceneResult\SceneResult.h" />

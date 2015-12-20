@@ -1,15 +1,14 @@
-#ifndef __TENNIS_PLAYER_STATE_COUNTER_H__
-#define __TENNIS_PLAYER_STATE_COUNTER_H__
+#pragma once
 
 #include "TennisPlayer.h"
 #include "../../GameSystem/ForwardDecl.h"
 
 //***************************************************
-//		プレイヤー操作の カウンタークラス
+//		テニスカウンターステートクラス
 //***************************************************
 
 
-class TennisState_PlayerControll_Counter : public TennisState
+class TennisState_Counter : public TennisState
 {
 public:
     // ステート開始
@@ -25,7 +24,3 @@ private:
     // カウンタークラス作成
     CharacterDefaultCounter* m_pCounter; // カウンタークラス
 };
-
-
-
-#endif

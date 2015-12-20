@@ -25,7 +25,7 @@ void SceneOption::Update()
         sceneGamePlay::InitParams param;
 
         GameInitializer_UsualMatch::StageType Stage = GameInitializer_UsualMatch::StageType::Kasennziki;
-        const UINT Round = 1;
+        const UINT Round = 2;
         const UINT Frame = 60 * 60 * 2;
 
         param.Round = Round;

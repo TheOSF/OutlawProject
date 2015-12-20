@@ -1,6 +1,10 @@
 #pragma once
 
 #include "TennisPlayer.h"
+
+#include "../Computer/CharacterComputerDoAction.h"
+#include "../Computer/CharacterComputerReaction.h"
+
 #include <bitset>
 
 //----------------------------------------------------------------//
@@ -53,6 +57,15 @@ public:
 class Tennis_DoCancelAction_Computer :public Tennis_DoCancelAction
 {
 public:
+
     Tennis_DoCancelAction_Computer(TennisPlayer* pTennis);
+    ~Tennis_DoCancelAction_Computer();
+
     bool DoAction()override;
+
+private:
+
+    CharacterComputerReaction*    m_pReaction;
+    CharacterComputerDoAction*    m_pDoAction;
+
 };
