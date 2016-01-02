@@ -322,7 +322,7 @@ void SelectMenuUI::SelectUpdate(bool NoSelect)
         else
         {
             //‘I‘ğ“x‡‚¢‚ğ‰º‚°‚é
-            it.SelectRatio *= 0.2f;
+            it.SelectRatio *= 0.1f;
         }
     }
 

@@ -24,11 +24,12 @@ const BaseballPlayer::SkillParam BaseballPlayer::skillparams =
 
 //　コンストラクタ
 BaseballPlayer::BaseballPlayer(const CharacterBase::PlayerInfo& info) :
-CharacterBase(info, new  BlendAnimationMesh(GetCharacterModelPath(CharacterType::_Baseball))), batterflg(true), m_ModelSize(0.05f), changetime(20),
+CharacterBase(info, new  BlendAnimationMesh(GetCharacterModelPath(CharacterType::_Baseball))), batterflg(true),  changetime(20),
 helmetEquip(nullptr), capEquip(nullptr), batEquip(nullptr), groveEquip(nullptr), changeflg(false)
 {
 	m_pStateMachine = new BaseballStateMachine(this);
 	SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(this));
+
 	//　体力低下(デバック用)
 	m_Params.maxHP = m_Params.HP = 100;
 	
@@ -36,7 +37,7 @@ helmetEquip(nullptr), capEquip(nullptr), batEquip(nullptr), groveEquip(nullptr),
 	helmetEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Helmet);
 	batEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Bat);
 	
-
+    m_ModelSize = 0.05f;
 }
 
 //　デストラクタ

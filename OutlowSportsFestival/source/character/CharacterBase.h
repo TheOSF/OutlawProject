@@ -63,6 +63,7 @@ public:
 	const PlayerInfo	m_PlayerInfo; //プレイヤー情報にする構造体
 	Params				m_Params;     //キャラクタ基本パラメーター
     CharacterRenderer	m_Renderer;   //レンダラ
+    float               m_ModelSize;  //モデルスケール
    
     CharacterBase(const PlayerInfo& info, BlendAnimationMesh* pMesh);
 	virtual ~CharacterBase();

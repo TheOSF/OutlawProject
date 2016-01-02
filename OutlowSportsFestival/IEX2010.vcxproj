@@ -160,6 +160,7 @@
     <ClCompile Include="source\character\Baseball\BaseballEquip.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballState_PoseMotion.cpp" />
     <ClCompile Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.cpp" />
+    <ClCompile Include="source\character\CharacterDamageControll.cpp" />
     <ClCompile Include="source\character\CharacterHitEventFunc.cpp" />
     <ClCompile Include="source\character\Computer\CharacterComputerDoAction.cpp" />
     <ClCompile Include="source\character\Computer\CharacterComputerReaction.cpp" />
@@ -238,6 +239,7 @@
     <ClCompile Include="source\character\Tennis\TennisPlayerState_SlowUpBall.cpp" />
     <ClCompile Include="source\character\Tennis\TennisSpecialAtk.cpp" />
     <ClCompile Include="source\character\Tennis\TennisState_BoundBall.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisState_ControllVanish.cpp" />
     <ClCompile Include="source\character\Tennis\TennisState_Rolling.cpp" />
     <ClCompile Include="source\character\Tennis\TennisPlayerState_Vanish.cpp" />
     <ClCompile Include="source\character\Tennis\Tennis_DoCancelAction.cpp" />
@@ -251,6 +253,7 @@
     <ClCompile Include="source\Collision\GameObjectCollisionMesh.cpp" />
     <ClCompile Include="source\Damage\Damage.cpp" />
     <ClCompile Include="source\Damage\DamageCheckObject.cpp" />
+    <ClCompile Include="source\Damage\DamageControll_Transform.cpp" />
     <ClCompile Include="source\debug\DebugDraw.cpp" />
     <ClCompile Include="source\Effect\AnimationBordRenderer.cpp" />
     <ClCompile Include="source\Effect\BlurImpact.cpp" />
@@ -311,6 +314,7 @@
     <ClCompile Include="source\Render\System\DeferredLightBufRenderer.cpp" />
     <ClCompile Include="source\Render\System\DeferredLightManager.cpp" />
     <ClCompile Include="source\Render\System\SmalBufBlurRenderer.cpp" />
+    <ClCompile Include="source\SceneCharacterSelect\CursorObject.cpp" />
     <ClCompile Include="source\SceneCharacterSelect\SceneCharacterSelect.cpp" />
     <ClCompile Include="source\SceneOption\SceneOption.cpp" />
     <ClCompile Include="source\SceneResult\CharacterResultUpdater.cpp" />
@@ -400,6 +404,7 @@
     <ClInclude Include="source\character\Baseball\BaseballEquip.h" />
     <ClInclude Include="source\character\Baseball\BaseballState_PoseMotion.h" />
     <ClInclude Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.h" />
+    <ClInclude Include="source\character\CharacterDamageControll.h" />
     <ClInclude Include="source\character\CharacterHitEventFunc.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerDoAction.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerReaction.h" />
@@ -483,6 +488,7 @@
     <ClInclude Include="source\character\Tennis\TennisPlayerState_SlowUpBall.h" />
     <ClInclude Include="source\character\Tennis\TennisSpecialAtk.h" />
     <ClInclude Include="source\character\Tennis\TennisState_BoundBall.h" />
+    <ClInclude Include="source\character\Tennis\TennisState_ControllVanish.h" />
     <ClInclude Include="source\character\Tennis\TennisState_Rolling.h" />
     <ClInclude Include="source\character\Tennis\TennisPlayerState_Vanish.h" />
     <ClInclude Include="source\character\Tennis\TennisState_BoundShot.h" />
@@ -497,6 +503,7 @@
     <ClInclude Include="source\Collision\GameObjectCollisionMesh.h" />
     <ClInclude Include="source\Damage\Damage.h" />
     <ClInclude Include="source\Damage\DamageCheckObject.h" />
+    <ClInclude Include="source\Damage\DamageControll_Transform.h" />
     <ClInclude Include="source\debug\DebugDraw.h" />
     <ClInclude Include="source\debug\DebugFunction.h" />
     <ClInclude Include="source\Effect\AnimationBordRenderer.h" />
@@ -560,6 +567,7 @@
     <ClInclude Include="source\Render\System\DeferredLightBufRenderer.h" />
     <ClInclude Include="source\Render\System\DeferredLightManager.h" />
     <ClInclude Include="source\Render\System\SmalBufBlurRenderer.h" />
+    <ClInclude Include="source\SceneCharacterSelect\CursorObject.h" />
     <ClInclude Include="source\SceneCharacterSelect\SceneCharacterSelect.h" />
     <ClInclude Include="source\SceneOption\SceneOption.h" />
     <ClInclude Include="source\SceneResult\CharacterResultUpdater.h" />

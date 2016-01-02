@@ -237,7 +237,7 @@ void TennisHeartBall::Move()
 
 float TennisHeartBall::CalcScale()
 {
-    const float Scale = 0.15f;
+    const float Scale = 0.125f;
 
     m_ScaleMove += (Scale - m_ScaleCount)*0.05f;
     m_ScaleCount += m_ScaleMove;
@@ -292,8 +292,9 @@ void TennisHeartBall::Counter(CharacterBase* pCounterCharacter)
 {
     m_isLive = false;
     m_Damage.pParent = pCounterCharacter;
+    m_Damage.m_Enable = false;
 
-    Effect(15);
+    Effect(10);
 
     SmokeEffect();
 }

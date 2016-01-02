@@ -7,10 +7,9 @@
 //-----------------------------------------------------------------------------------------
 AmefootPlayer::AmefootPlayer(const PlayerInfo& info) :
 CharacterBase(info, new BlendAnimationMesh(GetCharacterModelPath(CharacterType::_Americanfootball))),
-     m_ModelSize(0.052f) ,
      m_pStateMachine(new AmefootStateMachine(this))
 {
-
+    m_ModelSize = (0.052f);
 }
 //-----------------------------------------------------------------------------------------
 AmefootPlayer::~AmefootPlayer()

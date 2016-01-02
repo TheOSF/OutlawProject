@@ -22,7 +22,7 @@ public:
     //•¨—ƒpƒ‰ƒ[ƒ^
     struct PhysicsParam
     {
-        float Height;
+        //float Height;
         float Mass;
         float Friction;
         float Radius;

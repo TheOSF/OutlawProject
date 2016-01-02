@@ -217,6 +217,10 @@
     <ClCompile Include="source\UI\SelectMenuUI_ControllerPlayer.cpp" />
     <ClCompile Include="source\SceneCharacterSelect\SceneCharacterSelect.cpp" />
     <ClCompile Include="source\character\Tennis\Computer\TennisComputerReactionEvent.cpp" />
+    <ClCompile Include="source\SceneCharacterSelect\CursorObject.cpp" />
+    <ClCompile Include="source\character\CharacterDamageControll.cpp" />
+    <ClCompile Include="source\Damage\DamageControll_Transform.cpp" />
+    <ClCompile Include="source\character\Tennis\TennisState_ControllVanish.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -446,6 +450,10 @@
     <ClInclude Include="source\SceneCharacterSelect\SceneCharacterSelect.h" />
     <ClInclude Include="source\character\Tennis\Computer\TennisComputerUtillityClass.h" />
     <ClInclude Include="source\character\Tennis\Computer\TennisComputerReactionEvent.h" />
+    <ClInclude Include="source\SceneCharacterSelect\CursorObject.h" />
+    <ClInclude Include="source\character\CharacterDamageControll.h" />
+    <ClInclude Include="source\Damage\DamageControll_Transform.h" />
+    <ClInclude Include="source\character\Tennis\TennisState_ControllVanish.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DATA\Shader\3DEx.fx" />

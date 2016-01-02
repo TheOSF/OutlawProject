@@ -3,6 +3,7 @@
 
 #include "iextreme.h"
 #include "../GameSystem/ForwardDecl.h"
+#include "../Damage/DamageControll_Transform.h"
 #include <map>
 #include <bitset>
 #include <array>
@@ -37,14 +38,16 @@ public:
     {
     public:
         virtual ~HitCallBack(){}
-        virtual void Hit(const SphereParam* sp) = 0;
+
+        virtual void Hit(const SphereParam* sp) = 0;       //ダメージが当たったときに自動で呼ばれる
+        virtual void HitCharacter(CharacterBase* pHitCharacter) = 0; //キャラクタに当たったときに呼ばれる
     };
 
 	enum Type
 	{
 		_WeekDamage,	//怯みのみのダメージ
 		_VanishDamage,	//吹き飛びダメージ
-		_UpDamage,		//上に吹き飛ぶ(バレーとか)追撃可能
+		_ControllDamage,//キャラクタの体勢を制御できるダメージ
 	};
 
     enum class Option
@@ -153,9 +156,44 @@ private:
 };
 
 
+//*************************************************************
+//	姿勢制御ダメージクラス(形状は球)
+//*************************************************************
 
+class DamageControllVanish :public DamageBase
+{
+public:
+    //ゲッタークラス
+    class GetDamageControllTransformClass
+    {
+    public:
+        virtual ~GetDamageControllTransformClass(){}
 
+        //ダメージがヒットしたときにGet関数が呼ばれる、当たったキャラクタを操作するDamageControll_Transformクラスを返さなくてはならない
+        virtual DamageControll_Transform* Get() = 0;
+    };
 
+    bool			            m_Enable;	//このダメージが有効かどうか(当たった瞬間固定される)
+    SphereParam		            m_Param;	//このダメージの球の構造体
+
+    //コンストラクタ
+    DamageControllVanish(
+        GetDamageControllTransformClass*     pGetDamageControllClass  //デストラクタでdeleteする
+        );
+
+    ~DamageControllVanish();
+
+    bool HitCheckSphere(const SphereParam* sp);
+    void CalcPosVec(CrVector3 hit_pos, Vector3* pOutPos, Vector3* pOutVec);
+
+    //キャラクタを操作するクラスを得る(実装によってはfactoryの場合もある
+    DamageControll_Transform* GetDamageControll_Transform();
+
+private:
+    GetDamageControllTransformClass* const    m_pGetDamageControllClass;
+
+    void DebugDraw();
+};
 
 
 

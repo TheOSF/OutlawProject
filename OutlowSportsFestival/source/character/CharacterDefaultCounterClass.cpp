@@ -404,6 +404,13 @@ void CharacterDefaultCounter::Shot()
     //ボール打ち返すぜ！
     if (m_Count == 1)
     {
+        //カウンターするボールがカウンターできない状態なら打ち返し失敗ステートへ移行
+        if (DefBallMgr.isBallEnable(m_counterBallID) == false)
+        {
+            SetState(&CharacterDefaultCounter::Failed);
+            return;
+        }
+
         //ボールの移動値を計算
         float m = m_pCounterBall->m_Params.move.Length()*1.1f;
         m = min(m, 2.5f);

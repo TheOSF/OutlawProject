@@ -81,13 +81,13 @@ namespace EffectFactory
 
     //攻撃ヒット時のエフェクト
     void HitEffect(
-        CharacterBase* pDieCharacter,
+        CharacterBase* pHitCharacter,
         CrVector3      Damage_Vec
         );
 
     //吹き飛び攻撃くらい時のエフェクト
     void VanishEffect(
-        CharacterBase* pDieCharacter,
+        CharacterBase* pHitCharacter,
         CrVector3      Damage_Vec
         );
 

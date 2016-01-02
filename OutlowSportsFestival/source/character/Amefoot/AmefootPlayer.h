@@ -27,8 +27,6 @@ public:
      void SetState(AmefootState* state , bool important = false);
 
 
-     const float m_ModelSize;
-
 public:
      enum MotionType
      {

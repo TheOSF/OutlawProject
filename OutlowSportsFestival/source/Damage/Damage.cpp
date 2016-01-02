@@ -305,6 +305,68 @@ void DamageCapsure::DebugDraw()
         );
 }
 
+//*************************************************************
+//	姿勢制御ダメージクラス(形状は球)
+//*************************************************************
+
+
+//コンストラクタ
+DamageControllVanish::DamageControllVanish(
+    GetDamageControllTransformClass*     pGetDamageControllClass  //デストラクタでdeleteする
+    ):
+    m_pGetDamageControllClass(pGetDamageControllClass)
+{
+
+}
+
+DamageControllVanish::~DamageControllVanish()
+{
+    delete m_pGetDamageControllClass;
+}
+
+bool DamageControllVanish::HitCheckSphere(const SphereParam* sp)
+{
+    if (!m_Enable)
+    {
+        return false;
+    }
+    const float L = Vector3Length(sp->pos - this->m_Param.pos);
+
+    return L < (sp->size + this->m_Param.size);
+}
+
+void DamageControllVanish::CalcPosVec(CrVector3 hit_pos, Vector3* pOutPos, Vector3* pOutVec)
+{
+    *pOutPos = hit_pos;
+    *pOutVec = Vector3Normalize(hit_pos - m_Param.pos);
+}
+
+DamageControll_Transform* DamageControllVanish::GetDamageControll_Transform()
+{
+    return m_pGetDamageControllClass->Get();
+}
+
+void DamageControllVanish::DebugDraw()
+{
+    COLORf color(0.75f, 0, 0, 0);
+
+    if (!m_Enable)
+    {
+        return;
+    }
+
+    if (pParent)
+    {
+        color.SetColor(CharacterBase::GetPlayerColor(pParent->m_PlayerInfo.number));
+        color.a = 0.4f;
+    }
+
+    new DebugDrawSphere(
+        m_Param.pos,
+        m_Param.size,
+        color
+        );
+}
 
 //*************************************************************
 //		ダメージ判定マネージャ

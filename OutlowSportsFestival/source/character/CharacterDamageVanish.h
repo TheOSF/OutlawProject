@@ -3,6 +3,7 @@
 #include "iextreme.h"
 #include "../GameSystem/ForwardDecl.h"
 #include "../Damage/Damage.h"
+#include "../utillity/LocusHDR.h"
 
 //***************************************************
 //		キャラクター共通 吹き飛びひるみクラス
@@ -66,6 +67,7 @@ private:
     bool            m_WallHit;
     bool            m_FirstSlow;
     float           m_VanishAngle;
+    LocusHDR        m_Locus;
 
     void(CharacterDamageVanish::*m_pStateFunc)();
 
@@ -77,5 +79,7 @@ private:
 
     void HitWallAndDown();
     void HitFloorAndStandUp();
+
+    void LocusUpdate(bool FadeOut);
 };
 

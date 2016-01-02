@@ -160,7 +160,7 @@ void HitEffectObject::SetGlLocus(
     for (int i = 0; i < (int)(m_Particle_level) * 3; ++i)
     {
         g = new GlavityLocus(
-            pos, move + Vector3Rand() * 0.4f, power, 4, 60 + rand() % 30
+            pos, move + Vector3Rand() * 0.4f, power, 6, 60 + rand() % 30
             );
 
         g->m_BoundRatio = 0.2f;

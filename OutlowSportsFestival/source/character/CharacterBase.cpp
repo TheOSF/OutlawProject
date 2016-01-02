@@ -35,11 +35,8 @@ m_Renderer(pMesh)
 	m_Params.angle = 0;
 	m_Params.HP = 100;
     m_Params.maxHP = 100;
-	m_Params.SP = 0;
+	m_Params.SP = 1;
     m_Params.size = 1.8f;
-
-    //カーソルＵＩ
-    new PlayerCursorBillbord(this);
 
     //ゲージ
     new PlayerGauge(this);

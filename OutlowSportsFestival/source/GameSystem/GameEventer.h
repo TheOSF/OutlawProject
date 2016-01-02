@@ -68,6 +68,21 @@ namespace MatchState
 		void Exit(_Client_type_ptr);
 	};
 
+    //プレイヤー操作のキャラクタに矢印を出す
+    class PlayerCharacterDrawCursor :public GameEventer::State
+    {
+    private:
+        UINT m_Frame;
+        UINT m_ChrNum;
+
+        bool GetEffectChr(CharacterBase** ppOut, UINT ChrNum);
+        void Effect(CharacterBase* p);
+
+        void Enter(_Client_type_ptr);
+        void Execute(_Client_type_ptr);
+        void Exit(_Client_type_ptr);
+    };
+
     //２ラウンド目以降の開始ステート
     class RoundResetCountdown :public GameEventer::State
     {

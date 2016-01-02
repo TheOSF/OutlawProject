@@ -17,6 +17,7 @@ public:
         Die,      //死亡ステート
         Weak_Hit, //弱ひるみステート
         Vanish_Hit,//吹き飛びステート
+        Controll_Hit,//吹き飛びコントロールステート
 
         _None, //何もしなくてよい
     };

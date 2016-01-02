@@ -44,12 +44,13 @@ enum MotionType
 
 TennisPlayer::TennisPlayer(const CharacterBase::PlayerInfo& info) :
 CharacterBase(info, new BlendAnimationMesh(GetCharacterModelPath(CharacterType::_Tennis))),
-m_ModelSize(0.055f),
 m_DontBoundBallAtkTimer(0)
 {
 	m_pStateMachine = new TennisStateMachine(this);
 
     m_Params.maxHP = m_Params.HP = 100; 
+
+    m_ModelSize = 0.055f;
 }
 
 TennisPlayer::~TennisPlayer()

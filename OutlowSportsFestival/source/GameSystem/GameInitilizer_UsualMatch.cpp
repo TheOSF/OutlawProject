@@ -17,6 +17,7 @@
 #include "../Stage/Ground_Manager.h"
 #include "../Stage/Kasenziki_Manager.h"
 #include "../Item/Item_BellEmitter.h"
+#include "../Camera/CameraState.h"
 
 
 static void CreateCharacter(
@@ -88,7 +89,7 @@ void GameInitializer_UsualMatch::GameCreate()
         param.time = m_Param.Time;
         // param.time = 60 * 3;
 
-        new GameEventer(param, new MatchState::RoundResetCountdown());
+        new GameEventer(param, new MatchState::PlayerCharacterDrawCursor());
     }
 
 
@@ -102,6 +103,10 @@ void GameInitializer_UsualMatch::GameCreate()
     }
 
 
+    //試合中のカメラをセット
+    {
+        DefCamera.SetNewState(new CameraStateGamePlay());
+    }
 
 
     //ステージ作成

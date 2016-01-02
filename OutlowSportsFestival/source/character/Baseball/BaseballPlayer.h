@@ -78,8 +78,6 @@ public:
 	BaseballPlayer(const CharacterBase::PlayerInfo& info);
 	~BaseballPlayer();
 
-	const float m_ModelSize;
-
 	void SetState(BaseballState* state, int Important = 0);
 	bool Update();
 	bool CharacterMsg(MsgType mt);

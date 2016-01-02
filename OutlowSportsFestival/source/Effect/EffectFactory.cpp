@@ -267,14 +267,14 @@ void EffectFactory::ParticleHDR(
 
 //攻撃ヒット時のエフェクト
 void EffectFactory::HitEffect(
-    CharacterBase* pDieCharacter,
+    CharacterBase* pHitCharacter,
     CrVector3      Damage_Vec
     )
 {
 
     //ヒットエフェクト作成
     new HitEffectObject(
-        pDieCharacter->m_Params.pos + Vector3(0, 3, 0) + Damage_Vec*3.5f,
+        pHitCharacter->m_Params.pos + Vector3(0, 3, 0) + Damage_Vec*3.5f,
         Damage_Vec,
         0.045f,
         0.15f,
@@ -306,16 +306,16 @@ void EffectFactory::HitEffect(
 
 //吹き飛び攻撃くらい時のエフェクト
 void EffectFactory::VanishEffect(
-    CharacterBase* pDieCharacter,
+    CharacterBase* pHitCharacter,
     CrVector3      Damage_Vec
     )
 {
-    COLORf EffectColor(CharacterBase::GetPlayerColor(pDieCharacter->m_PlayerInfo.number));
+    COLORf EffectColor(CharacterBase::GetPlayerColor(pHitCharacter->m_PlayerInfo.number));
 
 
     //ヒットエフェクト作成
     new HitEffectObject(
-        pDieCharacter->m_Params.pos + Vector3(0, 3, 0),
+        pHitCharacter->m_Params.pos + Vector3(0, 3, 0),
         Damage_Vec,
         0.045f,
         0.15f,
@@ -325,7 +325,7 @@ void EffectFactory::VanishEffect(
 
     //ブラーエフェクト
     new BlurImpactSphere(
-        pDieCharacter->m_Params.pos + Vector3(0, 3, 0),
+        pHitCharacter->m_Params.pos + Vector3(0, 3, 0),
         10,
         30,
         30

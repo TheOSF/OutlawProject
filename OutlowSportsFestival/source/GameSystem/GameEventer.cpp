@@ -18,6 +18,7 @@
 #include "../Sound/Sound.h"
 #include "MatchLightManager.h"
 #include "MatchManager.h"
+#include "../UI/PlayerCursorBillbord.h"
 
 
 //----------------------------------------------------
@@ -167,6 +168,96 @@ void MatchState::StartCountdown::Exit(_Client_type_ptr p)
 {
 
 }
+
+
+//------------------------------------------------------------
+//       プレイヤー操作のキャラクタに矢印を出すステート
+//------------------------------------------------------------
+
+bool MatchState::PlayerCharacterDrawCursor::GetEffectChr(CharacterBase** ppOut, UINT ChrNum)
+{
+
+    UINT CalcCount = 0;
+    *ppOut = nullptr;
+
+    for (auto &it : DefCharacterMgr.GetCharacterMap())
+    {
+
+        if (it.first->m_PlayerInfo.player_type == PlayerType::_Player)
+        {
+            if (CalcCount == ChrNum)
+            {
+                *ppOut = it.first;
+
+                return true;
+            }
+            else
+            {
+                ++CalcCount;
+            }
+        }
+    }
+    
+    return false;
+}
+
+void MatchState::PlayerCharacterDrawCursor::Effect(CharacterBase* p)
+{
+    //カーソルＵＩ
+    PlayerCursorBillbord* UI = new PlayerCursorBillbord(p);;
+    UI->LightUp(40);
+
+    //振動
+    chr_func::SetControllerShock(p, 0.6f, 0.5f);
+
+}
+
+void MatchState::PlayerCharacterDrawCursor::Enter(_Client_type_ptr p)
+{
+    m_Frame = 60;
+    m_ChrNum = 0;
+}
+
+void MatchState::PlayerCharacterDrawCursor::Execute(_Client_type_ptr p)
+{
+    CharacterBase* pEffectChr = nullptr;
+
+    //カウント中なら処理しない
+    if (m_Frame > 0)
+    {
+        --m_Frame;
+        return;
+    }
+
+    //カウントセット
+    m_Frame = 60;
+
+    //エフェクトを出すキャラクタを得る
+    if (GetEffectChr(&pEffectChr, m_ChrNum))
+    {
+        //キャラクタにセット
+        Effect(pEffectChr);
+
+        //キャラクタカウント加算
+        ++m_ChrNum;
+    }
+    else
+    {
+        //エフェクトを出すキャラクタがいなかった！！
+
+        //ステートを開始ステートに
+        p->SetState(new RoundResetCountdown());
+    }
+}
+
+void MatchState::PlayerCharacterDrawCursor::Exit(_Client_type_ptr p)
+{
+
+}
+
+
+
+
 
 //--------------------------------------------------
 //         ２ラウンド目以降の開始ステート

@@ -17,7 +17,7 @@ m_pSource(nullptr)
 
     for (UINT i = 0; i < m_TextureNum; ++i)
     {
-        division = (DWORD)pow(2, (int)i + 1);
+        division = (DWORD)pow(2, (int)(min(i, 3)) + 1);
 
         m_pWorkTextureSizes[i].x = iexSystem::ScreenWidth / division;
         m_pWorkTextureSizes[i].y = iexSystem::ScreenHeight / division;

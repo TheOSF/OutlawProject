@@ -17,6 +17,7 @@ public:
 
     ~PlayerCursorBillbord();
 
+    void LightUp(UINT Frame);
 
 private:
     
@@ -25,6 +26,7 @@ private:
     RectI                      m_TextureRect;
     RectI                      m_DrawRect;
     RATIO                      m_Alpha;
+    UINT                       m_LightUpFrameCount;
     
     bool Update()override;
     bool Msg(MsgType mt)override;

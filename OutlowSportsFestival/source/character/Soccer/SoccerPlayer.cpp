@@ -23,8 +23,7 @@ const SoccerPlayer::SkillParam SoccerPlayer::skillparams =
 
 
 SoccerPlayer::SoccerPlayer(const CharacterBase::PlayerInfo& info) :
-CharacterBase(info, new BlendAnimationMesh(GetCharacterModelPath(CharacterType::_Soccer))),
-m_ModelSize(0.05f)
+CharacterBase(info, new BlendAnimationMesh(GetCharacterModelPath(CharacterType::_Soccer)))
 {
 	
 	m_pStateMachine = new SoccerStateMachine(this);
@@ -32,6 +31,8 @@ m_ModelSize(0.05f)
 	SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(this));
 	//　体力低下(デバック用)
 	m_Params.maxHP = m_Params.HP = 100;
+
+    m_ModelSize = 0.05f;
 }
 
 SoccerPlayer::~SoccerPlayer()

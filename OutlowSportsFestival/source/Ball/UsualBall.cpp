@@ -223,7 +223,7 @@ RigidBody* UsualBall::CreateRigidBody(
             params.pos,
             Vector3Zero, // Ç∆ÇËÇ†Ç¶Ç∏É[Éç
             physics.Radius,
-            physics.Height,
+            physics.Radius*1.5f, 
             physics.Friction,
             physics.Restitution,
             params.move * 45.0f
@@ -440,8 +440,6 @@ void UsualBall::ToNoWork()
     m_BaseMatrix._41 = 0;
     m_BaseMatrix._42 = 0;
     m_BaseMatrix._43 = 0;
-
-    const PhysicsParam p = GetBallPhysics(m_FirstParentType);
 
     m_pRigitBody = CreateRigidBody(
         m_FirstParentType,

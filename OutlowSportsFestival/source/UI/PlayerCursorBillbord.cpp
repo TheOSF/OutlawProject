@@ -9,7 +9,8 @@ PlayerCursorBillbord::PlayerCursorBillbord(
     ) :
     m_pCharacter(pCharacter),
     m_pCursorTex(DefResource.Get(Resource::TextureType::UI_player_name)),
-    m_Alpha(1)
+    m_Alpha(1),
+    m_LightUpFrameCount(0)
 {
     const int draw_scale = 3;
 
@@ -38,8 +39,19 @@ PlayerCursorBillbord::~PlayerCursorBillbord()
 
 }
 
+void PlayerCursorBillbord::LightUp(UINT Frame)
+{
+    m_LightUpFrameCount = Frame;
+}
+
 bool PlayerCursorBillbord::Update()
 {
+    //フレームカウント
+    if (m_LightUpFrameCount > 0)
+    {
+        --m_LightUpFrameCount;
+    }
+
     return true;
 }
 
@@ -70,9 +82,8 @@ void PlayerCursorBillbord::Render()
     draw_alpha = m_Alpha;
 
 
-
+    /*
     //カメラから近い場合は描画しない
-    if(0)
     {
         const float startZ = 50.0f;
         const float endZ = 45.0f;
@@ -88,7 +99,7 @@ void PlayerCursorBillbord::Render()
 
         draw_alpha *= z;
     }
-    
+    */
 
 
     //見えないなら描画しない
@@ -128,5 +139,19 @@ void PlayerCursorBillbord::Render()
             D3DCOLOR_COLORVALUE(1, 1, 1, draw_alpha)
             );
 
+        //点滅
+        if (m_LightUpFrameCount % 8 >= 4)
+        {
+            //描画
+            for (int i = 0; i < 5; ++i)
+            {
+                m_pCursorTex->Render(
+                    rc,
+                    m_TextureRect,
+                    RS_ADD,
+                    D3DCOLOR_COLORVALUE(1, 1, 1, 1)
+                    );
+            }
+        }
     }
 }

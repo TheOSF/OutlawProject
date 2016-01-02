@@ -2,6 +2,7 @@
 #include "TennisPlayerState_DamageMotionWeak.h"
 #include "TennisPlayerState_Vanish.h"
 #include "TennisPlayerState_DamageMotionDie.h"
+#include "TennisState_ControllVanish.h"
 #include "../CharacterFunction.h"
 
 
@@ -40,7 +41,14 @@ bool TennisHitEvent::Hit(DamageBase* pDmg)
         m_pTennis->SetState(new TennisState_DamageVanish(m_pTennis, DamageVec), 1);
         break;
 
-
+    case CharacterHitEventFunc::SetType::Controll_Hit:   
+    {
+        //コントロール吹き飛びステートへ
+        TennisState_ControllVanish* p=new TennisState_ControllVanish(m_pTennis);
+        m_pTennis->SetState(p, 2);
+        ((DamageControllVanish*)pDmg)->GetDamageControll_Transform()->AddControllClass(p->GetControllClass());
+    }
+        break;
 
     case CharacterHitEventFunc::SetType::_None:
         //何もしない(自身のダメージだった場合

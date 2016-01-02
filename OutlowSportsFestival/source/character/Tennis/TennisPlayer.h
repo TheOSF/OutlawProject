@@ -64,9 +64,6 @@ public:
 	TennisPlayer(const CharacterBase::PlayerInfo& info);
 	~TennisPlayer();
 
-	
-	const float         m_ModelSize;
-
     void SetState(TennisState* state, int Important = 0);
 
 	bool Update();

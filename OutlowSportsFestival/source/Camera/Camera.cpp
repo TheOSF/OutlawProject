@@ -140,7 +140,7 @@ CrVector3 Camera::GetForward()const
 Camera::Camera()
 {
 	m_pStateMachine = new CameraStateMachine(this);
-	m_pStateMachine->set_state(new CameraStateGamePlay());
+	//m_pStateMachine->set_state(new CameraStateGamePlay());
 
 	ShockParam.power = Vector2(0, 0);
 	ShockParam.time = 0;

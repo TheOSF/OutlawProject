@@ -252,6 +252,16 @@ inline float* Vector2GetComponent(Vector2 & v, int ComponentNumber)
 	return (float*)((BYTE*)(&v) + sizeof(float)*ComponentNumber);
 }
 
+//------------------------------------------------------
+//	角度(ラジアン)
+//------------------------------------------------------
+inline RADIAN Vector2Radian(const Vector2& v1, const Vector2& v2)
+{
+    float d = Vector2Dot(v1, v2) / (Vector2Length(v1)*Vector2Length(v2));
+    d = fClamp(d, 1, -1);
+    return acosf(d);
+}
+
 //*****************************************************************************
 //		３Ｄベクトル
 //*****************************************************************************

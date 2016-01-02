@@ -55,6 +55,9 @@ CharacterHitEventFunc::SetType CharacterHitEventFunc::CheckDamage(DamageBase* pD
         //吹き飛びダメージ
         return SetType::Vanish_Hit;
 
+    case DamageBase::Type::_ControllDamage:
+        //吹き飛びコントロールダメージ
+        return SetType::Controll_Hit;
 
     default:
 

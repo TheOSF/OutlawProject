@@ -60,7 +60,7 @@ Snakeshot::Snakeshot(
     m_Damage.m_VecPower = Vector2(0.5f, 0.5f);
     m_Damage.pBall = this;
     m_Damage.pParent = m_Params.pParent;
-    
+    m_Damage.Value = 0.0f;
 
     //エフェクト
     TornadoEffect::Param param;
@@ -293,7 +293,16 @@ void Snakeshot::Counter(CharacterBase* pCounterCharacter)
         )
     {   
         m_Damage.pParent = m_Params.pParent = m_pOriginParent;
-        m_pTarget = pCounterCharacter;
+
+        //撃ったキャラクタ以外のキャラクタをターゲットにする
+        for (auto &it : DefCharacterMgr.GetCharacterMap())
+        {
+            if (it.first != m_pOriginParent)
+            {
+                m_pTarget=it.first;
+                break;
+            }
+        }
     }
     else
     {
@@ -389,21 +398,7 @@ void Snakeshot::MoveHomingRotate(Vector3 TargetPos)
 		rotate = -rotate;
 	}
 
-    /*D3DXMatrixRotationY(&R, rotate);
-        
-    m_Params.move = Vector3MulMatrix3x3(m_Params.move, R);*/
-
     m_Params.move = Vector3RotateAxis(Vector3AxisY, rotate, m_Params.move);
-
-
-    // float b = Vector3Dot(v1, v2) / (v1.Length()*v2.Length());
-
-    MyAssert(
-        !(isnan(m_Params.move.x) || isinf(m_Params.move.x) ||
-        isnan(m_Params.move.y) || isinf(m_Params.move.y) ||
-        isnan(m_Params.move.z) || isinf(m_Params.move.z)
-        ), "このバグはやばいですよザーボンさん");
-   
 }
 
 //　遠距離ターゲット選定

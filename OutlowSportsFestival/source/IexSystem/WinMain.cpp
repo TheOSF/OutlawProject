@@ -2,6 +2,7 @@
 #include	"Framework.h"
 #include "IEX_Input.h"
 #include	"../SceneOption/SceneOption.h"
+#include	"../SceneCharacterSelect/SceneCharacterSelect.h"
 #include	"../debug/DebugFunction.h"
 
 #include "../../Input/GamePad/GamePadManager.h"
@@ -44,7 +45,7 @@ BOOL	InitApp( HWND hWnd )
 	//	メインフレームワーク生成
     MainFrame = new Framework(FPS_FLEX);
 	//	初期シーン登録
-	MainFrame->ChangeScene(new SceneOption());
+    MainFrame->ChangeScene(new SceneOption());
 
     //法線・深度バッファを登録
     {
@@ -155,7 +156,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	SYSTEM_Release();
 	iexSystem::CloseDebugWindow();
 
-    // 解放
+    // 入力システム解放
 #ifdef OUTLAW2_CONTROLL_TYPE_IEX_INPUT
     IEX_ReleaseInput();
 #else

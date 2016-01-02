@@ -31,9 +31,22 @@ CharacterDamageVanish::CharacterDamageVanish(
     m_pHitEvent(pHitEvent),
     m_WallHit(false),
     m_FirstSlow(false),
-    m_VanishAngle(PI*0.25f)
+    m_VanishAngle(PI*0.25f),
+    m_Locus(15)
 {
     m_Param = param;
+
+    {
+        m_Locus.m_Visible = false;  //////////
+
+        m_Locus.m_StartParam.Color = Vector4(1, 1, 1, 1);
+        m_Locus.m_StartParam.HDRColor = Vector4(0,0,0,0);
+        m_Locus.m_StartParam.Width = 1.0f;
+
+        m_Locus.m_EndParam.Color = Vector4(1, 1, 1, 0.5f);
+        m_Locus.m_EndParam.HDRColor = Vector4(0, 0, 0, 0);
+        m_Locus.m_EndParam.Width = 0.1f;
+    }
 }
 
 
@@ -79,16 +92,16 @@ void CharacterDamageVanish::Initialize()
 
 void CharacterDamageVanish::Flying()
 {
-
+    const float WallRefrectXZmoveValue = 0.2f;
 
     ++m_Count;
 
     //エフェクト
     {
         EffectFactory::Smoke(
-            m_pCharacter->m_Params.pos + Vector3(0,2,0) +Vector3Rand()*0.2f, 
+            m_pCharacter->m_Params.pos + Vector3(0, 2.5f, 0) + Vector3Rand()*0.2f,
             Vector3Zero,
-            1.0f + frand()*0.5f,
+            1.5f + frand()*0.5f, 
             0.1f
             );
     }
@@ -140,7 +153,7 @@ void CharacterDamageVanish::Flying()
     }
 
     //壁についていた場合は反転
-    if (m_WallHit == false)
+    if (m_WallHit == false && Vector3XZLength(m_pCharacter->m_Params.move) > WallRefrectXZmoveValue)
     {
         Vector3 out, pos(m_pCharacter->m_Params.pos), vec(m_pCharacter->m_Params.move);
         float dist = 10.0f;
@@ -171,13 +184,29 @@ void CharacterDamageVanish::Flying()
             {
                 m_Count = 0;
 
-                m_pCharacter->m_Params.move = Vector3Refrect(m_pCharacter->m_Params.move, vec)*0.5f;
+                m_pCharacter->m_Params.move = Vector3Refrect(m_pCharacter->m_Params.move, vec)*0.25f;
                 chr_func::AngleControll(m_pCharacter, m_pCharacter->m_Params.pos + m_pCharacter->m_Params.move);
 
                 m_pStateFunc = &CharacterDamageVanish::HitWallAndDown;
                 m_WallHit = true;
 
+                //エフェクト
                 DefCamera.SetShock(Vector2(0.3f, 0.3f), 15);
+
+                {
+                    Vector3 Pos = out;
+                    Pos.y = m_pCharacter->m_Params.pos.y + 3.0f;
+
+                    EffectFactory::CircleAnimation(
+                        Pos,
+                        vec,
+                        Vector3Zero,
+                        Vector3Zero,
+                        Vector2(8, 8), 
+                        0xFFFFFFFF,
+                        0x80FFFFFF
+                        );
+                }
             }
         }
     }
@@ -186,6 +215,9 @@ void CharacterDamageVanish::Flying()
         //移動更新
         chr_func::UpdateAll(m_pCharacter, m_pHitEvent);
     }
+
+    //軌跡更新
+    LocusUpdate(false);
 }
 
 
@@ -210,9 +242,6 @@ void CharacterDamageVanish::Dowing()
             );
     }
 
-
-
-
     //ステート移行
     if (m_Count > m_Param.down_frame)
     {
@@ -225,6 +254,9 @@ void CharacterDamageVanish::Dowing()
         //ノーダメージ版
         chr_func::UpdateAll(m_pCharacter, &DamageManager::HitEventBase());
     }
+
+    //軌跡更新
+    LocusUpdate(true);
 }
 
 
@@ -252,6 +284,9 @@ void CharacterDamageVanish::StandUping()
         //ノーダメージ版
         chr_func::UpdateAll(m_pCharacter, &DamageManager::HitEventBase());
     }
+
+    //軌跡更新
+    LocusUpdate(true);
 }
 
 
@@ -271,6 +306,25 @@ void CharacterDamageVanish::End()
 
 }
 
+void CharacterDamageVanish::LocusUpdate(bool FadeOut)
+{
+    Vector3 Pos, Vec;
+
+    Pos = m_pCharacter->m_Params.pos;
+    Pos += Vector3(0, 2, 0);
+
+    Vector3Cross(Vec, m_pCharacter->m_Params.move, DefCamera.GetForward());
+    Vec.Normalize();
+
+    m_Locus.AddPoint(Pos, Vec);
+
+    if (FadeOut)
+    {
+        m_Locus.m_StartParam.Color.w *= 0.9f;
+        m_Locus.m_EndParam.Color.w *= 0.9f;
+    }
+}
+
 void CharacterDamageVanish::HitWallAndDown()
 {
     const int DownFrame = 18;
@@ -279,6 +333,16 @@ void CharacterDamageVanish::HitWallAndDown()
     {
         m_Count = 1;
         m_pEvent->HitWall();
+    }
+
+    //エフェクト
+    {
+        EffectFactory::Smoke(
+            m_pCharacter->m_Params.pos + Vector3(0, 2.5f, 0) + Vector3Rand()*0.2f,
+            Vector3Zero,
+            1.5f + frand()*0.5f,
+            0.1f
+            );
     }
 
     //落下フレームなら
@@ -314,6 +378,9 @@ void CharacterDamageVanish::HitWallAndDown()
 
     //イベント更新
     m_pEvent->HitWallUpdate();
+
+    //軌跡更新
+    LocusUpdate(false);
 }
 
 
@@ -328,6 +395,19 @@ void CharacterDamageVanish::HitFloorAndStandUp()
     {
         m_pEvent->HitFloor();
     }
+
+    //エフェクト
+    if (m_Count < StandUpStart)
+    {
+        EffectFactory::Smoke(
+            m_pCharacter->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
+            Vector3(frand() - 0.5f, frand()*0.1f, frand() - 0.5f)*0.05f,
+            2.0f + frand()*2.0f,
+            1.0f,
+            true
+            );
+    }
+    
 
     //立ち上がりイベント
     if (m_Count == StandUpStart)
@@ -358,4 +438,7 @@ void CharacterDamageVanish::HitFloorAndStandUp()
 
     //イベント更新
     m_pEvent->HitWallUpdate();
+
+    //軌跡更新
+    LocusUpdate(true);
 }

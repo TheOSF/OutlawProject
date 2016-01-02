@@ -51,7 +51,7 @@ Baseball_SpAtk_Ball::Baseball_SpAtk_Ball(
     }
 
     m_PointLight.param.color = Vector3(0, 0.5f, 1)*2.0f;
-    m_PointLight.param.size = 15.0f;
+    m_PointLight.param.size = 35.0f;
 
 	//ÉJÉÅÉâÇÃÇ‰ÇÍ
 	DefCamera.SetShock(Vector2(0.4f, 0.4f), 30);

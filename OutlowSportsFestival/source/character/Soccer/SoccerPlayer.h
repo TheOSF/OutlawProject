@@ -57,7 +57,6 @@ public:
 		float shot;
 	};
 	static const SkillParam skillparams;
-	const float m_ModelSize;
 
     void SetState(SoccerState* state, int Important = 0);
 	bool Update();

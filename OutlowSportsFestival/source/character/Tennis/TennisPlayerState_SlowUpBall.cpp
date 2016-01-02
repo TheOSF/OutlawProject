@@ -13,7 +13,8 @@
 #include "../../Sound/Sound.h"
 #include "../../GameSystem/GameController.h"
 #include "TennisPlayerState_UsualMove.h"
-
+#include "../../Effect/EffectFactory.h"
+#include "../../Camera/Camera.h"
 
 
 TennisPlayerState_SlowUpBall::TennisPlayerState_SlowUpBall(
@@ -407,6 +408,18 @@ void TennisPlayerState_SlowUpBall::State_Smash()
                 0.1f,
                 0.1f,
                 Vector3(1, 1, 1)
+                );
+
+            //‰~
+            EffectFactory::CircleAnimation(
+                param.pos + Vector3(0, 1, 0) ,
+                -DefCamera.GetForward(),
+                Vector3Zero,
+                Vector3Zero,
+                Vector2(5, 5), 
+                0x80FFFFFF,
+                0x80FFFFFF,
+                1.0f
                 );
         }
     }

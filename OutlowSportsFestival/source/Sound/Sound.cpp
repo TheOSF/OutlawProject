@@ -45,8 +45,8 @@ void Sound::Initialize()
     
 
     RegistSE(Cursor_move, "Button\\cursor");
-    RegistSE(Cursor_move, "Button\\Enter");
-    RegistSE(Cursor_move, "Button\\kyanseru");
+    RegistSE(Cursor_enter, "Button\\Enter");
+    RegistSE(Cursor_cancel, "Button\\kyanseru");
     
     RegistSE(Kira_n, "kira-n");
 
