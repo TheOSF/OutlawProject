@@ -194,6 +194,7 @@ void CharacterBase::ResetRound()
     m_Params.pos = DefCharacterMgr.GetRoundStartPos(m_PlayerInfo.number);
     m_Params.move = Vector3Zero;
     m_Params.camera_draw = true;
+
     chr_func::AngleControll(this, Vector3(0, m_Params.pos.y, 0));
 }
 
