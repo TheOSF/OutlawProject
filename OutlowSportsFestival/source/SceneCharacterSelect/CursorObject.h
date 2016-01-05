@@ -2,112 +2,143 @@
 
 #include "../GameSystem/GameObject.h"
 #include "../GameSystem/GameController.h"
+#include "../GameScene/SceneGamePlay.h"
+#include "../Render/Renderer.h"
 #include <array>
+#include <list>
 
-//--------------------------------------------------------//
-// キャラクタセレクト画面でのカーソル関連のクラスヘッダ
-//--------------------------------------------------------//
-
+class SelectCursor;
 class CursorManager;
-class CursorObject;
 
-//カーソル移動ポイント
-class CursorPoint
+//サークル移動可能ポイント
+class SelectPointBase :public GameObjectBase,public UserInterfaceRenderer
 {
 public:
-
-    //選択したときのイベントクラス
-    class SelectEvent
+    enum class PointType
     {
-    public:
-        //イベントタイプ
-        enum class EventType
-        {
-            Select,
-            Cancel,
-            
-        };
-        virtual ~SelectEvent(){}
+        Tennis,
+        Soccer,
+        BaseBall,
+        AmericanFootBall,
 
-        //なんか押した時に呼ばれる
-        virtual bool Select(CursorObject* pCur, EventType type) = 0;
+        Random,
+
+        ComputerStrong,
+        ComputerChrSelect
     };
 
-    enum : size_t
-    {
-        MaxCursor = 4
-    };
+    Vector2         m_MoveTargetPos;
+    Vector2         m_Pos;
+    Vector2         m_Size;
 
+    const PointType m_Type;
 
-    CursorPoint(CursorManager* pManager);
-    ~CursorPoint();
-
-    Vector2   m_Pos;   //位置
-    bool      m_Only;  //カーソルがひとつしかさせないかどうか
-
-    Vector2 CalcCursorPos(CursorObject* p);  //カーソルの位置を得る
-
-    bool OnCursor(CursorObject* p);    //カーソルが上に乗った(戻り値：乗れたかどうか)
-    bool LeaveCursor(CursorObject* p); //離れた
-
-private:
     
-    typedef std::array<CursorObject*, MaxCursor> CursorArray;
-
-    CursorArray          m_CursorArray;
-    CursorManager* const m_pManager;
-    int                  m_OnCursorNum;
-
-    Vector2 CalcCurosrPosByCursorID(int Id);
-};
-
-
-
-//カーソルクラス
-class CursorObject :public GameObjectBase
-{
-public:
-    CursorObject(
-        CursorManager*              pManager,
-        CursorPoint*                pInitPoint,
-        controller::CONTROLLER_NUM  ControllerNum
+    SelectPointBase(
+        CursorManager* pMgr,
+        PointType      Type,
+        LPIEX2DOBJ     pTexture,
+        const RectI&   TexRect
         );
 
-    ~CursorObject();
+    virtual ~SelectPointBase();
+    
+    Vector2 GetOffSetPos(SelectCursor* p);
 
-    bool            m_Lock;
-    Vector2         m_Pos;
-    CursorPoint*    m_pPoint;
+    void OnCursor(SelectCursor* p);
+    void LeaveCursor(SelectCursor* p);
 
-    bool Move(CrVector2 Vec);
+    void Select(SelectCursor* p);
+    void Cancel(SelectCursor* p);
 
 private:
-    const controller::CONTROLLER_NUM    m_ControllerNum;
-    CursorManager* const                m_pManager;
+    std::list<SelectCursor*>  m_OnCursorData;
+
+    CursorManager* const m_pMgr;
+    iex2DObj* const      m_pTexture;
+    const RectI          m_TexRect;
+
+    int GetOnCursorID(SelectCursor* p);
 
     bool Update()override;
     bool Msg(MsgType mt)override;
+
+    StrongType::Value GetChangeStrongType(StrongType::Value Now);
+
+    void CalcZ()override;
+    void Render()override;
 };
 
 
+//カーソルクラス
+class SelectCursor :public GameObjectBase, public UserInterfaceRenderer
+{
+public:
 
-//カーソルマネージャ
+    sceneGamePlay::InitParams::PlayerInfo  m_PlayerInfo;
+
+    Vector2         m_Pos;
+    bool            m_Lock;
+    bool            m_Selected;
+   
+    SelectCursor(
+        CursorManager*                  pMgr,
+        controller::CONTROLLER_NUM      Num,
+        LPIEX2DOBJ                      pTexture,
+        const RectI&                    TexRect,
+        SelectPointBase*                pInitPoint
+        );
+
+    ~SelectCursor();
+
+    void SetPoint(SelectPointBase* pNewPoint);
+
+    inline SelectPointBase* GetPoint()
+    {
+        return m_pPoint;
+    }
+
+private:
+
+    CursorManager* const                  m_pMgr;
+    const controller::CONTROLLER_NUM      m_ControllerNum;
+    iex2DObj* const                       m_pTexture;
+    const RectI                           m_TexRect;
+
+    SelectPointBase*                      m_pPoint;
+
+    void Controll();
+
+    bool Update()override;
+    bool Msg(MsgType mt)override;
+
+    void CalcZ()override;
+    void Render()override;
+};
+
+
+//マネージャ
 class CursorManager
 {
 public:
+
     CursorManager();
     ~CursorManager();
 
-    bool GetNearPoint(CrVector2 NowPos, CursorPoint** ppOut);
-    bool Move(CursorPoint* pNowPoint, CrVector2 Vec, CursorPoint** ppOut);
 
-    void Regist(CursorPoint* pPoint);
-    void Erace(CursorPoint*  pPoint);
+    void Regist(SelectPointBase* p);
+    void Erace(SelectPointBase* p);
 
-    void Regist(CursorObject* pCursor);
-    void Erace(CursorObject*  pCursor);
+    void Regist(SelectCursor* p);
+    void Erace(SelectCursor* p);
+
+    bool GetNextPoint(CrVector2 Vec, SelectPointBase* pNow, SelectPointBase** ppOut);
+
+    void GetData(sceneGamePlay::InitParams& OutData);
+    void RandomMove(SelectCursor* p);
 
 private:
-    std::array<CursorObject*, CursorPoint::MaxCursor>   m_CursorArray;
-    std::array<CursorPoint*, 64>                        m_CursorPointArray;
+    std::list<SelectPointBase*> m_PointData;
+    std::list<SelectCursor*>    m_CursorData;
 };
+

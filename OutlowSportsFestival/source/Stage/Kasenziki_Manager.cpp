@@ -122,6 +122,7 @@ void Kasennziki_Manager::CreateStage()
     else
     {
         //ライティングセット
+        /*
         if (m_SunsetRound == 1)
         {
             SetSunsetLight();
@@ -132,6 +133,10 @@ void Kasennziki_Manager::CreateStage()
             SetNoonLight();
             SetNoonObject();
         }
+        */
+
+        SetSunsetLight();
+        SetSunsetObject();
     }
 
 

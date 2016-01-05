@@ -22,6 +22,8 @@ public:
             StrongType::Value strong_type;
         };
 
+        InitParams();
+
         IGameInitializer*         pInitializer;
         std::array<PlayerInfo, 4> PlayerArray;
         UINT  Round;

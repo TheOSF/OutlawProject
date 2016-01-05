@@ -25,10 +25,10 @@ void RoundUI::CalcZ()
 void RoundUI::Render()
 {
     m_pTexture->Render(
-        350,
-        360 + (int)(m_T*-50), 
-        650,
-        160,
+        (int)(350 * iexSystem::ScreenToX1600),
+        (int)((360 + m_T * -50)*iexSystem::ScreenToY900), 
+        (int)(650 * iexSystem::ScreenToX1600),
+        (int)(160 * iexSystem::ScreenToY900), 
 
         0,
         600,
@@ -103,10 +103,10 @@ void RoundUI::RoundRender()
 void RoundUI::NumberRender(int num, int posX, int sizeX, float t)
 {
     m_pTexture->Render(
-        posX,
-        330,
-        sizeX,
-        160,
+        (int)((float)posX*iexSystem::ScreenToX1600), 
+        (int)(330 * iexSystem::ScreenToY900),
+        (int)((float)sizeX*iexSystem::ScreenToX1600),
+        (int)(160 * iexSystem::ScreenToY900),
 
         (num % 10) * 100, 
         0,
@@ -123,10 +123,10 @@ void RoundUI::NumberRender(int num, int posX, int sizeX, float t)
     const int UpY = (int)(t * 500);
 
     m_pTexture->Render(
-        posX - UpX / 2,
-        330 - UpY / 2,
-        sizeX + UpX,
-        160 + UpY,
+        (int)((float)(posX - UpX / 2)*iexSystem::ScreenToX1600),
+        (int)((float)(330 - UpY / 2)*iexSystem::ScreenToY900),
+        (int)((float)(sizeX + UpX)*iexSystem::ScreenToX1600),
+        (int)((float)(160 + UpY)*iexSystem::ScreenToY900),
 
         (num / 10) * 100,
         0,

@@ -5,19 +5,6 @@
 SceneCharacterSelect::SceneCharacterSelect(UINT PlayerNum) :
 m_Texture("DATA\\Texture\\particle.png")
 {
-    CursorPoint* p;
-
-    m_pManager = new CursorManager();
-
-    for (int i = 0; i < 4; ++i)
-    {
-        p = new CursorPoint(m_pManager);
-        
-        p->m_Pos = Vector2(i % 2, i / 2)*200.0f + Vector2(300, 200);
-    }
-
-    m_pCursor = new CursorObject(m_pManager, p, 0);
-
     //	環境設定
     {
         iexLight::SetAmbient(0x404040);
@@ -27,6 +14,19 @@ m_Texture("DATA\\Texture\\particle.png")
         dir.Normalize();
         iexLight::DirLight(shader, 0, &dir, 0.8f, 0.8f, 0.8f);
     }
+
+    //マネージャ
+    m_pManager = new CursorManager();
+
+    
+    //キャラクタポイントをセット
+    std::array<SelectPointBase*, 4> ChrPoint;
+
+    SetCharacterPoint(ChrPoint);
+
+    //コンピュータ用のポイントをセット
+    //SetComputer
+
 }
 
 SceneCharacterSelect::~SceneCharacterSelect()
@@ -46,32 +46,40 @@ void SceneCharacterSelect::Update()
 
 void SceneCharacterSelect::Render()
 {
-    int W = 100, H = 100;
-
-    DefCamera.Clear();
-
-    iexPolygon::Rect(
-        0,
-        0,
-        100,
-        100,
-        RS_COPY,
-        0xFFFFFF80
-        );
-
-    m_Texture.Render(
-        m_pCursor->m_Pos.x - W / 2,
-        m_pCursor->m_Pos.y - H / 2, 
-        W,
-        H,
-        
-        0,
-        0,
-        128,
-        128
-
-        );
 
     
+}
+
+
+void SceneCharacterSelect::SetCharacterPoint(std::array<SelectPointBase*, 4>& ChrPoint)
+{
+    //キャラのカーソルポイントたち
+    {
+        SelectPointBase* p;
+        Vector2 Center((float)iexSystem::ScreenWidth*0.5f, (float)iexSystem::ScreenHeight*0.5f);
+        const float Space = 350.0f;
+
+        struct
+        {
+            SelectPointBase::PointType  Type;
+            Vector2                     Pos;
+        }
+        ChrPointData[4] =
+        {
+            { SelectPointBase::PointType::Tennis, Center + Vector2(-Space, -Space) },
+            { SelectPointBase::PointType::Soccer, Center + Vector2(Space, -Space) },
+            { SelectPointBase::PointType::BaseBall, Center + Vector2(-Space, Space) },
+            { SelectPointBase::PointType::AmericanFootBall, Center + Vector2(Space, Space) },
+        };
+
+        for (int i = 0; i < (int)ARRAYSIZE(ChrPointData); ++i)
+        {
+            p = new SelectPointBase(m_pManager, ChrPointData[i].Type, &m_Texture, RectI(0, 0, 64, 64));
+            p->m_Pos = Center;
+            p->m_MoveTargetPos = ChrPointData[i].Pos;
+
+            ChrPoint[i] = p;
+        }
+    }
 }
 

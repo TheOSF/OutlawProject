@@ -54,7 +54,7 @@ SoccerSpecialHit::SoccerSpecialHit(
                 param.start_width = 1.0f;
                 param.end_width = 2.0f;
 
-                param.height = 9.0f;
+                param.height = 6.5f;
                 param.speed = 1.0f / Frame;
                 param.damage = 30.0f;
                 

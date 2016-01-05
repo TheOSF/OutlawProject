@@ -45,6 +45,14 @@
 //
 //*****************************************************************************************************************************
 
+sceneGamePlay::InitParams::InitParams()
+{
+    pInitializer = nullptr;
+    PlayerArray.fill({ -1, PlayerType::_Player, CharacterType::_Tennis, StrongType::_Usual });
+    Round = 1;
+    Time = 60 * 60 * 1;
+}
+
 sceneGamePlay::sceneGamePlay(
     InitParams& params
     )

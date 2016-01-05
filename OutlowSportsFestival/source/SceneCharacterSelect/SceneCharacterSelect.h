@@ -8,6 +8,7 @@
 #include "../IexSystem/Scene.h"
 #include "../utillity/ScreenEffect.h"
 #include "CursorObject.h"
+#include "../GameSystem/GameSystem.h"
 
 class SceneCharacterSelect : public Scene
 {
@@ -23,6 +24,9 @@ public:
 
 private:
     CursorManager*  m_pManager;
-    CursorObject*   m_pCursor;
     iex2DObj        m_Texture;
+
+    void SetComputerPoint(UINT Num);
+    void SetCharacterPoint(std::array<SelectPointBase*, 4>& OutChrPoint);
 };
+

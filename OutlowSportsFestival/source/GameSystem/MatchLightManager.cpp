@@ -53,6 +53,10 @@ void MatchLightManager::LightChangeAndBack(
 {
     m_pStateFunc = &MatchLightManager::State_Change;
 
+    LightInit();
+
+    m_FrameCount = 0;
+
     m_Dark_frame = dark_frame;
     m_Hold_frame = hold_frame;
     m_Back_frame = back_frame;
@@ -174,5 +178,18 @@ void MatchLightManager::State_Back()
     {
         m_FrameCount = 0;
         m_pStateFunc = &MatchLightManager::State_Usual;
+    }
+}
+
+void MatchLightManager::LightInit()
+{
+    for (int i = 0; i < MaxManageNum; ++i)
+    {
+        if (m_pManageLightValues[i] == nullptr)
+        {
+            break;
+        }
+
+        *m_pManageLightValues[i] = m_pInitValues[i];
     }
 }

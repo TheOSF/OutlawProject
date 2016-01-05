@@ -46,6 +46,7 @@ private:
     void State_Hold();
     void State_Back();
 
+    void LightInit();
 
 
     static MatchLightManager* m_pInstance;
