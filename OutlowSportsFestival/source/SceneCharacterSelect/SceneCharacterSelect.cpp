@@ -89,3 +89,5 @@ void SceneCharacterSelect::SetCharacterPoint(std::array<SelectPointBase*, 4>& Ch
     }
 }
 
+
+//-------------------------------------------------------------------//
