@@ -25,8 +25,13 @@ m_Texture("DATA\\Texture\\particle.png")
     SetCharacterPoint(ChrPoint);
 
     //コンピュータ用のポイントをセット
-    //SetComputer
+    //SetComputerPoint();
 
+    //カーソルをセット
+    for (UINT i = 0; i < PlayerNum; ++i)
+    {
+        new SelectCursor(m_pManager, (controller::CONTROLLER_NUM)i, &m_Texture, RectI(0,0,128,128), ChrPoint[0]);
+    }
 }
 
 SceneCharacterSelect::~SceneCharacterSelect()
@@ -46,8 +51,9 @@ void SceneCharacterSelect::Update()
 
 void SceneCharacterSelect::Render()
 {
-
+    DefCamera.Clear();
     
+    DefRendererMgr.Render();
 }
 
 
@@ -57,7 +63,7 @@ void SceneCharacterSelect::SetCharacterPoint(std::array<SelectPointBase*, 4>& Ch
     {
         SelectPointBase* p;
         Vector2 Center((float)iexSystem::ScreenWidth*0.5f, (float)iexSystem::ScreenHeight*0.5f);
-        const float Space = 350.0f;
+        const float Space = 120.0f;
 
         struct
         {

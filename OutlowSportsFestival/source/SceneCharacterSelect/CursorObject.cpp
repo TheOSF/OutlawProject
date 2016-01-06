@@ -19,6 +19,8 @@ SelectPointBase::SelectPointBase(
     m_MoveTargetPos = Vector2(100, 100);
     m_Pos = Vector2(0, 0);
     m_Size = Vector2(100, 100);
+
+    m_pMgr->Regist(this);
 }
 
 SelectPointBase::~SelectPointBase()
@@ -28,7 +30,7 @@ SelectPointBase::~SelectPointBase()
 
 Vector2 SelectPointBase::GetOffSetPos(SelectCursor* p)
 {
-    const float Size = 50.0f;
+    const float Size = 40.0f;
     const int Id = GetOnCursorID(p);
     
     switch (m_OnCursorData.size())
@@ -37,21 +39,21 @@ Vector2 SelectPointBase::GetOffSetPos(SelectCursor* p)
         return m_Pos;
     
     case 2:
-        return m_Pos + Vector2((float)(Id * 2 - 1)*Size, 0);
+        return m_Pos + Vector2((float)((Id - 1) * 2 - 1)*Size, 0);
     
     case 3:
     
-        if (Id < 2)
+        if (Id <= 2)
         {
-            return m_Pos + Vector2((float)(Id * 2 - 1)*Size, Size*0.5f);
+            return m_Pos - Vector2(-(float)((Id - 1) *2 - 1)*Size, Size*0.66f);
         }
         else
         {
-            return m_Pos - Vector2(0, Size*0.5f);
+            return m_Pos + Vector2(0, Size*0.66f);
         }
     
     case 4:
-        return m_Pos + Vector2((float)(Id % 2 * 2 - 1), (float)(Id / 2 * 2 - 1))*Size;
+        return m_Pos + Vector2((float)((Id - 1) % 2 * 2 - 1), (float)((Id - 1) / 2 * 2 - 1))*Size;
     default:
     
         break;
@@ -254,6 +256,8 @@ SelectCursor::SelectCursor(
         break;
     }
 
+    m_pMgr->Regist(this);
+
     m_Lock = false;
 
     {
@@ -286,8 +290,11 @@ void SelectCursor::Controll()
         const bool StickDown = controller::GetStickJustMove(controller::stick::left, m_ControllerNum);
         SelectPointBase* pNextPoint = nullptr;
 
+        Vector2 Vec = controller::GetStickValue(controller::stick::left, m_ControllerNum);
+        Vec.y = -Vec.y;
+
         if (StickDown &&
-            m_pMgr->GetNextPoint(controller::GetStickValue(controller::stick::left, m_ControllerNum), m_pPoint, &pNextPoint)
+            m_pMgr->GetNextPoint(Vec, m_pPoint, &pNextPoint)
             )
         {
             //à⁄ìÆê¨å˜

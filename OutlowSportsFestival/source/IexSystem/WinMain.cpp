@@ -45,7 +45,7 @@ BOOL	InitApp( HWND hWnd )
 	//	メインフレームワーク生成
     MainFrame = new Framework(FPS_FLEX);
 	//	初期シーン登録
-    MainFrame->ChangeScene(new SceneOption());
+    MainFrame->ChangeScene(new SceneCharacterSelect(4));
 
     //法線・深度バッファを登録
     {
