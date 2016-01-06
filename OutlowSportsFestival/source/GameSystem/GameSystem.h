@@ -47,8 +47,8 @@ namespace CharacterType
 		_Tennis,			//テニス
 		_Baseball,			//野球
 		_Soccer,			//サッカー
-		_Volleyball,		//バレー
 		_Americanfootball,	//アメフト
+		_Volleyball,		//バレー
 		_Lacrosse,			//ラクロス
 
 		__ErrorType,		//エラー(未設定)

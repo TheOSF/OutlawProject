@@ -53,7 +53,7 @@ void AmefootPlayerState_Counter::Enter(AmefootPlayer* pCharacter)
      params.PoseFrame = 20;
      params.ShotFrame = 8;
      params.CatchFrame = 10;
-     params.CatchBoneNumber = 21;// サッカーの右足
+     params.CatchBoneNumber = 32;
      params.BallSpeed = 0.78f;
 
      m_pCharacterDefaultCounter = new CharacterDefaultCounter(
@@ -96,7 +96,7 @@ AmefootPlayerState_Counter::CounterEvent::CounterEvent(AmefootPlayer* pAmefoot) 
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_Counter::CounterEvent::Pose()
 {
-     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_CounterPose);
+     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Counter_Pose);
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_Counter::CounterEvent::Move(BallBase* pCounterBall)
@@ -106,17 +106,17 @@ void AmefootPlayerState_Counter::CounterEvent::Move(BallBase* pCounterBall)
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_Counter::CounterEvent::Catch(BallBase* pCounterBall)
 {
-     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_CounterCatch);
+     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Counter_Catch_Right);
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_Counter::CounterEvent::Shot(BallBase* pCounterBall)
 {
-     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Counter);
+     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Counter_Throw_Ball);
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_Counter::CounterEvent::ShotFaild()
 {
-     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_CounterFailed);
+     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Counter_Failed);
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_Counter::CounterEvent::End()

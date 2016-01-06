@@ -93,7 +93,7 @@ void AmefootPlayerState_ReceiveWeakDamage::MotionEvent::Update(RATIO speed)
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveWeakDamage::MotionEvent::Start()
 {
-     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_WeakDamage);
+     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Damage_Weak);
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveWeakDamage::MotionEvent::End()

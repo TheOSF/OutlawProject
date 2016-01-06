@@ -7,6 +7,7 @@
 #include "../../CharacterFunction.h"
 #include "../../CharacterHitEventFunc.h"
 #include "../AmefootUsualHitEvent.h"
+#include "../UtilityClass/AmefootPlayer_ThrowBallControll.h"
 
 //-----------------------------------------------------------------------------------------
 // MoveEvent
@@ -41,9 +42,9 @@ AmefootPlayerState_UsualMove::AmefootPlayerState_UsualMove() :
 void AmefootPlayerState_UsualMove::Enter(AmefootPlayer* pCharacter)
 {
      CharacterUsualMove::Params params;
-     params.Acceleration = 0.13f;
+     params.Acceleration = 0.085f;
      params.DownSpeed = 0.20f;
-     params.MaxSpeed = 0.23f;
+     params.MaxSpeed = 0.18f;
      params.TurnSpeed = 0.285f;
 
      m_pCharacterUsualMove = new CharacterUsualMove(
@@ -75,29 +76,67 @@ void AmefootPlayerState_UsualMove::Exit(AmefootPlayer* pCharacter)
      delete m_pCharacterUsualMove;
 }
 //-----------------------------------------------------------------------------------------
+AmefootState* AmefootPlayerState_UsualMove::GetPlayerControllMove(AmefootPlayer* player)
+{
+    switch ( player->m_PlayerInfo.player_type )
+    {
+    case PlayerType::_Player:
+        return new AmefootPlayerState_UsualMove();
+
+    case PlayerType::_Computer:
+        return new AmefootPlayerState_UsualMove();
+
+        switch ( player->m_PlayerInfo.strong_type )
+        {
+        case StrongType::_Weak:
+            //return new 弱い通常移動
+        case StrongType::_Usual:
+            //return new 普通の通常移動
+        case StrongType::_Strong:
+            //return new 強い通常移動
+        default:
+            break;
+        }
+
+    default:
+        break;
+    }
+
+    assert("通常ステートが作成できないキャラクタタイプです AmefootPlayerState_UsualMove::GetPlayerControllMove" && 0);
+    return nullptr;
+}
+//-----------------------------------------------------------------------------------------
 void AmefootPlayerState_UsualMove::ActionStateSwitch(AmefootPlayer* pCharacter)
 {
      if ( controller::GetTRG(controller::button::batu, pCharacter->m_PlayerInfo.number))
-     {
+     {// [×] で [回避]
           pCharacter->SetState(new AmefootPlayerState_Evasion());
      }
-     else if ( controller::GetTRG(controller::button::maru, pCharacter->m_PlayerInfo.number) )
+
+     if ( controller::GetTRG(controller::button::maru, pCharacter->m_PlayerInfo.number) )
      {
 
      }
-     else if ( controller::GetTRG(controller::button::sankaku, pCharacter->m_PlayerInfo.number) )
-     {
+     
+     if ( controller::GetTRG(controller::button::sankaku, pCharacter->m_PlayerInfo.number) )
+     {// [△] で [遠距離攻撃]
+         pCharacter->SetState(
+             new AmefootPlayerState_ThrowBall(
+                 new AmefootPlayer_ThrowBallControll(pCharacter))
+             );
+     }
+     
+     if ( controller::GetTRG(controller::button::shikaku, pCharacter->m_PlayerInfo.number) )
+     {// [□] で [近距離攻撃]
 
      }
-     else if ( controller::GetTRG(controller::button::shikaku, pCharacter->m_PlayerInfo.number) )
-     {
-
-     }
-     else if ( controller::GetTRG(controller::button::_R1, pCharacter->m_PlayerInfo.number) )
-     {
+     
+     if ( controller::GetTRG(controller::button::_R1, pCharacter->m_PlayerInfo.number) )
+     {// [R1] で [カウンター]
           pCharacter->SetState(new AmefootPlayerState_Counter());
      }
-     else if ( controller::GetTRG(controller::button::_L1, pCharacter->m_PlayerInfo.number) )
+     
+     if ( controller::GetTRG(controller::button::_L1, pCharacter->m_PlayerInfo.number) )
      {
 
      }
@@ -126,16 +165,18 @@ void AmefootPlayerState_UsualMove::MoveEvent::Update(bool isRun , RATIO speed)
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_UsualMove::MoveEvent::RunStart()
 {
-     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Run);
+     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Run_Start);
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_UsualMove::MoveEvent::StandStart()
 {
-     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Stand);
+    m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Stand);
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_UsualMove::MoveEvent::RunEnd()
-{}
+{
+    m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Run_End);
+}
 //-----------------------------------------------------------------------------------------
 
 

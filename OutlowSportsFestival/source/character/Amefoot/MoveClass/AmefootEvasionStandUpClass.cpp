@@ -22,7 +22,7 @@ bool AmefootEvasionStandUpClass::Update()
 {
      if ( m_timer == 0 )
      {
-          m_pAmefoot->m_Renderer.SetMotion(m_params.MotionNumber);
+          m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Evasion_Standup);
      }
 
      m_timer++;

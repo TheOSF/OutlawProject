@@ -10,6 +10,37 @@ static bool g_SaveStickValues[4][2] =
 
 static const float g_AdjustStickValue = 0.3f;
 
+
+//引数の値がスティックの誤差の値以内かどうか
+bool controller::isStickAdjustValue(float value)
+{
+    return fabsf(value) < g_AdjustStickValue;
+}
+
+
+//スティック(またはカーソル)を倒した瞬間かどうかを得る
+bool controller::GetStickJustMove(stick::stick_type x, CONTROLLER_NUM num)
+{
+    return
+        g_SaveStickValues[num][x] == false &&
+        Vector2LengthSq(GetStickValue(x, num)) > g_AdjustStickValue;
+}
+
+
+//更新(全体で１フレームに一回呼び出すだけ、使わないで！)
+void controller::UpdateInfo()
+{
+    for ( int i = 0; i < 4; ++i )
+    {
+        for ( int j = 0; j < 2; ++j )
+        {
+            g_SaveStickValues[i][j] = Vector2LengthSq(GetStickValue((stick::stick_type)j, i)) > g_AdjustStickValue;
+        }
+    }
+}
+
+
+
 #ifdef OUTLAW2_CONTROLL_TYPE_IEX_INPUT
 
 
@@ -187,12 +218,6 @@ bool controller::GetPushAnyController(button::button_type x)
     return false;
 }
 
-//引数の値がスティックの誤差の値以内かどうか
-bool controller::isStickAdjustValue(float value)
-{
-    return fabsf(value) < g_AdjustStickValue;
-}
-
 // コントローラの状態取得
 controller::button::button_state controller::GetButtonState(controller::button::button_type x, CONTROLLER_NUM num)
 {
@@ -206,14 +231,6 @@ controller::button::button_state controller::GetButtonState(controller::button::
     }
 
     return controller::button::button_state::bs_up;
-}
-
-//スティック(またはカーソル)を倒した瞬間かどうかを得る
-bool controller::GetStickJustMove(stick::stick_type x, CONTROLLER_NUM num)
-{
-    return 
-        g_SaveStickValues[num][x] == false &&
-        Vector2LengthSq(GetStickValue(x, num)) > g_AdjustStickValue;
 }
 
 // スティックの傾きの値を得る
@@ -257,17 +274,5 @@ void controller::SetVibration(DWORD power, float second,  CONTROLLER_NUM num, in
     GamePadManager::Vibration(num, pattern, (DWORD)(second*(float)DI_SECONDS), power);
 }
 
-//更新(全体で１フレームに一回呼び出すだけ、使わないで！)
-void controller::UpdateInfo()
-{
-    for (int i = 0; i < 4; ++i)
-    {
-        for (int j = 0; j < 2; ++j)
-        {
-            g_SaveStickValues[i][j] = Vector2LengthSq(GetStickValue((stick::stick_type)j, i)) > g_AdjustStickValue;
-        }
-    }
-    
-}
 
 #endif
