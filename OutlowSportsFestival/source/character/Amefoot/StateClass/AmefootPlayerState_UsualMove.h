@@ -17,6 +17,8 @@ public:
 
      void Exit(AmefootPlayer* pCharacter)override;
 
+     static AmefootState* GetPlayerControllMove(AmefootPlayer* player);
+
 private:
      class MoveEvent;
 

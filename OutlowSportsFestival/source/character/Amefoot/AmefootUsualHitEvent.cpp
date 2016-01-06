@@ -15,8 +15,8 @@ AmefootUsualHitEvent::AmefootUsualHitEvent(AmefootPlayer* pAmefoot):
 bool AmefootUsualHitEvent::Hit(DamageBase* pDamage)
 {
      Vector3 damageVec = Vector3Zero;
-
-     switch ( CharacterHitEventFunc::CheckDamage(pDamage , m_pAmefoot , &damageVec) )
+     CharacterHitEventFunc::SetType type = CharacterHitEventFunc::CheckDamage(pDamage, m_pAmefoot, &damageVec);
+     switch ( type )
      {
      case CharacterHitEventFunc::SetType::Weak_Hit:
           m_pAmefoot->SetState(new AmefootPlayerState_ReceiveWeakDamage(damageVec));
@@ -27,8 +27,12 @@ bool AmefootUsualHitEvent::Hit(DamageBase* pDamage)
           break;
 
      case CharacterHitEventFunc::SetType::Die:
-          m_pAmefoot->m_Renderer.SetMotion(7);
+         m_pAmefoot->SetState(new AmefootPlayerState_Die(m_pAmefoot, damageVec));
           break;
+
+     case CharacterHitEventFunc::SetType::Controll_Hit:
+         m_pAmefoot->m_Renderer.SetMotion(8);
+         break;
 
      case CharacterHitEventFunc::SetType::_None:
           return false;

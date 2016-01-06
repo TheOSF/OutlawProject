@@ -13,7 +13,6 @@ public:
      struct Params
      {
           int AllFrame;
-          int MotionNumber;
      };
 
      // コンストラクタ

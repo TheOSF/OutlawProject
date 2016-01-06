@@ -96,7 +96,7 @@ const char* CharacterBase::GetCharacterModelPath(CharacterType::Value chr_type)
         "DATA\\CHR\\SanoTennis\\tennis.iem",
         "DATA\\CHR\\BaseBall\\player_B.iem",
         "DATA\\CHR\\Soccer\\Player_S.iem",
-        "DATA\\CHR\\Soccer\\Player_S.iem",
+        "DATA\\CHR\\AmericanFootball\\AmericanFootball_v3.iem",
     };
 
     MyAssert((int)chr_type >= 0 && (int)chr_type < 4, "存在しないキャラクタタイプが引数に送られました type= %d ", (int)chr_type);
@@ -154,7 +154,7 @@ int CharacterBase::GetWinMotion(CharacterType::Value chr_type)
         (int)TennisPlayer::_mt_WinPose,
         (int)baseball_player::_mb_WinPose,
         (int)SoccerPlayer::_ms_Win,
-        (int)AmefootPlayer::Motion_Counter,
+        (int)AmefootPlayer::Motion_Win_Pose,
     };
 
     MyAssert((int)chr_type >= 0 && (int)chr_type < 4, "存在しないキャラクタタイプが引数に送られました type= %d ", (int)chr_type);
@@ -169,7 +169,7 @@ int CharacterBase::GetLoseMotion(CharacterType::Value chr_type)
         (int)TennisPlayer::_mt_LosePose,
         (int)baseball_player::_mb_LosePose,
         (int)SoccerPlayer::_ms_Lose,
-        (int)AmefootPlayer::Motion_CounterFailed,
+        (int)AmefootPlayer::Motion_Lose_Pose,
     };
 
     MyAssert((int)chr_type >= 0 && (int)chr_type < 4, "存在しないキャラクタタイプが引数に送られました type= %d ", (int)chr_type);

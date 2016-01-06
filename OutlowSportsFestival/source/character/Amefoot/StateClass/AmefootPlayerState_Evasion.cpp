@@ -50,7 +50,7 @@ void AmefootPlayerState_Evasion::Enter(AmefootPlayer* pCharacter)
           params.MoveDownSpeed = 0.25f;
           params.MoveSpeed = pCharacter->m_Params.move.Length();
           params.NoDamageEndFrame = 80;
-          params.NoDamageStartFrame = 8;
+          params.NoDamageStartFrame = 5;
 
           m_pCharacterEvasion = new CharacterEvasion(
                pCharacter,
@@ -61,8 +61,7 @@ void AmefootPlayerState_Evasion::Enter(AmefootPlayer* pCharacter)
 
      {
           AmefootEvasionStandUpClass::Params params;
-          params.AllFrame = 8;
-          params.MotionNumber = AmefootPlayer::Motion_EvasionStandUp;
+          params.AllFrame = 45;
 
           m_pAmefootEvasionStandUpClass = new AmefootEvasionStandUpClass(
                pCharacter,
@@ -125,7 +124,7 @@ void AmefootPlayerState_Evasion::EvasionEvent::Update()
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_Evasion::EvasionEvent::EvasionStart()
 {
-     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_EvasionStart);
+     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Evasion_Start);
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_Evasion::EvasionEvent::EvasionEnd()

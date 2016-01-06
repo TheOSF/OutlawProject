@@ -100,7 +100,7 @@ AmefootPlayerState_ReceiveVanishDamage::VanishEvent::VanishEvent(AmefootPlayer* 
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::FlyStart()
 {
-     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Vanishing);
+     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Damage_Vanish_Start);
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::Flying(Matrix const& rotation,RATIO speed)
@@ -118,7 +118,7 @@ void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::Flying(Matrix const& r
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::DownStart()
 {
-     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Down);
+     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Damage_Vanish_Landing);
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::Downing()
@@ -134,7 +134,7 @@ void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::Downing()
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::StandUpStart()
 {
-     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_StandUp);
+     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Damage_Vanish_Standup);
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::StandUping()
@@ -154,16 +154,30 @@ void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::End()
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::HitWall()
-{}
+{
+    m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Damage_Vanish_Hit_Wall);
+}
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::HitFloor()
-{}
+{
+    m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Damage_Vanish_Hit_Wall_Landing);
+}
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::HitFloorAndStandUp()
-{}
+{
+    m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Damage_Vanish_Hit_Wall_Standup);
+}
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::HitWallUpdate()
-{}
+{
+    m_pAmefoot->m_Renderer.Update(1);
+
+    chr_func::CreateTransMatrix(
+        m_pAmefoot,
+        m_pAmefoot->m_ModelSize,
+        &m_pAmefoot->m_Renderer.m_TransMatrix
+        );
+}
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::CanActionUpdate()
 {}

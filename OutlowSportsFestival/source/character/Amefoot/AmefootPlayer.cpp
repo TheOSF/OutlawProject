@@ -1,5 +1,6 @@
 
 #include "AmefootPlayer.h"
+#include "AmefootPlayerState.h"
 
 //-----------------------------------------------------------------------------------------
 // AmefootPlayer
@@ -10,6 +11,7 @@ CharacterBase(info, new BlendAnimationMesh(GetCharacterModelPath(CharacterType::
      m_pStateMachine(new AmefootStateMachine(this))
 {
     m_ModelSize = (0.052f);
+    m_Params.HP = 10;
 }
 //-----------------------------------------------------------------------------------------
 AmefootPlayer::~AmefootPlayer()
@@ -33,6 +35,7 @@ bool AmefootPlayer::CharacterMsg(MsgType msg)
      case GameObjectBase::_PlayStart:
           break;
      case GameObjectBase::_RoundReset:
+         SetState(AmefootPlayerState_UsualMove::GetPlayerControllMove(this));
           break;
      case GameObjectBase::_GameSet:
           break;
@@ -43,7 +46,8 @@ bool AmefootPlayer::CharacterMsg(MsgType msg)
      default:
           break;
      }
-     return true;
+
+     return m_pStateMachine->Msg(msg);
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayer::SetState(AmefootState* state , bool important)
