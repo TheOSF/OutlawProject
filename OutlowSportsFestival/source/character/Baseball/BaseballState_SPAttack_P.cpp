@@ -72,7 +72,7 @@ void BaseballState_SPAttack_P::State_Shot()
 			FreezeGame(55);
 			//エフェクト
 			new SpecialAttackEffect(m_pBaseBall, 55);
-			m_pBaseBall->m_Renderer.SetMotion(baseball_player::_mb_WinPose);
+			m_pBaseBall->m_Renderer.SetMotion(baseball_player::_mb_Stand_B);
 		}
 		if (m_Timer == 56)
 		{
@@ -172,7 +172,7 @@ CharacterShotAttack* BaseballState_SPAttack_P::CreateSpAttack_P(BaseballPlayer* 
 		{
 
 			//　☆モーション
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Shot);
+			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Shot_P);
 		}
 
 		void AttackEnd()

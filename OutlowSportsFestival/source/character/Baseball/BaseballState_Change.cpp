@@ -61,7 +61,7 @@ void BaseballState_Change::State_Change()
 			EffectFactory::Change(Vector3(m_pBaseball->m_Params.pos.x, m_pBaseball->m_Params.pos.y + 2.0f, m_pBaseball->m_Params.pos.z), 10.0f);
 			//@Œø‰Ê‰¹
 			Sound::Play(Sound::Change);
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_WinPose);
+			
 		}
 
 		if (m_Timer == 3)
@@ -69,9 +69,11 @@ void BaseballState_Change::State_Change()
 			if (batterflg)
 			{
 				m_pBaseball->setBatterFlg(false);
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Change_P);
 			}
 			else{
 				m_pBaseball->setBatterFlg(true);
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Change_B);
 			}
 			m_pStateFunc = &BaseballState_Change::State_End;
 		}

@@ -127,7 +127,7 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 		//　遠距離攻撃開始
 		void AttackStart()override{
 			//　☆モーション
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Shot);
+			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Shot_P);
 			//　効果音
 			Sound::Play(Sound::Swing3);
 		}

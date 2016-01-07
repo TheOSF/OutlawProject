@@ -113,13 +113,13 @@ void BaseballState_SPAttack_B::State_Atk()
 		//　モーション開始
 		if (m_Timer == 1)
 		{
-			m_pBaseBall->m_Renderer.SetMotion(baseball_player::_mb_SpAtk1);
+			m_pBaseBall->m_Renderer.SetMotion(baseball_player::_mb_SpAtk_B);
 		}
 
-		if (m_Timer == 33)
+		/*if (m_Timer == 33)
 		{
 			m_pBaseBall->m_Renderer.SetMotion(baseball_player::_mb_SpAtk2);
-		}
+		}*/
 		if (m_Timer >= 56)
 		{
 			timeflg = true;

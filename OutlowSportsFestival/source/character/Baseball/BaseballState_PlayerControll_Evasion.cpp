@@ -60,7 +60,14 @@ void BaseballState_Rolling::Execute(BaseballPlayer* b)
 	//モーションセット
 	if (m_Timer == 1)
 	{
-		b->m_Renderer.SetMotion(baseball_player::_mb_Evasion);
+		if (b->getBatterFlg())
+		{
+			b->m_Renderer.SetMotion(baseball_player::_mb_Evasion_B);
+		}
+		else
+		{
+			b->m_Renderer.SetMotion(baseball_player::_mb_Evasion_P);
+		}
 	}
 
 	//移動方向をコントロール

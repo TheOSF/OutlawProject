@@ -34,9 +34,9 @@ void SceneOption::Update()
 
         //ƒLƒƒƒ‰‘I‘ð
 		param.PlayerArray.at(0) = { 0, PlayerType::_Player, CharacterType::_Baseball, StrongType::_Strong };
-		param.PlayerArray.at(1) = { 1, PlayerType::_Player, CharacterType::_Baseball, StrongType::_Weak };
-        //param.PlayerArray.at(2) = { 2, PlayerType::_Computer, CharacterType::_Baseball, StrongType::_Usual };
-        //param.PlayerArray.at(3) = { 3, PlayerType::_Computer, CharacterType::_Baseball, StrongType::_Strong };
+		param.PlayerArray.at(1) = { 1, PlayerType::_Computer, CharacterType::_Tennis, StrongType::_Strong };
+		//param.PlayerArray.at(2) = { 2, PlayerType::_Computer, CharacterType::_Baseball, StrongType::_Strong };
+        //param.PlayerArray.at(3) = { 3, PlayerType::_Computer, CharacterType::_Soccer, StrongType::_Strong };
 
         param.pInitializer = new GameInitializer_UsualMatch(Stage, param);
         MainFrame->ChangeScene(new sceneGamePlay(param));

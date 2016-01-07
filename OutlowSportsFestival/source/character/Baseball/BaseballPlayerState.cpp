@@ -174,11 +174,11 @@ bool BaseballState_PlayerControll_Move::SwitchGameState(BaseballPlayer* pb)
 		return true;
 
 	case CharacterBase::State::LosePose:
-		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_LosePose, 0.2f, 1000));
+		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_Stand_B, 0.2f, 1000));
 		return true;
 
 	case CharacterBase::State::WinPose:
-		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_WinPose, 0.2f, 1000));
+		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_Stand_P, 0.2f, 1000));
 
 		return true;
 	default:
@@ -206,11 +206,26 @@ void BaseballState_PlayerControll_Move::Enter(BaseballPlayer* b)
 		}
 		//　走り始めにモーションセット
 		void RunStart(){
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Run);
+			//　実行パターン
+			if (m_pBaseball->getBatterFlg())
+			{
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Run_B);
+			}
+			else
+			{
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Run_P);
+			}
 		}
 		//　立ち始めにモーションセット
 		void StandStart(){
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand);
+			if (m_pBaseball->getBatterFlg())
+			{
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand_B);
+			}
+			else
+			{
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand_P);
+			}
 		}
 	};
 
