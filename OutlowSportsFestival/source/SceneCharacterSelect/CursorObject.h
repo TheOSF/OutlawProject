@@ -23,6 +23,8 @@ public:
 
         Random,
 
+        ComputerDefaultPoint,
+
         ComputerStrong,
         ComputerChrSelect
     };
