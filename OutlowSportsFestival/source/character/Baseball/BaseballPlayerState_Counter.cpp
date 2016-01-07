@@ -36,20 +36,42 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
 		//構え開始
 		void Pose()
 		{
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_CounterPose);
+			if (m_pBaseball->getBatterFlg())
+			{
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_CounterPose_B);
+			}
+			else
+			{
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_CounterPose_P);
+			}
 		}
 
 		//ボールへ移動開始
 		void Move(BallBase* pCounterBall)
 		{
-			//ボールの位置によってモーション分岐
-			if (chr_func::isRight(m_pBaseball, pCounterBall->m_Params.pos))
+			if (m_pBaseball->getBatterFlg())
 			{
-				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_CounterRight);
+				//ボールの位置によってモーション分岐
+				if (chr_func::isRight(m_pBaseball, pCounterBall->m_Params.pos))
+				{
+					m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_CounterRight_B);
+				}
+				else
+				{
+					m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_CounterLeft_B);
+				}
 			}
 			else
 			{
-				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_CounterLeft);
+				//ボールの位置によってモーション分岐
+				if (chr_func::isRight(m_pBaseball, pCounterBall->m_Params.pos))
+				{
+					m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_CounterRight_P);
+				}
+				else
+				{
+					m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_CounterLeft_P);
+				}
 			}
 		}
 
@@ -63,7 +85,14 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
 		//打ち失敗
 		void ShotFaild()
 		{
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_LosePose);
+			if (m_pBaseball->getBatterFlg())
+			{
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand_B);
+			}
+			else
+			{
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand_P);
+			}
 		}
 
 		//終了

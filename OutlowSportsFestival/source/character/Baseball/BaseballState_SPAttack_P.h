@@ -17,6 +17,7 @@ private:
 	int                     m_Timer;
 	bool					timeflg;
 
+	void(BaseballState_SPAttack_P::*m_pStateFunc)();
 
 public:
 
@@ -37,5 +38,8 @@ public:
 
 	//　ターゲット選定
 	CharacterBase* CalcTarget()const;
+
+	void State_Shot();
+	void State_End();
 };
 

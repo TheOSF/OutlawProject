@@ -35,7 +35,7 @@ void  BaseballState_PlayerControll_ShotAttack_B::Enter(BaseballPlayer* b)
 	m_Timer = 0;
 
 	//モーションセット
-	b->m_Renderer.SetMotion(baseball_player::_mb_Shot);
+	b->m_Renderer.SetMotion(baseball_player::_mb_Shot_B);
 
 	{
 		//移動量制限

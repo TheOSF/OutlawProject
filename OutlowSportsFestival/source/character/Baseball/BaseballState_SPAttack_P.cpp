@@ -15,7 +15,8 @@
 BaseballState_SPAttack_P::BaseballState_SPAttack_P() :
 m_Timer(0),
 timeflg(false),
-m_pSpAttack_P(nullptr)
+m_pSpAttack_P(nullptr),
+m_pStateFunc()
 {
 
 }
@@ -24,12 +25,17 @@ m_pSpAttack_P(nullptr)
 //　ステート開始
 void BaseballState_SPAttack_P::Enter(BaseballPlayer* b)
 {
+	m_Timer = 0;
+
 	//以前の移動値をリセット
-	chr_func::XZMoveDown(b,1);
+	chr_func::XZMoveDown(b, 1);
+
 	// 遠距離(バッター)クラス作成
 	m_pSpAttack_P = this->CreateSpAttack_P(b);
+
 	m_pBaseBall = b;
 	timeflg = false;
+	m_pStateFunc = &BaseballState_SPAttack_P::State_Shot;
 
 	//　スキルゲージリセット
 	chr_func::ResetSkillGauge(b);
@@ -37,8 +43,26 @@ void BaseballState_SPAttack_P::Enter(BaseballPlayer* b)
 
 
 //　ステート実行
-void BaseballState_SPAttack_P::Execute(BaseballPlayer* b){
-	
+void BaseballState_SPAttack_P::Execute(BaseballPlayer* b)
+{
+
+	//　実行
+	(this->*m_pStateFunc)();
+
+	//　モーション更新とか
+	b->m_Renderer.Update(1);
+	chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
+
+
+}
+
+//　ステート終了
+void BaseballState_SPAttack_P::Exit(BaseballPlayer* b){
+	delete m_pSpAttack_P;
+}
+
+void BaseballState_SPAttack_P::State_Shot()
+{
 	if (!timeflg)
 	{
 		m_Timer++;
@@ -47,7 +71,8 @@ void BaseballState_SPAttack_P::Execute(BaseballPlayer* b){
 			Sound::Play(Sound::Skill);
 			FreezeGame(55);
 			//エフェクト
-			new SpecialAttackEffect(b, 55);
+			new SpecialAttackEffect(m_pBaseBall, 55);
+			m_pBaseBall->m_Renderer.SetMotion(baseball_player::_mb_Stand_B);
 		}
 		if (m_Timer == 56)
 		{
@@ -57,94 +82,113 @@ void BaseballState_SPAttack_P::Execute(BaseballPlayer* b){
 	}
 	else
 	{
+
 		// スティックの値セット
-		if (b->m_PlayerInfo.player_type == PlayerType::_Player)
+		if (m_pBaseBall->m_PlayerInfo.player_type == PlayerType::_Player)
 		{
 			m_pSpAttack_P->SetStickValue(
-				controller::GetStickValue(controller::stick::left, b->m_PlayerInfo.number));
-
-			target = nullptr;
-			target = CalcTarget();
-			const float AngleSpeed = D3DXToRadian(3);
-
-			//ターゲットがいたら
-			if (target != nullptr)
-			{
-				chr_func::AngleControll(b, target->m_Params.pos, AngleSpeed*2.0f);
-			}
+				controller::GetStickValue(controller::stick::left, m_pBaseBall->m_PlayerInfo.number));
 		}
+		target = nullptr;
+		target = CalcTarget();
+		const float AngleSpeed = D3DXToRadian(3);
+
+		//ターゲットがいたら
+		if (target != nullptr)
+		{
+			chr_func::AngleControll(m_pBaseBall, target->m_Params.pos, AngleSpeed*2.0f);
+		}
+
 		// 更新
 		if (m_pSpAttack_P->Update() == false)
 		{
 			return;
 		}
+
+		m_Timer++;
+
+		if (m_Timer == 30)
+		{
+			m_Timer = 0;
+			m_pStateFunc = &BaseballState_SPAttack_P::State_End;
+		}
+	}
+
+}
+
+void BaseballState_SPAttack_P::State_End()
+{
+	if (m_pBaseBall->m_PlayerInfo.player_type == PlayerType::_Player)
+	{
+		//攻撃終了時に通常移動モードに戻る
+		m_pBaseBall->SetState(new BaseballState_PlayerControll_Move());
+	}
+	else
+	{
+		m_pBaseBall->SetState(new BaseballPlayerState_ComMove());
 	}
 }
-
-//　ステート終了
-void BaseballState_SPAttack_P::Exit(BaseballPlayer* b){
-	delete m_pSpAttack_P;
-}
-
 
 //　遠距離クラス
 CharacterShotAttack* BaseballState_SPAttack_P::CreateSpAttack_P(BaseballPlayer* b){
 	class SpAttackEvent :public CharacterShotAttack::Event{
 		BaseballPlayer* m_pBaseball;//　野球
-	
+
 	public:
 		//　コンストラクタ
 		SpAttackEvent(BaseballPlayer* pBaseball) :
 			m_pBaseball(pBaseball){}
 		//　更新
 		void Update()override{
-			
+
 			//　モデル更新
 			m_pBaseball->m_Renderer.Update(1.0f);
 
 			// 転送行列更新
 			chr_func::CreateTransMatrix(
 				m_pBaseball,
-				0.05f,
+				m_pBaseball->m_ModelSize,
 				&m_pBaseball->m_Renderer.m_TransMatrix);
+
 		}
 
 		// ダメージ判定開始 & ボール発射
 		void Shot()
 		{
-		
-            Vector3 pos, move;
-			
+
+			Vector3 pos, move;
+
 			chr_func::GetFront(m_pBaseball, &move);
-            move *= 3.8f;
-            pos = m_pBaseball->m_Params.pos;
-            pos.y = BallBase::UsualBallShotY;
+			move *= 3.8f;
+			pos = m_pBaseball->m_Params.pos;
+			pos.y = BallBase::UsualBallShotY;
 
 			//　威力とか
-            new Baseball_SpAtk_Ball(m_pBaseball, pos, move, 50);
+			new Baseball_SpAtk_Ball(m_pBaseball, pos, move, 50);
 		}
 
 		//　遠距離攻撃開始
 		void AttackStart()override
 		{
+
 			//　☆モーション
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Shot);
+			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Shot_P);
 		}
 
 		void AttackEnd()
 		{
-			if (m_pBaseball->m_PlayerInfo.player_type == PlayerType::_Player)
-			{
-				//攻撃終了時に通常移動モードに戻る
-				m_pBaseball->SetState(new BaseballState_PlayerControll_Move());
-			}
-			else
-			{
-				m_pBaseball->SetState(new BaseballPlayerState_ComMove());
-			}
+			//if (m_pBaseball->m_PlayerInfo.player_type == PlayerType::_Player)
+			//{
+			//	//攻撃終了時に通常移動モードに戻る
+			//	m_pBaseball->SetState(new BaseballState_PlayerControll_Move());
+			//}
+			//else
+			//{
+			//	m_pBaseball->SetState(new BaseballPlayerState_ComMove());
+			//}
 
 		}
-	
+
 	};
 
 	CharacterShotAttack::AttackParams atk;
@@ -154,12 +198,13 @@ CharacterShotAttack* BaseballState_SPAttack_P::CreateSpAttack_P(BaseballPlayer* 
 	atk.MaxTurnRadian = PI / 4;
 	atk.MoveDownSpeed = 1.2f;
 	atk.ShotFrame = 15;
+	//DamageManager::HitEventBase NoDmgHitEvent;   //ノーダメージ
 
 	return m_pSpAttack_P = new CharacterShotAttack(
 		b,
 		new SpAttackEvent(b),
 		atk,
-		new  BaseballHitEvent(b)
+		new  DamageManager::HitEventBase()
 		);
 }
 

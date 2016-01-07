@@ -43,7 +43,7 @@ void  BaseballState_SPAttack_B::Enter(BaseballPlayer* b)
 
 	m_Timer = 0;
 
-	m_pStateFunc = &BaseballState_SPAttack_B::State_Atk2;
+	m_pStateFunc = &BaseballState_SPAttack_B::State_Atk;
 
 	m_pBaseBall = b;
 
@@ -59,24 +59,17 @@ void  BaseballState_SPAttack_B::Enter(BaseballPlayer* b)
 // ステート実行
 void BaseballState_SPAttack_B::Execute(BaseballPlayer* b)
 {
-	const int NoDamageFrame = 10;     //無敵時間
-	DamageManager::HitEventBase NoDmgHitEvent;   //ノーダメージ
+	//ノーダメージ
+	DamageManager::HitEventBase NoDmgHitEvent;
+
+	//　実行
 	(this->*m_pStateFunc)();
 
-	{
-		//無敵フレームかによってヒットイベントクラスの分岐
-		if (m_Timer < NoDamageFrame)
-		{
-			chr_func::UpdateAll(b, &NoDmgHitEvent);
-		}
-		else
-		{
-			chr_func::UpdateAll(b, &DamageManager::HitEventBase());
-		}
+	//　無敵
+	chr_func::UpdateAll(b, &NoDmgHitEvent);
 
-		b->m_Renderer.Update(1);
-		chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
-	}
+	b->m_Renderer.Update(1);
+	chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
 
 	if (m_pStateFunc == &BaseballState_SPAttack_B::State_Finish)
 	{
@@ -101,88 +94,7 @@ void BaseballState_SPAttack_B::Exit(BaseballPlayer* b)
 
 
 
-//void BaseballState_SPAttack_B::State_Atk1()
-//{
-//	m_Timer++;
-//
-//	if (!timeflg)
-//	{
-//		//　発動音再生&The World
-//		//if (m_Timer == 1)
-//		//{
-//		//	//Sound::Play(Sound::Skill);
-//		//	//FreezeGame(55);
-//		//}
-//
-//		if (m_Timer >= 56)
-//		{
-//			timeflg = true;
-//			m_Timer = 0;
-//		}
-//	}
-//	else
-//	{
-//		//　雷エフェクト発動
-//		ThunderInvoke(5);
-//
-//		//　モーション開始
-//		if (m_Timer == 1)
-//		{
-//			Sound::Play(Sound::Swing2);
-//			m_pBaseBall->m_Renderer.SetMotion(baseball_player::_mb_Atk1);
-//		}
-//		//　当たり判定の場所とか
-//		if (m_Timer == 3)
-//		{
-//			m_Damage.m_Enable = true;
-//			chr_func::GetFront(m_pBaseBall, &m_Damage.m_Param.pos);
-//			m_Damage.m_Vec = m_Damage.m_Param.pos;
-//			m_Damage.m_Param.pos *= 3.0f;
-//			m_Damage.m_Param.pos += m_pBaseBall->m_Params.pos;
-//			m_Damage.m_VecPower.x = 0.2f;
-//			m_Damage.m_VecPower.y = 0.0f;
-//		}
-//		else
-//		{
-//			m_Damage.m_Enable = false;
-//		}
-//		//　当たってたら止める
-//		if (m_Damage.HitCount > 0 && m_Timer == 12)
-//		{
-//			FreezeGame(61);
-//			//エフェクト
-//			new SpecialAttackEffect(m_pBaseBall, 55);
-//		}
-//
-//		if (m_Timer == 20)
-//		{
-//			//　当たってたら2撃目へ
-//			if (m_Damage.HitCount > 0)
-//			{
-//				m_pStateFunc = &BaseballState_SPAttack_B::State_Atk2;
-//			}
-//			//　外れたら終了へ
-//			else
-//			{
-//				m_pStateFunc = &BaseballState_SPAttack_B::State_Atk1End;
-//			}
-//
-//			m_Timer = 0;
-//		}
-//	}
-//}
-//
-//void BaseballState_SPAttack_B::State_Atk1End()
-//{
-//	const int EndFrame = 20;
-//
-//	if (++m_Timer > EndFrame)
-//	{
-//		m_pStateFunc = &BaseballState_SPAttack_B::State_Finish;
-//	}
-//}
-
-void BaseballState_SPAttack_B::State_Atk2()
+void BaseballState_SPAttack_B::State_Atk()
 {
 	m_Timer++;
 	if (!timeflg)
@@ -201,13 +113,13 @@ void BaseballState_SPAttack_B::State_Atk2()
 		//　モーション開始
 		if (m_Timer == 1)
 		{
-			m_pBaseBall->m_Renderer.SetMotion(baseball_player::_mb_SpAtk1);
+			m_pBaseBall->m_Renderer.SetMotion(baseball_player::_mb_SpAtk_B);
 		}
 
-		if (m_Timer == 33)
+		/*if (m_Timer == 33)
 		{
 			m_pBaseBall->m_Renderer.SetMotion(baseball_player::_mb_SpAtk2);
-		}
+		}*/
 		if (m_Timer >= 56)
 		{
 			timeflg = true;

@@ -3,7 +3,7 @@
 #include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
 #include "../CharacterManager.h"
-
+#include "Baseball_HitEvent.h"
 #include "../../Effect/EffectFactory.h"
 #include "Sound/Sound.h"
 
@@ -32,12 +32,12 @@ void  BaseballState_Change::Enter(BaseballPlayer* b)
 // ステート実行
 void BaseballState_Change::Execute(BaseballPlayer* b)
 {
-
+	
 	chr_func::XZMoveDown(b, 0.05f);
 	(this->*m_pStateFunc)();
-	chr_func::UpdateAll(b, &DamageManager::HitEventBase());
+	chr_func::UpdateAll(b, &BaseballHitEvent(b));
 	b->m_Renderer.Update(1);
-	chr_func::CreateTransMatrix(b,b->m_ModelSize,&b->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
 }
 
 // ステート終了
@@ -48,8 +48,8 @@ void BaseballState_Change::Exit(BaseballPlayer* b)
 
 void BaseballState_Change::State_Change()
 {
-	
-	
+
+
 	if (m_pBaseball->getChangeTime() >= 20)
 	{
 		m_Timer++;
@@ -61,7 +61,7 @@ void BaseballState_Change::State_Change()
 			EffectFactory::Change(Vector3(m_pBaseball->m_Params.pos.x, m_pBaseball->m_Params.pos.y + 2.0f, m_pBaseball->m_Params.pos.z), 10.0f);
 			//　効果音
 			Sound::Play(Sound::Change);
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_WinPose);
+			
 		}
 
 		if (m_Timer == 3)
@@ -69,9 +69,11 @@ void BaseballState_Change::State_Change()
 			if (batterflg)
 			{
 				m_pBaseball->setBatterFlg(false);
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Change_P);
 			}
 			else{
 				m_pBaseball->setBatterFlg(true);
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Change_B);
 			}
 			m_pStateFunc = &BaseballState_Change::State_End;
 		}

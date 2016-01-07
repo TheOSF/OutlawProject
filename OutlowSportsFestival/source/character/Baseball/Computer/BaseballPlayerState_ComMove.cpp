@@ -63,11 +63,11 @@ bool BaseballPlayerState_ComMove::SwitchGameState(BaseballPlayer* pb)
 		return true;
 
 	case CharacterBase::State::LosePose:
-		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_LosePose, 0.2f, 1000));
+		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_Stand_B, 0.2f, 1000));
 		return true;
 
 	case CharacterBase::State::WinPose:
-		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_WinPose, 0.2f, 1000));
+		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_Stand_B, 0.2f, 1000));
 
 		return true;
 	default:
@@ -154,12 +154,26 @@ void BaseballPlayerState_ComMove::doMove(BaseballPlayer* b)
 		//走り始めにモーションをセット
 		void RunStart()
 		{
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Run);
+			if (m_pBaseball->getBatterFlg())
+			{
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Run_B);
+			}
+			else
+			{
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Run_P);
+			}
 		}
 		//立ちはじめにモーションをセット
 		void StandStart()
 		{
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand);
+			if (m_pBaseball->getBatterFlg())
+			{
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand_B);
+			}
+			else
+			{
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand_P);
+			}
 		}
 	};
 
@@ -217,9 +231,9 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 			if (m_cBaseball->getBatterFlg())
 			{
 				//　バッター時
-				if (len < 7.0f)
+				if (len < 7.4f)
 				{
-					if ((cParam.ActionFrequence * 400) > AttackPoint)
+					if ((cParam.ActionFrequence * 420) > AttackPoint)
 					{
 						//　必殺
 						if (len <= 6.0f && chr_func::isCanSpecialAttack(m_cBaseball))
@@ -237,7 +251,7 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 				{
 					//攻撃する時ならば
 
-					if ((cParam.ActionFrequence * 320) > AttackPoint)
+					if ((cParam.ActionFrequence * 350) > AttackPoint)
 					{
 						m_cBaseball->SetState(new BaseballState_PlayerControll_ShotAttack_B(new PlayerShotControllClass_B(m_cBaseball)));
 					}
@@ -257,7 +271,7 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 				if (len < 6.0f)
 				{
 					//攻撃する時ならば
-					if ((cParam.ActionFrequence * 400) > AttackPoint)
+					if ((cParam.ActionFrequence * 420) > AttackPoint)
 					{
 						m_cBaseball->SetState(new Baseball_PlayerControll_Attack_P(m_cBaseball));
 					}
@@ -266,7 +280,7 @@ void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
 				else if (len >= 6.0f && len < 35.0f)
 				{
 					//攻撃する時ならば
-					if ((cParam.ActionFrequence * 320) > AttackPoint)
+					if ((cParam.ActionFrequence * 350) > AttackPoint)
 					{
 						m_cBaseball->SetState(new BaseballState_PlayerControll_ShotAttack_P());
 					}
