@@ -528,11 +528,16 @@ void CursorManager::RandomMove(SelectCursor* p)
 
         bool Update()
         {
-            bool isLive = true;
+            bool isLive = m_Timer < 60;
 
-            if (m_Timer++ % 10 == 0)
+            if (m_Timer++ % 5 == 0)
             {
                 m_pMoveCursor->SetPoint(GetRandomPoint());
+            }
+
+            if (isLive == false)
+            {
+                m_pMoveCursor->m_Selected = true;
             }
 
             return isLive;

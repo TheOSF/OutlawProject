@@ -27,18 +27,6 @@ namespace key_vec_type {
 class SceneOption : public Scene
 {
 public:
-    class Renderer
-    {
-    public:
-        enum class DrawType
-        {
-            
-        };
-
-        void Render(
-
-            );
-    };
 	enum Nagare {
 		Sinkou,
 		Syuryo,

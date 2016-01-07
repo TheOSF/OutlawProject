@@ -660,7 +660,7 @@ void chr_func::AddWinPoint(CharacterBase* p)
 //ˆø”‚ÌƒXƒLƒ‹’l‚ª•KŽE‹Z‚ð”­“®‚Å‚«‚é‚©‚Ç‚¤‚©
 bool chr_func::isCanSpecialAttack(RATIO value)
 {
-    return value >= 0.5f;
+    return value >= 0.99f;
 }
 
 

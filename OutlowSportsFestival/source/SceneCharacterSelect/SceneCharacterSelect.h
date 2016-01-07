@@ -47,7 +47,7 @@ private:
     
     void InitData();
     void SetComputerPoint(UINT Num);
-    void SetCharacterPoint(std::array<SelectPointBase*, 4>& OutChrPoint);
+    void SetCharacterPoint();
     void SetOtherComputerCharacter();
     void CreateWindows();
     void CreateLight();

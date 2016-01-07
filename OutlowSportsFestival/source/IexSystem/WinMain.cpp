@@ -45,7 +45,7 @@ BOOL	InitApp( HWND hWnd )
 	//	メインフレームワーク生成
     MainFrame = new Framework(FPS_FLEX);
     //	初期シーン登録
-    if(1)
+    if(true)
     {
         sceneGamePlay::InitParams Param;
 

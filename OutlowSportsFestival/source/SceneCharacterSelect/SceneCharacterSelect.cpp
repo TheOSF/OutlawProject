@@ -36,36 +36,14 @@ m_LoadParams(LoadParams)
 
     
     //キャラクタポイントをセット
-    SetCharacterPoint(m_ChrPoint);
+    SetCharacterPoint();
 
     //コンピュータ用のポイントをセット
     //SetComputerPoint();
 
     //ライトセット
-    {
+    CreateLight();
 
-        //平行光
-        DirLight* pDir = new DirLight();
-
-        pDir->param.color = Vector3(0.28f, 0.24f, 0.24f);
-        pDir->param.vec = Vector3Normalize(Vector3(0.1f, -0.5f, 0.9f));//Vector3Normalize(Vector3(0.8f, -2, 0.2f));
-        pDir->param.Shadow.visible = true;
-        pDir->param.Shadow.Near = 5;
-        pDir->param.Shadow.Far = 30;
-        pDir->param.Shadow.origin = pDir->param.vec*-10.0f + Vector3(0, 0, 10);
-        pDir->param.Shadow.Size = 20;
-
-        new StaticGameObjectTemplate<DirLight>(pDir);
-
-        //環境光
-        AmbientLight* pAmb = new AmbientLight();
-
-        pAmb->param.color = Vector3(0.29f, 0.29f, 0.29f);
-        pAmb->param.Occlusion.SamplingSize = 0.1f;
-        pAmb->param.Occlusion.Enable = false;
-
-        new StaticGameObjectTemplate<AmbientLight>(pAmb);
-    }
 }
 
 SceneCharacterSelect::~SceneCharacterSelect()
@@ -79,8 +57,13 @@ SceneCharacterSelect::~SceneCharacterSelect()
 
 void SceneCharacterSelect::Update()
 {
-    DefCamera.m_Position = Vector3(0, 2.0f, 0);
-    DefCamera.m_Target = Vector3(0, 2.0f, 1);
+    static float CY[2] = { 2.0f, 2.0f };
+
+    CY[0] += controller::GetStickValue(controller::stick::right, 0).x*0.05f;
+    CY[1] += controller::GetStickValue(controller::stick::right, 0).y*0.05f;
+
+    DefCamera.m_Position = Vector3(0, 2.45f, 0);
+    DefCamera.m_Target = Vector3(0, 1.63f, 10);
 
     DefCamera.Update();
     DefGameObjMgr.Update();
@@ -130,18 +113,42 @@ void SceneCharacterSelect::InitData()
 
 }
 
-void CreateLight()
+void SceneCharacterSelect::CreateLight()
 {
 
+    //平行光
+    DirLight* pDir = new DirLight();
+
+    pDir->param.color = Vector3(0.28f, 0.24f, 0.24f);
+    pDir->param.vec = Vector3Normalize(Vector3(0.1f, -0.5f, 0.9f));//Vector3Normalize(Vector3(0.8f, -2, 0.2f));
+    pDir->param.Shadow.visible = true;
+    pDir->param.Shadow.Near = 5;
+    pDir->param.Shadow.Far = 30;
+    pDir->param.Shadow.origin = pDir->param.vec*-10.0f + Vector3(0, 0, 10);
+    pDir->param.Shadow.Size = 20;
+
+    new StaticGameObjectTemplate<DirLight>(pDir);
+
+    //環境光
+    AmbientLight* pAmb = new AmbientLight();
+
+    pAmb->param.color = Vector3(0.29f, 0.29f, 0.29f);
+    pAmb->param.Occlusion.SamplingSize = 0.1f;
+    pAmb->param.Occlusion.Enable = false;
+
+    new StaticGameObjectTemplate<AmbientLight>(pAmb);
 }
 
-void SceneCharacterSelect::SetCharacterPoint(std::array<SelectPointBase*, 4>& ChrPoint)
+void SceneCharacterSelect::SetCharacterPoint()
 {
     //キャラのカーソルポイントたち
     {
         SelectPointBase* p;
         Vector2 Center((float)iexSystem::ScreenWidth*0.5f, (float)iexSystem::ScreenHeight*0.5f);
-        const float Space = 120.0f;
+        const float Space = 240.0f;
+
+        Vector2 PosA = Vector2(-300, 200);
+        Vector2 PosB = Vector2(-100, 150);
 
         struct
         {
@@ -150,10 +157,10 @@ void SceneCharacterSelect::SetCharacterPoint(std::array<SelectPointBase*, 4>& Ch
         }
         ChrPointData[4] =
         {
-            { SelectPointBase::PointType::Tennis, Center + Vector2(-Space, -Space) },
-            { SelectPointBase::PointType::Soccer, Center + Vector2(Space, -Space) },
-            { SelectPointBase::PointType::BaseBall, Center + Vector2(-Space, Space) },
-            { SelectPointBase::PointType::AmericanFootBall, Center + Vector2(Space, Space) },
+            { SelectPointBase::PointType::Tennis, Center + PosA },
+            { SelectPointBase::PointType::Soccer, Center + PosB },
+            { SelectPointBase::PointType::BaseBall, Center + Vector2(-PosB.x, PosB.y) },
+            { SelectPointBase::PointType::AmericanFootBall, Center + Vector2(-PosA.x, PosA.y) },
         };
 
         for (int i = 0; i < (int)ARRAYSIZE(ChrPointData); ++i)
@@ -162,8 +169,13 @@ void SceneCharacterSelect::SetCharacterPoint(std::array<SelectPointBase*, 4>& Ch
             p->m_Pos = Center;
             p->m_MoveTargetPos = ChrPointData[i].Pos;
 
-            ChrPoint[i] = p;
+            m_ChrPoint[i] = p;
         }
+
+        p = new SelectPointBase(m_pManager, SelectPointBase::PointType::Random, &m_Texture, RectI(0, 0, 64, 64));
+        p->m_Pos = Center;
+        p->m_MoveTargetPos = Center + Vector2(0, 250);
+
     }
 }
 
@@ -227,6 +239,8 @@ void SceneCharacterSelect::State_PreSelect()
         for (UINT i = 0; i < 4; ++i)
         {
             SelectCursor* p = new SelectCursor(m_pManager, (controller::CONTROLLER_NUM)i, &m_Texture, RectI(0, 0, 128, 128), m_ChrPoint[i]);
+
+            p->m_PlayerInfo = m_LoadParams.PlayerArray.at(i);
 
             //操作不能に
             if (p->m_PlayerInfo.player_type == PlayerType::_Computer)

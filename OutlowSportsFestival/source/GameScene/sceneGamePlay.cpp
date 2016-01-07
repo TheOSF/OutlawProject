@@ -48,7 +48,12 @@
 sceneGamePlay::InitParams::InitParams()
 {
     pInitializer = nullptr;
-    PlayerArray.fill({ -1, PlayerType::_Player, CharacterType::_Tennis, StrongType::_Usual });
+    PlayerArray.fill({ 0, PlayerType::_Player, CharacterType::_Tennis, StrongType::_Usual });
+    for (int i = 0; i < 4; ++i)
+    {
+        PlayerArray.at(i).number = i;
+    }
+
     Round = 1;
     Time = 60 * 60 * 1;
 }
