@@ -1,47 +1,58 @@
+#pragma once
 //*****************************************************************************************************************************
 //
 //		ステージセレクトシーン
 //
 //*****************************************************************************************************************************
 #pragma once
-
 #include "../IexSystem/Scene.h"
 #include "../utillity/ScreenEffect.h"
-#include "../GameSystem/GameSystem.h"
-
 #include "../GameScene/SceneGamePlay.h"
-
+using namespace std;
+enum Stagetex{
+	Kasentex,
+	Groundtex
+};
+enum Step {
+	TitleMove,
+	TexMove,
+	Select,
+	Decidion,
+	leave
+};
 class SceneStageSelect : public Scene
 {
-public:
-    SceneStageSelect(
-        sceneGamePlay::InitParams& LoadParams
-        );
-
-    ~SceneStageSelect();
-
-    void Update();
-    void Render();
-
 private:
-    enum class NextSceneType
-    {
-        _NoChange,
+	int Time;
+	int WakuX;
+	int GroundX;
+	int KasenX;
+	int TitleY;
+	float WhiteAlpha;
+public:
+	SceneStageSelect(sceneGamePlay::InitParams param);
+	~SceneStageSelect();
 
-        Back,
-        Next,
-    };
+	Stagetex stagetexture;
+	Step step;
+	sceneGamePlay::InitParams initparam;
 
-    NextSceneType               m_NextSceneType;
-    sceneGamePlay::InitParams   m_LoadParams;
-    int     m_Timer;
+	iex2DObj* Back;//タイトル画像
+	iex2DObj* Waku1;
+	iex2DObj* Waku2;
+	iex2DObj* Kasen;
+	iex2DObj* Ground;
+	iex2DObj* White;
+	iex2DObj* StageSelect;
+	iex2DObj* Decide;
 
-    void(SceneStageSelect::*m_pStateFunc)();
+	
 
-    void State_PreSelect();
-    void State_Selecting();
-    void State_FadeOut();
-    void State_Change();
+
+	void WakuUpdate();
+	void Update();
+	void WakuRender();
+	void SelectRender();
+	void Render();
 
 };
-

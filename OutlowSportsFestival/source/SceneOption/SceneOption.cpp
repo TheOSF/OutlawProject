@@ -1,4 +1,5 @@
 #include "SceneOption.h"
+#include "../SceneStageSelect/SceneStageSelect.h"
 #include "../IexSystem/Framework.h"
 #include "../GameScene/SceneGamePlay.h"
 #include "../GameSystem/GameController.h"
@@ -7,8 +8,6 @@
 
 #include    "../GameSystem/GameObject.h"
 #include "../GameSystem/GameInitilizer_UsualMatch.h"
-
-#include "../SceneCharacterSelect/SceneCharacterSelect.h"
 
 struct POSITON_SIZE
 {
@@ -82,14 +81,11 @@ SceneOption::SceneOption()
 	Ball_Ground_y = 800;
 	BallPosInit();
 	nextsceneflg = false;
-
-    Sound::StopBGM();
-    Sound::Play(Sound::BGM_Option, 1, true);
 }
 
 SceneOption::~SceneOption()
 {
-
+    DefGameObjMgr.Release(); //ゲームオブジェクト削除は一番初めに
 	delete Back;
 	delete select;
 	delete Topping;
@@ -404,7 +400,7 @@ void SceneOption::Change() {
 			mode = Decide;
 			Sound::Play(Sound::Cursor_enter);
 		}
-		if (controller::GetTRG(controller::button::batu, 0)) {
+		if (controller::GetTRG(controller::button::batu, 0)){
 			mode = Time;
 			round = Roundnon;
 			Sound::Play(Sound::Cursor_cancel);
@@ -736,7 +732,7 @@ void SceneOption::BallRender()
 
 void SceneOption::Update()
 {
-	//Sound::Play(Sound::Cursor_enter);
+	Sound::Play(Sound::Cursor_enter);
 	ToppingUpdate();
 	switch (nagare) {
 	case Sinkou:
@@ -750,7 +746,7 @@ void SceneOption::Update()
 		ShadowAlpha = ball_y / (float)Ball_Ground_y;
 		BallUpdate();
 		Change();
-		if (controller::GetTRG(controller::button::maru, 0)
+		if (controller::GetTRG(controller::button::maru, 1)
 			&& mode == Decide) {
 			nagare = leave;
 			counter = 0;
@@ -767,10 +763,43 @@ void SceneOption::Update()
 		if (BallAlpha <= .0f)BallAlpha = .0f;
 		ShadowAlpha = .0f;
 		BallUpdate();
-
 		if (nextsceneflg) 
 		{
-            MainFrame->ChangeScene(new SceneCharacterSelect(param, (int)player + 1));
+			//GameInitializer_UsualMatch::StageType Stage = GameInitializer_UsualMatch::StageType::Kasennziki;
+			param.PlayerArray.fill({ -1, PlayerType::_Player, CharacterType::_Tennis, StrongType::_Strong });
+
+			//キャラ選択
+
+			param.PlayerArray.at(0) = { 0, PlayerType::_Computer, CharacterType::_Soccer,StrongType::_Strong };
+			param.PlayerArray.at(1) = { 1, PlayerType::_Computer, CharacterType::_Soccer,StrongType::_Strong };
+			param.PlayerArray.at(2) = { 2, PlayerType::_Computer, CharacterType::_Soccer,StrongType::_Strong };
+			param.PlayerArray.at(3) = { 3, PlayerType::_Computer, CharacterType::_Soccer,StrongType::_Strong };
+			if (player == one)
+			{
+				param.PlayerArray.at(0) = { 0, PlayerType::_Player, CharacterType::_Soccer,StrongType::_Strong };
+			}
+			else if (player == two)
+			{
+				param.PlayerArray.at(0) = { 0, PlayerType::_Player, CharacterType::_Soccer,StrongType::_Strong };
+				param.PlayerArray.at(1) = { 1, PlayerType::_Player, CharacterType::_Soccer,StrongType::_Strong };
+			}
+			else if (player == three)
+			{
+				param.PlayerArray.at(0) = { 0, PlayerType::_Player, CharacterType::_Soccer,StrongType::_Strong };
+				param.PlayerArray.at(1) = { 1, PlayerType::_Player, CharacterType::_Soccer,StrongType::_Strong };
+				param.PlayerArray.at(2) = { 2, PlayerType::_Player, CharacterType::_Soccer,StrongType::_Strong };
+			}
+			else if (player == four)
+			{
+				param.PlayerArray.at(0) = { 0, PlayerType::_Player, CharacterType::_Soccer,StrongType::_Strong };
+				param.PlayerArray.at(1) = { 1, PlayerType::_Player, CharacterType::_Soccer,StrongType::_Strong };
+				param.PlayerArray.at(2) = { 2, PlayerType::_Player, CharacterType::_Soccer,StrongType::_Strong };
+				param.PlayerArray.at(3) = { 3, PlayerType::_Player, CharacterType::_Soccer,StrongType::_Strong };
+			}
+
+			//param.pInitializer = new GameInitializer_UsualMatch(Stage, param);
+			//MainFrame->ChangeScene(new sceneGamePlay(param));
+			MainFrame->ChangeScene(new SceneStageSelect(param));
 		}
 		break;
 	}
