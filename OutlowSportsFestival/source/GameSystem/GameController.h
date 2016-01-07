@@ -82,6 +82,7 @@ namespace controller
         CONTROLLER_NUM num,
         int pattern = 0     //とりあえず０でおｋ
         );
+	
 }
 
 //デフォルトのbuttonセットを設定する
