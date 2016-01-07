@@ -1,4 +1,5 @@
 #include "SceneOption.h"
+#include "../SceneStageSelect/SceneStageSelect.h"
 #include "../IexSystem/Framework.h"
 #include "../GameScene/SceneGamePlay.h"
 #include "../GameSystem/GameController.h"
@@ -370,24 +371,24 @@ void SceneOption::Change() {
 	switch (mode)
 	{
 	case Player:
-		if (controller::GetTRG(controller::button::maru, 1)) {
+		if (controller::GetTRG(controller::button::maru, 0)) {
 			mode = Time;
 			time = hun1;
 			Sound::Play(Sound::Cursor_enter);
 		}
-		if (controller::GetTRG(controller::button::batu, 1)) {
+		if (controller::GetTRG(controller::button::batu, 0)) {
 			//MainFrame->ChangeScene(new Title());
 			Sound::Play(Sound::Cursor_cancel);
 		}
 		Switchplayer();
 		break;
 	case Time:
-		if (controller::GetTRG(controller::button::maru, 1)) {
+		if (controller::GetTRG(controller::button::maru, 0)) {
 			mode = Round;
 			round = R1;
 			Sound::Play(Sound::Cursor_enter);
 		}
-		if (controller::GetTRG(controller::button::batu, 1)) {
+		if (controller::GetTRG(controller::button::batu, 0)) {
 			mode = Player;
 			time = hunnon;
 			Sound::Play(Sound::Cursor_cancel);
@@ -395,11 +396,11 @@ void SceneOption::Change() {
 		Switchtime();
 		break;
 	case Round:
-		if (controller::GetTRG(controller::button::maru, 1)) {
+		if (controller::GetTRG(controller::button::maru, 0)) {
 			mode = Decide;
 			Sound::Play(Sound::Cursor_enter);
 		}
-		if (controller::GetTRG(controller::button::batu, 1)) {
+		if (controller::GetTRG(controller::button::batu, 0)){
 			mode = Time;
 			round = Roundnon;
 			Sound::Play(Sound::Cursor_cancel);
@@ -764,7 +765,7 @@ void SceneOption::Update()
 		BallUpdate();
 		if (nextsceneflg) 
 		{
-			GameInitializer_UsualMatch::StageType Stage = GameInitializer_UsualMatch::StageType::Kasennziki;
+			//GameInitializer_UsualMatch::StageType Stage = GameInitializer_UsualMatch::StageType::Kasennziki;
 			param.PlayerArray.fill({ -1, PlayerType::_Player, CharacterType::_Tennis, StrongType::_Strong });
 
 			//ƒLƒƒƒ‰‘I‘ð
@@ -796,8 +797,9 @@ void SceneOption::Update()
 				param.PlayerArray.at(3) = { 3, PlayerType::_Player, CharacterType::_Soccer,StrongType::_Strong };
 			}
 
-			param.pInitializer = new GameInitializer_UsualMatch(Stage, param);
-			MainFrame->ChangeScene(new sceneGamePlay(param));
+			//param.pInitializer = new GameInitializer_UsualMatch(Stage, param);
+			//MainFrame->ChangeScene(new sceneGamePlay(param));
+			MainFrame->ChangeScene(new SceneStageSelect(param));
 		}
 		break;
 	}
