@@ -16,6 +16,7 @@ public:
     {
         NoTexture,
         UseColor,
+        UseColor_DarkToAlpha, 
         UseColorSpecular,
         UseColorSpecularLightMap,
     };

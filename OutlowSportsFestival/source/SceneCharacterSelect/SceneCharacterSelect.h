@@ -40,8 +40,8 @@ private:
     CursorManager*  m_pManager;
     iex2DObj        m_Texture;
     int             m_Timer;
-
-
+    iex2DObj        m_BackTex;
+    SelectPointBase*m_pComputerDefaultPoint;
 
     void(SceneCharacterSelect::*m_pStateFunc)();
     
@@ -51,11 +51,13 @@ private:
     void SetOtherComputerCharacter();
     void CreateWindows();
     void CreateLight();
+    void CreateFloor();
+    void CreateBack();
 
     void State_PreSelect();
     void State_Selecting();
     void State_FadeOut();
     void State_Change();
 
-};
 
+};

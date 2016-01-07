@@ -21,17 +21,6 @@ m_pRigitBody(nullptr),
 
 m_pStateFunc(&BaseballEquip::StateEquip)
 {
-	class PhysicUpdateCallBack :public MeshRenderer::PreRenderCallBack
-	{
-		RigidBody* const pRigidBody;
-	public:
-		PhysicUpdateCallBack(RigidBody* const pRigidBody) :pRigidBody(pRigidBody){}
-
-		void Execute(MeshRenderer* pRenderer, Type type)
-		{
-
-		}
-	};
 
 	//Å@è¡ãéäJénéûä‘
 	m_DeleteFrame = DeleteTimeSet;

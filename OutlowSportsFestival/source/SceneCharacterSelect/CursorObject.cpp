@@ -49,7 +49,7 @@ Vector2 SelectPointBase::GetOffSetPos(SelectCursor* p)
         }
         else
         {
-            return m_Pos + Vector2(0, Size*0.66f);
+            return m_Pos + Vector2(0, Size * 0.66f);
         }
     
     case 4:
@@ -62,6 +62,12 @@ Vector2 SelectPointBase::GetOffSetPos(SelectCursor* p)
     MyAssert(false, "乗っている数がおかしい！");
 
     return Vector2(0, 0);
+}
+
+bool SelectPointBase::CanOnCursor()const
+{
+    //コンピュータ用のポイント出なければ乗れる
+    return m_Type != PointType::ComputerDefaultPoint;
 }
 
 void SelectPointBase::OnCursor(SelectCursor* p)
@@ -435,7 +441,7 @@ bool CursorManager::GetNextPoint(
     
     for (auto& it : m_PointData)
     {
-        if (it == nullptr || it == pNow)
+        if (it == nullptr || it == pNow || it->CanOnCursor() == false)
         {
             continue;
         }

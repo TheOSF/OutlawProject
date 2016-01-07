@@ -6,6 +6,9 @@
 #include "SelectCharacterWindow.h"
 #include "../Render/LightObject.h"
 #include "../utillity/StaticGameObjectTemplate.h"
+#include "../Render/MeshRenderer.h"
+
+#include "../Sound/Sound.h"
 
 SceneCharacterSelect::SceneCharacterSelect(
     sceneGamePlay::InitParams&  LoadParams,
@@ -16,7 +19,8 @@ m_pStateFunc(&SceneCharacterSelect::State_PreSelect),
 m_Timer(0),
 m_PlayerNum(PlayerNum),
 m_NextSceneType(NextSceneType::_NoChange),
-m_LoadParams(LoadParams)
+m_LoadParams(LoadParams),
+m_BackTex("DATA\\Texture\\mizu.png")
 {
     //	環境設定
     {
@@ -34,7 +38,12 @@ m_LoadParams(LoadParams)
     //マネージャ
     m_pManager = new CursorManager();
 
-    
+    //コンピュータカーソルのデフォルト位置を生成
+    m_pComputerDefaultPoint = new SelectPointBase(m_pManager, SelectPointBase::PointType::ComputerDefaultPoint, &m_Texture, RectI(0, 0, 128, 128));
+    m_pComputerDefaultPoint->m_MoveTargetPos = Vector2((float)iexSystem::ScreenWidth / 2, -500);
+    m_pComputerDefaultPoint->m_Pos = m_pComputerDefaultPoint->m_MoveTargetPos;
+
+
     //キャラクタポイントをセット
     SetCharacterPoint();
 
@@ -44,6 +53,16 @@ m_LoadParams(LoadParams)
     //ライトセット
     CreateLight();
 
+    //床セット
+    CreateFloor();
+
+
+    //背景オブジェクトを生成
+    CreateBack();
+
+
+    Sound::StopBGM();
+    Sound::Play(Sound::BGM_ChrSelect, 1, true);
 }
 
 SceneCharacterSelect::~SceneCharacterSelect()
@@ -57,11 +76,6 @@ SceneCharacterSelect::~SceneCharacterSelect()
 
 void SceneCharacterSelect::Update()
 {
-    static float CY[2] = { 2.0f, 2.0f };
-
-    CY[0] += controller::GetStickValue(controller::stick::right, 0).x*0.05f;
-    CY[1] += controller::GetStickValue(controller::stick::right, 0).y*0.05f;
-
     DefCamera.m_Position = Vector3(0, 2.45f, 0);
     DefCamera.m_Target = Vector3(0, 1.63f, 10);
 
@@ -89,7 +103,7 @@ void SceneCharacterSelect::Update()
 void SceneCharacterSelect::Render()
 {
     DefCamera.Clear();
-    
+
     DefRendererMgr.Render();
 }
 
@@ -125,7 +139,7 @@ void SceneCharacterSelect::CreateLight()
     pDir->param.Shadow.Near = 5;
     pDir->param.Shadow.Far = 30;
     pDir->param.Shadow.origin = pDir->param.vec*-10.0f + Vector3(0, 0, 10);
-    pDir->param.Shadow.Size = 20;
+    pDir->param.Shadow.Size = 17;
 
     new StaticGameObjectTemplate<DirLight>(pDir);
 
@@ -137,6 +151,77 @@ void SceneCharacterSelect::CreateLight()
     pAmb->param.Occlusion.Enable = false;
 
     new StaticGameObjectTemplate<AmbientLight>(pAmb);
+}
+
+void SceneCharacterSelect::CreateFloor()
+{
+
+    MeshRenderer* pRenderer = new MeshRenderer(
+        new IEXMESH("DATA\\ChrSelect\\yuka\\yuka.imo"),
+        true,
+        MeshRenderer::RenderType::UseColor_DarkToAlpha
+        );
+    { 
+        Matrix T;
+        const float Scale = 3.0f;
+
+        D3DXMatrixScaling(&T, Scale, Scale, Scale);
+
+        T._43 = 15.0f;
+
+        pRenderer->SetMatrix(T);
+    }
+
+    new StaticGameObjectTemplate<MeshRenderer>(pRenderer);
+
+}
+
+void SceneCharacterSelect::CreateBack()
+{
+
+    class Renderer :public DeferredRenderer
+    {
+        iex2DObj* pTexture;
+        float Z;
+    public:
+        Renderer(
+            iex2DObj* pTexture
+            ) :
+            pTexture(pTexture),
+            Z(26)
+        {}
+
+        //void CalcZ()
+        //{
+        //    m_SortZ = 1.0f;
+        //}
+
+        ////描画(自動的に呼ばれる)
+        //void Render()
+        //{
+        //    pTexture->Render(0, 0, iexSystem::ScreenWidth, iexSystem::ScreenHeight, 0, 0, 1024, 512, RS_COPY, 0xFFFFFFFF, 1.0f);
+        //}
+
+        void GbufRender(
+            iexShader*        pShader,                       //シェーダークラス
+            DeferredGbufRenderer::TechniqueSetter*  pSetter  //テクニック管理クラス
+            ) 
+        {
+            char path[256];
+            pSetter->NoTexture2D(path, 256, Z);
+            pTexture->Render(0, 0, iexSystem::ScreenWidth, iexSystem::ScreenHeight, 0, 0, 1024, 512, pShader, path, 0xFFFFFFFF, Z);
+        }
+
+        void MasterRender()
+        {
+            pTexture->Render(0, 0, iexSystem::ScreenWidth, iexSystem::ScreenHeight, 0, 0, 1024, 512, shader, "DeffLight_2D", 0xFFFFFFFF, Z);
+        }
+
+        void DepthRender(iexShader* pShader, const char* pTec, DepthRenderType type) {}
+    };
+
+    new StaticGameObjectTemplate<Renderer>(new Renderer(&m_BackTex));
+
 }
 
 void SceneCharacterSelect::SetCharacterPoint()
@@ -238,7 +323,14 @@ void SceneCharacterSelect::State_PreSelect()
         //カーソルをセット
         for (UINT i = 0; i < 4; ++i)
         {
-            SelectCursor* p = new SelectCursor(m_pManager, (controller::CONTROLLER_NUM)i, &m_Texture, RectI(0, 0, 128, 128), m_ChrPoint[i]);
+            SelectPointBase* pInitPoint = m_ChrPoint[i];
+
+            if (m_LoadParams.PlayerArray.at(i).player_type == PlayerType::_Computer)
+            {
+                pInitPoint = m_pComputerDefaultPoint;
+            }
+
+            SelectCursor* p = new SelectCursor(m_pManager, (controller::CONTROLLER_NUM)i, &m_Texture, RectI(0, 0, 128, 128), pInitPoint);
 
             p->m_PlayerInfo = m_LoadParams.PlayerArray.at(i);
 

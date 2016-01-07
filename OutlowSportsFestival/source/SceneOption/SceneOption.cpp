@@ -82,11 +82,14 @@ SceneOption::SceneOption()
 	Ball_Ground_y = 800;
 	BallPosInit();
 	nextsceneflg = false;
+
+    Sound::StopBGM();
+    Sound::Play(Sound::BGM_Option, 1, true);
 }
 
 SceneOption::~SceneOption()
 {
-    //DefGameObjMgr.Release(); //ゲームオブジェクト削除は一番初めに
+
 	delete Back;
 	delete select;
 	delete Topping;
@@ -372,24 +375,24 @@ void SceneOption::Change() {
 	switch (mode)
 	{
 	case Player:
-		if (controller::GetTRG(controller::button::maru, 1)) {
+		if (controller::GetTRG(controller::button::maru, 0)) {
 			mode = Time;
 			time = hun1;
 			Sound::Play(Sound::Cursor_enter);
 		}
-		if (controller::GetTRG(controller::button::batu, 1)) {
+		if (controller::GetTRG(controller::button::batu, 0)) {
 			//MainFrame->ChangeScene(new Title());
 			Sound::Play(Sound::Cursor_cancel);
 		}
 		Switchplayer();
 		break;
 	case Time:
-		if (controller::GetTRG(controller::button::maru, 1)) {
+		if (controller::GetTRG(controller::button::maru, 0)) {
 			mode = Round;
 			round = R1;
 			Sound::Play(Sound::Cursor_enter);
 		}
-		if (controller::GetTRG(controller::button::batu, 1)) {
+		if (controller::GetTRG(controller::button::batu, 0)) {
 			mode = Player;
 			time = hunnon;
 			Sound::Play(Sound::Cursor_cancel);
@@ -397,11 +400,11 @@ void SceneOption::Change() {
 		Switchtime();
 		break;
 	case Round:
-		if (controller::GetTRG(controller::button::maru, 1)) {
+		if (controller::GetTRG(controller::button::maru, 0)) {
 			mode = Decide;
 			Sound::Play(Sound::Cursor_enter);
 		}
-		if (controller::GetTRG(controller::button::batu, 1)) {
+		if (controller::GetTRG(controller::button::batu, 0)) {
 			mode = Time;
 			round = Roundnon;
 			Sound::Play(Sound::Cursor_cancel);
@@ -747,7 +750,7 @@ void SceneOption::Update()
 		ShadowAlpha = ball_y / (float)Ball_Ground_y;
 		BallUpdate();
 		Change();
-		if (controller::GetTRG(controller::button::maru, 1)
+		if (controller::GetTRG(controller::button::maru, 0)
 			&& mode == Decide) {
 			nagare = leave;
 			counter = 0;

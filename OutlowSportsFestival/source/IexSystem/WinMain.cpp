@@ -44,6 +44,12 @@ BOOL	InitApp( HWND hWnd )
 	SYSTEM_Initialize();
 	//	メインフレームワーク生成
     MainFrame = new Framework(FPS_FLEX);
+
+    //サウンド初期化
+    {
+        Sound::Initialize();
+    }
+
     //	初期シーン登録
     if(false)
     {
@@ -66,10 +72,7 @@ BOOL	InitApp( HWND hWnd )
             DefRendererMgr.GetNormalDepthTexture()->GetTexture());
     }
 
-    //サウンド初期化
-    {
-        Sound::Initialize();
-    }
+
 
 	return TRUE;
 }

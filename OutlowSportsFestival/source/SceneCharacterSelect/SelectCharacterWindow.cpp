@@ -68,7 +68,7 @@ void SelectCharacterWindow::LoadCharacterModels()
 
 Vector3 SelectCharacterWindow::GetCharacterPos()
 {
-    const Vector3 _1Pl(-6.0f, 0, 13), _2Pl(-2.2f, 1.0f, 16);
+    const Vector3 _1Pl(-6.0f, 0, 13), _2Pl(-2.2f, 0.0f, 16);
 
     switch (m_pCursor->m_PlayerInfo.number)
     {

@@ -119,8 +119,8 @@ void CharacterBase::CreateCharacterModel(CharacterRenderer* pOut, CharacterType:
 
     case CharacterType::_Baseball:
         pOut->SetMaterialRenderType(0, CharacterRenderer::RenderType::Face);
-        pOut->SetMaterialRenderType(1, CharacterRenderer::RenderType::Skin);
-        pOut->SetMaterialRenderType(2, CharacterRenderer::RenderType::Clothes);
+        pOut->SetMaterialRenderType(1, CharacterRenderer::RenderType::Clothes);
+        pOut->SetMaterialRenderType(2, CharacterRenderer::RenderType::Skin);
         break;
 
     case CharacterType::_Soccer:

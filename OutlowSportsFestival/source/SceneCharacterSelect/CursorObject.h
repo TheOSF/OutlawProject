@@ -47,6 +47,8 @@ public:
     
     Vector2 GetOffSetPos(SelectCursor* p);
 
+    bool CanOnCursor()const;
+
     void OnCursor(SelectCursor* p);
     void LeaveCursor(SelectCursor* p);
 

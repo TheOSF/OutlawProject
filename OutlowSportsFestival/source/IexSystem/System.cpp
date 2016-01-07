@@ -29,7 +29,7 @@ void	SYSTEM_Initialize()
 	PADSET	padset = { AXIS_X, AXIS_Y, AXIS_Z, AXIS_RZ, 2, 3, 1, 4,   7, 5,11,   8, 6,12,   9, 10 };
 	PADSET	padset_K = { AXIS_X, AXIS_Y, AXIS_Z, AXIS_RZ, 2, 1, 4, 3,   5, 8,11,   7, 6,12,   9, 10 };
 	for (int i = 0; i < 4; i++)
-		KEY_PadAsign(padset_K, i);
+		KEY_PadAsign(padset, i);
 
 	//KEY_PadAsign( iexInput::ps101 );		// ELECOM JC-PS101USV
 	//KEY_PadAsign( iexInput::sixaxis );	// PS3 SIXAXIS DUALSHOCK3

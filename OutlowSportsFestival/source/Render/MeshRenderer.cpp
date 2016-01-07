@@ -105,10 +105,18 @@ void MeshRenderer::MasterRender()
         m_pMesh->Render(shader, "DeffLightNoSp");
         break;
 
+    case RenderType::UseColor_DarkToAlpha:
+        m_pMesh->Render(shader, "DeffLight_DarkToAlpha");
+        break;
+
     case RenderType::UseColorSpecular:
         m_pMesh->Render(shader, "DeffLight");
         break;
 
+
+    default:
+        MyAssert(false, "ì¬‚³‚ê‚Ä‚¢‚È‚¢•`‰æƒ^ƒCƒv");
+        break;
     }
 
 }
