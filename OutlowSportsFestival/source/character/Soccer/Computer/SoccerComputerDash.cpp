@@ -109,7 +109,7 @@ void SoccerState_ComputerControll_Dash::Enter(SoccerPlayer* s)
 			}
 			if (len < 6.0f)
 			{
-				if ((cParam.ActionFrequence * 400) > AttackPoint)
+				if ((cParam.ActionFrequence * 500) > AttackPoint)
 				{
 					m_cSoccer->SetState(new SoccerState_ComputerControll_Sliding(m_cSoccer));
 				}

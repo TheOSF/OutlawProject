@@ -56,21 +56,10 @@ void SoccerState_ComputerControll_Finisher::Execute(SoccerPlayer* s)
 	//基本的な更新
 	{
 		DamageManager::HitEventBase NoDmgHitEvent;   //ノーダメージ
-		SoccerHitEvent              UsualHitEvent(s);//通常
-
-													 //無敵フレームかによってヒットイベントクラスの分岐
-		/*if (m_Timer < NoDamageFrame)
-		{
-			chr_func::UpdateAll(s, &NoDmgHitEvent);
-		}
-		else
-		{
-			chr_func::UpdateAll(s, &UsualHitEvent);
-		}*/
+		
 		chr_func::UpdateAll(s, &NoDmgHitEvent);
 	}
 	
-
 	// 更新
 	if (m_pSnakeShotClass->Update() == false)
 	{
@@ -149,7 +138,7 @@ CharacterShotAttack* SoccerState_ComputerControll_Finisher::SnakeShotClass(Socce
 		s,
 		new ShotAttackEvent(s),
 		atk,
-		new  SoccerHitEvent(s)
+		new  DamageManager::HitEventBase() // 無敵
 		);
 }
 //　The World

@@ -124,7 +124,7 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 		{
 			if (chr_func::isCanSpecialAttack(m_cSoccer))
 			{
-				if (SoccerState_ComputerControll_Move::calcTarget(m_cSoccer))
+				if (SoccerState_ComputerControll_Move::calcTarget(m_cSoccer) == true)
 				{
 					m_cSoccer->SetState(new SoccerState_ComputerControll_Finisher());
 				}
@@ -139,14 +139,14 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 						(new SocceComputerrUtillityClass::ComputerRollingControll(m_cSoccer, avoidvec),
 							false));
 				}
-				else if ((cParam.ActionFrequence * 400) > AttackPoint)
+				else if ((cParam.ActionFrequence * 450) > AttackPoint)
 				{
 					m_cSoccer->SetState(new SoccerState_ComputerControll_Attack(m_cSoccer));
 				}
 			}
 			else if (len < 20.0f)
 			{
-				if ((cParam.ActionFrequence * 150) > AttackPoint)
+				if ((cParam.ActionFrequence * 350) > AttackPoint)
 				{
 					m_cSoccer->SetState(new SoccerState_ComputerControll_Shot);
 				}
@@ -292,7 +292,7 @@ bool SoccerState_ComputerControll_Move::calcTarget(SoccerPlayer* s)
 
 		++it;
 	}
-	if (MostMinAngle < 1.0f)
+	if (MostMinAngle < .1f)
 	{
 		//return pTargetEnemy->m_Params.pos;
 		return true;
