@@ -11,6 +11,7 @@
 CharacterRenderer::CharacterRenderer(BlendAnimationMesh* pAnimeMesh) :
 m_pAnimeMesh(pAnimeMesh),
 m_UsePartsMotion(false),
+m_Visible(true),
 m_HDR(0, 0, 0),
 m_Lighting(0, 0, 0)
 {
@@ -29,6 +30,8 @@ CharacterRenderer::CharacterRenderer(
 	m_UpBodyBoneNumArray(UpBodyBoneNums),
 	m_DownBodyBoneNumArray(DownBodyBoneNums)
 {
+    MyAssert(false, "使用できない機能です");
+
 	Initialize();
 }
 
@@ -47,6 +50,8 @@ void CharacterRenderer::SetMaterialRenderType(int MaterialNum, RenderType Type)
         "CharacterClothes",
         "CharacterSkin",
         "DeffLightNoSp",
+        "TextureBloom",
+
     };
 
     MyAssert(MaterialNum >= 0 && MaterialNum < m_pAnimeMesh->GetNumMaterial(), "描画方法の指定で存在しないマテリアル番号が指定されました Material=%d", MaterialNum);
@@ -187,6 +192,11 @@ void CharacterRenderer::GbufRender(
     DeferredGbufRenderer::TechniqueSetter*  pSetter  //テクニック管理クラス
     )
 {
+    if (m_Visible == false)
+    {
+        return;
+    }
+
     char str[256];
     pSetter->NoTexture(str, 256);
 
@@ -195,6 +205,11 @@ void CharacterRenderer::GbufRender(
 
 void CharacterRenderer::MasterRender()
 {
+    if (m_Visible == false)
+    {
+        return;
+    }
+
     shader->SetValue("g_HDR_Color", m_HDR);
     shader->SetValue("g_Lighting_Color", m_Lighting);
     shader->SetValue("g_Color", D3DXVECTOR4(m_ClothesColor.x, m_ClothesColor.y, m_ClothesColor.z, 1.0f));
@@ -204,6 +219,12 @@ void CharacterRenderer::MasterRender()
 
 void CharacterRenderer::DepthRender(iexShader* pShader, const char* pTec, DepthRenderType type)
 {
+    if (m_Visible == false)
+    {
+        return;
+    }
+
+
     char str[256];
     strcpy_s<256>(str, pTec);
 
@@ -217,6 +238,11 @@ void CharacterRenderer::CalcZ()
 
 void CharacterRenderer::Render()
 {
+    if (m_Visible == false)
+    {
+        return;
+    }
+
     if (m_OutlineVisible)
     {
         shader->SetValue("g_Outline_Color", m_OutlineColor.toVector4());

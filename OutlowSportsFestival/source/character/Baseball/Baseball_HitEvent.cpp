@@ -48,6 +48,9 @@ bool BaseballHitEvent::Hit(DamageBase* pDmg)
         return false;
 
     default:
+
+
+
         MyAssert(false, "‚Ð‚é‚Ý•ªŠò‚ª‚Å‚«‚Ä‚¢‚Ü‚¹‚ñ");
         return false;
     }

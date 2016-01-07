@@ -67,6 +67,26 @@ Vector2 SelectPointBase::GetOffSetPos(SelectCursor* p)
 void SelectPointBase::OnCursor(SelectCursor* p)
 {
     m_OnCursorData.push_back(p);
+
+    switch (m_Type)
+    {
+
+    case PointType::Tennis:
+        p->m_PlayerInfo.chr_type = CharacterType::_Tennis;
+        break;
+
+    case PointType::Soccer:
+        p->m_PlayerInfo.chr_type = CharacterType::_Soccer;
+        break;
+
+    case PointType::BaseBall:
+        p->m_PlayerInfo.chr_type = CharacterType::_Baseball;
+        break;
+
+    case PointType::AmericanFootBall:
+        p->m_PlayerInfo.chr_type = CharacterType::_Americanfootball;
+        break;
+    }
 }
 
 void SelectPointBase::LeaveCursor(SelectCursor* p)
@@ -92,23 +112,23 @@ void SelectPointBase::Select(SelectCursor* p)
     {
 
     case PointType::Tennis:
-        p->m_PlayerInfo.chr_type = CharacterType::_Tennis;
         p->m_Lock = true;
+        p->m_Selected = true;
         break;
 
     case PointType::Soccer:
-        p->m_PlayerInfo.chr_type = CharacterType::_Soccer;
         p->m_Lock = true;
+        p->m_Selected = true;
         break;
 
     case PointType::BaseBall:
-        p->m_PlayerInfo.chr_type = CharacterType::_Baseball;
         p->m_Lock = true;
+        p->m_Selected = true;
         break;
 
     case PointType::AmericanFootBall:
-        p->m_PlayerInfo.chr_type = CharacterType::_Americanfootball;
         p->m_Lock = true;
+        p->m_Selected = true;
         break;
 
 
@@ -312,7 +332,7 @@ bool SelectCursor::Update()
 {
 
     //‘€ìXV
-    if (m_Lock == false)
+    if (m_Lock == false && m_ControllerNum != controller::__ERROR_CONTROLLER_NUM)
     {
         Controll();
     }
@@ -438,12 +458,21 @@ bool CursorManager::GetNextPoint(
     return *ppOut != nullptr;
 }
 
+bool CursorManager::isAllPlayerSelected()const
+{
+    for (auto& it : m_CursorData)
+    {
+        if (it->m_PlayerInfo.player_type == PlayerType::_Player &&it->m_Selected == false)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
 
 void CursorManager::GetData(sceneGamePlay::InitParams& OutData)
 {
-
-    OutData.PlayerArray.fill({ -1, PlayerType::_Computer, CharacterType::_Volleyball, StrongType::__ErrorType });
-
     for (auto& it : m_CursorData)
     {
         sceneGamePlay::InitParams::PlayerInfo& p = it->m_PlayerInfo;

@@ -74,6 +74,7 @@ namespace MatchState
     private:
         UINT m_Frame;
         UINT m_ChrNum;
+        PlayerNum::Value m_PrePlayerNum;
 
         bool GetEffectChr(CharacterBase** ppOut, UINT ChrNum);
         void Effect(CharacterBase* p);

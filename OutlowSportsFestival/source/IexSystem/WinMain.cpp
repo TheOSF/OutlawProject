@@ -44,8 +44,21 @@ BOOL	InitApp( HWND hWnd )
 	SYSTEM_Initialize();
 	//	メインフレームワーク生成
     MainFrame = new Framework(FPS_FLEX);
-	//	初期シーン登録
-    MainFrame->ChangeScene(new SceneOption());
+    //	初期シーン登録
+    if(1)
+    {
+        sceneGamePlay::InitParams Param;
+
+        Param.Round = 2;
+        Param.Time = 60 * 5;
+
+        MainFrame->ChangeScene(new SceneCharacterSelect(Param, 1));
+
+    }
+    else
+    {
+        MainFrame->ChangeScene(new SceneOption());
+    }
 
     //法線・深度バッファを登録
     {

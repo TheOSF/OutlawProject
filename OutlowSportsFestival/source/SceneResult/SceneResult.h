@@ -34,9 +34,9 @@ public:
     {
         PreSelect, //–¢Œˆ’è
 
-        CharacterSelect,
+        Title,
         GameOption,
-        End
+        StaffRoll,
     };
 
     SceneResult(

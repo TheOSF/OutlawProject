@@ -11,6 +11,7 @@
 #include "../Render/LightObject.h"
 #include "../UI/SelectMenuUI_ControllerPlayer.h"
 #include "../SceneOption/SceneOption.h"
+#include "../SceneCharacterSelect/SceneCharacterSelect.h"
 
 
 SceneResult::SceneResult(
@@ -54,11 +55,15 @@ void SceneResult::Update()
 
         break;
 
-    case NextSceneType::CharacterSelect:
+    case NextSceneType::GameOption:
         MainFrame->ChangeScene(new SceneOption());
         return;
 
-    case NextSceneType::GameOption:
+    case NextSceneType::StaffRoll:
+        MainFrame->ChangeScene(new SceneOption());
+        return;
+
+    case NextSceneType::Title:
         MainFrame->ChangeScene(new SceneOption());
         return;
 
@@ -165,22 +170,22 @@ void SceneResult::State_Back()
 
         pMenu->AddMenu(
             new SceneChangeDecide(this, NextSceneType::GameOption),
-            RectI(0,0,1024,128),
+            RectI(0,150,1024,128),
             500,
             80
             );
 
         pMenu->AddMenu(
-            new SceneChangeDecide(this, NextSceneType::GameOption),
-            RectI(0, 128, 880, 128),
-            400,
+            new SceneChangeDecide(this, NextSceneType::Title),
+            RectI(41, 470, 240, 110),
+            200,
             80
             );
 
         pMenu->AddMenu(
-            new SceneChangeDecide(this, NextSceneType::GameOption),
-            RectI(0, 0, 1024, 128),
-            500,
+            new SceneChangeDecide(this, NextSceneType::StaffRoll),
+            RectI(41, 470, 240, 110),
+            200,
             80
             );
     }

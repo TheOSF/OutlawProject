@@ -32,7 +32,6 @@ void  BaseballState_Change::Enter(BaseballPlayer* b)
 // ステート実行
 void BaseballState_Change::Execute(BaseballPlayer* b)
 {
-	MyDebugString("Now=%f \n", b->m_Params.move.Length());
 
 	chr_func::XZMoveDown(b, 0.05f);
 	(this->*m_pStateFunc)();

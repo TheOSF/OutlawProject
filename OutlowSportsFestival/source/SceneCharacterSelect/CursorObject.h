@@ -75,11 +75,12 @@ class SelectCursor :public GameObjectBase, public UserInterfaceRenderer
 {
 public:
 
-    sceneGamePlay::InitParams::PlayerInfo  m_PlayerInfo;
-
+    sceneGamePlay::InitParams::PlayerInfo   m_PlayerInfo;
+    controller::CONTROLLER_NUM              m_ControllerNum;
     Vector2         m_Pos;
     bool            m_Lock;
     bool            m_Selected;
+
    
     SelectCursor(
         CursorManager*                  pMgr,
@@ -101,7 +102,6 @@ public:
 private:
 
     CursorManager* const                  m_pMgr;
-    const controller::CONTROLLER_NUM      m_ControllerNum;
     iex2DObj* const                       m_pTexture;
     const RectI                           m_TexRect;
 
@@ -133,6 +133,8 @@ public:
     void Erace(SelectCursor* p);
 
     bool GetNextPoint(CrVector2 Vec, SelectPointBase* pNow, SelectPointBase** ppOut);
+
+    bool isAllPlayerSelected()const;
 
     void GetData(sceneGamePlay::InitParams& OutData);
     void RandomMove(SelectCursor* p);

@@ -130,9 +130,9 @@ void CharacterBase::CreateCharacterModel(CharacterRenderer* pOut, CharacterType:
         break;
 
     case CharacterType::_Americanfootball:
-        pOut->SetMaterialRenderType(0, CharacterRenderer::RenderType::Face);
-        pOut->SetMaterialRenderType(1, CharacterRenderer::RenderType::Skin);
-        pOut->SetMaterialRenderType(2, CharacterRenderer::RenderType::Clothes);
+        pOut->SetMaterialRenderType(0, CharacterRenderer::RenderType::Clothes);
+        pOut->SetMaterialRenderType(1, CharacterRenderer::RenderType::Bloom);
+        pOut->SetMaterialRenderType(2, CharacterRenderer::RenderType::Normal);
         break;
 
     default:

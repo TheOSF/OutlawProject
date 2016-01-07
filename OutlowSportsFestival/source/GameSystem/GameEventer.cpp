@@ -176,20 +176,22 @@ void MatchState::StartCountdown::Exit(_Client_type_ptr p)
 
 bool MatchState::PlayerCharacterDrawCursor::GetEffectChr(CharacterBase** ppOut, UINT ChrNum)
 {
-
+    CharacterBase* pPlayerArray[6] = {};
+    int  ToPreNumber = 0, TempPreNumber;
     UINT CalcCount = 0;
     *ppOut = nullptr;
+    
+
+    //プレイヤ操作　＆　前回より上でもっとも近いキャラクタ
 
     for (auto &it : DefCharacterMgr.GetCharacterMap())
     {
 
         if (it.first->m_PlayerInfo.player_type == PlayerType::_Player)
         {
-            if (CalcCount == ChrNum)
+            if (CalcCount == ChrNum )
             {
                 *ppOut = it.first;
-
-                return true;
             }
             else
             {
@@ -198,7 +200,7 @@ bool MatchState::PlayerCharacterDrawCursor::GetEffectChr(CharacterBase** ppOut, 
         }
     }
     
-    return false;
+    return *ppOut != nullptr;
 }
 
 void MatchState::PlayerCharacterDrawCursor::Effect(CharacterBase* p)
@@ -216,6 +218,7 @@ void MatchState::PlayerCharacterDrawCursor::Enter(_Client_type_ptr p)
 {
     m_Frame = 60;
     m_ChrNum = 0;
+    m_PrePlayerNum = PlayerNum::Value::_ErrorType;
 }
 
 void MatchState::PlayerCharacterDrawCursor::Execute(_Client_type_ptr p)

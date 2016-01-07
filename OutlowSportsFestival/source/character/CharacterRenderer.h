@@ -20,6 +20,7 @@ public:
         Clothes,
         Face,
         Normal,
+        Bloom,
     };
 
 	//通常コンストラクタ
@@ -69,6 +70,9 @@ public:
 
     //ローカル空間(キャラクタ空間)上でのボーン座標を得る
     Vector3 GetLocalBonePos(int BoneNum);
+
+    //描画するかどうか
+    bool    m_Visible;
 
 	//ワールド変換行列
 	Matrix  m_TransMatrix;

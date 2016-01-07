@@ -9,7 +9,7 @@
 namespace PlayerNum
 {
 	//プレイヤー番号の値
-	enum Value
+    enum Value
 	{
 		_ErrorType = -1			//エラ－番号
 	};
