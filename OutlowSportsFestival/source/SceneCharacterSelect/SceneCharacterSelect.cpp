@@ -162,15 +162,21 @@ void SceneCharacterSelect::CreateFloor()
         MeshRenderer::RenderType::UseColor_DarkToAlpha
         );
     { 
-        Matrix T;
-        const float Scale = 3.0f;
+        Matrix T, R;
+
+        const float Scale = 3.8f;
 
         D3DXMatrixScaling(&T, Scale, Scale, Scale);
+        D3DXMatrixRotationY(&R, PI);
 
-        T._43 = 15.0f;
+        T *= R;
+
+        T._43 = 4.5f;
 
         pRenderer->SetMatrix(T);
     }
+
+    pRenderer->m_Lighting = Vector3(1, 1, 1)*0.12f;
 
     new StaticGameObjectTemplate<MeshRenderer>(pRenderer);
 
@@ -243,7 +249,7 @@ void SceneCharacterSelect::SetCharacterPoint()
 
         p = new SelectPointBase(m_pManager, SelectPointBase::PointType::Random, &m_Texture, RectI(563, 0, 115, 115));
         p->m_Pos = Center;
-        p->m_MoveTargetPos = Center + Vector2(0, 250);
+        p->m_MoveTargetPos = Center + Vector2(0, 280);
 
     }
 }
@@ -316,7 +322,12 @@ void SceneCharacterSelect::State_PreSelect()
 
             SelectCursor* p = new SelectCursor(m_pManager, (controller::CONTROLLER_NUM)i, &m_Texture, RectI(734, 0, 90, 115), pInitPoint);
 
-            p->m_PlayerInfo = m_LoadParams.PlayerArray.at(i);
+            {
+                const CharacterType::Value Type = p->m_PlayerInfo.chr_type;
+
+                p->m_PlayerInfo = m_LoadParams.PlayerArray.at(i);
+                p->m_PlayerInfo.chr_type = Type;
+            }
 
             //‘€ì•s”\‚É
             if (p->m_PlayerInfo.player_type == PlayerType::_Computer)

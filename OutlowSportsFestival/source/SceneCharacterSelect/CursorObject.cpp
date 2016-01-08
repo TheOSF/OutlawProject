@@ -30,7 +30,7 @@ SelectPointBase::~SelectPointBase()
 
 Vector2 SelectPointBase::GetOffSetPos(SelectCursor* p)
 {
-    const float Size = 40.0f;
+    const float Size = 30.0f;
     const int Id = GetOnCursorID(p);
     
     switch (m_OnCursorData.size())
@@ -365,7 +365,7 @@ void SelectCursor::CalcZ()
 void SelectCursor::Render()
 {
     RectI di;
-    const Vector2 Size(60, 70);
+    const Vector2 Size(50, 60);
 
     di.x = (int)(m_Pos.x - Size.x*0.5f);
     di.y = (int)(m_Pos.y - Size.y*0.5f);

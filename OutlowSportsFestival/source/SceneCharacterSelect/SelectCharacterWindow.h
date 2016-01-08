@@ -2,7 +2,7 @@
 
 #include "../GameSystem/GameObject.h"
 #include "../GameSystem/GameSystem.h"
-
+#include "../Render/MeshRenderer.h"
 #include "../character/CharacterRenderer.h"
 #include "CursorObject.h"
 #include <array>
@@ -26,7 +26,7 @@ private:
     std::array<CharacterRenderer*, 4>   m_ChrRenderers;
     SelectCursor* const                 m_pCursor;
     bool                                m_DrawComputerUI;
-
+    MeshRenderer*                       m_pRandomMesh;
 
     void LoadCharacterModels();
     Vector3 GetCharacterPos();

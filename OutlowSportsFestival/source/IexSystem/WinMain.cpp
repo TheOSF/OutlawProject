@@ -8,6 +8,7 @@
 #include "../../Input/GamePad/GamePadManager.h"
 #include "../Sound/Sound.h"
 #include "../Render/Renderer.h"
+#include "../SceneResult/SceneResult.h"
 
 //*****************************************************************************************************************************
 //
@@ -51,19 +52,33 @@ BOOL	InitApp( HWND hWnd )
     }
 
     //	初期シーン登録
-    if(true)
+    if(false)
     {
         sceneGamePlay::InitParams Param;
 
         Param.Round = 2;
         Param.Time = 60 * 5;
 
-        MainFrame->ChangeScene(new SceneCharacterSelect(Param, 1));
+        MainFrame->ChangeScene(new SceneCharacterSelect(Param, 4));
 
+    }
+    else if (false)
+    {
+        MainFrame->ChangeScene(new SceneOption());
     }
     else
     {
-        MainFrame->ChangeScene(new SceneOption());
+        SceneResult::ResultStartParam param;
+
+        param.PlayerList.push_back({ 1, (PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis });
+        param.PlayerList.push_back({ 3, (PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Soccer });
+        param.PlayerList.push_back({ 2, (PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Baseball });
+        param.PlayerList.push_back({ 4, (PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Americanfootball });
+
+        MainFrame->ChangeScene(new SceneResult(
+            new iex2DObj("DATA\\Texture\\particle.png"),
+            param
+            ));
     }
 
     //法線・深度バッファを登録
