@@ -2,6 +2,7 @@
 #include	"Framework.h"
 #include "IEX_Input.h"
 #include	"../SceneOption/SceneOption.h"
+#include	"../SceneStageSelect/SceneStageSelect.h"
 #include	"../SceneCharacterSelect/SceneCharacterSelect.h"
 #include	"../debug/DebugFunction.h"
 
@@ -58,7 +59,7 @@ BOOL	InitApp( HWND hWnd )
         Param.Round = 2;
         Param.Time = 60 * 5;
 
-        MainFrame->ChangeScene(new SceneCharacterSelect(Param, 1));
+        MainFrame->ChangeScene(new SceneStageSelect(Param));
 
     }
     else

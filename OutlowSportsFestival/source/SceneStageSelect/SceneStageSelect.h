@@ -29,6 +29,9 @@ private:
 	int KasenX;
 	int TitleY;
 	float WhiteAlpha;
+
+	DWORD GroundColor;
+	DWORD KasenColor;
 public:
 	SceneStageSelect(sceneGamePlay::InitParams param);
 	~SceneStageSelect();
@@ -48,8 +51,8 @@ public:
 
 	
 
-
 	void WakuUpdate();
+	void SelectUpdate();
 	void Update();
 	void WakuRender();
 	void SelectRender();
