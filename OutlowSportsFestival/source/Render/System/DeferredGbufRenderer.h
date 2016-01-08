@@ -36,13 +36,6 @@ public:
             size_t out_size
             );
 
-        //‚Q‚c‚ğo—Í‚·‚éÛ‚É
-        void NoTexture2D(
-            char* out,
-            size_t out_size,
-            float Z
-            );
-
     private:
         DeferredGbufRenderer*  m_pMgr;
     };

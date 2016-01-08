@@ -51,7 +51,7 @@ BOOL	InitApp( HWND hWnd )
     }
 
     //	‰ŠúƒV[ƒ““o˜^
-    if(false)
+    if(true)
     {
         sceneGamePlay::InitParams Param;
 

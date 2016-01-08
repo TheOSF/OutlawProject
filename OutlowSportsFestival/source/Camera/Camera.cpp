@@ -146,7 +146,7 @@ Camera::Camera()
 	ShockParam.time = 0;
 	ShockParam.max_time = 0;
 
-    m_IexView.SetProjection(D3DX_PI /4, 2.5f, 300);
+    m_IexView.SetProjection(D3DX_PI /4, 2.5f, 500);
 }
 
 Camera::~Camera()

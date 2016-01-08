@@ -18,7 +18,7 @@ SelectPointBase::SelectPointBase(
 {
     m_MoveTargetPos = Vector2(100, 100);
     m_Pos = Vector2(0, 0);
-    m_Size = Vector2(100, 100);
+    m_Size = Vector2(120, 120);
 
     m_pMgr->Regist(this);
 }
@@ -201,7 +201,7 @@ bool SelectPointBase::Msg(MsgType mt)
 
 void SelectPointBase::CalcZ()
 {
-    m_SortZ = 0;
+    m_SortZ = -2;
 }
 
 StrongType::Value SelectPointBase::GetChangeStrongType(StrongType::Value Now)
@@ -359,13 +359,13 @@ bool SelectCursor::Msg(MsgType mt)
 
 void SelectCursor::CalcZ()
 {
-    m_SortZ = 0;
+    m_SortZ = -4;
 }
 
 void SelectCursor::Render()
 {
     RectI di;
-    const Vector2 Size(100, 100);
+    const Vector2 Size(60, 70);
 
     di.x = (int)(m_Pos.x - Size.x*0.5f);
     di.y = (int)(m_Pos.y - Size.y*0.5f);

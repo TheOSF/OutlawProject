@@ -11,7 +11,7 @@ m_DeleteFlg(false)
     m_pMesh = new iexMesh(Path);
 
     m_pMesh->SetPos(Vector3(0, -20, 20));
-    m_pMesh->SetScale(0.1f);
+    m_pMesh->SetScale(0.2f);
     m_pMesh->SetAngle(PI);
     m_pMesh->Update();
 }

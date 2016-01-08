@@ -14,7 +14,7 @@ SceneCharacterSelect::SceneCharacterSelect(
     sceneGamePlay::InitParams&  LoadParams,
     UINT                        PlayerNum
     ) :
-m_Texture("DATA\\Texture\\particle.png"),
+m_Texture("DATA\\ChrSelect\\character_select.png"),
 m_pStateFunc(&SceneCharacterSelect::State_PreSelect),
 m_Timer(0),
 m_PlayerNum(PlayerNum),
@@ -179,7 +179,7 @@ void SceneCharacterSelect::CreateFloor()
 void SceneCharacterSelect::CreateBack()
 {
 
-    class Renderer :public DeferredRenderer
+    class Renderer :public ForwardRenderer
     {
         iex2DObj* pTexture;
         float Z;
@@ -188,36 +188,20 @@ void SceneCharacterSelect::CreateBack()
             iex2DObj* pTexture
             ) :
             pTexture(pTexture),
-            Z(26)
+            Z(1)
         {}
 
-        //void CalcZ()
-        //{
-        //    m_SortZ = 1.0f;
-        //}
-
-        ////描画(自動的に呼ばれる)
-        //void Render()
-        //{
-        //    pTexture->Render(0, 0, iexSystem::ScreenWidth, iexSystem::ScreenHeight, 0, 0, 1024, 512, RS_COPY, 0xFFFFFFFF, 1.0f);
-        //}
-
-        void GbufRender(
-            iexShader*        pShader,                       //シェーダークラス
-            DeferredGbufRenderer::TechniqueSetter*  pSetter  //テクニック管理クラス
-            ) 
+        void CalcZ()
         {
-            char path[256];
-            pSetter->NoTexture2D(path, 256, Z);
-            pTexture->Render(0, 0, iexSystem::ScreenWidth, iexSystem::ScreenHeight, 0, 0, 1024, 512, pShader, path, 0xFFFFFFFF, Z);
+            m_SortZ = Z;
         }
 
-        void MasterRender()
+        //描画(自動的に呼ばれる)
+        void Render()
         {
-            pTexture->Render(0, 0, iexSystem::ScreenWidth, iexSystem::ScreenHeight, 0, 0, 1024, 512, shader, "DeffLight_2D", 0xFFFFFFFF, Z);
+            pTexture->Render(0, 0, iexSystem::ScreenWidth, iexSystem::ScreenHeight, 0, 0, 1024, 512, RS_COPY, 0xFFFFFFFF, Z);
         }
 
-        void DepthRender(iexShader* pShader, const char* pTec, DepthRenderType type) {}
     };
 
     new StaticGameObjectTemplate<Renderer>(new Renderer(&m_BackTex));
@@ -250,14 +234,14 @@ void SceneCharacterSelect::SetCharacterPoint()
 
         for (int i = 0; i < (int)ARRAYSIZE(ChrPointData); ++i)
         {
-            p = new SelectPointBase(m_pManager, ChrPointData[i].Type, &m_Texture, RectI(0, 0, 64, 64));
+            p = new SelectPointBase(m_pManager, ChrPointData[i].Type, &m_Texture, RectI(140 * i, 0, 115, 115));
             p->m_Pos = Center;
             p->m_MoveTargetPos = ChrPointData[i].Pos;
 
             m_ChrPoint[i] = p;
         }
 
-        p = new SelectPointBase(m_pManager, SelectPointBase::PointType::Random, &m_Texture, RectI(0, 0, 64, 64));
+        p = new SelectPointBase(m_pManager, SelectPointBase::PointType::Random, &m_Texture, RectI(563, 0, 115, 115));
         p->m_Pos = Center;
         p->m_MoveTargetPos = Center + Vector2(0, 250);
 
@@ -330,7 +314,7 @@ void SceneCharacterSelect::State_PreSelect()
                 pInitPoint = m_pComputerDefaultPoint;
             }
 
-            SelectCursor* p = new SelectCursor(m_pManager, (controller::CONTROLLER_NUM)i, &m_Texture, RectI(0, 0, 128, 128), pInitPoint);
+            SelectCursor* p = new SelectCursor(m_pManager, (controller::CONTROLLER_NUM)i, &m_Texture, RectI(734, 0, 90, 115), pInitPoint);
 
             p->m_PlayerInfo = m_LoadParams.PlayerArray.at(i);
 

@@ -59,24 +59,6 @@ void DeferredGbufRenderer::TechniqueSetter::UseNormalHeight(
     strcpy(out, Technique);
 }
 
-//‚Q‚c‚ğo—Í‚·‚éÛ‚É
-void DeferredGbufRenderer::TechniqueSetter::NoTexture2D(
-    char* out,
-    size_t out_size,
-    float Z
-    )
-{
-    static const char* Technique = "NoTexture2D";
-
-    //Œ‹‰ÊŠi”[‚·‚é—e—Êƒ`ƒFƒbƒN
-    assert(strlen(Technique) + 1 < out_size && "Ši”[•¶š—ñ‚ÌƒTƒCƒY‚ª‘«‚è‚Ü‚¹‚ñ");
-
-    //–ß‚è’l‚Æ‚µ‚ÄŠi”[
-    strcpy(out, Technique);
-
-    m_pMgr->m_pShader->SetValue("g_2D_Depth", Z);
-}
-
 //---------------------------------------------
 //  public 
 //---------------------------------------------
