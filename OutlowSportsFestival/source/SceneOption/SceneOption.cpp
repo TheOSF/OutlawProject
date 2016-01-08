@@ -10,10 +10,7 @@
 
 #include "../SceneCharacterSelect/SceneCharacterSelect.h"
 
-struct POSITON_SIZE
-{
-    int x, y, size_x, size_y, render_size_x, render_size_y;
-};
+
 static POSITON_SIZE BALLTEXEL[4] =
 {
     { 302, 155, 160, 160, 150, 150 },
@@ -777,7 +774,7 @@ void SceneOption::Update()
 }
 void SceneOption::Render()
 {
-    Back->Render(0, 0, 1944, 1137, 0, 0, 500, 500);//バック
+    Back->Render(0, 0, 1296, 758, 0, 0, 500, 500);//バック
     ToppingRender();
     if (nagare == Syuryo) {
 

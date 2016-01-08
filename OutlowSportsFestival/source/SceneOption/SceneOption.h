@@ -9,6 +9,11 @@
 #include "../GameScene/SceneGamePlay.h"
 using namespace std;
 
+struct POSITON_SIZE
+{
+	int x, y, size_x, size_y, render_size_x, render_size_y;
+};
+
 enum {
 	Player,
 	Time,
