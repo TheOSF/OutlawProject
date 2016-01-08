@@ -181,7 +181,7 @@ void BaseballState_Rolling::Execute(BaseballPlayer* b)
 		}
 
 		//モデル更新
-		b->m_Renderer.Update(1);
+		b->m_Renderer.Update(2);
 
 		//行列更新
 		chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);

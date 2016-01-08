@@ -79,6 +79,33 @@ void BaseballState_DamageMotion_Die::Enter(BaseballPlayer* b)
 			m_pBaseball->m_Params.camera_draw = false;
 		}
 
+		void HitWall()
+		{
+			//壁に当たったモーションをセット
+			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Damage_Vanish_Wall);
+		}
+
+		void HitFloor()
+		{
+			//床に当たったモーションをセット
+			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Damage_Vanish_Bound);
+		}
+
+		void HitFloorAndStandUp()
+		{
+			//立ち上がりモーションをセット
+			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Damage_Vanish_StandUp);
+		}
+
+		void HitWallUpdate()
+		{
+			//モデルのアニメーション更新
+			m_pBaseball->m_Renderer.Update(1);
+
+			//ワールド変換行列を計算
+			chr_func::CreateTransMatrix(m_pBaseball, m_pBaseball->m_ModelSize, &m_pBaseball->m_Renderer.m_TransMatrix);
+		}
+
 	private:
 		BaseballPlayer*  m_pBaseball;
 	};

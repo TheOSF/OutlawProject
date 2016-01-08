@@ -133,10 +133,10 @@ void BaseballState_PlayerControll_Counter::Execute(BaseballPlayer* b)
 	m_pCounter->Update();
 
 	//モデルのワールド変換行列を更新
-	chr_func::CreateTransMatrix(b, 0.05f, &b->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
 
 	//モデル更新
-	b->m_Renderer.Update(1);
+	b->m_Renderer.Update(2);
 }
 
 

@@ -69,11 +69,11 @@ void BaseballState_Change::State_Change()
 			if (batterflg)
 			{
 				m_pBaseball->setBatterFlg(false);
-				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Change_P);
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Change_B);
 			}
 			else{
 				m_pBaseball->setBatterFlg(true);
-				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Change_B);
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Change_P);
 			}
 			m_pStateFunc = &BaseballState_Change::State_End;
 		}

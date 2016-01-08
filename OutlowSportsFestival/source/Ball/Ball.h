@@ -37,6 +37,7 @@ public:
 	//パラメータ構造体
 	struct Params
 	{
+		Matrix  BoneMat;            //　発射位置
 		CharacterBase*	pParent;	//発射したキャラクタへのポインタ
 		Type			type;		//玉のタイプ
 		Vector3			pos;		//場所
