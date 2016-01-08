@@ -68,7 +68,7 @@ void BaseballState_SPAttack_B::Execute(BaseballPlayer* b)
 	//　無敵
 	chr_func::UpdateAll(b, &NoDmgHitEvent);
 
-	b->m_Renderer.Update(1);
+	b->m_Renderer.Update(2);
 	chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
 
 	if (m_pStateFunc == &BaseballState_SPAttack_B::State_Finish)
@@ -254,6 +254,8 @@ void BaseballState_SPAttack_B::FreezeGame(UINT frame)
 	UpdateObjList.push_back(m_pBaseBall);
 
 	DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, frame, true);
+
+	
 }
 
 //　雷エフェクト発動

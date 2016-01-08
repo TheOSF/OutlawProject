@@ -96,7 +96,7 @@ void BaseballEquip::Install(MeshType mt)
 		m_pMeshRenderer = new MeshRenderer(pArmMesh, false, MeshRenderer::RenderType::UseColorSpecular);
 		break;
 	case Bat:
-		pArmMesh = DefResource.Get(Resource::MeshType::Tennis_ball);
+		pArmMesh = DefResource.Get(Resource::MeshType::Bat);
 		m_pMeshRenderer = new MeshRenderer(pArmMesh, false, MeshRenderer::RenderType::UseColorSpecular);
 		break;
 	default:
@@ -125,7 +125,7 @@ void BaseballEquip::NormalMove()
 //@’ÊíˆÚ“®
 void BaseballEquip::NormalMove_Head()
 {
-	m_Baseball->m_Renderer.GetWorldBoneMatirx(param.BoneMat, 3);
+	m_Baseball->m_Renderer.GetWorldBoneMatirx(param.BoneMat, 11);
 
 	param.TempPos = Vector3(param.BoneMat._41, param.BoneMat._42, param.BoneMat._43);
 
@@ -134,10 +134,22 @@ void BaseballEquip::NormalMove_Head()
 
 	param.Pos = param.TempPos + param.Forward*1.2f;
 
-	m._41 = param.Pos.x;
-	m._42 = param.Pos.y + 1.2f;
-	m._43 = param.Pos.z - 0.5f;
+	m = param.BoneMat;
 
+	m._41 = param.Pos.x;
+	m._42 = param.Pos.y + 0.5f;
+	m._43 = param.Pos.z;
+	{
+		m._31 = -m._31;
+		m._32 = -m._32;
+		m._33 = -m._33;
+	}
+	
+	//{
+		
+
+	//	//m._42 += 0.8f;
+	//}
 	m_pMeshRenderer->SetMatrix(m);
 }
 
@@ -146,24 +158,21 @@ void BaseballEquip::NormalMove_Arm()
 {
 	if (meshType == Bat)
 	{
-		m_Baseball->m_Renderer.GetWorldBoneMatirx(param.BoneMat, 11);
+		m_Baseball->m_Renderer.GetWorldBoneMatirx(param.BoneMat, 32);
 	}
 	else
 	{
-		m_Baseball->m_Renderer.GetWorldBoneMatirx(param.BoneMat, 18);
+		m_Baseball->m_Renderer.GetWorldBoneMatirx(param.BoneMat, 20);
 	}
 
-	param.TempPos = Vector3(param.BoneMat._41, param.BoneMat._42, param.BoneMat._43);
+	m = param.BoneMat;
 
-	param.Forward = Vector3(param.BoneMat._31, param.BoneMat._32, param.BoneMat._33);
-	param.Forward.Normalize();
-
-	param.Pos = param.TempPos + param.Forward;
-
-	m._41 = param.Pos.x;
-	m._42 = param.Pos.y-0.8f;
-	m._43 = param.Pos.z;
-
+	{
+		m._31 = -m._31;
+		m._32 = -m._32;
+		m._33 = -m._33;
+	}
+	param.Pos = Vector3(m._41, m._42, m._43);
 	m_pMeshRenderer->SetMatrix(m);
 }
 

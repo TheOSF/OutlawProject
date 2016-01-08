@@ -173,6 +173,16 @@ bool sceneGamePlay::Initialize()
             Resource::MeshType::Volley_ball,
             new iexMesh("DATA\\CHR\\Ball\\soccer_ball.imo")
             );
+
+		//Å@ñÏãÖä÷òA
+		DefResource.Regist(
+			Resource::MeshType::Bat,
+			new iexMesh("DATA\\CHR\\SanoBaseball\\bat.imo")
+			);
+		DefResource.Regist(
+			Resource::MeshType::Helmet,
+			new iexMesh("DATA\\CHR\\SanoBaseball\\helmet.imo")
+			);
     }
 
 

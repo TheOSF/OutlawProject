@@ -22,16 +22,18 @@
 //***************************************
 class ShotAttackEvent_P;
 //　コンストラクタ
-BaseballState_PlayerControll_ShotAttack_P::BaseballState_PlayerControll_ShotAttack_P() :pTargetEnemy(nullptr), m_pShotAttackClass_P(nullptr){
+BaseballState_PlayerControll_ShotAttack_P::BaseballState_PlayerControll_ShotAttack_P() :
+pTargetEnemy(nullptr), m_pShotAttackClass_P(nullptr)
+{
 
 }
 
 
 //　ステート開始
-void BaseballState_PlayerControll_ShotAttack_P::Enter(BaseballPlayer* b){
+void BaseballState_PlayerControll_ShotAttack_P::Enter(BaseballPlayer* b)
+{
 	// 遠距離(ピッチャー)クラス作成
 	m_pShotAttackClass_P = this->CreateShotAttackClass_P(b);
-
 
 }
 
@@ -90,12 +92,12 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 		void Update()override{
 
 			//　モデル更新
-			m_pBaseball->m_Renderer.Update(1.0f);
+			m_pBaseball->m_Renderer.Update(2);
 
 			// 転送行列更新
 			chr_func::CreateTransMatrix(
 				m_pBaseball,
-				0.05f,
+				m_pBaseball->m_ModelSize,
 				&m_pBaseball->m_Renderer.m_TransMatrix);
 		}
 	public:
@@ -108,10 +110,12 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 			chr_func::GetFront(m_pBaseball, &param.move);
 
 			param.pos = m_pBaseball->m_Params.pos;
+			
+			param.pos.z += 2.0f;
 			param.pos.y = UsualBall::UsualBallShotY;
 
 			param.pParent = m_pBaseball;
-			param.scale = 1.0f;
+			//param.scale = 1.0f;
 			param.type = BallBase::Type::_Milder;
 			//生成
 			new MilderHoming(param, 5, m_pBaseball);

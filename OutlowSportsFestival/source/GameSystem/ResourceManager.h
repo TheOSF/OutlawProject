@@ -42,6 +42,9 @@ public:
         Bench,
         Pipe,
 
+		//@–ì‹…ŠÖ˜A
+		Bat,
+		Helmet,
 
         _MaxType
     };
