@@ -167,7 +167,7 @@ bool sceneGamePlay::Initialize()
 
         DefResource.Regist(
             Resource::MeshType::Tennis_Heart,
-			new iexMesh("DATA\\CHR\\Ball\\Tennis_ball.imo")
+			new iexMesh("DATA\\CHR\\SanoTennis\\Heart\\Heart.imo")
             );
 
         DefResource.Regist(
@@ -180,10 +180,21 @@ bool sceneGamePlay::Initialize()
 			Resource::MeshType::Bat,
 			new iexMesh("DATA\\CHR\\SanoBaseball\\bat.imo")
 			);
+
 		DefResource.Regist(
 			Resource::MeshType::Helmet,
 			new iexMesh("DATA\\CHR\\SanoBaseball\\helmet.imo")
 			);
+
+        DefResource.Regist(
+            Resource::MeshType::Hat,
+            new iexMesh("DATA\\CHR\\SanoBaseball\\hat.imo")
+            );
+
+        DefResource.Regist(
+            Resource::MeshType::Mitt,
+            new iexMesh("DATA\\CHR\\SanoBaseball\\mitt.imo")
+            );
     }
 
 
@@ -191,6 +202,9 @@ bool sceneGamePlay::Initialize()
         //エフェクト読み込み
         EffectResource::Load();
     }
+
+    //BGM STOP
+    Sound::StopBGM();
 
     //GameInitializer_DevelopMode
 

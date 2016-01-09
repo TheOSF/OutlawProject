@@ -45,6 +45,8 @@ public:
 		//@–ì‹…ŠÖ˜A
 		Bat,
 		Helmet,
+        Hat,
+        Mitt,
 
         _MaxType
     };

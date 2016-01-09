@@ -388,7 +388,9 @@ void RendererManager::Render()
         );
 
     if (GetKeyState('G'))
-    m_DeferredLightManager.TextureRender();
+    {
+        m_DeferredLightManager.TextureRender();
+    }
 }
 
 //テクスチャに描画

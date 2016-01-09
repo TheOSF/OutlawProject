@@ -97,6 +97,7 @@ public:
     ~SelectCursor();
 
     void SetPoint(SelectPointBase* pNewPoint);
+    bool SelectNowPoint();
 
     inline SelectPointBase* GetPoint()
     {

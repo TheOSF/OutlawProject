@@ -20,6 +20,7 @@ public:
 
     ~SelectCharacterWindow();
 
+    void DoMotion();
 
 private:
 
@@ -27,6 +28,7 @@ private:
     SelectCursor* const                 m_pCursor;
     bool                                m_DrawComputerUI;
     MeshRenderer*                       m_pRandomMesh;
+    bool                                m_PreFrameIsSelected;
 
     void LoadCharacterModels();
     Vector3 GetCharacterPos();

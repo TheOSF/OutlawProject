@@ -226,6 +226,7 @@
     <ClCompile Include="source\SceneLoading\SceneLoading.cpp" />
     <ClCompile Include="source\SceneStageSelect\SceneStageSelect.cpp" />
     <ClCompile Include="source\SceneCharacterSelect\SelectCharacterWindow.cpp" />
+    <ClCompile Include="source\SceneResult\BreakScreenObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -463,6 +464,7 @@
     <ClInclude Include="source\SceneLoading\SceneLoading.h" />
     <ClInclude Include="source\SceneStageSelect\SceneStageSelect.h" />
     <ClInclude Include="source\SceneCharacterSelect\SelectCharacterWindow.h" />
+    <ClInclude Include="source\SceneResult\BreakScreenObject.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DATA\Shader\3DEx.fx" />

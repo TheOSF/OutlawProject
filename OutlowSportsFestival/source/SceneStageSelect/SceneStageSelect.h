@@ -9,20 +9,22 @@
 #include "../utillity/ScreenEffect.h"
 #include "../GameScene/SceneGamePlay.h"
 using namespace std;
-enum Stagetex{
-	Kasentex,
-	Groundtex
-};
-enum Step {
-	TitleMove,
-	TexMove,
-	Select,
-	Decidion,
-	leave
-};
+
 class SceneStageSelect : public Scene
 {
 private:
+    enum Stagetex{
+        Kasentex,
+        Groundtex
+    };
+    enum Step {
+        TitleMove,
+        TexMove,
+        Select,
+        Decidion,
+        leave
+    };
+
 	int Time;
 	int WakuX;
 	int GroundX;

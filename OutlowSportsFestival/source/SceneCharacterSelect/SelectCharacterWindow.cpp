@@ -5,8 +5,9 @@
 
 SelectCharacterWindow::SelectCharacterWindow(
     SelectCursor*   pCursor
-    ):
-    m_pCursor(pCursor)
+    ) :
+    m_pCursor(pCursor),
+    m_PreFrameIsSelected(false)
 {
     //キャラクタを読み込み
     LoadCharacterModels();
@@ -23,6 +24,11 @@ SelectCharacterWindow::~SelectCharacterWindow()
     {
         delete it;
     }
+}
+
+void SelectCharacterWindow::DoMotion()
+{
+
 }
 
 void SelectCharacterWindow::LoadCharacterModels()
@@ -100,6 +106,8 @@ Vector3 SelectCharacterWindow::GetCharacterPos()
 
 bool SelectCharacterWindow::Update()
 {
+    CharacterRenderer* pSelectCharacter = nullptr;
+
     //描画フラグの更新
     for (int i = 0; i < (int)m_ChrRenderers.size(); ++i)
     {
@@ -108,13 +116,28 @@ bool SelectCharacterWindow::Update()
 
         if (m_ChrRenderers.at(i)->m_Visible)
         {
+            pSelectCharacter = m_ChrRenderers.at(i);
             m_ChrRenderers.at(i)->Update(1);
         }
     }
 
+    if (pSelectCharacter != nullptr)
+    {
+        //今回フレームで選択していたら
+        if (m_PreFrameIsSelected == false &&
+            m_pCursor->m_Selected == true
+            )
+        {
+            
+        }
+    }
+
+    
+
     //コンピュータ操作で未設定なら//「コンピュータ」ＵＩ表示
     m_DrawComputerUI = 
         (m_pCursor->m_PlayerInfo.chr_type == CharacterType::__ErrorType);
+
 
 
     return true;

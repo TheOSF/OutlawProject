@@ -12,6 +12,8 @@
 #include "../UI/SelectMenuUI_ControllerPlayer.h"
 #include "../SceneOption/SceneOption.h"
 #include "../SceneCharacterSelect/SceneCharacterSelect.h"
+#include "BreakScreenObject.h"
+#include "../Render/MeshRenderer.h"
 
 
 SceneResult::SceneResult(
@@ -20,20 +22,48 @@ SceneResult::SceneResult(
     ):
     m_NextSceneType(NextSceneType::PreSelect),
     m_pStateFunc(&SceneResult::State_Initialize),
-    m_Timer(0)
+    m_Timer(0),
+    m_pScreenTex(pScreenTexture)
 {
-    m_pScreenTexture = pScreenTexture;
-    m_pBreakScreenModel = nullptr;  /////
+
     m_StartParam = param;
+
+    class Pred
+    {
+    public:
+        bool operator ()(const PlayerInfo& p1, const PlayerInfo& p2)
+        {
+            return (int)p1.Num < (int)p2.Num;
+        }
+    };
+
+    m_StartParam.PlayerList.sort(Pred());
+    
 }
 
 SceneResult::~SceneResult()
 {
     DefGameObjMgr.Release(); //ゲームオブジェクト削除は一番初めに
     DefCamera.Release();
-    
+}
 
-    delete m_pScreenTexture;
+bool SceneResult::Initialize()
+{
+    //カメラを初期位置にセット
+    DefCamera.SetNewState(new CameraStateNoWork());
+
+    DefCamera.m_Position = Vector3(0, 5, -12);
+    DefCamera.m_Target = Vector3(0, 5, 0);
+
+    DefCamera.Update();
+
+    //画面オブジェクトを生成
+    new BreakScreenObject(m_pScreenTex);
+
+    //ステージ生成
+    CreateStage();
+
+    return true;
 }
 
 void SceneResult::SetNextScene(NextSceneType Next)
@@ -85,11 +115,8 @@ void SceneResult::State_Initialize()
     //画面砕け散るステートへ
     m_pStateFunc = &SceneResult::State_ScreenVanish;
 
-    //カメラを初期位置にセット
-    DefCamera.SetNewState(new CameraStateNoWork());
-
     //キャラクタをセット
-    Vector3 pos = Vector3(-4.5f, 0, 0);
+    Vector3 pos = Vector3(-4.5f, 1.95f, 0);
 
     for (auto&it : m_StartParam.PlayerList)
     {
@@ -120,9 +147,6 @@ void SceneResult::State_ScreenVanish()
     {
         m_pStateFunc = &SceneResult::State_Back;
         m_Timer = 0;
-
-        DefCamera.m_Position = Vector3(0, 5, -20);
-        DefCamera.m_Target = Vector3(0, 5, 0);
     }
 }
 
@@ -150,7 +174,7 @@ void SceneResult::State_Back()
     }
 
     //メニュー表示ステートへ
-    if (m_Timer == 100)
+    if (m_Timer == 200)
     {
         //メニュー作成
         SelectMenuUI_ControllerPlayer* pController = new SelectMenuUI_ControllerPlayer();
@@ -191,6 +215,61 @@ void SceneResult::State_Back()
     }
 }
 
+void SceneResult::CreateStage()
+{
+    MeshRenderer* Renderer = new MeshRenderer(
+        new iexMesh("DATA\\RESULT\\Stage\\ResultStage.imo"),
+        true,
+        MeshRenderer::RenderType::UseColorSpecular
+        );
+
+    {
+        const Vector3 S = Vector3(0.125f, 0.125f, 0.05f);
+        Matrix T, R;
+
+        D3DXMatrixScaling(&T, S.x, S.y, S.z);
+        D3DXMatrixRotationY(&R, PI);
+
+        T *= R;
+
+        Renderer->SetMatrix(T);
+    }
+
+    new StaticGameObjectTemplate<MeshRenderer>(Renderer);
+}
+
+void SceneResult::CreateCharacterBlock(CrVector3 Pos, int Rank)
+{
+    char Path[MAX_PATH];
+
+    sprintf(Path,"DATA\\RESULT\\RankBlock\\%d.imo", Rank);
+
+    MeshRenderer* pRenderer = new MeshRenderer(
+        new iexMesh(Path),
+        true,
+        MeshRenderer::RenderType::UseColor
+        );
+
+    {
+        const float Scale = 0.1f;
+        Matrix T, R;
+
+        D3DXMatrixScaling(&T, Scale, Scale, Scale);
+        D3DXMatrixRotationY(&R, PI);
+
+        T *= R;
+
+        T._41 = Pos.x;
+        T._42 = Pos.y;
+        T._43 = Pos.z;
+
+        pRenderer->SetMatrix(T);
+    }
+
+    new StaticGameObjectTemplate<MeshRenderer>(pRenderer);
+    
+}
+
 void SceneResult::SetLights()
 {
     //ライトをセット
@@ -200,13 +279,13 @@ void SceneResult::SetLights()
         DirLight* pDirLight = new DirLight();
 
         //夕焼け時のライティングをセット
-        pDirLight->param.color = Vector3(0.3f, 0.2f, 0.2f);
-        pDirLight->param.vec = Vector3Normalize(Vector3(0.8f, -1, 0.2f));
+        pDirLight->param.color = Vector3(0.28f, 0.24f, 0.24f);
+        pDirLight->param.vec = Vector3Normalize(Vector3(0.1f, -0.5f, 0.9f));
         pDirLight->param.Shadow.visible = true;
         pDirLight->param.Shadow.Near = 5;
-        pDirLight->param.Shadow.Far = 150;
-        pDirLight->param.Shadow.origin = pDirLight->param.vec*-50.0f;
-        pDirLight->param.Shadow.Size = 120;
+        pDirLight->param.Shadow.Far = 30;
+        pDirLight->param.Shadow.origin = pDirLight->param.vec*-20.0f;
+        pDirLight->param.Shadow.Size = 30;
 
         new StaticGameObjectTemplate<DirLight>(pDirLight);
     }
@@ -214,7 +293,7 @@ void SceneResult::SetLights()
     //環境光
     {
         AmbientLight* pAmbient = new AmbientLight();
-        pAmbient->param.color = Vector3(0.37f, 0.26f, 0.26f);
+        pAmbient->param.color = Vector3(0.29f, 0.29f, 0.29f);
         pAmbient->param.Occlusion.SamplingSize = 0.1f;
         pAmbient->param.Occlusion.Enable = false;
 
@@ -223,8 +302,16 @@ void SceneResult::SetLights()
 
 }
 
+
 void SceneResult::SetCharacter(CrVector3 pos, PlayerInfo& info)
 {
+    const float RankHeight[] = 
+    {
+        1.65f,
+        1.3f,
+        1.1f,
+        0.9f,
+    };
 
     //キャラクタレンダラーの作成
     CharacterRenderer* Renderer = 
@@ -235,18 +322,36 @@ void SceneResult::SetCharacter(CrVector3 pos, PlayerInfo& info)
     CharacterBase::CreateCharacterModel(Renderer, info.ChrType, info.Num);
 
 
+    //ランキング台の作成
+    CreateCharacterBlock(pos, info.Ranking);
+
     //ワールド変換行列を算出
     {
         const float MulScale = 0.05f;
         Matrix  R;
         Matrix* T = &Renderer->m_TransMatrix;
 
-        D3DXMatrixRotationY(&R, PI);
+        {
+            float Angle = 0;
+            Vector3 v = DefCamera.m_Position + Vector3(0, 0, -5) - pos;
+
+            v.Normalize();
+
+            Angle = acosf(v.z);
+            if (v.x < 0)
+            {
+                Angle = -Angle;
+            }
+
+            D3DXMatrixRotationY(&R, Angle);
+            
+        }
+
         D3DXMatrixScaling(T, MulScale, MulScale, MulScale);
         *T *= R;
-
+        
         T->_41 = pos.x;
-        T->_42 = pos.y;
+        T->_42 = pos.y +  RankHeight[info.Ranking - 1];
         T->_43 = pos.z;
     }
 

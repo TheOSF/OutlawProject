@@ -72,10 +72,8 @@ protected:
 	bool changeflg;//　Com用
 private:
 	BaseballStateMachine*		m_pStateMachine;
-	BaseballEquip* helmetEquip;
-	BaseballEquip* capEquip;
-	BaseballEquip* batEquip;
-	BaseballEquip* groveEquip;
+    BaseballEquip* HeadEquip;
+    BaseballEquip* WeaponEquip;
 public:
 
 	//　攻撃によるスキルゲージ増加量

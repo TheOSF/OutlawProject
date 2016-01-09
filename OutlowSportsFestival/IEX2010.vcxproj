@@ -321,6 +321,7 @@
     <ClCompile Include="source\SceneCharacterSelect\SelectCharacterWindow.cpp" />
     <ClCompile Include="source\SceneLoading\SceneLoading.cpp" />
     <ClCompile Include="source\SceneOption\SceneOption.cpp" />
+    <ClCompile Include="source\SceneResult\BreakScreenObject.cpp" />
     <ClCompile Include="source\SceneResult\CharacterResultUpdater.cpp" />
     <ClCompile Include="source\SceneResult\SceneResult.cpp" />
     <ClCompile Include="source\SceneStageSelect\SceneStageSelect.cpp" />
@@ -578,6 +579,7 @@
     <ClInclude Include="source\SceneCharacterSelect\SelectCharacterWindow.h" />
     <ClInclude Include="source\SceneLoading\SceneLoading.h" />
     <ClInclude Include="source\SceneOption\SceneOption.h" />
+    <ClInclude Include="source\SceneResult\BreakScreenObject.h" />
     <ClInclude Include="source\SceneResult\CharacterResultUpdater.h" />
     <ClInclude Include="source\SceneResult\SceneResult.h" />
     <ClInclude Include="source\SceneStageSelect\SceneStageSelect.h" />

@@ -134,7 +134,7 @@ void SceneCharacterSelect::CreateLight()
     DirLight* pDir = new DirLight();
 
     pDir->param.color = Vector3(0.28f, 0.24f, 0.24f);
-    pDir->param.vec = Vector3Normalize(Vector3(0.1f, -0.5f, 0.9f));//Vector3Normalize(Vector3(0.8f, -2, 0.2f));
+    pDir->param.vec = Vector3Normalize(Vector3(0.1f, -0.5f, 0.9f)); //Vector3Normalize(Vector3(0.1f, -0.5f, 0.9f));
     pDir->param.Shadow.visible = true;
     pDir->param.Shadow.Near = 5;
     pDir->param.Shadow.Far = 30;
@@ -332,6 +332,7 @@ void SceneCharacterSelect::State_PreSelect()
             //‘€ì•s”\‚É
             if (p->m_PlayerInfo.player_type == PlayerType::_Computer)
             {
+                p->m_PlayerInfo.chr_type = CharacterType::__ErrorType;
                 p->m_ControllerNum = controller::__ERROR_CONTROLLER_NUM;
             }
 

@@ -176,28 +176,26 @@ void MatchState::StartCountdown::Exit(_Client_type_ptr p)
 
 bool MatchState::PlayerCharacterDrawCursor::GetEffectChr(CharacterBase** ppOut, UINT ChrNum)
 {
-    CharacterBase* pPlayerArray[6] = {};
-    int  ToPreNumber = 0, TempPreNumber;
     UINT CalcCount = 0;
+
     *ppOut = nullptr;
-    
 
     //プレイヤ操作　＆　前回より上でもっとも近いキャラクタ
-
     for (auto &it : DefCharacterMgr.GetCharacterMap())
     {
-
-        if (it.first->m_PlayerInfo.player_type == PlayerType::_Player)
+        if (ChrNum == (UINT)it.first->m_PlayerInfo.number)
         {
-            if (CalcCount == ChrNum )
+            if (it.first->m_PlayerInfo.player_type == PlayerType::_Player)
             {
                 *ppOut = it.first;
+                break;
             }
             else
             {
-                ++CalcCount;
+                break;
             }
         }
+        
     }
     
     return *ppOut != nullptr;

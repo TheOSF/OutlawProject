@@ -25,7 +25,7 @@ const BaseballPlayer::SkillParam BaseballPlayer::skillparams =
 //　コンストラクタ
 BaseballPlayer::BaseballPlayer(const CharacterBase::PlayerInfo& info) :
 CharacterBase(info, new  BlendAnimationMesh(GetCharacterModelPath(CharacterType::_Baseball))), batterflg(true), changetime(20),
-helmetEquip(nullptr), capEquip(nullptr), batEquip(nullptr), groveEquip(nullptr), changeflg(false)
+changeflg(false)
 {
 	m_pStateMachine = new BaseballStateMachine(this);
 	SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(this));
@@ -33,10 +33,11 @@ helmetEquip(nullptr), capEquip(nullptr), batEquip(nullptr), groveEquip(nullptr),
 	m_Params.maxHP = m_Params.HP = 100;
 	//m_Params.size = 1.8f;
 	temp_batterflg = batterflg;
-	helmetEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Helmet);
-	batEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Bat);
+
+    HeadEquip = new BaseballEquip(&m_Renderer, BaseballEquip::MeshType::Helmet, 1);
+    WeaponEquip = new BaseballEquip(&m_Renderer, BaseballEquip::MeshType::Bat, 1);
 	
-    m_ModelSize = 0.067f;
+    m_ModelSize = 0.06f;
 }
 
 //　デストラクタ
@@ -90,25 +91,23 @@ void BaseballPlayer::CheangeEquip()
 		if (batterflg)
 		{
 			//　現在装備している物を物理挙動&nullptr代入
-			capEquip->ToPhysicMove();
-			groveEquip->ToPhysicMove();
-			capEquip = nullptr;
-			groveEquip = nullptr;
+            HeadEquip->Takeoff();
+            WeaponEquip->Takeoff();
+
 			//　新しい装備をnew
-			helmetEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Helmet);
-			batEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Bat);
+            HeadEquip = new BaseballEquip(&m_Renderer, BaseballEquip::MeshType::Helmet, 1);
+            WeaponEquip = new BaseballEquip(&m_Renderer, BaseballEquip::MeshType::Bat, 1);
 
 		}
 		else
 		{
 			//　現在装備している物を物理挙動&nullptr代入
-			helmetEquip->ToPhysicMove();
-			batEquip->ToPhysicMove();
-			helmetEquip = nullptr;
-			batEquip = nullptr;
+            HeadEquip->Takeoff();
+            WeaponEquip->Takeoff();
+
 			//　新しい装備をnew
-			capEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Cap);
-			groveEquip = new BaseballEquip(this, 1, BaseballEquip::MeshType::Grove);
+            HeadEquip = new BaseballEquip(&m_Renderer, BaseballEquip::MeshType::Cap, 1);
+            WeaponEquip = new BaseballEquip(&m_Renderer, BaseballEquip::MeshType::Grove, 1);
 
 		}
 		//　一時保存に今のフラグを代入

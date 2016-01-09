@@ -10,6 +10,11 @@
 #include "../Render/Renderer.h"
 #include "../SceneResult/SceneResult.h"
 
+
+
+
+#include "../GameSystem/GameInitilizer_UsualMatch.h"
+
 //*****************************************************************************************************************************
 //
 //
@@ -56,27 +61,45 @@ BOOL	InitApp( HWND hWnd )
     {
         sceneGamePlay::InitParams Param;
 
-        Param.Round = 2;
-        Param.Time = 60 * 5;
+        Param.Round = 3;
+        Param.Time = 60 * 60 * 100;
 
-        MainFrame->ChangeScene(new SceneCharacterSelect(Param, 4));
+        MainFrame->ChangeScene(new SceneCharacterSelect(Param, 1));
 
     }
     else if (false)
     {
         MainFrame->ChangeScene(new SceneOption());
     }
-    else
+    else if (false)
     {
         SceneResult::ResultStartParam param;
 
-        param.PlayerList.push_back({ 1, (PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis });
-        param.PlayerList.push_back({ 3, (PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Soccer });
-        param.PlayerList.push_back({ 2, (PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Baseball });
+        param.PlayerList.push_back({ 1, (PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Americanfootball });
+        param.PlayerList.push_back({ 3, (PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Americanfootball });
+        param.PlayerList.push_back({ 2, (PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Americanfootball });
         param.PlayerList.push_back({ 4, (PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Americanfootball });
 
         MainFrame->ChangeScene(new SceneResult(
-            new iex2DObj("DATA\\Texture\\particle.png"),
+            new iex2DObj("DATA\\Texture\\play_manual.png"),
+            param
+            ));
+    }
+    else
+    {
+        sceneGamePlay::InitParams param;
+
+        param.Round = 3;
+        param.Time = 60 * 60 * 5;
+
+        param.PlayerArray[0] = { 0, PlayerType::_Player, CharacterType::_Baseball, StrongType::_Usual };
+        param.PlayerArray[1] = { 1, PlayerType::_Player, CharacterType::_Tennis, StrongType::_Usual };
+        param.PlayerArray[2] = { 2, PlayerType::_Player, CharacterType::_Baseball, StrongType::_Usual };
+        param.PlayerArray[3] = { 3, PlayerType::_Computer, CharacterType::_Baseball, StrongType::_Usual };
+
+        param.pInitializer = new GameInitializer_UsualMatch(GameInitializer_UsualMatch::StageType::Kasennziki,param );
+        
+        MainFrame->ChangeScene(new sceneGamePlay(
             param
             ));
     }

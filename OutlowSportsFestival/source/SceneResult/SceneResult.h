@@ -46,6 +46,8 @@ public:
 
     ~SceneResult();
 
+    bool Initialize();
+
     void SetNextScene(NextSceneType Next);
 
     void Update();
@@ -69,11 +71,10 @@ private:
     };
 
 
-    iex2DObj*           m_pScreenTexture;
-    iex3DObj*           m_pBreakScreenModel;
     ResultStartParam    m_StartParam;
     NextSceneType       m_NextSceneType;
     int                 m_Timer;
+    iex2DObj*           m_pScreenTex;
 
     void(SceneResult::*m_pStateFunc)();
 
@@ -81,6 +82,9 @@ private:
     void State_ScreenVanish();
     void State_Back();
     
+    void CreateStage();
+    void CreateCharacterBlock(CrVector3 Pos,int Rank);
+
     void SetLights();
     void SetCharacter(CrVector3 pos, PlayerInfo& info);
 };

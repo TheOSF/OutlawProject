@@ -213,8 +213,8 @@ void Kasennziki_Manager::SetSunsetLight()
     m_DirLight.param.vec = Vector3Normalize(Vector3(0.8f, -1, 0.2f));
     m_DirLight.param.Shadow.visible = true;
     m_DirLight.param.Shadow.Near = 5;
-    m_DirLight.param.Shadow.Far = 150;
-    m_DirLight.param.Shadow.origin = m_DirLight.param.vec*-50.0f;
+    m_DirLight.param.Shadow.Far = 250;
+    m_DirLight.param.Shadow.origin = m_DirLight.param.vec*-150.0f;
     m_DirLight.param.Shadow.Size = 120;
 
     m_AmbientLight.param.color = Vector3(0.37f, 0.26f, 0.26f);

@@ -122,6 +122,12 @@ const Matrix& Camera::GetViewProjectionMatrix()const
     return m_VP;
 }
 
+//逆ビュープロジェクション変換をする行列を得る
+const Matrix& Camera::GetInvViewProjectionMatrix()const
+{
+    return m_VP_inv;
+}
+
 CrVector3 Camera::GetRight()const
 {
 	return m_Right;

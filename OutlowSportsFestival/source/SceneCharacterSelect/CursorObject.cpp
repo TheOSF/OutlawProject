@@ -114,24 +114,14 @@ void SelectPointBase::LeaveCursor(SelectCursor* p)
 
 void SelectPointBase::Select(SelectCursor* p)
 {
+    bool PreFrameSelect = p->m_Selected;
+
     switch (m_Type)
     {
 
     case PointType::Tennis:
-        p->m_Lock = true;
-        p->m_Selected = true;
-        break;
-
     case PointType::Soccer:
-        p->m_Lock = true;
-        p->m_Selected = true;
-        break;
-
     case PointType::BaseBall:
-        p->m_Lock = true;
-        p->m_Selected = true;
-        break;
-
     case PointType::AmericanFootBall:
         p->m_Lock = true;
         p->m_Selected = true;
@@ -160,11 +150,40 @@ void SelectPointBase::Select(SelectCursor* p)
         MyAssert(false, "タイプがおかしい");
         break;
     }
+
+    //決定していたらＳＥを鳴らす
+    if (PreFrameSelect == false && p->m_Selected)
+    {
+        Sound::Play(Sound::Scene_Enter);
+    }
 }
 
 void SelectPointBase::Cancel(SelectCursor* p)
 {
+    if (p->m_Lock == false)
+    {
+        return;
+    }
 
+    bool PreFrameSelect = p->m_Selected;
+
+    switch (m_Type)
+    {
+
+    case PointType::Tennis:
+    case PointType::Soccer:
+    case PointType::BaseBall:
+    case PointType::AmericanFootBall:
+        p->m_Lock = false;
+        p->m_Selected = false;
+        break;
+
+    default:
+        return;
+    }
+
+    //SE
+    Sound::Play(Sound::Cursor_cancel);
 }
 
 int SelectPointBase::GetOnCursorID(SelectCursor* p)
@@ -308,6 +327,20 @@ void SelectCursor::SetPoint(SelectPointBase* pNewPoint)
     m_pPoint = pNewPoint;  //更新
 
     m_pPoint->OnCursor(this); //乗る
+
+    //SE
+    Sound::Play(Sound::Cursor_move);
+}
+
+bool SelectCursor::SelectNowPoint()
+{
+    if (m_pPoint == nullptr )
+    {
+        return false;
+    }
+
+    m_pPoint->Select(this);
+    return true;
 }
 
 void SelectCursor::Controll()
@@ -338,10 +371,21 @@ bool SelectCursor::Update()
 {
 
     //操作更新
-    if (m_Lock == false && m_ControllerNum != controller::__ERROR_CONTROLLER_NUM)
+    if (m_ControllerNum != controller::__ERROR_CONTROLLER_NUM)
     {
-        Controll();
+        if (m_Lock == false)
+        {
+            Controll();
+        }
+        else
+        {
+            if (controller::GetTRG(controller::button::batu, m_ControllerNum))
+            {
+                m_pPoint->Cancel(this);
+            }
+        }
     }
+    
 
     //移動
     if (m_pPoint != nullptr)
@@ -543,7 +587,7 @@ void CursorManager::RandomMove(SelectCursor* p)
 
             if (isLive == false)
             {
-                m_pMoveCursor->m_Selected = true;
+                m_pMoveCursor->SelectNowPoint();
             }
 
             return isLive;

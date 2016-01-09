@@ -44,6 +44,9 @@ public:
 
     //ビュープロジェクション変換をする行列を得る
     const Matrix& GetViewProjectionMatrix()const;
+        
+    //逆ビュープロジェクション変換をする行列を得る
+    const Matrix& GetInvViewProjectionMatrix()const;
 
 	//カメラの各方向ベクトルを得る
 	CrVector3 GetRight()const;

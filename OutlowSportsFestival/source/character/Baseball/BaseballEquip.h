@@ -15,106 +15,66 @@
 //		野球装備クラス
 //*****************************************************
 
-#define DeleteTimeSet 10;//　消滅までの時間
-
 class BaseballPlayer;
 
 
 
 class BaseballEquip :public GameObjectBase
 {
-public:
-	//物理パラメータ
-	struct PhysicsParam
-	{
-		float Mass;
-		float Friction;
-		float Radius;
-		float Restitution;
-	};
-
-	struct Param
-	{
-		Matrix  BoneMat;
-		Vector3 Forward;
-		Vector3 TempPos;
-		Vector3 Pos;
-		Vector3 Move;
-	};
-
-
-private:
-	BaseballPlayer* m_Baseball;
-	LPIEXMESH		pHeadMesh;//　頭
-	LPIEXMESH	    pArmMesh; //　腕
-	Param param;
-	PhysicsParam pParam;
-	bool tempflg;
-	bool Deleteflg;//　消滅時間減少用
-	bool(BaseballEquip::*       m_pStateFunc)();
-
-	iexMesh* pMesh;
-
-	LpMeshRenderer		        m_pMeshRenderer;
-	
-	Vector3                     m_RotateSpeed;
-	const float         m_Glavity;
-	LocusHDR                    m_Locus;
-
-	Matrix					    m;
-	Matrix              m_BaseMatrix;
-	RigidBody*          m_pRigitBody;
-	int                 m_DeleteFrame;
-
 //　基本
 public:
-	enum MeshType
+	enum class MeshType
 	{
 		Cap,
 		Helmet,
 		Grove,
 		Bat
 	};
-	MeshType meshType;
+
+
 	//　コンストラクタ
-	BaseballEquip(BaseballPlayer* b, int BoneNum, MeshType mt);
+    BaseballEquip(CharacterRenderer* pRenderer, MeshType mt, float Scale);
 	//　デストラクタ
 	~BaseballEquip();
-	//　装着
-	void Install(MeshType mt);
+
 	//　解除
 	void Takeoff();
-	void NormalMove();
-	//　バウンド&フェードアウト
-	void Bound();
-	// 後方に落ちる
-	void ToPhysicMove();
-	bool Update();
-	bool Msg(MsgType mt);
 
-public:
-	//　通常移動(頭)
-	void NormalMove_Head();
-	//　通常移動(腕)
-	void NormalMove_Arm();
+private:
+    void UpdateMeshFromBonePos();
 	//　物理パラメータセット
 	void SetPhysicsParam();
+
+    //　装着
+    void Install(MeshType mt);
+
+    bool Update();
+    bool Msg(MsgType mt);
 
 //　ステート(自動更新してくれる)
 public:
 	bool StateEquip();
-	bool StateChangeEquip();
-	bool StateHitGround();
+	bool StatePhysicMove();
 	bool StateEnd();
 
+
 public:
-	//　色を現在の親キャラクタの色に設定
-	void UpdateColor();
-	//　落下処理
-	void UpdateMove();
 	//　物理挙動
 	void UpdatePhysicMove();
-	//　床あたり判定
-	bool UpdateWallCheck();
 	
+private:
+    static const int DeleteTimeSet = 10;//　消滅までの時間
+
+    CharacterRenderer* m_pChrRenderer;
+    LPIEXMESH		m_pMesh;//　頭
+    MeshType        m_MeshType;
+    float           m_MeshScale;
+
+    bool(BaseballEquip::*       m_pStateFunc)();
+    LpMeshRenderer		        m_pMeshRenderer;
+    LocusHDR                    m_Locus;
+    RigidBody*                  m_pRigitBody;
+    int                         m_DeleteFrame;
+    int                         m_BoneNumber;
+
 };

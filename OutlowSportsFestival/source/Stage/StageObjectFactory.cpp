@@ -166,4 +166,6 @@ StagePhysicMoveObject* StageObjFactory::CreateBench(CrVector3 pos, CrVector3 ang
         Vector3(1, 1.3f, 1)*0.05f*sizeRatio,
         2.0f*sizeRatio
         );
+
 }
+

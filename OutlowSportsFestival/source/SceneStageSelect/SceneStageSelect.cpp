@@ -97,6 +97,21 @@ void SceneStageSelect::Update()
 		{
 			KasenX = -800;
 			GroundX = 1600;
+
+            GameInitializer_UsualMatch::StageType Stage = GameInitializer_UsualMatch::StageType::Kasennziki;
+            
+            switch (stagetexture)
+            {
+            case Kasentex:
+                Stage = GameInitializer_UsualMatch::StageType::Kasennziki;
+                break;
+            case Groundtex:
+                Stage = GameInitializer_UsualMatch::StageType::School;
+                break;
+            }
+
+            initparam.pInitializer = new GameInitializer_UsualMatch(Stage, initparam);
+
 			MainFrame->ChangeScene(new sceneGamePlay(initparam));
 		}
 		break;
@@ -179,7 +194,7 @@ void SceneStageSelect::SelectRender()
 		GameInitializer_UsualMatch::StageType Stage;
 	case Groundtex:
 		Stage = GameInitializer_UsualMatch::StageType::School;
-		initparam.pInitializer = new GameInitializer_UsualMatch(Stage, initparam);
+		
 
 		Decide->Render(GroundX + 288 - STAGE_POS[0].render_size_x / 2,
 			120 + 288 - STAGE_POS[0].render_size_y / 2,
@@ -193,7 +208,6 @@ void SceneStageSelect::SelectRender()
 		break;
 	case Kasentex:
 		Stage = GameInitializer_UsualMatch::StageType::Kasennziki;
-		initparam.pInitializer = new GameInitializer_UsualMatch(Stage, initparam);
 		Decide->Render(KasenX + 288 - STAGE_POS[1].render_size_x / 2,
 			120 + 288 - STAGE_POS[1].render_size_y / 2,
 			480, 480, 0, 0, 512, 512);
