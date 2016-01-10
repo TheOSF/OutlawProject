@@ -176,7 +176,7 @@ void AmefootBoundBall::StateGroundTouch()
     //あたり判定を有効化
     m_Damage.m_Enable = true;
 
-    if ( ++m_Timer > 5 )
+    //if ( ++m_Timer > 5 )
     {
 
         //一番近いプレイヤーに向かっていくように設定

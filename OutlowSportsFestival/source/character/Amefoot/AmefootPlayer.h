@@ -41,6 +41,7 @@ public:
         Motion_Tackle_Charge, // タックル突進
         Motion_Tackle_Drive_Away, // タックル打ち上げ
         Motion_Tackle_Touchdown, // タックルタッチダウン
+        Motion_Tackle_Standup, // タックル起き上がり
         Motion_Counter_Pose, // カウンター構え
         Motion_Counter_Catch_Right, // カウンター右キャッチ
         Motion_Counter_Catch_Left, // カウンター左キャッチ

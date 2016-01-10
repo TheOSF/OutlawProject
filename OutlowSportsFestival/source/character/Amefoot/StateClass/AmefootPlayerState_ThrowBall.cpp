@@ -89,8 +89,8 @@ void AmefootPlayerState_ThrowBall::Execute(AmefootPlayer* pCharacter)
         pos = pCharacter->m_Params.pos + Vector3(0, BallBase::UsualBallShotY, 0) + chr_func::GetFront(pCharacter)*0.8f;
 
         chr_func::GetFront(pCharacter, &move);
-        move *= 0.6f;
-        move.y = 0.3f;
+        move *= 0.35f;
+        move.y = 0.7f;
 
         new AmefootBoundBall(
         pos,
@@ -122,7 +122,7 @@ void AmefootPlayerState_ThrowBall::Execute(AmefootPlayer* pCharacter)
         }
 
         //後ろに移動
-        chr_func::AddMoveFront(pCharacter, 0.25f, 0.5f);
+        //chr_func::AddMoveFront(pCharacter, 0.25f, 0.5f);
     }
 
     //ステート終了
