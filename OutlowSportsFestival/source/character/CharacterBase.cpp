@@ -95,7 +95,7 @@ const char* CharacterBase::GetCharacterModelPath(CharacterType::Value chr_type)
     {
         "DATA\\CHR\\SanoTennis\\tennis.iem",
         "DATA\\CHR\\SanoBaseBall\\baseball.iem",
-        "DATA\\CHR\\Soccer\\Player_S.iem",
+        "DATA\\CHR\\SanoSoccer\\soccer.iem",
         "DATA\\CHR\\AmericanFootball\\AmericanFootball_v3.iem",
     };
 
@@ -124,9 +124,10 @@ void CharacterBase::CreateCharacterModel(CharacterRenderer* pOut, CharacterType:
         break;
 
     case CharacterType::_Soccer:
-        pOut->SetMaterialRenderType(0, CharacterRenderer::RenderType::Face);
-        pOut->SetMaterialRenderType(1, CharacterRenderer::RenderType::Skin);
-        pOut->SetMaterialRenderType(2, CharacterRenderer::RenderType::Clothes);
+        pOut->SetMaterialRenderType(0, CharacterRenderer::RenderType::Hair);
+        pOut->SetMaterialRenderType(1, CharacterRenderer::RenderType::Face);
+        pOut->SetMaterialRenderType(2, CharacterRenderer::RenderType::Skin);
+        pOut->SetMaterialRenderType(3, CharacterRenderer::RenderType::Clothes);
         break;
 
     case CharacterType::_Americanfootball:

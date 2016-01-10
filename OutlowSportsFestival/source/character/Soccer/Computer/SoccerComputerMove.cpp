@@ -80,6 +80,11 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 		{
 			m_cSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Stand);
 		}
+        //走り終わり
+        void RunEnd()
+        {
+            m_cSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_RunStop);
+        }
 	};
 
 	//移動パラメータを代入

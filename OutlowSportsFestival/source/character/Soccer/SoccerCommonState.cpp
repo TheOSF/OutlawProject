@@ -108,7 +108,7 @@ void SoccerState_DamageVanish::Enter(SoccerPlayer* s)
 		void FlyStart()
 		{
 			//吹き飛びモーションをセット
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Blowing);
+			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Vanish_Fly);
 		}
         void Flying(const Matrix& Rotate, RATIO t)
 		{
@@ -124,7 +124,7 @@ void SoccerState_DamageVanish::Enter(SoccerPlayer* s)
 		void DownStart()
 		{
 			//ダウンモーションをセット
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Scrub);
+			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Vanish_Down);
 		}
 
 		void Downing()
@@ -138,7 +138,7 @@ void SoccerState_DamageVanish::Enter(SoccerPlayer* s)
 		void StandUpStart()
 		{
 			//吹き飛びモーションをセット
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_GetUp);
+			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_StandUp);
 		}
 
 		void StandUping()
@@ -157,6 +157,41 @@ void SoccerState_DamageVanish::Enter(SoccerPlayer* s)
 				SoccerState_PlayerControll_Move::GetPlayerControllMove(m_pSoccer)
 				);
 		}
+
+        void HitWall()
+        {
+            //壁に当たったモーションをセット
+            m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_HitWallAndFall);
+        }
+
+        void HitFloor()
+        {
+            //床に当たったモーションをセット
+            m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_FallAndDown);
+        }
+
+        void HitFloorAndStandUp()
+        {
+            //立ち上がりモーションをセット
+            m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_StandUp);
+        }
+
+        void HitWallUpdate()
+        {
+            //モデルのアニメーション更新
+            m_pSoccer->m_Renderer.Update(1);
+
+            //ワールド変換行列を計算
+            chr_func::CreateTransMatrix(m_pSoccer, m_pSoccer->m_ModelSize, &m_pSoccer->m_Renderer.m_TransMatrix);
+        }
+
+        void CanActionUpdate()
+        {
+            //行動分岐が可能なときに呼ばれる
+           // m_pDoCancelAction->DoAction();
+        }
+
+
 	private:
 		SoccerPlayer*  m_pSoccer;
 		int            m_Timer;
@@ -215,7 +250,7 @@ void SoccerState_DamageMotion_Die::Enter(SoccerPlayer* t)
 		void FlyStart()
 		{
 			//吹き飛びモーションをセット
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Blowing);
+			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Vanish_Fly);
 			m_pSoccer->m_Params.camera_draw = false;
 		}
 
@@ -234,7 +269,7 @@ void SoccerState_DamageMotion_Die::Enter(SoccerPlayer* t)
 		void DownStart()
 		{
 			//ダウンモーションをセット
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Scrub);
+			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Vanish_Down);
 		}
 
 		void Downing()
@@ -264,6 +299,8 @@ void SoccerState_DamageMotion_Die::Enter(SoccerPlayer* t)
 			//カメラ写すフラグをfalseに
 			m_pSoccer->m_Params.camera_draw = false;
 		}
+
+
 
 	private:
 		SoccerPlayer*  m_pSoccer;
@@ -314,44 +351,9 @@ SoccerState_brake::SoccerState_brake(
 }
 void SoccerState_brake::Enter(SoccerPlayer* s)
 {
-	class SoccerMoveEvent :public CharacterUsualMove::MoveEvent
-	{
-		SoccerPlayer* m_pSoccer;
-	public:
-		SoccerMoveEvent(SoccerPlayer* pSoccer) :
-			m_pSoccer(pSoccer){}
-
-		//アニメーションの更新
-		void Update(bool isRun, RATIO speed_ratio)
-		{
-			m_pSoccer->m_Renderer.Update(1);
-		}
-		//走り始めにモーションをセット
-		void RunStart()
-		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Guard);
-		}
-		//立ちはじめにモーションをセット
-		void StandStart()
-		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Guard);
-		}
-	};
-	CharacterUsualMove::Params p;
-
-	p.Acceleration = 0.0f;
-	p.MaxSpeed = 0.2f;
-	p.TurnSpeed = 0.0f;
-	p.DownSpeed = 0.08f;
-
-	m_pMoveClass = new CharacterUsualMove(
-		s,
-		p,
-		new SoccerMoveEvent(s),
-		new SoccerHitEvent(s)
-		);
 	//初期のたちモーションセット
-	s->m_Renderer.SetMotion(SoccerPlayer::_ms_Guard);
+	s->m_Renderer.SetMotion(SoccerPlayer::_ms_DushStop);
+
 	Sound::Play(Sound::Sand2);
 	Sound::Play(Sound::Soccer_Brake);
 
@@ -372,30 +374,22 @@ void SoccerState_brake::Enter(SoccerPlayer* s)
 void SoccerState_brake::Execute(SoccerPlayer* s)
 {
 	++m_Timer;
-	if (s->m_Params.move.Length() <= 0.03f)
+
+    if (++m_Timer > 30)
 	{
 		s->SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(s));
 	}
-
-	if (m_Timer % 6 == 2)
-	{
-		EffectFactory::Smoke(
-			s->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
-			Vector3Zero,
-			1.8f,
-			1.0f,
-			true
-			);
-	}
-	
 		
-	m_pMoveClass->Update();
+    chr_func::XZMoveDown(s, 0.08f);
 
-	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
+    s->m_Renderer.Update(1);
+
+    chr_func::UpdateAll(s, &SoccerHitEvent(s));
+    chr_func::CreateTransMatrix(s, s->m_ModelSize, &s->m_Renderer.m_TransMatrix);
 }
 void SoccerState_brake::Exit(SoccerPlayer* s)
 {
-	delete m_pMoveClass;
+
 }
 
 SoccerState_clash::SoccerState_clash(
@@ -429,6 +423,11 @@ void SoccerState_clash::Enter(SoccerPlayer* s)
 		{
 			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Damage);
 		}
+        //走り終わり
+        void RunEnd()
+        {
+            m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_RunStop);
+        }
 	};
 	CharacterUsualMove::Params p;
 
@@ -444,7 +443,7 @@ void SoccerState_clash::Enter(SoccerPlayer* s)
 		new SoccerHitEvent(s)
 		);
 	//初期のたちモーションセット
-	s->m_Renderer.SetMotion(SoccerPlayer::_ms_Guard);
+	s->m_Renderer.SetMotion(SoccerPlayer::_ms_DushStop);
 	Sound::Play(Sound::AtkHit1);
 	m_count = 0;
 

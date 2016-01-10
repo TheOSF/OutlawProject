@@ -156,7 +156,7 @@ void SoccerState_PlayerControll_Move::Enter(SoccerPlayer* s)
 		//アニメーションの更新
 		void Update(bool isRun, RATIO speed_ratio)
 		{
-			m_pSoccer->m_Renderer.Update(1);
+            m_pSoccer->m_Renderer.Update(0.5f);
 		}
 		//走り始めにモーションをセット
 		void RunStart()
@@ -168,6 +168,12 @@ void SoccerState_PlayerControll_Move::Enter(SoccerPlayer* s)
 		{
 			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Stand);
 		}
+        
+        //走り終わり
+        void RunEnd()
+        {
+            m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_RunStop);
+        }
 	};
 
 	CharacterUsualMove::Params p;
@@ -576,7 +582,7 @@ void SoccerState_PlayerControll_Counter::Enter(SoccerPlayer* s)
 		//構え開始
 		void Pose()
 		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Counter);
+			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_CounterPose);
 		}
 
 		//ボールへ移動開始
@@ -585,11 +591,11 @@ void SoccerState_PlayerControll_Counter::Enter(SoccerPlayer* s)
 			//ボールの位置によってモーション分岐
 			if (chr_func::isRight(m_pSoccer, pCounterBall->m_Params.pos))
 			{
-				m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Shot);
+				m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Counter_Right);
 			}
 			else
 			{
-				m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Shot);
+				m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Counter_Left);
 			}
 		}
 
@@ -604,7 +610,7 @@ void SoccerState_PlayerControll_Counter::Enter(SoccerPlayer* s)
 		//打ち失敗
 		void ShotFaild()
 		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Crap);
+            m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Counter_Failed);
 		}
 
 		//終了
@@ -878,7 +884,7 @@ CharacterShotAttack* SoccerState_PlayerControll_Finisher::SnakeShotClass(SoccerP
 		//　遠距離攻撃開始
 		void AttackStart()override{
 			//　☆モーション
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Command);
+            m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_SpecialAtk);
 		}
 
 		void AttackEnd()

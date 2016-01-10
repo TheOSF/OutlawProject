@@ -2,6 +2,7 @@
 #include "BaseballplayerState_DamageMotionWeak.h"
 #include "BaseballPlayerState_DamageMotion_Vanish.h"
 #include "BaseballPlayerState_DamageMotion_Die.h"
+#include "BaseballPlayerState_Controll_Vanish.h"
 #include "../CharacterFunction.h"
 
 
@@ -41,7 +42,15 @@ bool BaseballHitEvent::Hit(DamageBase* pDmg)
         m_pBaseball->SetState(new BaseballState_DamageVanish(m_pBaseball, DamageVec), 1);
         break;
 
-
+    case CharacterHitEventFunc::SetType::Controll_Hit:
+    {
+        //コントロール吹き飛びステートへ
+        BaseballState_ControllVanish* p = new BaseballState_ControllVanish(m_pBaseball);
+        m_pBaseball->SetState(p, 2);
+        ((DamageControllVanish*)pDmg)->GetDamageControll_Transform()->AddControllClass(p->GetControllClass());
+    }
+        break;
+        //
 
     case CharacterHitEventFunc::SetType::_None:
         //何もしない(自身のダメージだった場合

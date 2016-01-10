@@ -116,7 +116,7 @@ CharacterShotAttack* SoccerState_ComputerControll_Finisher::SnakeShotClass(Socce
 		//　遠距離攻撃開始
 		void AttackStart()override {
 			//　☆モーション
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Command);
+			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_SpecialAtk);
 		}
 
 		void AttackEnd()

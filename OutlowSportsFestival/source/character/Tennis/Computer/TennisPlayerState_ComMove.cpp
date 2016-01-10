@@ -9,36 +9,11 @@
 #include "../../CharacterManager.h"
 #include "../Tennis_HitEvent.h"
 #include "../TennisPlayerState_Attack.h"
-
+#include "../TennisUtillityClass.h"
 
 //ステート開始
 void TennisState_ComputerControll_Move::Enter(TennisPlayer* t)
 {
-    //移動イベントクラス
-    class TennisMoveEvent :public CharacterUsualMove::MoveEvent
-    {
-        TennisPlayer* m_pTennis;
-    public:
-        TennisMoveEvent(TennisPlayer* pTennis) :
-            m_pTennis(pTennis){}
-
-        //アニメーションの更新
-        void Update(bool isRun, RATIO speed_ratio)
-        {
-            m_pTennis->m_Renderer.Update(1);
-        }
-        //走り始めにモーションをセット
-        void RunStart()
-        {
-            m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Run);
-        }
-        //立ちはじめにモーションをセット
-        void StandStart()
-        {
-            m_pTennis->m_Renderer.SetMotion(TennisPlayer::_mt_Stand);
-        }
-    };
-
     //移動パラメータを代入
     CharacterUsualMove::Params p;
 
@@ -51,7 +26,7 @@ void TennisState_ComputerControll_Move::Enter(TennisPlayer* t)
     m_pMoveClass = new CharacterUsualMove(
         t,
         p,
-        new TennisMoveEvent(t),
+        new TennisUtillityClass::TennisMoveEvent(t),
         new TennisHitEvent(t)
         );
 

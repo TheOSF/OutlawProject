@@ -67,7 +67,7 @@ BOOL	InitApp( HWND hWnd )
         MainFrame->ChangeScene(new SceneCharacterSelect(Param, 1));
 
     }
-    else if (false)
+    else if (true)
     {
         MainFrame->ChangeScene(new SceneOption());
     }
@@ -92,7 +92,7 @@ BOOL	InitApp( HWND hWnd )
         param.Round = 3;
         param.Time = 60 * 60 * 5;
 
-        param.PlayerArray[0] = { 0, PlayerType::_Player, CharacterType::_Baseball, StrongType::_Usual };
+        param.PlayerArray[0] = { 0, PlayerType::_Player, CharacterType::_Soccer, StrongType::_Usual };
         param.PlayerArray[1] = { 1, PlayerType::_Player, CharacterType::_Tennis, StrongType::_Usual };
         param.PlayerArray[2] = { 2, PlayerType::_Player, CharacterType::_Baseball, StrongType::_Usual };
         param.PlayerArray[3] = { 3, PlayerType::_Computer, CharacterType::_Baseball, StrongType::_Usual };

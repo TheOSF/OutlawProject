@@ -73,7 +73,7 @@ void StageResourceLoadFaction::LoadStage2Object()
     //ステージ１物理エンジン用メッシュ
     DefResource.Regist(
         Resource::MeshType::Stage2_HitPhysic,
-        new iexMesh("DATA\\Stages\\Stage2\\Ground.imo")
+        new iexMesh("DATA\\Stages\\Stage2\\Ground_Hit.imo")
         );
 
 

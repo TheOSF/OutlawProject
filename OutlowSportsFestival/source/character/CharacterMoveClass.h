@@ -33,7 +33,7 @@ public:
 		virtual void Update(bool isRun,RATIO speed_ratio) = 0;	//毎フレーム実行される関数
 		virtual void RunStart() = 0;			//走り開始時に呼ばれる関数
         virtual void StandStart() = 0;			//棒立ち開始時に呼ばれる関数
-        virtual void RunEnd(){}
+        virtual void RunEnd() = 0;              //走り終了時に呼ばれる関数
     };
 
 	CharacterUsualMove(

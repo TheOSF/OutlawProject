@@ -22,7 +22,7 @@ void SoccerState_ComputerControll_Counter::Enter(SoccerPlayer* s)
 		//構え開始
 		void Pose()
 		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Counter);
+			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_CounterPose);
 		}
 
 		//ボールへ移動開始
@@ -50,7 +50,7 @@ void SoccerState_ComputerControll_Counter::Enter(SoccerPlayer* s)
 		//打ち失敗
 		void ShotFaild()
 		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Crap);
+			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_RunStop);
 		}
 
 		//終了

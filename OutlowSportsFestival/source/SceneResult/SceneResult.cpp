@@ -116,12 +116,13 @@ void SceneResult::State_Initialize()
     m_pStateFunc = &SceneResult::State_ScreenVanish;
 
     //キャラクタをセット
-    Vector3 pos = Vector3(-4.5f, 1.95f, 0);
+    Vector3 pos = Vector3(-5.2f, 1.95f, 0);
+    const float Width = -pos.x / 1.5f;
 
     for (auto&it : m_StartParam.PlayerList)
     {
         SetCharacter(pos, it);
-        pos.x += 3.0f;
+        pos.x += Width;
     }
 
     //スクリーンモデルにテクスチャを張り替える

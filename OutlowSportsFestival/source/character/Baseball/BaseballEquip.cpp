@@ -76,25 +76,25 @@ void BaseballEquip::Install(MeshType mt)
 	{
     case MeshType::Cap:
 		m_pMesh = DefResource.Get(Resource::MeshType::Hat);
-        m_BoneNumber = 11;
+        m_BoneNumber = 5;
         m_MeshScale *= 0.1f;
 		break;
 
     case MeshType::Helmet:
         m_pMesh = DefResource.Get(Resource::MeshType::Helmet);
-        m_BoneNumber = 11;
+        m_BoneNumber = 5;
         m_MeshScale *= 0.1f;
 		break;
 
     case MeshType::Grove:
         m_pMesh = DefResource.Get(Resource::MeshType::Mitt);
-        m_BoneNumber = 19;
+        m_BoneNumber = 20;
         m_MeshScale *= 0.1f;
 		break;
 
     case MeshType::Bat:
         m_pMesh = DefResource.Get(Resource::MeshType::Bat);
-        m_BoneNumber = 27;
+        m_BoneNumber = 32;
         m_MeshScale *= 0.1f;
 		break;
 
@@ -124,6 +124,9 @@ void BaseballEquip::UpdateMeshFromBonePos()
 
         break;
     case MeshType::Bat:
+        Transform._31 = -Transform._31;
+        Transform._32 = -Transform._32;
+        Transform._33 = -Transform._33;
 
         break;
     }

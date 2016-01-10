@@ -21,24 +21,36 @@ class SoccerPlayer :public CharacterBase
 public:
 	enum MotionType
 	{
-		_ms_Stand,
-		_ms_Run,
-		_ms_Atk1,
-		_ms_Shot,
-		_ms_Guard,
-		_ms_Rolling,
-		_ms_Damage,
-		_ms_Blowing,
-		_ms_Scrub,
-		_ms_GetUp,
-		_ms_Shot2,
-		_ms_Win,
-		_ms_Lose,
-		_ms_Command,
-		_ms_Atk2,
-		_ms_Atk3,
-		_ms_Counter,
-		_ms_Crap
+        _ms_Stand = 1,
+        _ms_Run = 3,
+        _ms_RunStop = 4,
+        _ms_DushStop = 6,
+        _ms_Sliding_Start = 8,
+        _ms_Sliding_End = 9,
+        _ms_Rolling = 11,
+
+        _ms_Atk1 = 13,
+        _ms_Atk2 = 15,
+        _ms_Atk3 = 17,
+
+        _ms_CounterPose = 19,
+        _ms_Counter_Right = 21,
+        _ms_Counter_Left = 23,
+
+        _ms_SpecialAtk = 25,
+        _ms_Damage = 27,
+        _ms_Vanish_Fly = 29,
+        _ms_Vanish_Down = 31,
+        _ms_StandUp = 32,
+        _ms_HitWallAndFall = 36,
+        _ms_FallAndDown = 38,
+
+        _ms_Counter_Failed = _ms_RunStop, 
+        _ms_Shot = _ms_Atk1,
+
+        _ms_Win = _ms_Vanish_Fly,
+        _ms_Lose = _ms_Vanish_Fly,
+
 	};
 protected:
 	

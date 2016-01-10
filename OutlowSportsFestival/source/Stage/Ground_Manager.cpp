@@ -59,7 +59,7 @@ void Ground_Manager::CreateStage()
 
         const float scale = 0.1f;
 
-        MeshRenderer* R = new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColor, MeshRenderer::GbufRenderType::NoTexture);
+        MeshRenderer* R = new MeshRenderer(pStageMesh, true, MeshRenderer::RenderType::UseColorSpecular, MeshRenderer::GbufRenderType::UseNormal);
         MeshCollider* C = new MeshCollider(pStageMesh, nullptr, false, CollisionManager::RayType::_Ball | CollisionManager::RayType::_Usual);
 
         pStageMesh->SetScale(scale, scale, scale);

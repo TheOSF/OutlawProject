@@ -227,6 +227,18 @@ void BaseballState_PlayerControll_Move::Enter(BaseballPlayer* b)
 				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand_P);
 			}
 		}
+        //走り終わり
+        void RunEnd()
+        {
+            if (m_pBaseball->getBatterFlg())
+            {
+                m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stop_B);
+            }
+            else
+            {
+                m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stop_P);
+            }
+        }
 	};
 
 	//　移動パラメータを代入
