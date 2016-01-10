@@ -8,6 +8,7 @@
 #include "../../CharacterHitEventFunc.h"
 #include "../AmefootUsualHitEvent.h"
 #include "../UtilityClass/AmefootPlayer_ThrowBallControll.h"
+#include "../AmefootPlayerState.h"
 
 //-----------------------------------------------------------------------------------------
 // MoveEvent
@@ -128,7 +129,9 @@ void AmefootPlayerState_UsualMove::ActionStateSwitch(AmefootPlayer* pCharacter)
      
      if ( controller::GetTRG(controller::button::shikaku, pCharacter->m_PlayerInfo.number) )
      {// [ ] ‚Å [‹ß‹——£UŒ‚]
-
+         pCharacter->SetState(
+             new AmefootPlayerState_Tackle(pCharacter)
+             );
      }
      
      if ( controller::GetTRG(controller::button::_R1, pCharacter->m_PlayerInfo.number) )

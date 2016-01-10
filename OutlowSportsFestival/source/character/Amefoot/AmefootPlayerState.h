@@ -7,5 +7,5 @@
 #include "StateClass/AmefootPlayerState_Counter.h"
 #include "StateClass/AmefootPlayerState_ThrowBall.h"
 #include "StateClass/AmefootPlayerState_Die.h"
-
+#include "StateClass/AmefootPlayerState_Tackle.h"
 

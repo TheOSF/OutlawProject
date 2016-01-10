@@ -12,11 +12,11 @@ class AmefootPlayer;
 class AmefootUsualHitEvent : public DamageManager::HitEventBase
 {
 public:
-     AmefootUsualHitEvent(AmefootPlayer* pAmefoot);
+     AmefootUsualHitEvent(AmefootPlayer*const pAmefoot);
 
      bool Hit(DamageBase* pDamage)override;
 
 protected:
-     AmefootPlayer* m_pAmefoot;
+     AmefootPlayer* const m_pAmefoot;
 };
 //-----------------------------------------------------------------------------------------

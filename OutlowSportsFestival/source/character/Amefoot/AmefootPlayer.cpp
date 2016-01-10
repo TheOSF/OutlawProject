@@ -11,7 +11,6 @@ CharacterBase(info, new BlendAnimationMesh(GetCharacterModelPath(CharacterType::
      m_pStateMachine(new AmefootStateMachine(this))
 {
     m_ModelSize = (0.052f);
-    m_Params.HP = 10;
 }
 //-----------------------------------------------------------------------------------------
 AmefootPlayer::~AmefootPlayer()

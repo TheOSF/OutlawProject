@@ -223,6 +223,8 @@
     <ClCompile Include="source\Ball\AmefootBoundBall.cpp" />
     <ClCompile Include="source\character\Amefoot\UtilityClass\AmefootPlayer_ThrowBallControll.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_Die.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_Tackle.cpp" />
+    <ClCompile Include="source\character\Amefoot\MoveClass\AmefootAttackClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -457,6 +459,10 @@
     <ClInclude Include="source\character\Tennis\TennisState_ControllVanish.h" />
     <ClInclude Include="source\character\Amefoot\UtilityClass\AmefootPlayer_ThrowBallControll.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_Die.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveControllVanish.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_Tackle.h" />
+    <ClInclude Include="source\character\Amefoot\MoveClass\AmefootAttackClass.h" />
+    <ClInclude Include="source\character\Amefoot\MoveClass\AmefootTackleVanishControl.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DATA\Shader\3DEx.fx" />
