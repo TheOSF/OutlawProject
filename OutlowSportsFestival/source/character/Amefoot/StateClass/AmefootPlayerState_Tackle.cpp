@@ -10,6 +10,8 @@
 #include "../../../Sound/Sound.h"
 #include "../../../Effect/ImpactLightObject.h"
 
+
+
 AmefootPlayerState_Tackle::AmefootPlayerState_Tackle(AmefootPlayer*const pCharacter) :
 m_pAmefootPlayer(pCharacter),
 m_pStateFunc(&AmefootPlayerState_Tackle::Pose),

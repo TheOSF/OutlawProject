@@ -427,6 +427,10 @@ void CharacterDefaultCounter::Shot()
             m_pCounterBall->m_Params.pos.y = UsualBall::UsualBallShotY;
         }
 
+        if (m_Param.CatchFrame > 0)
+        {
+            m_pCounterBall->m_Params.pos += Vector3Normalize(m_pCounterBall->m_Params.move)*1.0f;
+        }
 
         EffectApper();
 
