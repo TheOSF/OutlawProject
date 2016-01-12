@@ -179,9 +179,20 @@ bool sceneGamePlay::Initialize()
 			Resource::MeshType::Bat,
 			new iexMesh("DATA\\CHR\\SanoBaseball\\bat.imo")
 			);
+
+		DefResource.Regist(
+			Resource::MeshType::mitt,
+			new iexMesh("DATA\\CHR\\SanoBaseball\\mitt.imo")
+			);
+
 		DefResource.Regist(
 			Resource::MeshType::Helmet,
 			new iexMesh("DATA\\CHR\\SanoBaseball\\helmet.imo")
+			);
+
+		DefResource.Regist(
+			Resource::MeshType::cap,
+			new iexMesh("DATA\\CHR\\SanoBaseball\\cap.imo")
 			);
     }
 

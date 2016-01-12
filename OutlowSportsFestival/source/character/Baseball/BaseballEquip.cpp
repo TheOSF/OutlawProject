@@ -84,15 +84,15 @@ void BaseballEquip::Install(MeshType mt)
 	switch (mt)
 	{
 	case Cap:
-		pHeadMesh = DefResource.Get(Resource::MeshType::Soccer_ball);
+		pHeadMesh = DefResource.Get(Resource::MeshType::cap);
 		m_pMeshRenderer = new MeshRenderer(pHeadMesh, false, MeshRenderer::RenderType::UseColorSpecular);
 		break;
 	case Helmet:
-		pHeadMesh = DefResource.Get(Resource::MeshType::BaseBall_ball);
+		pHeadMesh = DefResource.Get(Resource::MeshType::Helmet);
 		m_pMeshRenderer = new MeshRenderer(pHeadMesh, false, MeshRenderer::RenderType::UseColorSpecular);
 		break;
 	case Grove:
-		pArmMesh = DefResource.Get(Resource::MeshType::Amefoot_ball);
+		pArmMesh = DefResource.Get(Resource::MeshType::mitt);
 		m_pMeshRenderer = new MeshRenderer(pArmMesh, false, MeshRenderer::RenderType::UseColorSpecular);
 		break;
 	case Bat:
@@ -159,19 +159,24 @@ void BaseballEquip::NormalMove_Arm()
 	if (meshType == Bat)
 	{
 		m_Baseball->m_Renderer.GetWorldBoneMatirx(param.BoneMat, 32);
+		{
+			m = param.BoneMat;
+
+			m._31 = -m._31;
+			m._32 = -m._32;
+			m._33 = -m._33;
+		}
 	}
 	else
 	{
 		m_Baseball->m_Renderer.GetWorldBoneMatirx(param.BoneMat, 20);
+		m = param.BoneMat;
+		/*m._11 = -m._11;
+		m._12 = -m._12;
+		m._13 = -m._13;*/
 	}
 
-	m = param.BoneMat;
-
-	{
-		m._31 = -m._31;
-		m._32 = -m._32;
-		m._33 = -m._33;
-	}
+	
 	param.Pos = Vector3(m._41, m._42, m._43);
 	m_pMeshRenderer->SetMatrix(m);
 }
