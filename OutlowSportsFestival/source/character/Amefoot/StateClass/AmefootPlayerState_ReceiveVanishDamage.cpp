@@ -109,7 +109,6 @@ void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::Flying(Matrix const& r
 
      chr_func::CreateTransMatrix(
           m_pAmefoot , 
-          m_pAmefoot->m_ModelSize , 
           &m_pAmefoot->m_Renderer.m_TransMatrix
           );
 
@@ -127,7 +126,6 @@ void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::Downing()
 
      chr_func::CreateTransMatrix(
           m_pAmefoot ,
-          m_pAmefoot->m_ModelSize ,
           &m_pAmefoot->m_Renderer.m_TransMatrix
           );
 }
@@ -143,7 +141,6 @@ void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::StandUping()
 
      chr_func::CreateTransMatrix(
           m_pAmefoot ,
-          m_pAmefoot->m_ModelSize ,
           &m_pAmefoot->m_Renderer.m_TransMatrix
           );
 }
@@ -155,7 +152,7 @@ void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::End()
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::HitWall()
 {
-    m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Damage_Vanish_Hit_Wall);
+    m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Damage_Vanish_Hit_Wall_Fall);
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::HitFloor()
@@ -174,7 +171,6 @@ void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::HitWallUpdate()
 
     chr_func::CreateTransMatrix(
         m_pAmefoot,
-        m_pAmefoot->m_ModelSize,
         &m_pAmefoot->m_Renderer.m_TransMatrix
         );
 }

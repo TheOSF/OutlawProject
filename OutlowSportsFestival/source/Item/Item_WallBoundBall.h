@@ -7,6 +7,8 @@
 #include "../Render/MeshRenderer.h"
 #include "../GameSystem/GameObject.h"
 
+class Item_Bell;
+
 //***************************************************
 //		ベル鳴らし用ボールクラス
 //***************************************************
@@ -15,15 +17,18 @@ class Item_WallBoundBall :public GameObjectBase, public BallBase
 {
 public:
     //コンストラク
-    Item_WallBoundBall(CrVector3 pos, CrVector3 move, CrVector3 target);
+    Item_WallBoundBall(CrVector3 pos, CrVector3 move, CrVector3 target, Item_Bell* pBell);
     ~Item_WallBoundBall();
+
+    void Destroy();
 
     bool Update();
     bool Msg(MsgType mt);
 
 private:
+    CharacterBase*      m_pHitCharacter;
+    Item_Bell* const    m_pBell;
     MeshRenderer		m_MeshRenderer;
-    DamageShpere		m_Damage;
     LocusHDR            m_Locus;
     bool                m_LiveFlg;
     const Vector3       m_Target;
@@ -38,7 +43,6 @@ private:
     void UpdateLocusColor();         //色更新
 
     void ApperEffect();              //エフェクト
-    void UpdateDamageClass();        //当たり判定更新
     void UpdateMesh();               //メッシュ更新
     bool WallCheck(Vector3* pNormal);//壁との判定を取り,trueを返す場合にはpNormalに壁法線を入れている
 

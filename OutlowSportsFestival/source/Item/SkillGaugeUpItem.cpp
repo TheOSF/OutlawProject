@@ -111,7 +111,7 @@ bool SkillGaugeUpItem::Update()
         Sound::Play(Sound::Change);
 
         //ゲージを上昇
-        chr_func::AddSkillGauge(HitChr, 0.5f);
+        chr_func::AddSkillGauge(HitChr, 1.0f);
 
         //コントローラを振動
         chr_func::SetControllerShock(

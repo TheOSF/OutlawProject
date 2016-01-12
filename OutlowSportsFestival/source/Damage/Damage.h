@@ -55,14 +55,15 @@ public:
         _DontDie,   //死亡しない(必ず１残る
     };
 
-	LpCharacterBase	    pParent;	    //このダメージ判定の元のキャラクタ(親がキャラクタでない場合はnullptrが入っている)
-	LpBallBase		    pBall;		    //この判定についているボール(ボールでなければnull)
-    HitCallBack*        pCallBackClass; //コールバッククラス(nullの場合はよび出さない)
-    Type			    type;		    //このダメージのタイプ
-	float			    Value;		    //値
-	int				    HitCount;	    //当たった回数
-    int                 MaxChrHit;      //１キャラクタに当たる総数
-    int                 HitMotionFrame; //ひるみフレーム(弱ひるみのみ有効、デフォルトでは25が入っている
+	LpCharacterBase	    pParent;	       //このダメージ判定の元のキャラクタ(親がキャラクタでない場合はnullptrが入っている)
+	LpBallBase		    pBall;		       //この判定についているボール(ボールでなければnull)
+    HitCallBack*        pCallBackClass;    //コールバッククラス(nullの場合はよび出さない)
+    Type			    type;		       //このダメージのタイプ
+	float			    Value;		       //値
+	int				    HitCount;	       //当たった回数
+    int                 MaxChrHit;         //１キャラクタに当たる総数
+    int                 HitMotionFrame;    //ひるみフレーム(弱ひるみのみ有効、デフォルトでは25が入っている
+    float               AddSkillGaugeValue;//スキル増加量
 
 	DamageBase();
 	virtual ~DamageBase();
@@ -71,7 +72,7 @@ public:
     void SetOption(Option op, bool flag);  //オプションのon,offをセット
 
     void ResetCounts();                    //ヒットカウント、キャラヒットカウントをリセット
-    void AddHitCount(CharacterBase* pHitChr);            //キャラクタに当たった場合カウントを加算
+    void OnHitCharacter(CharacterBase* pHitChr);            //キャラクタに当たった時に呼ぶ
     bool isCanHitCharacter(CharacterBase* pHitChr)const; //引数のキャラクタに当たれるかどうか
 
     virtual bool HitCheckSphere(const SphereParam* sp) = 0;

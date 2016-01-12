@@ -16,7 +16,7 @@ public:
 
      bool Hit(DamageBase* pDamage)override;
 
-protected:
-     AmefootPlayer* const m_pAmefoot;
+private:
+    AmefootPlayer* const m_pAmefoot;
 };
 //-----------------------------------------------------------------------------------------

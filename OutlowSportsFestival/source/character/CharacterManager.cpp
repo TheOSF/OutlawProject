@@ -95,15 +95,18 @@ void CharacterManager::CheckCharacterSpace()
 
     for (auto& it1 : m_CharacterMap)
     {
-        if (chr_func::isDie(it1.first))
+        if (chr_func::isDie(it1.first) ||
+            it1.first->m_Params.DoCheckOtherChrSpace == false)
         {
             continue;
         }
 
         for (auto& it2 : m_CharacterMap)
         {
-            if (it1 == it2 || 
-                chr_func::isDie(it2.first))
+            if (it1 == it2 ||
+                chr_func::isDie(it2.first) || 
+                it2.first->m_Params.DoCheckOtherChrSpace == false
+                )
             {
                 continue;
             }
@@ -121,6 +124,11 @@ void CharacterManager::CheckCharacterSpace()
 
             vec.Normalize();
             vec *= len * 0.5f;
+
+            if (vec == Vector3Zero)
+            {
+                vec.x = 0.05f;
+            }
 
             it1.first->m_Params.pos -= vec;
             it2.first->m_Params.pos += vec;

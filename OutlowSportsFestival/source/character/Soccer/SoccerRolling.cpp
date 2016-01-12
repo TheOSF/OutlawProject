@@ -37,19 +37,19 @@ void SoccerState_Rolling::Execute(SoccerPlayer* s)
 	const int CanControllFrame = 2;   //移動方向をコントロールできるフレーム
 	const int NoDamageFrame = 10;     //無敵時間
 
-	float DownValue = 0.5f;
-	float MoveValue = 0.05f;
+	float DownValue = 0.0f;
+	float MoveValue = 0.0f;
 	
 	if (Dash)
 	{
-		 MoveValue = 0.5f;    //移動量
-		 DownValue = 0.05f;     //減速量
+		 MoveValue = 1.0f;    //移動量
+		 DownValue = 0.04f;     //減速量
 	}
-	else
-	{
-		 MoveValue = 0.4f;    //移動量
-		 DownValue = 0.08f;     //減速量
-	}
+    else
+    {
+        MoveValue = 0.8f;    //移動量
+        DownValue = 0.04f;     //減速量
+    }
 
 	
 
@@ -152,7 +152,6 @@ void SoccerState_Rolling::Execute(SoccerPlayer* s)
 
 
 		//移動量の減衰
-		if (m_Timer > EndFrame - 13)
 		{
 			chr_func::XZMoveDown(s, DownValue);
 		}
@@ -171,7 +170,7 @@ void SoccerState_Rolling::Execute(SoccerPlayer* s)
 		s->m_Renderer.Update(1);
 
 		//行列更新
-		chr_func::CreateTransMatrix(s, s->m_ModelSize, &s->m_Renderer.m_TransMatrix);
+		chr_func::CreateTransMatrix(s, &s->m_Renderer.m_TransMatrix);
 	}
 }
 

@@ -97,7 +97,6 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 			// “]‘—s—ñXV
 			chr_func::CreateTransMatrix(
 				m_pBaseball,
-				m_pBaseball->m_ModelSize,
 				&m_pBaseball->m_Renderer.m_TransMatrix);
 		}
 	public:

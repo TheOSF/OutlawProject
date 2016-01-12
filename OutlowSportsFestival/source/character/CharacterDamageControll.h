@@ -37,15 +37,14 @@ public:
     //毎フレームの更新
     void Update();
 
-private:
+public:
     EventClass* const       m_pEventClass;
     Matrix                  m_Transform;
 
     Vector3                 m_Move;
     bool                    m_Init;
 
-    RATIO                   m_ShockCount;
-
     RATIO                   m_DamageShockCount;
 
+    int                     m_NotControllCount;
 };

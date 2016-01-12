@@ -39,10 +39,10 @@ void AmefootPlayerState_ThrowBall::Enter(AmefootPlayer* pCharacter)
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ThrowBall::Execute(AmefootPlayer* pCharacter)
 {
-    const int EndFrame = 38; //終了フレーム
-    const int ShotFrame = 9;//打つフレーム
+    const int EndFrame = 21; //終了フレーム
+    const int ShotFrame = 10;//打つフレーム
     const int AfterAction = 15;//ショット後のアクションが可能になるフレーム
-
+    
     //カウント更新
     ++m_Timer;
 
@@ -137,8 +137,8 @@ void AmefootPlayerState_ThrowBall::Execute(AmefootPlayer* pCharacter)
         chr_func::UpdateAll(pCharacter, &HitEvent);
 
         //モデル関連の更新
-        pCharacter->m_Renderer.Update(1);
-        chr_func::CreateTransMatrix(pCharacter, pCharacter->m_ModelSize, &pCharacter->m_Renderer.m_TransMatrix);
+        pCharacter->m_Renderer.Update(2.0f);
+        chr_func::CreateTransMatrix(pCharacter, &pCharacter->m_Renderer.m_TransMatrix);
     }
 }
 //-----------------------------------------------------------------------------------------

@@ -37,7 +37,7 @@ void BaseballState_Change::Execute(BaseballPlayer* b)
 	(this->*m_pStateFunc)();
 	chr_func::UpdateAll(b, &BaseballHitEvent(b));
 	b->m_Renderer.Update(1);
-	chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
 }
 
 // ステート終了

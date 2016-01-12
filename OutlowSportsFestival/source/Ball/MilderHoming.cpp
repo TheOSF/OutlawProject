@@ -279,8 +279,6 @@ void MilderHoming::Cheak()
 	//“G‚É“–‚½‚Á‚Ä‚¢‚½‚çUŒ‚”»’è‚ğ‚È‚­‚·
 	if (m_Damage.HitCount > 0)
 	{
-		//ƒQ[ƒW‘‰Á
-		chr_func::AddSkillGauge(m_Params.pParent, AddSkillValueRatio*m_Damage.Value);
 		//UŒ‚”»’è‚Ì‚È‚¢ó‘Ô‚É‚·‚é
 		m_pStatefunc = &MilderHoming::State_NoWork;
 	}

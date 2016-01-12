@@ -10,7 +10,7 @@ AmefootPlayer::AmefootPlayer(const PlayerInfo& info) :
 CharacterBase(info, new BlendAnimationMesh(GetCharacterModelPath(CharacterType::_Americanfootball))),
      m_pStateMachine(new AmefootStateMachine(this))
 {
-    m_ModelSize = (0.052f);
+    m_ModelSize = (0.058f);
 }
 //-----------------------------------------------------------------------------------------
 AmefootPlayer::~AmefootPlayer()
@@ -49,7 +49,7 @@ bool AmefootPlayer::CharacterMsg(MsgType msg)
      return m_pStateMachine->Msg(msg);
 }
 //-----------------------------------------------------------------------------------------
-void AmefootPlayer::SetState(AmefootState* state , bool important)
+void AmefootPlayer::SetState(AmefootState* state , int important)
 {
      m_pStateMachine->set_state(state , important);
 }

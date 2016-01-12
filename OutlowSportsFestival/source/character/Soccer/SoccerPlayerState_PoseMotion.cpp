@@ -41,7 +41,7 @@ void SoccerState_PoseMotion::Execute(SoccerPlayer* s)
 
 	chr_func::UpdateAll(s, &DamageManager::HitEventBase());
 
-	chr_func::CreateTransMatrix(s, s->m_ModelSize, &s->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(s, &s->m_Renderer.m_TransMatrix);
 
 	s->m_Renderer.Update(1);
 }

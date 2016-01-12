@@ -10,6 +10,37 @@ static float fRand(float fmin, float fmax)
 	return ((float)rand() / RAND_MAX)*(fmax - fmin) + fmin;
 }
 
+CameraDrawObject::CameraDrawObject()
+{
+    m_isDraw = true;
+    m_Pos = Vector3Zero;
+    m_DrawImportant = 1.0f;
+
+    DefCamera.m_DrawObjectList.push_back(this);
+}
+
+CameraDrawObject::~CameraDrawObject()
+{
+    Camera& C = DefCamera;
+
+    for (auto it = C.m_DrawObjectList.begin();
+        it != C.m_DrawObjectList.end();
+        ++it
+        )
+    {
+        if (*it == this)
+        {
+            C.m_DrawObjectList.erase(it);
+            return;
+        }
+    }
+
+    MyAssert(false, "çÌèúé∏îs");
+}
+
+
+//------------------------------//
+
 Camera& Camera::GetInstance()
 {
 	if (m_pInstance == nullptr)
@@ -141,6 +172,11 @@ CrVector3 Camera::GetUp()const
 CrVector3 Camera::GetForward()const
 {
 	return m_Forward;
+}
+
+const Camera::CameraDrawObjectList& Camera::GetCameraDrawObjectList()
+{
+    return m_DrawObjectList;
 }
 
 Camera::Camera()

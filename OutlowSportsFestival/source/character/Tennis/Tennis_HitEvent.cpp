@@ -19,6 +19,7 @@ m_CounterHit(CounterHit)
 
 bool TennisHitEvent::Hit(DamageBase* pDmg)
 {
+
     Vector3 DamageVec = Vector3Zero;
 
     //‚Ð‚é‚Ý•ªŠò

@@ -67,7 +67,7 @@ BOOL	InitApp( HWND hWnd )
         MainFrame->ChangeScene(new SceneCharacterSelect(Param, 1));
 
     }
-    else if (true)
+    else if (false)
     {
         MainFrame->ChangeScene(new SceneOption());
     }
@@ -75,7 +75,7 @@ BOOL	InitApp( HWND hWnd )
     {
         SceneResult::ResultStartParam param;
 
-        param.PlayerList.push_back({ 1, (PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Americanfootball });
+        param.PlayerList.push_back({ 1, (PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Soccer });
         param.PlayerList.push_back({ 3, (PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Americanfootball });
         param.PlayerList.push_back({ 2, (PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Americanfootball });
         param.PlayerList.push_back({ 4, (PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Americanfootball });
@@ -93,9 +93,9 @@ BOOL	InitApp( HWND hWnd )
         param.Time = 60 * 60 * 5;
 
         param.PlayerArray[0] = { 0, PlayerType::_Player, CharacterType::_Soccer, StrongType::_Usual };
-        param.PlayerArray[1] = { 1, PlayerType::_Player, CharacterType::_Tennis, StrongType::_Usual };
-        param.PlayerArray[2] = { 2, PlayerType::_Player, CharacterType::_Baseball, StrongType::_Usual };
-        param.PlayerArray[3] = { 3, PlayerType::_Computer, CharacterType::_Baseball, StrongType::_Usual };
+        param.PlayerArray[1] = { 1, PlayerType::_Computer, CharacterType::_Soccer, StrongType::_Strong };
+        param.PlayerArray[2] = { 2, PlayerType::_Computer, CharacterType::_Soccer, StrongType::_Strong };
+        param.PlayerArray[3] = { 3, PlayerType::_Computer, CharacterType::_Soccer, StrongType::_Usual };
 
         param.pInitializer = new GameInitializer_UsualMatch(GameInitializer_UsualMatch::StageType::Kasennziki,param );
         

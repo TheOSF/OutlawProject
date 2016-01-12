@@ -1,6 +1,7 @@
 #include "Damage.h"
 #include "../debug/DebugDraw.h"
 #include "../character/CharacterBase.h"
+#include "../character/CharacterFunction.h"
 
 //ダメージクラス
 DamageBase::DamageBase() :
@@ -12,7 +13,8 @@ Value(1),
 HitCount(0),
 m_OptionFlags(),
 MaxChrHit(1),
-HitMotionFrame(25)
+HitMotionFrame(25),
+AddSkillGaugeValue(1)
 {
 #ifdef _DEBUG
 	MyAssert(DefDamageMgr.AddDamage(this), "ダメージ登録の失敗");
@@ -52,10 +54,16 @@ void DamageBase::ResetCounts()
     HitCount = 0;
 }
 
-void DamageBase::AddHitCount(CharacterBase* pHitChr)
+void DamageBase::OnHitCharacter(CharacterBase* pHitChr)
 {
     //キャラクタに当たった場合カウントを加算
     ++m_PlayerHitCounts.at((int)pHitChr->m_PlayerInfo.number);
+
+    //スキルゲージ加算
+    if (pParent != nullptr)
+    {
+        chr_func::AddSkillGauge(pParent, Value*AddSkillGaugeValue*0.01f);
+    }
 }
 
 bool DamageBase::isCanHitCharacter(CharacterBase* pHitChr)const
@@ -426,6 +434,7 @@ void DamageManager::HitCheckSphere(
             {
                 it->second->pCallBackClass->Hit(&sp);
             }
+            break;
 		}
 	}
 }

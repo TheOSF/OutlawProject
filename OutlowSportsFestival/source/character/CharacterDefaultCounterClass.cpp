@@ -263,8 +263,6 @@ void CharacterDefaultCounter::Move()
         m_HitStopFrame = 0;
         m_BallFreezePos = m_pCounterBall->m_Params.pos;
 
-        EffectApper();
-
         SetState(&CharacterDefaultCounter::HitStop);
     }
 
@@ -300,7 +298,7 @@ void CharacterDefaultCounter::HitStop() //ヒットストップ
     //ステート分岐
     if (m_Count >= m_HitStopFrame)
     {
-        if (m_Param.CatchFrame == 0)
+        if (m_Param.CatchFrame <= 0)
         {
             SetState(&CharacterDefaultCounter::Shot);
         }
@@ -371,6 +369,8 @@ void CharacterDefaultCounter::Catch()
      Vector3 bonePos = m_pOwner->m_Renderer.GetWorldBonePos(m_Param.CatchBoneNumber);
      m_pCounterBall->m_Params.pos = bonePos;
 
+     chr_func::XZMoveDown(m_pOwner, 0.2f);
+
      // とりあえず移動量はゼロに
      //m_pCounterBall->m_Params.move = Vector3Zero;
 
@@ -427,7 +427,8 @@ void CharacterDefaultCounter::Shot()
             m_pCounterBall->m_Params.pos.y = UsualBall::UsualBallShotY;
         }
 
-        
+
+        EffectApper();
 
         //スティックによる角度調整
         if (m_pCounterBall->m_Params.pParent == m_pOwner)
@@ -449,19 +450,13 @@ void CharacterDefaultCounter::Shot()
             m_pCounterBall->m_Params.move *= m;
         }
 
-
-        {
-            //m_pCounterBall->m_Params.pos = m_pOwner->m_Params.pos;
-            //m_pCounterBall->m_Params.pos.y = UsualBall::UsualBallShotY;
-        }
-
         //ゲージ上昇
         {
             chr_func::AddSkillGauge(m_pOwner, m_SkillUpValue);
         }
 
         //振動
-
+        chr_func::SetControllerShock(m_pOwner, 1.0f, 0.1f);
 
         //ボール側のカウンター処理
         m_pCounterBall->Counter(m_pOwner);
@@ -526,90 +521,11 @@ void CharacterDefaultCounter::SetState(void(CharacterDefaultCounter::*pNewState)
 }
 
 
-////スティックによる角度調整
-//void CharacterDefaultCounter::SetStickAngle(CrVector3 OriginVec, RADIAN controllRad)
-//{
-//    if (m_Stick.x == 0 && m_Stick.y == 0)
-//    {
-//        Vector3 ViewPos = m_pOwner->m_Params.pos + OriginVec;
-//        ViewPos.y = m_pOwner->m_Params.pos.y;
-//
-//        chr_func::AngleControll(m_pOwner, ViewPos);
-//        return;
-//    }
-//
-//    Vector3 RotateVec;
-//
-//    //回転する
-//    float toStickAngle = Vector2Dot(m_Stick, Vector2(OriginVec.x, OriginVec.z));
-//
-//    m_Stick.x = -m_Stick.x;
-//
-//    toStickAngle /= Vector2Length(m_Stick)*Vector2Length(Vector2(OriginVec.x, OriginVec.z));
-//    toStickAngle = acosf(toStickAngle);
-//
-//    //角度制限
-//    toStickAngle = min(toStickAngle, controllRad);
-//
-//    //左右判定
-//    float CrossY = m_Stick.y*OriginVec.x + m_Stick.x*OriginVec.z;
-//    if (CrossY > 0)
-//    {
-//        toStickAngle = -toStickAngle;
-//    }
-//
-//    Matrix m;
-//    D3DXMatrixRotationY(&m, toStickAngle);
-//
-//    RotateVec = Vector3MulMatrix3x3(OriginVec, m);
-//
-//
-//    RotateVec = m_pOwner->m_Params.pos + RotateVec;
-//    RotateVec.y = m_pOwner->m_Params.pos.y;
-//
-//    chr_func::AngleControll(m_pOwner, RotateVec);
-//}
-
-
-
 //スティックによる角度調整
 void CharacterDefaultCounter::SetStickAngle(CrVector3 OriginVec, RADIAN controllRad)
 {
 
-    Vector3 RotateVec;
-
-    //スティックの倒した方向のベクトルを作成
-    //if (m_Stick.x != 0 || m_Stick.y != 0)
-    if (0)
-    {
-        //回転する
-        float toStickAngle = Vector2Dot(m_Stick, Vector2(OriginVec.x, OriginVec.z));
-
-        m_Stick.x = -m_Stick.x;
-
-        toStickAngle /= Vector2Length(m_Stick)*Vector2Length(Vector2(OriginVec.x, OriginVec.z));
-        toStickAngle = acosf(toStickAngle);
-
-        //角度制限
-        toStickAngle = min(toStickAngle, controllRad);
-
-        //左右判定
-        float CrossY = m_Stick.y*OriginVec.x + m_Stick.x*OriginVec.z;
-        if (CrossY > 0)
-        {
-            toStickAngle = -toStickAngle;
-        }
-
-        Matrix m;
-        D3DXMatrixRotationY(&m, toStickAngle);
-
-        RotateVec = Vector3MulMatrix3x3(OriginVec, m);
-        RotateVec.Normalize();
-    }
-    else
-    {
-        RotateVec = OriginVec;
-    }
+    Vector3 RotateVec = OriginVec;
 
 
     //各的キャラクタへのベクトルの中で一番　↑のベクトルと近いものを算出

@@ -31,7 +31,7 @@ void BaseballState_DamageMotion_Weak::Enter(BaseballPlayer* t)
 		{
 			//ƒ‚ƒfƒ‹‚ÌXV‚Ì‚İ
 			m_pBaseball->m_Renderer.Update(speed);
-			chr_func::CreateTransMatrix(m_pBaseball, m_pBaseball->m_ModelSize, &m_pBaseball->m_Renderer.m_TransMatrix);
+			chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->m_Renderer.m_TransMatrix);
 		}
 		void Start()
 		{

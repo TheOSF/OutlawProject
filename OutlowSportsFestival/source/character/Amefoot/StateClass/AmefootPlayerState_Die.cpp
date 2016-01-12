@@ -38,7 +38,7 @@ void AmefootPlayerState_Die::Enter(AmefootPlayer* pCharacter)
             m_pAmefootPlayer->m_Renderer.Update(t);
 
             //位置にもとずき、ワールド変換行列を計算
-            chr_func::CreateTransMatrix(m_pAmefootPlayer, m_pAmefootPlayer->m_ModelSize, &m_pAmefootPlayer->m_Renderer.m_TransMatrix);
+            chr_func::CreateTransMatrix(m_pAmefootPlayer, &m_pAmefootPlayer->m_Renderer.m_TransMatrix);
 
             //吹き飛びの回転を入れる
             m_pAmefootPlayer->m_Renderer.m_TransMatrix = Rotate*m_pAmefootPlayer->m_Renderer.m_TransMatrix;
@@ -55,7 +55,7 @@ void AmefootPlayerState_Die::Enter(AmefootPlayer* pCharacter)
             m_pAmefootPlayer->m_Renderer.Update(1);
 
             //ワールド変換行列を計算
-            chr_func::CreateTransMatrix(m_pAmefootPlayer, m_pAmefootPlayer->m_ModelSize, &m_pAmefootPlayer->m_Renderer.m_TransMatrix);
+            chr_func::CreateTransMatrix(m_pAmefootPlayer, &m_pAmefootPlayer->m_Renderer.m_TransMatrix);
 
         }
 
@@ -70,18 +70,18 @@ void AmefootPlayerState_Die::Enter(AmefootPlayer* pCharacter)
             m_pAmefootPlayer->m_Renderer.Update(1);
 
             //ワールド変換行列を計算
-            chr_func::CreateTransMatrix(m_pAmefootPlayer, m_pAmefootPlayer->m_ModelSize, &m_pAmefootPlayer->m_Renderer.m_TransMatrix);
+            chr_func::CreateTransMatrix(m_pAmefootPlayer, &m_pAmefootPlayer->m_Renderer.m_TransMatrix);
         }
 
         void End()
         {
             //カメラ写すフラグをfalseに
-            m_pAmefootPlayer->m_Params.camera_draw = false;
+            m_pAmefootPlayer->m_DrawObject.m_isDraw = false;
         }
         void HitWall()
         {
             //壁に当たったモーションをセット
-            m_pAmefootPlayer->m_Renderer.SetMotion(AmefootPlayer::Motion_Damage_Vanish_Hit_Wall);
+            m_pAmefootPlayer->m_Renderer.SetMotion(AmefootPlayer::Motion_Damage_Vanish_Hit_Wall_Fall);
         }
 
         void HitFloor()
@@ -101,7 +101,7 @@ void AmefootPlayerState_Die::Enter(AmefootPlayer* pCharacter)
             m_pAmefootPlayer->m_Renderer.Update(1);
 
             //ワールド変換行列を計算
-            chr_func::CreateTransMatrix(m_pAmefootPlayer, m_pAmefootPlayer->m_ModelSize, &m_pAmefootPlayer->m_Renderer.m_TransMatrix);
+            chr_func::CreateTransMatrix(m_pAmefootPlayer, &m_pAmefootPlayer->m_Renderer.m_TransMatrix);
         }
     private:
         AmefootPlayer*  m_pAmefootPlayer;

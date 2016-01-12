@@ -648,6 +648,23 @@ inline to QuaternionTrans(const from& q)
 	return ret;
 }
 
+
+inline void D3DXMatrixWorldScaleNormalize(Matrix& m)
+{
+    float mg;
+    int i, j;
+
+    for (i = 0; i < 3; ++i)
+    {
+        mg = Vector3(m(0, i), m(1, i), m(2, i)).Length();
+
+        for (j = 0; j < 3; ++j)
+        {
+            m(j, i) /= mg;
+        }
+    }
+}
+
 //*****************************************************************************************************************************
 //
 //		‚R‚cŠî–{Ý’è

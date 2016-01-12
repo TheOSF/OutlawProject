@@ -86,7 +86,6 @@ void AmefootPlayerState_ReceiveWeakDamage::MotionEvent::Update(RATIO speed)
      // モデルのワールド変換行列を更新
      chr_func::CreateTransMatrix(
           m_pAmefoot ,
-          m_pAmefoot->m_ModelSize ,
           &m_pAmefoot->m_Renderer.m_TransMatrix
           );
 }

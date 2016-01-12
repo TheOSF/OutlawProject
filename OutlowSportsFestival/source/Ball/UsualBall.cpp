@@ -484,9 +484,6 @@ bool UsualBall::StateFlyMove()
             m_Params.move *= -0.25f;
             m_Params.move.y += 0.2f;
 
-            //ƒQ[ƒW‘‰Á
-            chr_func::AddSkillGauge(m_Params.pParent, AddSkillValueRatio*m_Damage.Value);
-
             //UŒ‚”»’è‚Ì‚È‚¢ó‘Ô‚É‚·‚é
             ToNoWork();
 

@@ -30,6 +30,8 @@ public:
 private:
     std::array<CharacterDamageControll*, 4> m_ChrControllArray;
 
+    std::array<CharacterBase*, 4> m_ChrArray;  //
+
     bool Update();
     bool Msg(MsgType mt);
 };

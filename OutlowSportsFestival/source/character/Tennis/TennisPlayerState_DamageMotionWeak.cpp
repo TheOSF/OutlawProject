@@ -33,7 +33,7 @@ void TennisState_DamageMotion_Weak::Enter(TennisPlayer* t)
 		{
 			//ƒ‚ƒfƒ‹‚ÌXV‚Ì‚İ
             m_pTennis->m_Renderer.Update(speed);
-			chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
+			chr_func::CreateTransMatrix(m_pTennis, &m_pTennis->m_Renderer.m_TransMatrix);
 		}
 
 		void Start()

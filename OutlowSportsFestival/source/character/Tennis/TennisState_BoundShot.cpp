@@ -36,13 +36,13 @@ void TennisState_BoundShot::Enter(TennisPlayer* t)
     m_Timer = 0;
 
     //モーションセット
-    t->m_Renderer.SetMotion(TennisPlayer::_mt_Shot);
+    t->m_Renderer.SetMotion(TennisPlayer::_mt_HeartShot);
 }
 
 void TennisState_BoundShot::Execute(TennisPlayer* t)
 {
     const int EndFrame = 38; //終了フレーム
-    const int ShotFrame = 9;//打つフレーム
+    const int ShotFrame = 25;//打つフレーム
     const int AfterAction = 15;//ショット後のアクションが可能になるフレーム
 
     //カウント更新
@@ -189,7 +189,7 @@ void TennisState_BoundShot::Execute(TennisPlayer* t)
 
         //モデル関連の更新
         t->m_Renderer.Update(1);
-        chr_func::CreateTransMatrix(t, t->m_ModelSize, &t->m_Renderer.m_TransMatrix);
+        chr_func::CreateTransMatrix(t, &t->m_Renderer.m_TransMatrix);
     }
 }
 

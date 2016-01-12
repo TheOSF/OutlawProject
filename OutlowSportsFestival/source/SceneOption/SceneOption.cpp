@@ -799,31 +799,36 @@ bool SceneOption::GetKeyVec_stick_or_dpad(key_vec_type::KEY_VEC_TYPE type, int n
 {
     using namespace key_vec_type;
 
+    const bool    StickMove = controller::GetStickJustMove(controller::stick::left, number);
+    const Vector2 Stick = controller::GetStickValue(controller::stick::left, number);
+    const float OkValue = 0.5f;
+
     switch (type)
     {
     case vec_up:
-        /*if (controller::GetStickValue(controller::stick::left, number) ||
-        controller::GetTRG(controller::button::shikaku,number))return true;*/
-        if (controller::GetTRG(controller::button::up, number))
+        if (StickMove && Stick.y > OkValue)
+        {
             return true;
+        }
+            
         break;
     case vec_down:
-        /*if (SelectFunction::GetStickValue(type, number) ||
-        KEY(KEY_DOWN, number) == 3)return true;*/
-        if (controller::GetTRG(controller::button::down, number))
+        if (StickMove && Stick.y < -OkValue)
+        {
             return true;
+        }
         break;
     case vec_right:
-        /*if (SelectFunction::GetStickValue(type, number) ||
-        KEY(KEY_RIGHT, number) == 3)return true;*/
-        if (controller::GetTRG(controller::button::right, number))
+        if (StickMove && Stick.x > OkValue)
+        {
             return true;
+        }
         break;
     case vec_left:
-        /*if (SelectFunction::GetStickValue(type, number) ||
-        KEY(KEY_LEFT, number) == 3)return true;*/
-        if (controller::GetTRG(controller::button::left, number))
+        if (StickMove && Stick.x < -OkValue)
+        {
             return true;
+        }
         break;
     default:
         MyAssert(false, "存在しないタイプのキー方向が指定されました");

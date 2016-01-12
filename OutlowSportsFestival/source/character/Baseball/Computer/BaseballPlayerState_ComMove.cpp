@@ -123,7 +123,7 @@ void BaseballPlayerState_ComMove::Execute(BaseballPlayer* b)
 	}
 
 	//モデルのワールド変換行列を更新
-	chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
 
 }
 

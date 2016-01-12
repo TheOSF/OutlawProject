@@ -259,8 +259,8 @@ void	sceneGamePlay::Update()
         DefGameObjMgr.Update();
 
     }
-    
-    //キャラクタ押しのける
+
+    //キャラクタ同士の押し出しを計算する
     DefCharacterMgr.CheckCharacterSpace();
     
     //ダメージのデバッグ描画

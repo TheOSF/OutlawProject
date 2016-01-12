@@ -55,7 +55,7 @@ void BaseballAttackClass::Update()
 		chr_func::UpdateAll(m_pOwner, &HitEvent);
 	}
 
-	chr_func::CreateTransMatrix(m_pOwner, m_pOwner->m_ModelSize, &m_pOwner->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(m_pOwner, &m_pOwner->m_Renderer.m_TransMatrix);
 }
 
 bool BaseballAttackClass::isEnd()const

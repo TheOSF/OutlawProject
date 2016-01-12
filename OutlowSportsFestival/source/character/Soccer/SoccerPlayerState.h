@@ -37,27 +37,12 @@ public:
 	void Execute(SoccerPlayer* s);
 	void Exit(SoccerPlayer* s);
 };
+
 //プレイヤー操作のスライディングクラス
-class SoccerState_PlayerControll_Sliding :public SoccerState
+class SoccerState_Sliding :public SoccerState
 {
-	//攻撃操作クラス
-	class PlayerControllEvent :public SoccerAttackClass::ControllEvent
-	{
-	public:
-		PlayerControllEvent(SoccerPlayer*const pSoccer);
-
-		bool isDoCombo();
-		void AngleControll(RADIAN angle);
-
-	private:
-		SoccerPlayer*const m_pSoccer;
-		
-		const CharacterBase* GetFrontTargetEnemy();
-	};
 public:
-	SoccerState_PlayerControll_Sliding(SoccerPlayer* s);
-	~SoccerState_PlayerControll_Sliding();
-
+    SoccerState_Sliding(SoccerPlayer* s);
 	// ステート開始
 	void Enter(SoccerPlayer* t)override;
 
@@ -68,9 +53,28 @@ public:
 	void Exit(SoccerPlayer* t)override;
 
 private:
-	int m_Timer;
-	SoccerAttackClass   m_Attack;        //攻撃クラスへのポインタ
+    typedef void(SoccerState_Sliding::*StateFunc)();
+
+    StateFunc               m_pStateFunc;
+    SoccerPlayer* const     m_pChr;
+    DamageShpere            m_Damage;
+	int                     m_Timer;
+    
+    void SetState(StateFunc State);
+    void UpdateDamage();
+    void NoBallDamageUpdate();
+    void StartAngleControll();
+    void AutoAngleControll();
+    void SetMoveByAngle();
+    void SetEffect(RATIO alpha);
+
+    void State_Start();
+    void State_Sliding();
+    void State_End();
+
 };
+
+
 //プレイヤー操作の攻撃クラス
 class SoccerState_PlayerControll_Attack :public SoccerState
 {

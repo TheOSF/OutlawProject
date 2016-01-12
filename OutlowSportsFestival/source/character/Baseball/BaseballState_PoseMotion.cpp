@@ -41,7 +41,7 @@ void  BaseballState_PoseMotion::Execute(BaseballPlayer* b)
 
 	chr_func::UpdateAll(b, &DamageManager::HitEventBase());
 
-	chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
 
 	b->m_Renderer.Update(1);
 }

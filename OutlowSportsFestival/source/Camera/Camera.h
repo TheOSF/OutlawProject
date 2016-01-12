@@ -3,18 +3,38 @@
 
 #include "iextreme.h"
 #include "../utillity/StateTemplate.h"
+#include <list>
 
 class Camera;
 typedef StateMachine<Camera, void> CameraStateMachine;
 typedef State<Camera, void> CameraState;
 
-//***********************************************
-//	カメラクラス(シングルトン)
-//***********************************************
+//----------------------------------------------------
+//	        試合中にカメラに移すオブジェクト
+//----------------------------------------------------
+class CameraDrawObject
+{
+public:
+    CameraDrawObject();
+    ~CameraDrawObject();
+
+    bool     m_isDraw;
+    Vector3  m_Pos;
+    RATIO    m_DrawImportant;
+};
+
+//----------------------------------------------------
+//	        カメラクラス(シングルトン)
+//----------------------------------------------------
+
 
 class Camera
 {
 public:
+    friend class CameraDrawObject;
+
+    typedef std::list<CameraDrawObject*> CameraDrawObjectList;
+
 	static Camera& GetInstance();
 	static void Release();
 
@@ -53,9 +73,13 @@ public:
 	CrVector3 GetUp()const;
 	CrVector3 GetForward()const;
 
+    const CameraDrawObjectList& GetCameraDrawObjectList();
+
 	//位置と見る向き
 	Vector3 m_Target;
 	Vector3 m_Position;
+
+    
 
 private:
 	Camera();
@@ -71,14 +95,17 @@ private:
 	//衝撃を更新する
 	void ShockUpdate(Vector3& ShockVector);
 
-	static Camera*			m_pInstance;
 
-	CameraStateMachine*		m_pStateMachine;
-	iexView					m_IexView;
-	Matrix					m_VP;
-	Matrix					m_VP_inv;
-	Matrix                  m_Billbord;
-	Vector3					m_Right, m_Up, m_Forward;
+	static Camera*			        m_pInstance;
+
+    CameraDrawObjectList            m_DrawObjectList;
+	CameraStateMachine*		        m_pStateMachine;
+	iexView					        m_IexView;
+	Matrix					        m_VP;
+	Matrix					        m_VP_inv;
+	Matrix                          m_Billbord;
+	Vector3					        m_Right, m_Up, m_Forward;
+    
 	
 	struct
 	{

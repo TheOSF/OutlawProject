@@ -58,8 +58,7 @@ void TennisState_Counter::Enter(TennisPlayer* t)
         //打つ
         void Shot(BallBase* pCounterBall)
         {
-            chr_func::ResetMove(m_pTennis);
-            chr_func::AddMoveFront(m_pTennis, -0.15f, 1000);
+            
         }
 
         //打ち失敗
@@ -123,7 +122,7 @@ void TennisState_Counter::Execute(TennisPlayer* t)
 	m_pCounter->Update();
 
 	//モデルのワールド変換行列を更新
-	chr_func::CreateTransMatrix(t, t->m_ModelSize, &t->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(t, &t->m_Renderer.m_TransMatrix);
 
     //モデル更新
    // t->m_Renderer.Update(1);

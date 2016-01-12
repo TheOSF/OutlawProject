@@ -119,7 +119,7 @@ void TennisState_Rolling::Execute(TennisPlayer* t)
         t->m_Renderer.Update(1);
 
         //s—ñXV
-        chr_func::CreateTransMatrix(t, t->m_ModelSize, &t->m_Renderer.m_TransMatrix);
+        chr_func::CreateTransMatrix(t, &t->m_Renderer.m_TransMatrix);
     }
 
     //‹OÕ

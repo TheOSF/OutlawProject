@@ -480,7 +480,7 @@ void TennisState_SpecialAtk::Execute(TennisPlayer* t)
         chr_func::CheckGround(p);
 
 
-        chr_func::CreateTransMatrix(t, t->m_ModelSize, &t->m_Renderer.m_TransMatrix);
+        chr_func::CreateTransMatrix(t, &t->m_Renderer.m_TransMatrix);
         t->m_Renderer.Update(1);
     }
 }

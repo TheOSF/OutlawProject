@@ -37,11 +37,7 @@
     <ClCompile Include="source\character\Computer\CharacterComputerDoAction.cpp" />
     <ClCompile Include="source\character\Computer\CharacterComputerReaction.cpp" />
     <ClCompile Include="source\character\Computer\CharacterComputerReactionHitEvent.cpp" />
-    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerAttack.cpp" />
-    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerCounter.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerDash.cpp" />
-    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerFinisher.cpp" />
-    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerShot.cpp" />
     <ClCompile Include="source\Ball\Ball.cpp" />
     <ClCompile Include="source\Ball\BallFadeOutRenderer.cpp" />
     <ClCompile Include="source\Ball\Baseball_SpAtk_Ball.cpp" />
@@ -86,14 +82,12 @@
     <ClCompile Include="source\character\CharacterEvasionClass.cpp" />
     <ClCompile Include="source\character\CharacterShotAttackClass.cpp" />
     <ClCompile Include="source\character\Soccer\Computer\SoccerComputerMove.cpp" />
-    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerSliding.cpp" />
     <ClCompile Include="source\character\Soccer\Snakeshot.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerAttackInfo_UsualAttack.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerCommonState.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerDash.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerHitEvent.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerPlayer.cpp" />
-    <ClCompile Include="source\character\Soccer\SoccerPlayerState.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerPlayerState_PoseMotion.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerRolling.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerSliding.cpp" />
@@ -229,6 +223,15 @@
     <ClCompile Include="source\SceneResult\BreakScreenObject.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballPlayerState_Controll_Vanish.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerState_ControllVanish.cpp" />
+    <ClCompile Include="source\character\Amefoot\MoveClass\AmefootAttackClass.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_Tackle.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveControllVanish.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_SpecialAtk.cpp" />
+    <ClCompile Include="source\utillity\DamageObject.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerAttackState.cpp" />
+    <ClCompile Include="source\character\Amefoot\MoveClass\AmefootThrowBall.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerPlayerState.cpp" />
+    <ClCompile Include="source\utillity\ScreenEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -257,11 +260,7 @@
     <ClInclude Include="source\character\Computer\CharacterComputerDoAction.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerReaction.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerReactionHitEvent.h" />
-    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerAttack.h" />
-    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerCounter.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerDash.h" />
-    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerFinisher.h" />
-    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerShot.h" />
     <ClInclude Include="source\Ball\Ball.h" />
     <ClInclude Include="source\Ball\BallFadeOutRenderer.h" />
     <ClInclude Include="source\Ball\Baseball_SpAtk_Ball.h" />
@@ -310,7 +309,6 @@
     <ClInclude Include="source\character\CharacterEvasionClass.h" />
     <ClInclude Include="source\character\CharacterShotAttackClass.h" />
     <ClInclude Include="source\character\Soccer\Computer\SoccerComputerMove.h" />
-    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerSliding.h" />
     <ClInclude Include="source\character\Soccer\Snakeshot.h" />
     <ClInclude Include="source\character\Soccer\SoccerAttackClass.h" />
     <ClInclude Include="source\character\Soccer\SoccerAttackInfo_UsualAttack.h" />
@@ -469,6 +467,15 @@
     <ClInclude Include="source\SceneResult\BreakScreenObject.h" />
     <ClInclude Include="source\character\Baseball\BaseballPlayerState_Controll_Vanish.h" />
     <ClInclude Include="source\character\Soccer\SoccerState_ControllVanish.h" />
+    <ClInclude Include="source\character\Amefoot\MoveClass\AmefootAttackClass.h" />
+    <ClInclude Include="source\character\Amefoot\MoveClass\AmefootTackleVanishControl.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveControllVanish.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_Tackle.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_SpecialAtk.h" />
+    <ClInclude Include="source\utillity\DamageObject.h" />
+    <ClInclude Include="source\character\Soccer\SoccerAttackState.h" />
+    <ClInclude Include="source\character\Amefoot\MoveClass\AmefootThrowBall.h" />
+    <ClInclude Include="source\utillity\ScreenEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DATA\Shader\3DEx.fx" />

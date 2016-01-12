@@ -8,6 +8,7 @@
 #include "CharacterRenderer.h"
 #include "iextreme.h"
 #include "CharacterPhysic.h"
+#include "../Camera/Camera.h"
 
 //***************************************************
 //		キャラクタクラス
@@ -31,7 +32,6 @@ public:
 	struct Params
 	{
 		UINT                win;        //勝ったラウンド数
-        bool                camera_draw;//カメラに写すかどうか
 		Vector3				pos;		//座標
 		Vector3				move;		//移動量
 		float				hitScale;	//あたり判定の円の大きさ
@@ -40,6 +40,7 @@ public:
 		float				HP;			//０～
 		float				SP;			//０～１００
         float               size;       //他のキャラクタを押しのける大きさ
+        bool                DoCheckOtherChrSpace; //他のキャラクタを押しのけるかどうか
 	};
 
     //キャラクタ共通パラメータ
@@ -64,6 +65,7 @@ public:
 	Params				m_Params;     //キャラクタ基本パラメーター
     CharacterRenderer	m_Renderer;   //レンダラ
     float               m_ModelSize;  //モデルスケール
+    CameraDrawObject    m_DrawObject; //カメラを写すオブジェクト
    
     CharacterBase(const PlayerInfo& info, BlendAnimationMesh* pMesh);
 	virtual ~CharacterBase();
@@ -97,6 +99,7 @@ private:
     State               m_StateType;  //現在のステートタイプ
 
     void RendererUpdate();
+    void CameraDrawObjUpdate();
 };
 
 #endif

@@ -102,7 +102,7 @@ void SoccerDash::Update()
 	chrpos.y += 1.5f;
 	m_SpeedEffect.Update(chrpos,-m_pParent->m_Params.move);
 	m_pParent->m_Renderer.Update(1);
-	chr_func::CreateTransMatrix(m_pParent, m_pParent->m_ModelSize, &m_pParent->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(m_pParent, &m_pParent->m_Renderer.m_TransMatrix);
 }
 
 void SoccerDash::SetStickValue(CrVector2 StickValue)

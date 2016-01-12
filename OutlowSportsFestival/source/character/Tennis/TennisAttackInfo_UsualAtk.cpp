@@ -169,7 +169,6 @@ void TennisAttackInfo_UsualAtk::HitStopUpdate()
 //UŒ‚‚ª‚ ‚½‚Á‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
 void TennisAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
 {
-    chr_func::AddSkillGauge(m_pOwner, pDmg->Value*0.01f);
 
     //ƒRƒ“ƒgƒ[ƒ‰‚ğU“®
     chr_func::SetControllerShock(

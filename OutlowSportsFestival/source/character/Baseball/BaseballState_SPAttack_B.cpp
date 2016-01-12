@@ -69,7 +69,7 @@ void BaseballState_SPAttack_B::Execute(BaseballPlayer* b)
 	chr_func::UpdateAll(b, &NoDmgHitEvent);
 
 	b->m_Renderer.Update(2);
-	chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
 
 	if (m_pStateFunc == &BaseballState_SPAttack_B::State_Finish)
 	{

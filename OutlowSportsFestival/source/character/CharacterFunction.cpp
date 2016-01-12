@@ -161,9 +161,10 @@ void chr_func::AngleControll(CharacterBase* p, CrVector3 view_pos)
 }
 
 //現在の位置、現在のangle、Scaleをもとに変換行列を生成する
-void chr_func::CreateTransMatrix(CharacterBase* p, float Scale, Matrix* pOutMatrix)
+void chr_func::CreateTransMatrix(CharacterBase* p, Matrix* pOutMatrix)
 {
 	Matrix m;
+    const float Scale = p->m_ModelSize;
 
 	D3DXMatrixScaling(pOutMatrix, Scale, Scale, Scale);
 	D3DXMatrixRotationY(&m, p->m_Params.angle);

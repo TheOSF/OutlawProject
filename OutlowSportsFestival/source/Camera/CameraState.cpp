@@ -32,11 +32,10 @@ void CameraStateGamePlay::Enter(Camera* c)
 
 void CameraStateGamePlay::Execute(Camera* c)
 {
-
-	const CharacterManager::CharacterMap& chr_map = DefCharacterMgr.GetCharacterMap();
+    const Camera::CameraDrawObjectList& DrawList = c->GetCameraDrawObjectList();
 
 	//キャラクタがいない場合移動できない
-	if (chr_map.empty())
+    if (DrawList.empty())
 	{
 		return;
 	}
@@ -47,12 +46,10 @@ void CameraStateGamePlay::Execute(Camera* c)
 	float dRightLen = 0;
 
 	//全キャラクタ座標の平均座標を算出する
-	for (auto it = chr_map.begin();
-		it != chr_map.end();
-		++it)
+    for (auto& it : DrawList)
 	{
-		if (chr_func::isDie(it->first))continue;
-		center += it->first->m_Params.pos;
+        if (it->m_isDraw == false) continue;
+        center += it->m_Pos;
 		livecnt++;
 	}
 
@@ -74,12 +71,10 @@ void CameraStateGamePlay::Execute(Camera* c)
 
     
 	//どれだけカメラを引くかを算出する
-	for (auto it = chr_map.begin();
-		it != chr_map.end();
-		++it)
+    for (auto& it : DrawList)
 	{
-        if (it->first->m_Params.camera_draw == false)continue;
-		CrVector3 chrpos = it->first->m_Params.pos;
+        if (it->m_isDraw == false)continue;
+		CrVector3 chrpos = it->m_Pos;
 
 		//カメラ注視点からの距離を求める
 		float rlen = Vector3Length(chrpos - center);
@@ -185,41 +180,41 @@ void CameraStateGamePlay::Exit(Camera* c)
 
 }
 
-void CameraStateGamePlay::MoveCameraPosition(CrVector3 ViewTarget, Camera* c)
-{
-    const CharacterManager::CharacterMap& ChrMap = DefCharacterMgr.GetCharacterMap();
-    Vector3 MoveTarget, Work;
-    float   BackValue = 0;
-    bool    AllIn = true;
-    
-    for (auto &it : ChrMap)
-    {
-        if (it.first->m_Params.camera_draw == false)
-        {
-            continue;
-        }
-
-        if (c->WorldToProjection(&Work, it.first->m_Params.pos) == false ||
-            Vector3XYLength(Work) > 0.75f || 
-            Work.y < -0.8f)
-        {
-            AllIn = false;
-            BackValue = max(BackValue, max(fabsf(Work.x), fabsf(Work.y)));
-        }
-    }
-
-    if (AllIn)
-    {
-        //補間する
-        c->m_Position += (ViewTarget - c->m_Position)*m_PosSpeed;
-    }
-    else
-    {
-        //補間する
-        c->m_Position += (first_pos - ViewTarget)*m_PosSpeed;
-    }
-
-}
+//void CameraStateGamePlay::MoveCameraPosition(CrVector3 ViewTarget, Camera* c)
+//{
+//    const CharacterManager::CharacterMap& ChrMap = DefCharacterMgr.GetCharacterMap();
+//    Vector3 MoveTarget, Work;
+//    float   BackValue = 0;
+//    bool    AllIn = true;
+//    
+//    for (auto &it : ChrMap)
+//    {
+//        if (it.first->m_Params.camera_draw == false)
+//        {
+//            continue;
+//        }
+//
+//        if (c->WorldToProjection(&Work, it.first->m_Params.pos) == false ||
+//            Vector3XYLength(Work) > 0.75f || 
+//            Work.y < -0.8f)
+//        {
+//            AllIn = false;
+//            BackValue = max(BackValue, max(fabsf(Work.x), fabsf(Work.y)));
+//        }
+//    }
+//
+//    if (AllIn)
+//    {
+//        //補間する
+//        c->m_Position += (ViewTarget - c->m_Position)*m_PosSpeed;
+//    }
+//    else
+//    {
+//        //補間する
+//        c->m_Position += (first_pos - ViewTarget)*m_PosSpeed;
+//    }
+//
+//}
 
 bool CameraStateGamePlay::isViewIn(CrVector3 pos)
 {

@@ -27,8 +27,11 @@ public:
 
      void End()override;
 
+     Vector3 ClacLocalOffset(bool Right)override;
+
 private:
      AmefootPlayer* m_pAmefoot;
+     bool           m_isMotionRight;
 }AmefootCounter_Event;
 
 
@@ -45,16 +48,17 @@ void AmefootPlayerState_Counter::Enter(AmefootPlayer* pCharacter)
 {
      CharacterDefaultCounter::Param params;
 
-     params.AfterShotFrame = 18;
+     params.AfterShotFrame = 11;
      params.CanCounterFrame = 25;
      params.CatchAriaSize = 5.5f;
      params.ControllRadian = D3DXToRadian(65);
-     params.FailedFrame = 12;
+     params.FailedFrame = 48;
      params.PoseFrame = 20;
-     params.ShotFrame = 8;
-     params.CatchFrame = 10;
+     params.ShotFrame = 5;
+     params.CatchFrame = 18;
      params.CatchBoneNumber = 32;
      params.BallSpeed = 0.78f;
+
 
      m_pCharacterDefaultCounter = new CharacterDefaultCounter(
           pCharacter,
@@ -74,7 +78,7 @@ void AmefootPlayerState_Counter::Execute(AmefootPlayer* pCharacter)
      m_pCharacterDefaultCounter->Update();
 
      // モデルのワールド変換行列を更新
-     chr_func::CreateTransMatrix(pCharacter, pCharacter->m_ModelSize, &pCharacter->m_Renderer.m_TransMatrix);
+     chr_func::CreateTransMatrix(pCharacter, &pCharacter->m_Renderer.m_TransMatrix);
 
      // モデル更新
      pCharacter->m_Renderer.Update(1);
@@ -91,7 +95,8 @@ void AmefootPlayerState_Counter::Exit(AmefootPlayer* pCharacter)
 // CounterEvent
 //-----------------------------------------------------------------------------------------
 AmefootPlayerState_Counter::CounterEvent::CounterEvent(AmefootPlayer* pAmefoot) :
-     m_pAmefoot(pAmefoot)
+m_pAmefoot(pAmefoot),
+m_isMotionRight(true)
 {};
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_Counter::CounterEvent::Pose()
@@ -101,17 +106,24 @@ void AmefootPlayerState_Counter::CounterEvent::Pose()
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_Counter::CounterEvent::Move(BallBase* pCounterBall)
 {
-     //m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_CounterMove);
+    if (m_isMotionRight)
+    {
+        m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Counter_Catch_Right);
+    }
+    else
+    {
+        m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Counter_Catch_Left);
+    }
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_Counter::CounterEvent::Catch(BallBase* pCounterBall)
 {
-     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Counter_Catch_Right);
+    m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Counter_Throw_Ball);
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_Counter::CounterEvent::Shot(BallBase* pCounterBall)
 {
-     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Counter_Throw_Ball);
+
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_Counter::CounterEvent::ShotFaild()
@@ -124,4 +136,19 @@ void AmefootPlayerState_Counter::CounterEvent::End()
      m_pAmefoot->SetState(new AmefootPlayerState_UsualMove());
 }
 //-----------------------------------------------------------------------------------------
+Vector3 AmefootPlayerState_Counter::CounterEvent::ClacLocalOffset(bool Right)
+{
+    Vector3 ret(0, 0, 0);
+    m_isMotionRight = Right;
 
+    //ボールの位置によってモーション分岐
+    if (Right)
+    {
+        ret = Vector3(1.5f, 0, 0);
+    }
+    else
+    {
+        ret = Vector3(-1.0f, 0, 0);
+    }
+    return ret;
+}

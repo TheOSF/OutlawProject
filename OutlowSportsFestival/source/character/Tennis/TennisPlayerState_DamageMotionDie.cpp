@@ -42,7 +42,7 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
             m_pTennis->m_Renderer.Update(t);
 
             //位置にもとずき、ワールド変換行列を計算
-            chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
+            chr_func::CreateTransMatrix(m_pTennis, &m_pTennis->m_Renderer.m_TransMatrix);
 
             //吹き飛びの回転を入れる
             m_pTennis->m_Renderer.m_TransMatrix = Rotate*m_pTennis->m_Renderer.m_TransMatrix;
@@ -59,7 +59,7 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
             m_pTennis->m_Renderer.Update(1);
 
             //ワールド変換行列を計算
-            chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
+            chr_func::CreateTransMatrix(m_pTennis, &m_pTennis->m_Renderer.m_TransMatrix);
 
         }
 
@@ -74,13 +74,13 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
             m_pTennis->m_Renderer.Update(1);
 
             //ワールド変換行列を計算
-            chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
+            chr_func::CreateTransMatrix(m_pTennis, &m_pTennis->m_Renderer.m_TransMatrix);
         }
 
         void End()
         {
             //カメラ写すフラグをfalseに
-            m_pTennis->m_Params.camera_draw = false;
+            m_pTennis->m_DrawObject.m_isDraw = false;
         }
         void HitWall()
         {
@@ -105,7 +105,7 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
             m_pTennis->m_Renderer.Update(1);
 
             //ワールド変換行列を計算
-            chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
+            chr_func::CreateTransMatrix(m_pTennis, &m_pTennis->m_Renderer.m_TransMatrix);
         }
     private:
         TennisPlayer*  m_pTennis;

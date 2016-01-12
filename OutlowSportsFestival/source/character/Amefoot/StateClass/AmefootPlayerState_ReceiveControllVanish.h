@@ -1,22 +1,33 @@
 #pragma once
 
-
 #include "../AmefootPlayer.h"
+#include "../../CharacterDamageControll.h"
 
-class AmefootPlayerState_ReceiveControllVanish : public AmefootState
+//***************************************************
+//		コントロール吹き飛びクラス
+//***************************************************
+class AmefootState_ControllVanish : public AmefootState
 {
 public:
-    AmefootPlayerState_ReceiveControllVanish(AmefootPlayer* pCharacter);
+    AmefootState_ControllVanish(AmefootPlayer*  pAmefoot);
+    ~AmefootState_ControllVanish();
 
-    ~AmefootPlayerState_ReceiveControllVanish();
+    //ゲッタ
+    inline CharacterDamageControll*    GetControllClass()
+    {
+        return m_pMoveClass;
+    }
 
-    void Enter(AmefootPlayer* pCharacter)override;
+    // ステート開始
+    void Enter(AmefootPlayer* t)override;
 
-    void Execute(AmefootPlayer* pCharacter)override;
+    // ステート実行
+    void Execute(AmefootPlayer* t)override;
 
-    void Exit(AmefootPlayer* pCharacter)override;
+    // ステート終了
+    void Exit(AmefootPlayer* t)override;
+
+private:
+    AmefootPlayer*  const        m_pAmefoot;
+    CharacterDamageControll*    m_pMoveClass;
 };
-
-
-
-

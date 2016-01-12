@@ -12,7 +12,7 @@ class AmefootEvasionStandUpClass
 public:
      struct Params
      {
-          int AllFrame;
+         bool isViewAround;
      };
 
      // コンストラクタ
@@ -24,9 +24,12 @@ public:
      bool Update();
 
 private:
+    bool(AmefootEvasionStandUpClass::*m_pStateFunc)();
+
      AmefootPlayer* m_pAmefoot;
-     const Params m_params;
      int m_timer;
 
+     bool State_ViewAround();
+     bool State_StandUp();
 };
 

@@ -22,16 +22,19 @@ CharacterDamageControll::EventClass:: ~EventClass()
 CharacterDamageControll::CharacterDamageControll(EventClass* pEventClass) :
 m_pEventClass(pEventClass),
 m_Move(Vector3Zero),
-m_Init(false)
+m_Init(false),
+m_NotControllCount(0)
 {
     D3DXMatrixIdentity(&m_Transform);
 
     MyAssert(m_pEventClass != nullptr, "イベントクラスがnullptrになっています");
 
+    m_pEventClass->pOwner->m_Params.DoCheckOtherChrSpace = false;
 }
 
 CharacterDamageControll::~CharacterDamageControll()
 {
+    m_pEventClass->pOwner->m_Params.DoCheckOtherChrSpace = true;
     delete m_pEventClass;
 }
 
@@ -39,6 +42,7 @@ CharacterDamageControll::~CharacterDamageControll()
 void CharacterDamageControll::SetTransform(const Matrix& m)
 {
     m_Transform = m;
+    m_NotControllCount = 0;
 }
 
 //操作解除(通常の吹き飛びステートに移行する)
@@ -82,6 +86,7 @@ void CharacterDamageControll::Update()
     //初期フレームでモーションセット
     if (m_Init == false)
     {
+        m_Init = true;
         m_pEventClass->pOwner->m_Renderer.SetMotion(m_pEventClass->VanishMotion);
     }
     
@@ -129,6 +134,11 @@ void CharacterDamageControll::Update()
     //前回フレームの位置から移動値を算出
     {
         m_Move = m_pEventClass->pOwner->m_Params.move = (pChr->m_Params.pos - PrePos);
+    }
+
+    if (m_NotControllCount++ > 60)
+    {
+        ToFree();
     }
 }
 

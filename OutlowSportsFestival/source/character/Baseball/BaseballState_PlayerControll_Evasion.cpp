@@ -184,7 +184,7 @@ void BaseballState_Rolling::Execute(BaseballPlayer* b)
 		b->m_Renderer.Update(2);
 
 		//s—ñXV
-		chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
+		chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
 	}
 }
 

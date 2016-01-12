@@ -5,11 +5,14 @@
 #include "../Camera/Camera.h"
 #include "../Effect/EffectFactory.h"
 #include "../Effect/GlavityLocus.h"
+#include "Item_Bell.h"
 
 Item_WallBoundBall::Item_WallBoundBall(
     CrVector3 pos,
     CrVector3 move,
-    CrVector3 target) :
+    CrVector3 target,
+    Item_Bell* pBell
+    ) :
     m_Locus(28),
     m_LiveFlg(true),
     m_Target(target),
@@ -17,17 +20,10 @@ Item_WallBoundBall::Item_WallBoundBall(
     m_Timer(0),
     m_Glavity(-0.03f),
     m_MeshRenderer(DefResource.Get(Resource::MeshType::Sphere), false, MeshRenderer::RenderType::NoTexture),
-    m_pStateFunc(&Item_WallBoundBall::State_ToFloorMove)
+    m_pStateFunc(&Item_WallBoundBall::State_ToFloorMove),
+    m_pBell(pBell),
+    m_pHitCharacter(nullptr)
 {
-
-    //ダメージ初期化(ダメージいるのか？
-    {
-        m_Damage.MaxChrHit = 0;  //キャラクタには当たらない
-        m_Damage.m_VecType = DamageShpere::DamageVecType::MemberParam;
-        m_Damage.pBall = this;
-        m_Damage.m_Enable = false;
-    }
-
     //軌跡
     {
         m_Locus.m_StartParam.Width=0.5f;
@@ -50,6 +46,10 @@ Item_WallBoundBall::~Item_WallBoundBall()
 
 }
 
+void Item_WallBoundBall::Destroy()
+{
+    m_LiveFlg = false;
+}
 
 bool Item_WallBoundBall::Update()
 {
@@ -78,8 +78,6 @@ bool Item_WallBoundBall::Update()
             );
     }
 
-    //ダメージ更新
-    UpdateDamageClass();
 
     //メッシュ更新
     UpdateMesh();
@@ -89,12 +87,6 @@ bool Item_WallBoundBall::Update()
 
     //色たいまー
     m_ColorTimer += 0.1f;
-
-    //下すぎたら消す
-    if (m_LiveFlg && m_Params.pos.Length() > 150.0f)
-    {
-        m_LiveFlg = false;
-    }
 
     return m_LiveFlg;
 }
@@ -227,13 +219,6 @@ void Item_WallBoundBall::ApperEffect()
     }
 }
 
-void Item_WallBoundBall::UpdateDamageClass()
-{
-    m_Damage.m_Param.pos = m_Params.pos;
-    m_Damage.m_Param.size = 1.0f;
-    m_Damage.m_Vec = m_Params.move;
-}
-
 void Item_WallBoundBall::UpdateMesh()
 {
     const float Scale = 0.4f;
@@ -316,10 +301,13 @@ void Item_WallBoundBall::State_ToBellMove()
     m_Params.pos += m_Params.move;
 
     //鐘に当たっていた場合
-    if (m_Damage.HitCount)
+    if (Vector3Distance(m_Params.pos,m_pBell->GetPos()) < 2.0f)
     {
         //エフェクト
         ApperEffect();
+
+        //ヒット関数！
+        m_pBell->Hit(this, m_pHitCharacter);
 
         //終了ステートへ
         m_pStateFunc = &Item_WallBoundBall::State_Finish;
@@ -341,8 +329,7 @@ void Item_WallBoundBall::Counter(CharacterBase* pCounterCharacter)
     m_Params.move = GetToMoveValue();
     m_pStateFunc = &Item_WallBoundBall::State_ToBellMove;
 
-    m_Damage.m_Enable = true;
-    m_Damage.pParent = pCounterCharacter;
+    m_pHitCharacter = pCounterCharacter;
 }
 
 

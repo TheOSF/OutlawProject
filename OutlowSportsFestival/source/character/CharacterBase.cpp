@@ -28,7 +28,6 @@ m_Renderer(pMesh)
 {
 
 	m_Params.win = 0;
-    m_Params.camera_draw = true;
 	m_Params.pos = Vector3Zero;
 	m_Params.move = Vector3Zero;
 	m_Params.hitScale = 1.5f;
@@ -37,6 +36,8 @@ m_Renderer(pMesh)
     m_Params.maxHP = 100;
 	m_Params.SP = 0;
     m_Params.size = 1.8f;
+    m_Params.DoCheckOtherChrSpace = true;
+    m_DrawObject.m_isDraw = true;
 
     //ゲージ
     new PlayerGauge(this);
@@ -96,7 +97,7 @@ const char* CharacterBase::GetCharacterModelPath(CharacterType::Value chr_type)
         "DATA\\CHR\\SanoTennis\\tennis.iem",
         "DATA\\CHR\\SanoBaseBall\\baseball.iem",
         "DATA\\CHR\\SanoSoccer\\soccer.iem",
-        "DATA\\CHR\\AmericanFootball\\AmericanFootball_v3.iem",
+        "DATA\\CHR\\AmericanFootball\\AmericanFootball_v6.iem",
     };
 
     MyAssert((int)chr_type >= 0 && (int)chr_type < 4, "存在しないキャラクタタイプが引数に送られました type= %d ", (int)chr_type);
@@ -194,7 +195,7 @@ void CharacterBase::ResetRound()
     m_Params.HP = m_Params.maxHP;
     m_Params.pos = DefCharacterMgr.GetRoundStartPos(m_PlayerInfo.number);
     m_Params.move = Vector3Zero;
-    m_Params.camera_draw = true;
+    m_DrawObject.m_isDraw = true;
 
     chr_func::AngleControll(this, Vector3(0, m_Params.pos.y, 0));
 }
@@ -204,6 +205,7 @@ void CharacterBase::BaseUpdate()
 {
     m_PhysicObj.Update();
     RendererUpdate();
+    CameraDrawObjUpdate();
 }
 
 bool CharacterBase::Msg(MsgType mt)
@@ -265,4 +267,9 @@ void CharacterBase::RendererUpdate()
 
     m_Renderer.m_OutlineColor = COLORf(0, Color.x, Color.y, Color.z);
     m_Renderer.m_OutlineVisible = Color.Length() > 0.1f;
+}
+
+void CharacterBase::CameraDrawObjUpdate()
+{
+    m_DrawObject.m_Pos = m_Params.pos;
 }

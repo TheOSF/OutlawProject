@@ -39,7 +39,7 @@ namespace chr_func
 	void AngleControll(CharacterBase* p, CrVector3 view_pos);
 
 	//現在の位置、現在のangle、Scaleをもとに変換行列を生成する
-	void CreateTransMatrix(CharacterBase* p, float Scale, Matrix* pOutMatrix);
+	void CreateTransMatrix(CharacterBase* p, Matrix* pOutMatrix);
 
 	//前方向ベクトルを得る
 	void    GetFront(CharacterBase* p, Vector3* pOut);

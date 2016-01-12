@@ -37,17 +37,6 @@ bool Item_BellEmitter::Update()
             3
             );
 
-        for (int i = 0; i < 3; ++i)
-        {
-
-            //ボール
-            new Item_WallBoundBall(
-                Vector3(0, 20, 10),
-                Vector3Normalize(Vector3(frand(), 0, frand()))*0.65f, 
-                Item_Bell::BellFreezePos
-                );
-
-        }
 
         //カウンタリセット
         m_ApperCount = 0;

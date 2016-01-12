@@ -57,7 +57,7 @@ TennisAttackClass::~TennisAttackClass()
 
 void TennisAttackClass::Update()
 {
-    chr_func::CreateTransMatrix(m_pOwner, m_pOwner->m_ModelSize, &m_pOwner->m_Renderer.m_TransMatrix);
+    chr_func::CreateTransMatrix(m_pOwner, &m_pOwner->m_Renderer.m_TransMatrix);
 
     (this->*m_pStateFunc)();
 

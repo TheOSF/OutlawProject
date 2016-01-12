@@ -24,8 +24,11 @@ public:
 private:
     MeshRenderer		m_MeshRenderer;
     LocusHDR            m_Locus;
-    bool                m_LiveFlg;
     CharacterBase*const m_Target;
     Vector3             m_Pos, m_Move;
+    RATIO               m_HomingRatio;
 
+    void UpdateMesh();
+    bool Move();
+    void Effect();
 };

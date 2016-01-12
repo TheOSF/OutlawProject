@@ -116,7 +116,8 @@ void AmefootPlayerState_UsualMove::ActionStateSwitch(AmefootPlayer* pCharacter)
 
      if ( controller::GetTRG(controller::button::maru, pCharacter->m_PlayerInfo.number) )
      {
-
+         // [○] で [必殺技]
+         pCharacter->SetState(new AmefootPlayerState_SpecialAtk(pCharacter));
      }
      
      if ( controller::GetTRG(controller::button::sankaku, pCharacter->m_PlayerInfo.number) )
@@ -161,14 +162,13 @@ void AmefootPlayerState_UsualMove::MoveEvent::Update(bool isRun , RATIO speed)
      // モデルのワールド変換行列を更新
      chr_func::CreateTransMatrix(
           m_pAmefoot ,
-          m_pAmefoot->m_ModelSize ,
           &m_pAmefoot->m_Renderer.m_TransMatrix
           );
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_UsualMove::MoveEvent::RunStart()
 {
-     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Run_Start);
+     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Run);
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_UsualMove::MoveEvent::StandStart()

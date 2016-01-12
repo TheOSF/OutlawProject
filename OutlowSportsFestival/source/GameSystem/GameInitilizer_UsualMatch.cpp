@@ -17,6 +17,7 @@
 #include "../Stage/Ground_Manager.h"
 #include "../Stage/Kasenziki_Manager.h"
 #include "../Item/Item_BellEmitter.h"
+#include "../Item/Item_Bell.h"
 #include "../Camera/CameraState.h"
 
 
@@ -97,9 +98,9 @@ void GameInitializer_UsualMatch::GameCreate()
     {
         new SkillGaugeItemEmitter(60 * 60 * 1);
 
-        //new Item_BellEmitter(
-        //    60 * 60 * 2  //‚Q•ª
-        //    );
+        new Item_BellEmitter(
+            60 * 60 * 2  //‚Q•ª
+            );
     }
 
 

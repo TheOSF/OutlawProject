@@ -95,12 +95,12 @@ Tennis_DoCancelAction(pTennis)
 
 Tennis_DoCancelAction_Computer::~Tennis_DoCancelAction_Computer()
 {
-
+    delete m_pReaction;
 }
 
 
 bool Tennis_DoCancelAction_Computer::DoAction()
 {
-
+    m_pReaction->Update();
     return false;
 }

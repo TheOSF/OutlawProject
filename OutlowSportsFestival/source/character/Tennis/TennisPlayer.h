@@ -56,8 +56,8 @@ public:
         _mt_WinPose = 29,
         _mt_LosePose = 31,
 
-        _mt_Shot = 36, //ñ≥Ç¢ÉÇÅ[ÉVÉáÉì
-
+        _mt_Shot = 36,
+        _mt_HeartShot = 39,
     };
 
 

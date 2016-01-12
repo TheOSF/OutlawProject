@@ -2,6 +2,10 @@
 
 #include "../Render/MeshRenderer.h"
 #include "../GameSystem/GameObject.h"
+#include "../Camera/Camera.h"
+#include "Item_WallBoundBall.h"
+#include "../character/CharacterBase.h"
+#include <vector>
 
 //-------------------------------------------------------------//
 // アイテム？　ベル
@@ -15,10 +19,18 @@ public:
     Item_Bell(UINT HitCount);
     ~Item_Bell();
 
+    void Hit(Item_WallBoundBall* pHitBall,CharacterBase* pHitOwner);
+    Vector3 GetPos();
+
     bool Update();
     bool Msg(MsgType mt);
 
 private:
+    typedef std::vector<Item_WallBoundBall*> WallBoundBallArray;
+
+    WallBoundBallArray m_WallBoundBallArray;
+    CharacterBase*    m_pLastHitChr;
+    CameraDrawObject  m_CameraDrawObject;
     void(Item_Bell::* m_pStateFunc)();
     MeshRenderer*     m_pMeshRenderer;
     Vector3           m_Pos;
@@ -26,8 +38,8 @@ private:
     int               m_HitCount;
     int               m_NoDamageFrame;
 
+    void UpdateBallLive();
     void MeshUpdate();
-    bool HitCheck(Vector3& out_hitPos);
 
     void State_MoveToTarget();
     void State_WaitHit();

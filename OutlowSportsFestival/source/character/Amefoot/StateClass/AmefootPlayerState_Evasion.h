@@ -3,9 +3,6 @@
 
 #include "../AmefootPlayer.h"
 
-class AmefootEvasionStandUpClass;
-class CharacterEvasion;
-
 //-----------------------------------------------------------------------------------------
 // AmefootPlayerState_Evasion
 // [ アメフト ] 回避行動をするステートクラス
@@ -13,7 +10,7 @@ class CharacterEvasion;
 class AmefootPlayerState_Evasion : public AmefootState
 {
 public:
-     AmefootPlayerState_Evasion();
+    AmefootPlayerState_Evasion();
 
      void Enter(AmefootPlayer* pCharacter)override;
 
@@ -22,10 +19,19 @@ public:
      void Exit(AmefootPlayer* pCharacter)override;
 
 private:
-     class EvasionEvent;
 
-private:
-     AmefootEvasionStandUpClass* m_pAmefootEvasionStandUpClass;
-     CharacterEvasion* m_pCharacterEvasion;
+    typedef void(AmefootPlayerState_Evasion::*StateFunc)();
+
+    AmefootPlayer*  m_pChr;
+    StateFunc       m_pStateFunc;
+    int             m_Timer;
+
+    bool isStandUp();
+    void SetState(StateFunc pNewState);
+
+    void State_DownStart();
+    void State_Downing();
+    void State_StandUp();
+    void State_ViewAround();
 };
 

@@ -6,7 +6,6 @@
 #include "Snakeshot.h"
 #include "../../Effect/EffectFactory.h"
 #include "../Soccer/Computer/SoccerComputerMove.h"
-#include "../Soccer/Computer/SoccerComputerFinisher.h"
 
 #include "../../Effect/SpecialAttackEffect.h"
 #include "../CharacterDefaultCounterClass.h"
@@ -16,6 +15,10 @@
 #include "../CharacterBase.h"
 #include "../../Sound/Sound.h"
 #include "../../Camera/Camera.h"
+#include "SoccerAttackState.h"
+#include "../CharacterHitEventFunc.h"
+#include "SoccerCommonState.h"
+#include "SoccerState_ControllVanish.h"
 
 class SoccerUtillityClass
 {
@@ -104,8 +107,8 @@ bool SoccerState_PlayerControll_Move::SwitchGameState(SoccerPlayer* ps)
 
 	return false;
 
-
 }
+
 void SoccerState_PlayerControll_Move::ActionStateSwitch(SoccerPlayer*s)
 {
 	float movelen = s->m_Params.move.Length();
@@ -117,7 +120,7 @@ void SoccerState_PlayerControll_Move::ActionStateSwitch(SoccerPlayer*s)
 	// [□] で 格闘
 	if (controller::GetTRG(controller::button::shikaku, s->m_PlayerInfo.number))
 	{
-		s->SetState(new SoccerState_PlayerControll_Attack(s));
+        s->SetState(new SoccerAttackState(s));
 	}
 	// [△] で ショット
 	if (controller::GetTRG(controller::button::sankaku, s->m_PlayerInfo.number))
@@ -222,7 +225,7 @@ void SoccerState_PlayerControll_Move::Execute(SoccerPlayer* s)
 
 
 	//モデルのワールド変換行列を更新
-	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(s, &s->m_Renderer.m_TransMatrix);
 }
 void SoccerState_PlayerControll_Move::Exit(SoccerPlayer* s)
 {
@@ -230,136 +233,288 @@ void SoccerState_PlayerControll_Move::Exit(SoccerPlayer* s)
 }
 
 //-------------スライディングステートクラス-------------
-SoccerState_PlayerControll_Sliding::PlayerControllEvent::PlayerControllEvent(SoccerPlayer*const pSoccer) :
-m_pSoccer(pSoccer)
+
+SoccerState_Sliding::SoccerState_Sliding(SoccerPlayer* s) :
+m_pChr(s),
+m_Timer(0)
 {
+    //初期化
+    m_Damage.m_Enable = false;
+    m_Damage.m_VecPower = Vector2(0.45f, 0.0f);
+    m_Damage.m_VecType = DamageShpere::DamageVecType::MemberParam;
+    m_Damage.pParent = s;
+    m_Damage.type = DamageBase::Type::_WeekDamage;
+    m_Damage.m_Param.size = 1.5f;
 
-}
-bool SoccerState_PlayerControll_Sliding::PlayerControllEvent::isDoCombo()
-{
-	return controller::GetTRG(controller::button::shikaku, m_pSoccer->m_PlayerInfo.number);
-}
-void SoccerState_PlayerControll_Sliding::PlayerControllEvent::AngleControll(RADIAN angle)
-{
-	const CharacterBase* const pTargetCharacter = GetFrontTargetEnemy();
-
-	if (pTargetCharacter != nullptr)
-	{
-		//自動回転
-		chr_func::AngleControll(m_pSoccer, pTargetCharacter->m_Params.pos, angle);
-	}
-	else
-	{
-		const Vector2 Stick = controller::GetStickValue(controller::stick::left, m_pSoccer->m_PlayerInfo.number);
-
-		//スティックが一定以上倒されているかどうか
-		if (Vector2Length(Stick) > 0.25f)
-		{
-			Vector3 Vec(Stick.x, 0, Stick.y);
-
-			//スティック値をカメラ空間に
-			Vec = Vector3MulMatrix3x3(Vec, matView);
-
-			//キャラクタ回転
-			chr_func::AngleControll(m_pSoccer, m_pSoccer->m_Params.pos + Vec, angle);
-		}
-	}
+    m_pStateFunc = &SoccerState_Sliding::State_Start;
 }
 
-const CharacterBase* SoccerState_PlayerControll_Sliding::PlayerControllEvent::GetFrontTargetEnemy()
+void SoccerState_Sliding::Enter(SoccerPlayer* t)
 {
-	CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
-
-	const float  AutoDistance = 10.0f;               //自動ができる最大距離
-	const RADIAN AutoMaxAngle = D3DXToRadian(90);   //自動ができる最大角度
-
-	const CharacterBase* pTargetEnemy = nullptr;    //ターゲット保持のポインタ
-	RADIAN MostMinAngle = PI;                       //もっとも狭い角度
-	RADIAN TempAngle;
-
-	Vector3 MyFront;      //自身の前方ベクトル
-	chr_func::GetFront(m_pSoccer, &MyFront);
-
-	auto it = ChrMap.begin();
-
-	while (it != ChrMap.end())
-	{
-		//自身を除外
-		if (m_pSoccer->m_PlayerInfo.number == it->first->m_PlayerInfo.number ||
-			chr_func::isDie(it->first)
-			)
-		{
-			++it;
-			continue;
-		}
-
-		//距離が一定以上のキャラクタを除外する
-		if (Vector3Distance(it->first->m_Params.pos, m_pSoccer->m_Params.pos) > AutoDistance)
-		{
-			it = ChrMap.erase(it);
-			continue;
-		}
-
-		//前ベクトルと敵へのベクトルの角度を計算する
-		TempAngle = Vector3Radian(MyFront, (it->first->m_Params.pos - m_pSoccer->m_Params.pos));
-
-		//角度が一番狭かったら更新
-		if (TempAngle < MostMinAngle)
-		{
-			pTargetEnemy = it->first;
-			MostMinAngle = TempAngle;
-		}
-
-		++it;
-	}
-
-	return pTargetEnemy;
-
+    
 }
-//-------------スライディング攻撃ステートクラス-------------
-SoccerState_PlayerControll_Sliding::SoccerState_PlayerControll_Sliding(SoccerPlayer* s) :
-m_Attack(s, new PlayerControllEvent(s))
+
+void SoccerState_Sliding::Execute(SoccerPlayer* t)
+{
+
+    (this->*m_pStateFunc)();
+    
+    SetMoveByAngle();
+
+    //ダメージ位置を更新
+    UpdateDamage();
+
+    m_pChr->m_Renderer.Update(1);
+    chr_func::CreateTransMatrix(m_pChr, &m_pChr->m_Renderer.m_TransMatrix);
+}
+
+void SoccerState_Sliding::Exit(SoccerPlayer* t)
 {
 
 }
 
-
-SoccerState_PlayerControll_Sliding::~SoccerState_PlayerControll_Sliding()
+void SoccerState_Sliding::SetState(StateFunc State)
 {
+    m_pStateFunc = State;
+    m_Timer = 0;
+}
+
+void SoccerState_Sliding::UpdateDamage()
+{
+    {
+        //少し前方
+        chr_func::GetFront(m_pChr, &m_Damage.m_Param.pos);
+        m_Damage.m_Param.pos *= 1.5f;
+
+        //少し上に
+        m_Damage.m_Param.pos += Vector3(0, 1.5f, 0);
+
+        //座標をセット
+        m_Damage.m_Param.pos += m_pChr->m_Params.pos;
+    }
+
+    {
+        m_Damage.m_Vec =  chr_func::GetFront(m_pChr);
+        m_Damage.m_Vec.Normalize();
+    }
 
 }
-void SoccerState_PlayerControll_Sliding::Enter(SoccerPlayer* s)
+
+void SoccerState_Sliding::NoBallDamageUpdate()
 {
-	//攻撃クラス作成
-	SoccerAttackInfo_UsualAtk* pAtk;
 
-	SoccerAttackInfo_UsualAtk::Param AtkParam[] =
-	{
-		{ 6, 5.0f, 2.0f, DamageBase::Type::_VanishDamage, 5, 22, 0.05f, 5, 60, SoccerPlayer::_ms_Rolling, 60, 60, -1, -1, 0, 4, D3DXToRadian(1), 18 ,2 },
-	};
-	Sound::Play(Sound::Sand2);
+    class SoccerNoWeakDamageHitEvent :public DamageManager::HitEventBase
+    {
+        SoccerPlayer* m_pSoccer;
+    public:
+        SoccerNoWeakDamageHitEvent(SoccerPlayer* ps) :m_pSoccer(ps){}
 
-	for (int i = 0; i < (int)ARRAYSIZE(AtkParam); ++i)
-	{
-		pAtk = new SoccerAttackInfo_UsualAtk(s);
 
-		pAtk->m_Param = AtkParam[i];
+        bool Hit(DamageBase* pDmg)
+        {
+            Vector3 DamageVec = Vector3Zero;
 
-		m_Attack.m_AttackInfoArray.push_back(pAtk);
-	}
+            if (pDmg->pBall != nullptr)
+            {
+                return false;
+            }
+           
+
+            //ひるみ分岐
+            switch (CharacterHitEventFunc::CheckDamage(pDmg, m_pSoccer, &DamageVec))
+            {
+            case CharacterHitEventFunc::SetType::Die:
+                //死亡ステートへ
+                m_pSoccer->SetState(new SoccerState_DamageMotion_Die(m_pSoccer, DamageVec), 2);
+                break;
+
+
+            case CharacterHitEventFunc::SetType::Weak_Hit:
+                //弱ひるみステートへ
+                m_pSoccer->SetState(new SoccerState_SmallDamage(m_pSoccer, DamageVec, false, pDmg->HitMotionFrame), 1);
+                break;
+
+
+            case CharacterHitEventFunc::SetType::Vanish_Hit:
+                //吹き飛びステートへ
+                m_pSoccer->SetState(new SoccerState_DamageVanish(m_pSoccer, DamageVec), 1);
+                break;
+
+            case CharacterHitEventFunc::SetType::Controll_Hit:
+            {
+                //コントロール吹き飛びステートへ
+                SoccerState_ControllVanish* p = new SoccerState_ControllVanish(m_pSoccer);
+                m_pSoccer->SetState(p, 2);
+                ((DamageControllVanish*)pDmg)->GetDamageControll_Transform()->AddControllClass(p->GetControllClass());
+            }
+                break;
+
+            case CharacterHitEventFunc::SetType::_None:
+                //何もしない(自身のダメージだった場合
+                return false;
+
+            default:
+                MyAssert(false, "ひるみ分岐ができていません");
+                return false;
+            }
+
+
+            return true;
+        }
+    private:
+    };
+
+    chr_func::UpdateAll(m_pChr, &SoccerNoWeakDamageHitEvent(m_pChr));
 }
-void SoccerState_PlayerControll_Sliding::Execute(SoccerPlayer* s)
-{
-	m_Attack.Update();
 
-	if (m_Attack.isEnd())
-	{
-		s->SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(s));
-	}
+void SoccerState_Sliding::StartAngleControll()
+{
+   
+    if (m_pChr->m_PlayerInfo.player_type == PlayerType::_Player)
+    {
+        const RADIAN ControllAngle = D3DXToRadian(40);
+
+        Vector2 Stick = controller::GetStickValue(controller::stick::left, m_pChr->m_PlayerInfo.number);
+        Vector3 ViewVec(Stick.x, 0, Stick.y);
+
+        chr_func::AngleControll(m_pChr, m_pChr->m_Params.pos + ViewVec, ControllAngle);
+    }
+
+    {
+        CharacterBase* pTarget = nullptr;
+
+        if (chr_func::CalcAtkTarget(m_pChr, D3DXToRadian(25), 15.0f, &pTarget))
+        {
+            chr_func::AngleControll(m_pChr, pTarget->m_Params.pos);
+        }
+    }
 }
-void SoccerState_PlayerControll_Sliding::Exit(SoccerPlayer* s)
-{
 
+void SoccerState_Sliding::AutoAngleControll()
+{
+    const RADIAN AngleSpeed = D3DXToRadian(5);
+    CharacterBase* pTarget = nullptr;
+
+    if (chr_func::CalcAtkTarget(m_pChr, D3DXToRadian(20), 8.0f, &pTarget))
+    {
+        chr_func::AngleControll(m_pChr, pTarget->m_Params.pos, AngleSpeed);
+    }
+    else 
+    {
+        if (m_pChr->m_PlayerInfo.player_type == PlayerType::_Player)
+        {
+            Vector2 Stick = controller::GetStickValue(controller::stick::left, m_pChr->m_PlayerInfo.number);
+            Vector3 ViewVec(Stick.x, 0, Stick.y);
+
+            chr_func::AngleControll(m_pChr, m_pChr->m_Params.pos + ViewVec, AngleSpeed);
+        }
+        else
+        {
+            if (chr_func::CalcAtkTarget(m_pChr, D3DXToRadian(45), 8.0f, &pTarget))
+            {
+                chr_func::AngleControll(m_pChr, pTarget->m_Params.pos, AngleSpeed);
+            }
+        }
+    }
+}
+
+void SoccerState_Sliding::SetMoveByAngle()
+{
+    const float L = Vector3XZLength(m_pChr->m_Params.move);
+
+    Vector3 m = chr_func::GetFront(m_pChr);
+
+    m_pChr->m_Params.move.x = m.x*L;
+    m_pChr->m_Params.move.z = m.z*L;
+}
+
+void SoccerState_Sliding::SetEffect(RATIO alpha)
+{
+    EffectFactory::SmokeParticle(
+        m_pChr->m_Params.pos,
+        Vector3(0, 0.025f + frand()*0.025f, 0),
+        25,
+        1.5f*(frand()*0.5f + 0.5f) ,
+        D3DCOLOR_COLORVALUE(1, 1, 1, fClamp(alpha*0.25f , 1, 0))
+        );
+}
+
+void SoccerState_Sliding::State_Start()
+{
+    const int AllFrame = 10;
+    const int DamageFrame = 5;
+
+    ++m_Timer;
+
+    m_Damage.m_Enable = m_Timer > DamageFrame;
+
+    if (m_Timer == 1)
+    {
+        m_pChr->m_Renderer.SetMotion(SoccerPlayer::_ms_Sliding_Start);
+
+        StartAngleControll();
+
+        //SE
+        Sound::Play(Sound::Sand2);
+    }
+
+    if (m_Timer > AllFrame)
+    {
+        SetState(&SoccerState_Sliding::State_Sliding);
+    }
+
+    SetEffect(1);
+
+    NoBallDamageUpdate();
+}
+
+void SoccerState_Sliding::State_Sliding()
+{
+    const int SlideingFrame = 30;
+    ++m_Timer;
+
+    AutoAngleControll();
+
+    chr_func::XZMoveDown(m_pChr, 0.025f);
+
+    if (m_Damage.HitCount > 0)
+    {
+        m_pChr->SetState(new SoccerAttackState(m_pChr, true));
+    }
+
+    if (m_Timer > SlideingFrame)
+    {
+        SetState(&SoccerState_Sliding::State_End);
+    }
+
+    SetEffect(1 - ((float)m_Timer / (float)SlideingFrame));
+
+    NoBallDamageUpdate();
+}
+
+void SoccerState_Sliding::State_End()
+{
+    const int AllFrame = 10;
+
+
+    ++m_Timer;
+
+
+    m_Damage.m_Enable = false;
+
+    if (m_Timer == 1)
+    {
+        m_pChr->m_Renderer.SetMotion(SoccerPlayer::_ms_Sliding_End);
+
+        chr_func::XZMoveDown(m_pChr, 0.2f);
+    }
+
+    if (m_Timer > AllFrame)
+    {
+        m_pChr->SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(m_pChr));
+    }
+
+    chr_func::UpdateAll(m_pChr, &SoccerHitEvent(m_pChr));
 }
 
 //------------プレイヤー操作の攻撃操作クラス--------------
@@ -555,11 +710,11 @@ void SoccerState_PlayerControll_Shot::Execute(SoccerPlayer* s)
 	
 	if (!m_pShotClass->Update())
 	{
-		s->SetState(new SoccerState_PlayerControll_Move);
+		s->SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(s));
 	}
 	//モデル関連の更新
 	s->m_Renderer.Update(1);
-	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(s, &s->m_Renderer.m_TransMatrix);
 }
 void SoccerState_PlayerControll_Shot::Exit(SoccerPlayer* s)
 {
@@ -648,7 +803,7 @@ void SoccerState_PlayerControll_Counter::Execute(SoccerPlayer* s)
 	m_pCounter->Update();
 
 	//モデルのワールド変換行列を更新
-	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(s, &s->m_Renderer.m_TransMatrix);
 
 	//モデル更新
 	s->m_Renderer.Update(1);
@@ -720,7 +875,7 @@ void SoccerState_PlayerControll_Dash::Execute(SoccerPlayer* s)
 		// [□] で スライディング
 		if (controller::GetTRG(controller::button::shikaku, s->m_PlayerInfo.number))
 		{
-			s->SetState(new SoccerState_PlayerControll_Sliding(s));
+			s->SetState(new SoccerState_Sliding(s));
 		}
 		// [〇] で 必殺技
 		if (controller::GetTRG(controller::button::maru, s->m_PlayerInfo.number))
@@ -769,7 +924,7 @@ void SoccerState_PlayerControll_Dash::Execute(SoccerPlayer* s)
 	
 	m_pMoveClass->Update();
 
-	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(s, &s->m_Renderer.m_TransMatrix);
 }
 void SoccerState_PlayerControll_Dash::Exit(SoccerPlayer* s)
 {
@@ -803,9 +958,16 @@ void SoccerState_PlayerControll_Finisher::Execute(SoccerPlayer* s)
 		if (m_Timer == 1)
 		{
 			Sound::Play(Sound::Skill);
-			SoccerState_ComputerControll_Finisher::FreezeGame(55, s);
+			
+            std::list<LpGameObjectBase> UpdateObjList;
+
+            UpdateObjList.push_back(s);
+
+            DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, 55, true);
+
 			new SpecialAttackEffect(s, 55);
 		}
+
 		if (m_Timer == 60)
 		{
 			s->m_Renderer.SetMotion(SoccerPlayer::_ms_Shot);
@@ -861,7 +1023,6 @@ CharacterShotAttack* SoccerState_PlayerControll_Finisher::SnakeShotClass(SoccerP
 			// 転送行列更新
 			chr_func::CreateTransMatrix(
 				m_pSoccer,
-				0.05f,
 				&m_pSoccer->m_Renderer.m_TransMatrix);
 		}
 	public:
@@ -890,7 +1051,7 @@ CharacterShotAttack* SoccerState_PlayerControll_Finisher::SnakeShotClass(SoccerP
 		void AttackEnd()
 		{
 			//攻撃終了時に通常移動モードに戻る
-			m_pSoccer->SetState(new SoccerState_PlayerControll_Move());
+			m_pSoccer->SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(m_pSoccer));
 		}
 	};
 

@@ -106,7 +106,7 @@ SoccerSpecialHit::SoccerSpecialHit(
 
 SoccerSpecialHit::~SoccerSpecialHit()
 {
-    
+    delete m_pDamage;
 }
 
 bool SoccerSpecialHit::Update()

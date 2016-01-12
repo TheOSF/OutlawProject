@@ -3,6 +3,7 @@
 
 #include "../Effect/EffectFactory.h"
 #include "../Sound/Sound.h"
+#include "RainbowSkillBall.h"
 
 const Vector3 Item_Bell::BellFreezePos = Vector3(0, 10, 0);
 
@@ -11,7 +12,8 @@ m_Pos(0, 30, 0),
 m_pStateFunc(&Item_Bell::State_MoveToTarget),
 m_MaxHitCount((int)HitCount),
 m_HitCount(0),
-m_NoDamageFrame(0)
+m_NoDamageFrame(0),
+m_pLastHitChr(nullptr)
 {
     //ƒƒbƒVƒ…“Ç‚Ýž‚Ý
     {
@@ -24,6 +26,7 @@ m_NoDamageFrame(0)
         MeshUpdate();
     }
 
+    m_CameraDrawObject.m_isDraw = false;
 }
 
 Item_Bell::~Item_Bell()
@@ -31,11 +34,68 @@ Item_Bell::~Item_Bell()
     delete m_pMeshRenderer;
 }
 
+void Item_Bell::Hit(Item_WallBoundBall* pHitBall, CharacterBase* pHitOwner)
+{
+    ++m_HitCount;
+
+    pHitBall->Destroy();
+
+    //ƒŠƒXƒg‚©‚çíœ
+    for (auto& it = m_WallBoundBallArray.begin();
+        it != m_WallBoundBallArray.end();
+        ++it)
+    {
+        if (*it == pHitBall)
+        {
+            m_WallBoundBallArray.erase(it);
+            break;
+        }
+    }
+
+    //“–‚½‚Á‚½ƒLƒƒƒ‰ƒNƒ^‚ð•Û‘¶
+    m_pLastHitChr = pHitOwner;
+
+    //Å‘å‰ñ”‚È‚Á‚½‚ç
+    if (m_HitCount >= m_MaxHitCount)
+    {
+        m_pStateFunc = &Item_Bell::State_ApperSkillSoul;
+
+        //‚r‚d
+        Sound::Play(Sound::Gong_End);
+    }
+    else
+    {
+        //‚r‚d
+        Sound::Play(Sound::Gong_Start);
+    }
+
+    //ƒGƒtƒFƒNƒg
+    EffectFactory::CircleAnimationBillbord(
+        m_Pos,
+        Vector3Zero,
+        Vector3Zero,
+        Vector2(20, 20),
+        0xFFFFFFFF,
+        RS_ADD
+        );
+
+}
+
+Vector3 Item_Bell::GetPos()
+{
+    return m_Pos;
+}
+
+
 bool Item_Bell::Update()
 {
     (this->*m_pStateFunc)();
 
+    m_CameraDrawObject.m_Pos = m_Pos;
+
     MeshUpdate();
+
+    UpdateBallLive();
 
     return m_pStateFunc != &Item_Bell::State_Finish;
 }
@@ -47,6 +107,37 @@ bool Item_Bell::Msg(MsgType mt)
     return false;
 }
 
+void Item_Bell::UpdateBallLive()
+{
+    const int BallNumTarget = m_MaxHitCount - m_HitCount;  //o‚Ä‚¢‚Ä‚Ù‚µ‚¢”
+
+    auto it = m_WallBoundBallArray.begin();
+
+    while (it != m_WallBoundBallArray.end())
+    {
+        if ((*it)->m_Params.pos.Length() > 200.0f)
+        {
+            (*it)->Destroy();
+            it = m_WallBoundBallArray.erase(it);
+            continue;
+        }
+
+        ++it;
+    }
+
+    while (BallNumTarget > (int)m_WallBoundBallArray.size())
+    {
+        m_WallBoundBallArray.push_back(
+            new Item_WallBoundBall(
+                Vector3(0, 20, 10),
+                Vector3Normalize(Vector3(frand(), 0, frand()))*0.65f,
+                Item_Bell::BellFreezePos,
+                this
+                )
+            );
+    }
+
+}
 
 void Item_Bell::MeshUpdate()
 {
@@ -64,43 +155,6 @@ void Item_Bell::MeshUpdate()
     m_pMeshRenderer->SetMatrix(m);
 }
 
-
-bool Item_Bell::HitCheck(Vector3& out_hitPos)
-{
-    class HitCheckClass :public DamageManager::HitEventBase
-    {
-    public:
-        bool    isHit;
-        Vector3 HitPos;
-        const Vector3 Pos;
-
-        HitCheckClass(CrVector3 pos) :Pos(pos), isHit(false){}
-
-        bool Hit(DamageBase* pDmg)override
-        {
-            Vector3 vec;
-            isHit = true;
-            pDmg->CalcPosVec(Pos, &HitPos, &vec);
-
-            return true;
-        }
-    };
-
-    SphereParam sp;
-    HitCheckClass hit_check(m_Pos);
-
-    sp.pos = m_Pos;
-    sp.size = 4.0f;
-
-    DefDamageMgr.HitCheckSphere(sp, hit_check);
-
-    if (hit_check.isHit)
-    {
-        out_hitPos = hit_check.HitPos;
-    }
-
-    return hit_check.isHit;
-}
 
 
 //----------------------------------------------------------------------------------//
@@ -134,43 +188,18 @@ void Item_Bell::State_WaitHit()
 
     m_NoDamageFrame = max(0, m_NoDamageFrame - 1);
 
-    if (HitCheck(HitPos) && m_NoDamageFrame <= 0)
-    {
-        //‚P•bŠÔ–³“G‚É
-        m_NoDamageFrame = 60;
+    m_CameraDrawObject.m_isDraw = true;
 
-        ++m_HitCount;
-
-        //Å‘å‰ñ”‚È‚Á‚½‚ç
-        if (m_HitCount >= m_MaxHitCount)
-        {
-            m_pStateFunc = &Item_Bell::State_ApperSkillSoul;
-
-            //‚r‚d
-            Sound::Play(Sound::Gong_End);
-        }
-        else
-        {
-            //‚r‚d
-            Sound::Play(Sound::Gong_Start);
-        }
-
-        //ƒGƒtƒFƒNƒg
-        EffectFactory::CircleAnimationBillbord(
-            m_Pos,
-            Vector3Zero,
-            Vector3Zero,
-            Vector2(20,20),
-            0xFFFFFFFF,
-            RS_ADD
-            );
-
-        
-    }
 }
 
 void Item_Bell::State_ApperSkillSoul()
 {
+    new RainbowSkillBall(
+        m_Pos,
+        Vector3AxisY * 0.2f,
+        m_pLastHitChr
+        );
+
     m_pStateFunc = &Item_Bell::State_FadeOut;
 }
 
@@ -180,6 +209,8 @@ void Item_Bell::State_FadeOut()
     const float Speed = 0.2f;
 
     Vector3 v = TargetPos - m_Pos;
+
+    m_CameraDrawObject.m_isDraw = false;
 
     if (v.Length() > Speed)
     {

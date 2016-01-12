@@ -35,7 +35,7 @@ void BaseballState_DamageVanish::Enter(BaseballPlayer* b)
 			m_pBaseball->m_Renderer.Update(1);
 
 			//位置にもとずき、ワールド変換行列を計算
-			chr_func::CreateTransMatrix(m_pBaseball, m_pBaseball->m_ModelSize, &m_pBaseball->m_Renderer.m_TransMatrix);
+			chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->m_Renderer.m_TransMatrix);
 
 			//吹き飛びの回転を入れる
 			m_pBaseball->m_Renderer.m_TransMatrix = Rotate*m_pBaseball->m_Renderer.m_TransMatrix;
@@ -52,7 +52,7 @@ void BaseballState_DamageVanish::Enter(BaseballPlayer* b)
 			m_pBaseball->m_Renderer.Update(1);
 
 			//ワールド変換行列を計算
-			chr_func::CreateTransMatrix(m_pBaseball, m_pBaseball->m_ModelSize, &m_pBaseball->m_Renderer.m_TransMatrix);
+			chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->m_Renderer.m_TransMatrix);
 		}
 
 		void StandUpStart()
@@ -67,7 +67,7 @@ void BaseballState_DamageVanish::Enter(BaseballPlayer* b)
 			m_pBaseball->m_Renderer.Update(1);
 
 			//ワールド変換行列を計算
-			chr_func::CreateTransMatrix(m_pBaseball, m_pBaseball->m_ModelSize, &m_pBaseball->m_Renderer.m_TransMatrix);
+			chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->m_Renderer.m_TransMatrix);
 		}
 
 		void End()
@@ -101,7 +101,7 @@ void BaseballState_DamageVanish::Enter(BaseballPlayer* b)
 			m_pBaseball->m_Renderer.Update(1);
 
 			//ワールド変換行列を計算
-			chr_func::CreateTransMatrix(m_pBaseball, m_pBaseball->m_ModelSize, &m_pBaseball->m_Renderer.m_TransMatrix);
+			chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->m_Renderer.m_TransMatrix);
 		}
 
 		//void CanActionUpdate()

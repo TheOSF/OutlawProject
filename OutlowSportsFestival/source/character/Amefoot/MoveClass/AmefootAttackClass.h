@@ -80,7 +80,7 @@ private:
     void HitStop(); // ヒットストップ
 
     void PoseStart(); // 構え開始の瞬間
-    void TackleStart(); // タックル開始の瞬間
+    void TackleStart(float MoveValue, float DamageValue); // タックル開始の瞬間
     void JumpStart(); // ジャンプ開始の瞬間
     void DrivaAwayStart(); // タックル打ち上げ開始の瞬間
     void TouchdownStart(); // タッチダウン開始の瞬間
@@ -96,14 +96,22 @@ private:
     // ヒットストップ時の更新
     void CharacterHitStopUpdate();
 
+    //パワーから突進のパラメータを得るゲッタ
+    void GetTackleParamByPower(RATIO p, int *pOutFrame, float* pOutMoveValue, float* pOutDamagePower)const;
+
+    //引っ付きクラスを腕の位置に更新する
+    void UpdateDamageTransform();
+
 private:
     AmefootPlayer* const m_pAmefootPlayer;
     Control* m_pControl;
-    DamageShpere m_Damage;
+    DamageShpere              m_Damage;
+    DamageControllVanish*     m_pControllDamage;
+    DamageControll_Transform  m_DamageTransform;
 
     int m_Timer = 0;
     int m_HitStopFrame = 0;
-    //float m_TacklePower = 0.0f;
+    RATIO m_TacklePower = 0.0f;
 
     StateType m_NowStateType = _Pose;
     StateType m_NextStateType = _Error;

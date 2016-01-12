@@ -51,7 +51,7 @@ void BaseballState_SPAttack_P::Execute(BaseballPlayer* b)
 
 	//　モーション更新とか
 	b->m_Renderer.Update(2);
-	chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
 
 
 }
@@ -147,7 +147,6 @@ CharacterShotAttack* BaseballState_SPAttack_P::CreateSpAttack_P(BaseballPlayer* 
 			// 転送行列更新
 			chr_func::CreateTransMatrix(
 				m_pBaseball,
-				m_pBaseball->m_ModelSize,
 				&m_pBaseball->m_Renderer.m_TransMatrix);
 
 		}

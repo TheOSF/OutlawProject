@@ -52,7 +52,7 @@ public:
 public:
     void set_state(_MyState_ptr const Newstate, int ImportantLevel = 0)
 	{
-        //重要なステートの場合
+
         if (m_ImportantLevel > ImportantLevel)
         {
             delete Newstate;

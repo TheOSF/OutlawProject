@@ -36,7 +36,6 @@ void SoccerState_SmallDamage::Enter(SoccerPlayer* s)
 			m_pSoccer->m_Renderer.Update(speed);
 			chr_func::CreateTransMatrix(
 				m_pSoccer, 
-				m_pSoccer->m_ModelSize,
 				&m_pSoccer->m_Renderer.m_TransMatrix);
 		}
 		void Start()
@@ -116,7 +115,7 @@ void SoccerState_DamageVanish::Enter(SoccerPlayer* s)
 			m_pSoccer->m_Renderer.Update(1);
 
 			//位置にもとづき、ワールド変換行列を計算
-			chr_func::CreateTransMatrix(m_pSoccer, m_pSoccer->m_ModelSize, &m_pSoccer->m_Renderer.m_TransMatrix);
+			chr_func::CreateTransMatrix(m_pSoccer, &m_pSoccer->m_Renderer.m_TransMatrix);
 
 			//吹き飛びの回転を入れる
 			m_pSoccer->m_Renderer.m_TransMatrix = Rotate*m_pSoccer->m_Renderer.m_TransMatrix;
@@ -132,7 +131,7 @@ void SoccerState_DamageVanish::Enter(SoccerPlayer* s)
 			m_pSoccer->m_Renderer.Update(1);
 
 			//ワールド変換行列を計算
-			chr_func::CreateTransMatrix(m_pSoccer, m_pSoccer->m_ModelSize, &m_pSoccer->m_Renderer.m_TransMatrix);
+			chr_func::CreateTransMatrix(m_pSoccer, &m_pSoccer->m_Renderer.m_TransMatrix);
 		}
 
 		void StandUpStart()
@@ -147,7 +146,7 @@ void SoccerState_DamageVanish::Enter(SoccerPlayer* s)
 			m_pSoccer->m_Renderer.Update(1);
 
 			//ワールド変換行列を計算
-			chr_func::CreateTransMatrix(m_pSoccer, m_pSoccer->m_ModelSize, &m_pSoccer->m_Renderer.m_TransMatrix);
+			chr_func::CreateTransMatrix(m_pSoccer, &m_pSoccer->m_Renderer.m_TransMatrix);
 		}
 
 		void End()
@@ -182,7 +181,7 @@ void SoccerState_DamageVanish::Enter(SoccerPlayer* s)
             m_pSoccer->m_Renderer.Update(1);
 
             //ワールド変換行列を計算
-            chr_func::CreateTransMatrix(m_pSoccer, m_pSoccer->m_ModelSize, &m_pSoccer->m_Renderer.m_TransMatrix);
+            chr_func::CreateTransMatrix(m_pSoccer, &m_pSoccer->m_Renderer.m_TransMatrix);
         }
 
         void CanActionUpdate()
@@ -251,7 +250,7 @@ void SoccerState_DamageMotion_Die::Enter(SoccerPlayer* t)
 		{
 			//吹き飛びモーションをセット
 			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Vanish_Fly);
-			m_pSoccer->m_Params.camera_draw = false;
+            m_pSoccer->m_DrawObject.m_isDraw = false;
 		}
 
         void Flying(const Matrix& Rotate, RATIO t)
@@ -260,7 +259,7 @@ void SoccerState_DamageMotion_Die::Enter(SoccerPlayer* t)
 			m_pSoccer->m_Renderer.Update(t);
 
 			//位置にもとずき、ワールド変換行列を計算
-			chr_func::CreateTransMatrix(m_pSoccer, m_pSoccer->m_ModelSize, &m_pSoccer->m_Renderer.m_TransMatrix);
+			chr_func::CreateTransMatrix(m_pSoccer, &m_pSoccer->m_Renderer.m_TransMatrix);
 
 			//吹き飛びの回転を入れる
 			m_pSoccer->m_Renderer.m_TransMatrix = Rotate*m_pSoccer->m_Renderer.m_TransMatrix;
@@ -277,7 +276,7 @@ void SoccerState_DamageMotion_Die::Enter(SoccerPlayer* t)
 			m_pSoccer->m_Renderer.Update(1);
 
 			//ワールド変換行列を計算
-			chr_func::CreateTransMatrix(m_pSoccer, m_pSoccer->m_ModelSize, &m_pSoccer->m_Renderer.m_TransMatrix);
+			chr_func::CreateTransMatrix(m_pSoccer, &m_pSoccer->m_Renderer.m_TransMatrix);
 		}
 
 		void StandUpStart()
@@ -291,16 +290,47 @@ void SoccerState_DamageMotion_Die::Enter(SoccerPlayer* t)
 			m_pSoccer->m_Renderer.Update(1);
 
 			//ワールド変換行列を計算
-			chr_func::CreateTransMatrix(m_pSoccer, m_pSoccer->m_ModelSize, &m_pSoccer->m_Renderer.m_TransMatrix);
+			chr_func::CreateTransMatrix(m_pSoccer, &m_pSoccer->m_Renderer.m_TransMatrix);
 		}
 
 		void End()
 		{
 			//カメラ写すフラグをfalseに
-			m_pSoccer->m_Params.camera_draw = false;
+            m_pSoccer->m_DrawObject.m_isDraw = false;
 		}
 
+        void HitWall()
+        {
+            //壁に当たったモーションをセット
+            m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_HitWallAndFall);
+        }
 
+        void HitFloor()
+        {
+            //床に当たったモーションをセット
+            m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_FallAndDown);
+        }
+
+        void HitFloorAndStandUp()
+        {
+            //立ち上がりモーションをセット…しない！
+            //m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_StandUp);
+        }
+
+        void HitWallUpdate()
+        {
+            //モデルのアニメーション更新
+            m_pSoccer->m_Renderer.Update(1);
+
+            //ワールド変換行列を計算
+            chr_func::CreateTransMatrix(m_pSoccer, &m_pSoccer->m_Renderer.m_TransMatrix);
+        }
+
+        void CanActionUpdate()
+        {
+            //行動分岐が可能なときに呼ばれる
+            // m_pDoCancelAction->DoAction();
+        }
 
 	private:
 		SoccerPlayer*  m_pSoccer;
@@ -385,7 +415,7 @@ void SoccerState_brake::Execute(SoccerPlayer* s)
     s->m_Renderer.Update(1);
 
     chr_func::UpdateAll(s, &SoccerHitEvent(s));
-    chr_func::CreateTransMatrix(s, s->m_ModelSize, &s->m_Renderer.m_TransMatrix);
+    chr_func::CreateTransMatrix(s, &s->m_Renderer.m_TransMatrix);
 }
 void SoccerState_brake::Exit(SoccerPlayer* s)
 {
@@ -470,7 +500,7 @@ void SoccerState_clash::Execute(SoccerPlayer* s)
 
 	m_pMoveClass->Update();
 
-	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(s, &s->m_Renderer.m_TransMatrix);
 }
 void SoccerState_clash::Exit(SoccerPlayer* s)
 {

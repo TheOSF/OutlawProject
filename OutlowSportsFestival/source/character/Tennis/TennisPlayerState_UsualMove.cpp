@@ -146,7 +146,7 @@ void TennisState_PlayerControll_Move::Execute(TennisPlayer* t)
 
 
     //モデルのワールド変換行列を更新
-    chr_func::CreateTransMatrix(t, t->m_ModelSize, &t->m_Renderer.m_TransMatrix);
+    chr_func::CreateTransMatrix(t, &t->m_Renderer.m_TransMatrix);
 
 }
 

@@ -2,7 +2,7 @@
 
 #include "../GameSystem/GameObject.h"
 #include "../Render/Renderer.h"
-
+#include "../Camera/Camera.h"
 
 //---------------------------------------------------------//
 //  ベルイベントを出現させるクラス
@@ -27,6 +27,7 @@ private:
     const int  m_ApperFrame;
     int        m_ApperCount;
     bool       m_FirstRound;
+    
 
     bool isCanApper();
 

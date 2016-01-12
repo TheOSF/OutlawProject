@@ -21,7 +21,7 @@ CharacterHitEventFunc::SetType CharacterHitEventFunc::CheckDamage(DamageBase* pD
     pDmg->CalcPosVec(pOwner->CalcHitCheckPos(), &dmg_pos, pOutVec);
 
     //ヒットカウント加算
-    pDmg->AddHitCount(pOwner);
+    pDmg->OnHitCharacter(pOwner);
 
     //ダメージ計算
     chr_func::CalcDamage(pOwner, pDmg->Value, pDmg->isOptionOn(DamageBase::Option::_DontDie));

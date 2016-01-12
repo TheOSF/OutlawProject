@@ -42,7 +42,7 @@ void TennisState_PoseMotion::Execute(TennisPlayer* t)
 
     chr_func::UpdateAll(t, &DamageManager::HitEventBase());
 
-    chr_func::CreateTransMatrix(t, t->m_ModelSize, &t->m_Renderer.m_TransMatrix);
+    chr_func::CreateTransMatrix(t, &t->m_Renderer.m_TransMatrix);
 
     t->m_Renderer.Update(1);
 }

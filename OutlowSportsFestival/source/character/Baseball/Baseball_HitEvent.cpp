@@ -11,7 +11,7 @@
 
 
 
-BaseballHitEvent::BaseballHitEvent(BaseballPlayer* pt,bool CounterHit) :
+BaseballHitEvent::BaseballHitEvent(BaseballPlayer* pt, bool CounterHit) :
 m_pBaseball(pt),
 m_CounterHit(CounterHit)
 {
@@ -20,6 +20,7 @@ m_CounterHit(CounterHit)
 
 bool BaseballHitEvent::Hit(DamageBase* pDmg)
 {
+
     Vector3 DamageVec = Vector3Zero;
 
     //‚Ð‚é‚Ý•ªŠò

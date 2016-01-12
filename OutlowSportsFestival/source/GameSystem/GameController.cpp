@@ -117,6 +117,20 @@ controller::button::button_state controller::GetButtonState(controller::button::
     return controller::button::button_state::bs_up;
 }
 
+//方向キーの方向を得る
+static Vector2 GetCursorValue(controller::CONTROLLER_NUM num)
+{
+    Vector2 ret(0, 0);
+
+    ret.x += (controller::GetPush(controller::button::right,num)) ? (1) : (0);
+    ret.x += (controller::GetPush(controller::button::left, num)) ? (-1) : (0);
+
+    ret.y += (controller::GetPush(controller::button::up, num))  ? (1) : (0);
+    ret.y += (controller::GetPush(controller::button::down, num))  ? (-1) : (0);
+
+    return ret;
+}
+
 //スティックの傾きの値を得る
 Vector2 controller::GetStickValue(stick::stick_type x, CONTROLLER_NUM num)
 {
@@ -125,6 +139,22 @@ Vector2 controller::GetStickValue(stick::stick_type x, CONTROLLER_NUM num)
     //補正
     if (fabsf(ret.x)<g_AdjustStickValue)ret.x = 0;
     if (fabsf(ret.y)<g_AdjustStickValue)ret.y = 0;
+
+    //左スティックならカーソルも考慮する
+    if (x == stick::left)
+    {
+        Vector2 cur = GetCursorValue(num);
+
+        if (fabsf(ret.x) < fabsf(cur.x))
+        {
+            ret.x = cur.x;
+        }
+
+        if (fabsf(ret.y) < fabsf(cur.y))
+        {
+            ret.y = cur.y;
+        }
+    }
 
     if (Vector2Length(ret) > 1)return Vector2Normalize(ret);
 

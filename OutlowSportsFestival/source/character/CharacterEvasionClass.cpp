@@ -3,11 +3,6 @@
 #include "CharacterFunction.h"
 
 
-//***************************************************
-//		ラクロス用回避クラス
-//***************************************************
-
-
 // コンストラクタ
 CharacterEvasion::CharacterEvasion(
 	CharacterBase* pCharacterBase,

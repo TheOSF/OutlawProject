@@ -104,7 +104,8 @@ AmefootAttackClass::AmefootAttackClass(
     m_pControl(pControl),
     m_NowStateType(StateType::_Pose),
     m_pNowState(&AmefootAttackClass::Pose),
-    m_Damage()
+    m_Damage(),
+    m_pControllDamage(nullptr)
 {
     m_Damage.m_Enable = false;
     m_Damage.m_Param.pos = m_pAmefootPlayer->m_Params.pos;
@@ -128,9 +129,10 @@ void AmefootAttackClass::Update()
 
     chr_func::CreateTransMatrix(
         m_pAmefootPlayer,
-        m_pAmefootPlayer->m_ModelSize,
         &m_pAmefootPlayer->m_Renderer.m_TransMatrix
         );
+
+    UpdateDamageTransform();
 
     m_pAmefootPlayer->m_Renderer.Update(1);
 }
@@ -213,6 +215,8 @@ void AmefootAttackClass::Pose()
     {
         if ( !m_pControl->isPoseContinue() )
         {
+            //タックルパワーを溜めた時間から計算
+            m_TacklePower = (float)(m_Timer - kAllFrame) / (float)kAdditionalFrame;
             go_next = true;
         }
     }
@@ -220,12 +224,15 @@ void AmefootAttackClass::Pose()
     // 最大フレームを超えたら次のステートへ
     if ( m_Timer >= (kAllFrame + kAdditionalFrame) )
     {
+        //タックルパワー最大！
+        m_TacklePower = 1.0f;
         go_next = true;
     }
 
     // 次のステートへ
     if ( go_next )
     {
+
         SetState(_Tackle);
     }
 
@@ -237,13 +244,19 @@ void AmefootAttackClass::Pose()
 // タックル中
 void AmefootAttackClass::Tackle()
 {
-    const int kAllFrame = 15;
-    const float kMoveDownSpeed = 0.2f;
     const float kDamagePosOffset = 4.0f;
     const RADIAN kAngleControlSpeed = 0.04f; // 角度補正スピード
 
+    int kAllFrame = 0;
+    float DamageValue = 0.0f;
+    float MoveValue = 0.0f;
+
+    //パラメータ取得
+    GetTackleParamByPower(m_TacklePower, &kAllFrame, &MoveValue, &DamageValue);
+
+
     // 開始
-    if ( m_Timer == 0 ) { TackleStart(); }
+    if (m_Timer == 0) { TackleStart(MoveValue, DamageValue); }
     ++m_Timer;
 
     const CharacterBase * const pTargetCharacter = GetFrontTargetEnemy(m_pAmefootPlayer);
@@ -320,8 +333,11 @@ void AmefootAttackClass::Jump()
     m_pAmefootPlayer->m_Params.move.y = kMoveY;
 
     // ダメージ座標設定
-    m_Damage.m_Param.pos = m_pAmefootPlayer->m_Params.pos + chr_func::GetFront(m_pAmefootPlayer) * kDamagePosOffset;
-    m_Damage.m_Param.pos.y += kDamagePosYOffset;
+    m_pControllDamage->m_Param.pos = m_pAmefootPlayer->m_Params.pos + chr_func::GetFront(m_pAmefootPlayer) * kDamagePosOffset;
+    m_pControllDamage->m_Param.pos.y += kDamagePosYOffset;
+
+    m_pControllDamage->m_Param.size = 2.0f;
+
 
     if ( m_Timer >= kAllFrame )
     {
@@ -346,7 +362,7 @@ void AmefootAttackClass::Touchdown()
 
     // 移動
     chr_func::XZMoveDown(m_pAmefootPlayer, kMoveDownSpeed);
-    m_pAmefootPlayer->m_Params.move.y = kMoveY;
+   // m_pAmefootPlayer->m_Params.move.y = kMoveY;
 
     if ( m_Timer >= kTouchdownFrame )
     {
@@ -428,17 +444,17 @@ void AmefootAttackClass::PoseStart()
 
 
 // タックル開始の瞬間
-void AmefootAttackClass::TackleStart()
+void AmefootAttackClass::TackleStart(float MoveValue, float DamageValue)
 {
-    const float kAcceleration = 0.8f;
-    const float kMaxSpeed = 3.0f;
+    const float kAcceleration = MoveValue;
 
     // 移動
-    chr_func::AddMoveFront(m_pAmefootPlayer, kAcceleration, kMaxSpeed);
+    chr_func::ResetMove(m_pAmefootPlayer);
+    chr_func::AddMoveFront(m_pAmefootPlayer, kAcceleration, kAcceleration);
 
     // ダメージ設定
     m_Damage.m_Enable = true;
-    m_Damage.Value = 0;
+    m_Damage.Value = DamageValue;
     m_Damage.type = DamageBase::Type::_WeekDamage;
 
     m_pAmefootPlayer->m_Renderer.SetMotion(AmefootPlayer::Motion_Tackle_Charge);
@@ -465,15 +481,33 @@ void AmefootAttackClass::DrivaAwayStart()
 // ジャンプ開始の瞬間
 void AmefootAttackClass::JumpStart()
 {
-    m_Damage.ResetCounts();
-    m_Damage.SetOption(DamageBase::Option::_DontDie, true);
-    m_Damage.m_Enable = true;
-    m_Damage.m_VecPower = Vector2(0.1f, -1.6f);
-    m_Damage.m_Vec = chr_func::GetFront(m_pAmefootPlayer);
-    m_Damage.m_Vec.y = 1.0f;
-    m_Damage.m_VecType = DamageShpere::DamageVecType::MemberParam;
-    m_Damage.Value = 5;
-    m_Damage.type = DamageBase::Type::_VanishDamage;
+    m_Damage.m_Enable = false;  //通常ダメージをoffに
+
+    //コントロールダメージ作成
+    {
+        class GetTransform :public DamageControllVanish::GetDamageControllTransformClass
+        {
+            DamageControll_Transform* const m_pTransform;
+        public:
+            GetTransform(DamageControll_Transform* const pTransform):
+                m_pTransform(pTransform)
+            {}
+
+            DamageControll_Transform* Get()
+            {
+                return m_pTransform;
+            }
+        };
+
+        //生成
+        m_pControllDamage = new DamageControllVanish(new GetTransform(&m_DamageTransform));
+
+        //パラメータセット
+        m_pControllDamage->m_Enable = true;
+        m_pControllDamage->pParent = m_pAmefootPlayer;
+        m_pControllDamage->type = DamageBase::Type::_ControllDamage;
+    }
+
 
     m_Damage.type = DamageBase::Type::_WeekDamage;
     chr_func::ResetMove(m_pAmefootPlayer);
@@ -484,14 +518,14 @@ void AmefootAttackClass::JumpStart()
 // タッチダウン開始の瞬間
 void AmefootAttackClass::TouchdownStart()
 {
-    //m_pAmefootPlayer->m_Renderer.SetMotion(AmefootPlayer::Motion_Tackle_Touchdown);
+    m_pAmefootPlayer->m_Renderer.SetMotion(AmefootPlayer::Motion_Tackle_Touchdown);
 }
 
 
 // 立ち上がり開始の瞬間
 void AmefootAttackClass::StandupStart()
 {
-    m_pAmefootPlayer->m_Renderer.SetMotion(AmefootPlayer::Motion_Tackle_Standup);
+    m_pAmefootPlayer->m_Renderer.SetMotion(AmefootPlayer::Motion_Damage_Vanish_Landing);
 }
 
 
@@ -535,4 +569,73 @@ void AmefootAttackClass::CharacterHitStopUpdate()
 
 }
 
+//パワーから突進のパラメータを得るゲッタ
+void AmefootAttackClass::GetTackleParamByPower(
+    RATIO p, int *pOutFrame, float* pOutMoveValue, float* pOutDamagePower)const
+{
+    struct
+    {
+        RATIO ok_value;
+        int   Frame;
+        float MoveValue;
+        float Damage;
+    }
+    Params[]=
+    {
+        { 1.0f, 32, 1.0f, 6.0f },  //最大パワー時
+        { 0.9f, 29, 0.9f, 5.0f },
+        { 0.7f, 26, 0.8f, 4.0f },
+        { 0.5f, 23, 0.7f, 3.0f },
+        { 0.3f, 20, 0.6f, 2.0f },
+        { 0.1f, 17, 0.5f, 1.0f },  
+        { 0.0f, 14, 0.4f, 1.0f }, //最弱パワー時
+    };
 
+    for (auto& it : Params)
+    {
+        if (it.ok_value <= p)
+        {
+            *pOutFrame = it.Frame;
+            *pOutMoveValue = it.MoveValue;
+            *pOutDamagePower = it.Damage;
+
+            return;
+        }
+    }
+
+    MyAssert(false, "タックルためすぎいいい");
+
+}
+
+
+//引っ付きクラスを腕の位置に更新する
+void AmefootAttackClass::UpdateDamageTransform()
+{
+    Matrix* T = &m_DamageTransform.m_Transform;
+
+    //腕の行列を取得
+    m_pAmefootPlayer->m_Renderer.GetWorldBoneMatirx(*T, 22);
+
+    //ボーン行列のスケール成分を正規化
+    for (int i = 0; i < 3; ++i)
+    {
+        const float Length = Vector3((*T)(0, i), (*T)(1, i), (*T)(2, i)).Length();
+
+        for (int j = 0; j < 3; ++j)
+        {
+            (*T)(j, i) /= Length;
+        }
+    }
+
+
+    //座標は右腕と左腕の中間に
+    {
+        const Vector3 Pos = 
+            (m_pAmefootPlayer->m_Renderer.GetLocalBonePos(22)+
+             m_pAmefootPlayer->m_Renderer.GetLocalBonePos(28))*0.5f;
+
+        T->_41 = Pos.x;
+        T->_42 = Pos.y;
+        T->_43 = Pos.z;
+    }
+}

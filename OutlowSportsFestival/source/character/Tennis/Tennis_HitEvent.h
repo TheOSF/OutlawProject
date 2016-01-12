@@ -16,6 +16,7 @@ public:
 	bool Hit(DamageBase* pDmg);//“–‚½‚Á‚½‚ÉŒÄ‚Î‚ê‚éŠÖ”(–ß‚è’lF“–‚½‚Á‚½‚©‚Ç‚¤‚©)
 
 private:
+    bool          m_CheckFinished;
     bool          m_CounterHit;
 	TennisPlayer* m_pTennis;
 };

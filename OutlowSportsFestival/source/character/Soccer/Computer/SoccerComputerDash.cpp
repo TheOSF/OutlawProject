@@ -2,15 +2,10 @@
 #include "../../Computer/CharacterComputerReactionHitEvent.h"
 #include "../../CharacterFunction.h"
 #include "../../CharacterMoveClass.h"
-#include "SoccerComputerAttack.h"
 #include "../SoccerPlayerState.h"
 #include "../SoccerRolling.h"
-#include "SoccerComputerShot.h"
 #include "../SoccerSliding.h"
 #include "SoccerComputerDash.h"
-#include "SoccerComputerCounter.h"
-#include "SoccerComputerSliding.h"
-#include "SoccerComputerFinisher.h"
 #include "../SoccerPlayerState_PoseMotion.h"
 #include "../../CharacterManager.h"
 #include "../Computer/SoccerComputerUtilityClass.h"
@@ -105,20 +100,20 @@ void SoccerState_ComputerControll_Dash::Enter(SoccerPlayer* s)
 			//if (m_cSoccer->m_Params.SP >= 0.6f)
 			if (chr_func::isCanSpecialAttack(m_cSoccer))
 			{
-				m_cSoccer->SetState(new SoccerState_ComputerControll_Finisher());
+				m_cSoccer->SetState(new SoccerState_PlayerControll_Finisher());
 			}
 			if (len < 6.0f)
 			{
 				if ((cParam.ActionFrequence * 500) > AttackPoint)
 				{
-					m_cSoccer->SetState(new SoccerState_ComputerControll_Sliding(m_cSoccer));
+                    m_cSoccer->SetState(new SoccerState_Sliding(m_cSoccer));
 				}
 			}
 			else if (len < 22.0f)
 			{
 				if ((cParam.ActionFrequence * 150) > AttackPoint)
 				{
-					m_cSoccer->SetState(new SoccerState_ComputerControll_Shot);
+					m_cSoccer->SetState(new SoccerState_PlayerControll_Shot);
 				}
 			}
 		}
@@ -226,7 +221,7 @@ void SoccerState_ComputerControll_Dash::Execute(SoccerPlayer* s)
 			);
 	}
 	
-	chr_func::CreateTransMatrix(s, 0.05f, &s->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(s, &s->m_Renderer.m_TransMatrix);
 }
 
 void SoccerState_ComputerControll_Dash::Exit(SoccerPlayer* s)

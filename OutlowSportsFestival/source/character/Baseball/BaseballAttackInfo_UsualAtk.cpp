@@ -130,8 +130,6 @@ void BaseballAttackInfo_UsualAtk::Update(int Frame, LocusHDR* pLocus)
 //攻撃があたったときに呼ばれる
 void BaseballAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
 {
-	//スキルゲージ増加
-	chr_func::AddSkillGauge(m_pOwner, m_Param.AddSkillValue);
 
 	//コントローラを振動
     chr_func::SetControllerShock(

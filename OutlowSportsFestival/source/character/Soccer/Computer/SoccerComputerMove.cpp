@@ -2,13 +2,9 @@
 #include "../../Computer/CharacterComputerReactionHitEvent.h"
 #include "../../CharacterFunction.h"
 #include "../../CharacterMoveClass.h"
-#include "SoccerComputerAttack.h"
 #include "SoccerComputerDash.h"
 #include "../SoccerPlayerState.h"
 #include "../SoccerRolling.h"
-#include "SoccerComputerShot.h"
-#include "SoccerComputerFinisher.h"
-#include "SoccerComputerCounter.h"
 #include "../SoccerPlayerState_PoseMotion.h"
 #include "../../CharacterManager.h"
 #include "../../../Camera/Camera.h"
@@ -16,6 +12,7 @@
 #include "../../CharacterManager.h"
 
 #include "../Computer/SoccerComputerUtilityClass.h"
+#include "../SoccerAttackState.h"
 
 
 
@@ -67,7 +64,7 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 		//アニメーションの更新
 		void Update(bool isRun, RATIO speed_ratio)
 		{
-			m_cSoccer->m_Renderer.Update(1);
+			m_cSoccer->m_Renderer.Update(0.5f);
 		}
 		//走り始めにモーションをセット
 		void RunStart()
@@ -131,7 +128,7 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 			{
 				if (SoccerState_ComputerControll_Move::calcTarget(m_cSoccer) == true)
 				{
-					m_cSoccer->SetState(new SoccerState_ComputerControll_Finisher());
+					m_cSoccer->SetState(new SoccerState_PlayerControll_Finisher());
 				}
 			}
 			if (len < 5.0f)
@@ -146,14 +143,14 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 				}
 				else if ((cParam.ActionFrequence * 450) > AttackPoint)
 				{
-					m_cSoccer->SetState(new SoccerState_ComputerControll_Attack(m_cSoccer));
+					m_cSoccer->SetState(new SoccerAttackState(m_cSoccer));
 				}
 			}
 			else if (len < 20.0f)
 			{
 				if ((cParam.ActionFrequence * 350) > AttackPoint)
 				{
-					m_cSoccer->SetState(new SoccerState_ComputerControll_Shot);
+					m_cSoccer->SetState(new SoccerState_PlayerControll_Shot());
 				}
 			}
 		}
@@ -233,12 +230,13 @@ void SoccerState_ComputerControll_Move::Execute(SoccerPlayer* s)
 	{
 		m_pMoveClass->SetStickValue(Vector2(0,0));
 	}
+
 	m_pMoveClass->Update();
 	
 	
 	//モデルのワールド変換行列を更新
 
-	chr_func::CreateTransMatrix(s, s->m_ModelSize, &s->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(s, &s->m_Renderer.m_TransMatrix);
 
 }
 

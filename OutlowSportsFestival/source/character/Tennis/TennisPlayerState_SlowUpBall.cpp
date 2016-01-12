@@ -55,7 +55,7 @@ void TennisPlayerState_SlowUpBall::Execute(TennisPlayer* p)
         p->m_Renderer.Update(1);
 
         //s—ñXV
-        chr_func::CreateTransMatrix(p, p->m_ModelSize, &p->m_Renderer.m_TransMatrix);
+        chr_func::CreateTransMatrix(p, &p->m_Renderer.m_TransMatrix);
 
     }
 }

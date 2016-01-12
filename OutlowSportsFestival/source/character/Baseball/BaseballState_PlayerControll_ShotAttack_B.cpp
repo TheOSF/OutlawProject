@@ -263,7 +263,7 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 
 			//モデル関連の更新
 			b->m_Renderer.Update(2);
-			chr_func::CreateTransMatrix(b, b->m_ModelSize, &b->m_Renderer.m_TransMatrix);
+			chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
 		}
 	}
 }

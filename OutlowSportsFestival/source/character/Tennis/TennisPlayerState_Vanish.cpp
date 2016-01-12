@@ -58,7 +58,7 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
             m_pTennis->m_Renderer.Update(t);
 
             //位置にもとずき、ワールド変換行列を計算
-            chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
+            chr_func::CreateTransMatrix(m_pTennis, &m_pTennis->m_Renderer.m_TransMatrix);
 
             //吹き飛びの回転を入れる
             m_pTennis->m_Renderer.m_TransMatrix = Rotate*m_pTennis->m_Renderer.m_TransMatrix;
@@ -75,7 +75,7 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
             m_pTennis->m_Renderer.Update(1);
 
             //ワールド変換行列を計算
-            chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
+            chr_func::CreateTransMatrix(m_pTennis, &m_pTennis->m_Renderer.m_TransMatrix);
         }
 
         void StandUpStart()
@@ -90,7 +90,7 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
             m_pTennis->m_Renderer.Update(1);
 
             //ワールド変換行列を計算
-            chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
+            chr_func::CreateTransMatrix(m_pTennis, &m_pTennis->m_Renderer.m_TransMatrix);
         }
 
         void End()
@@ -125,7 +125,7 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
             m_pTennis->m_Renderer.Update(1);
 
             //ワールド変換行列を計算
-            chr_func::CreateTransMatrix(m_pTennis, m_pTennis->m_ModelSize, &m_pTennis->m_Renderer.m_TransMatrix);
+            chr_func::CreateTransMatrix(m_pTennis, &m_pTennis->m_Renderer.m_TransMatrix);
         }
 
         void CanActionUpdate()
