@@ -27,6 +27,12 @@ class ChrStateMachine
 public:
 	typedef _Client*_Client_type_ptr;
 	typedef ChrState<_Client, Msg_t>*_MyState_ptr;
+
+    enum :int 
+    {
+        DONT_UPDATE_STATE_LEVEL = INT_MAX
+    };
+
 private:
 	_Client_type_ptr		m_pClient;
 	_MyState_ptr			m_pState;
@@ -50,13 +56,13 @@ public:
 		if (m_pNextState)delete m_pNextState;
 	}
 public:
-    void set_state(_MyState_ptr const Newstate, int ImportantLevel = 0)
+    bool set_state(_MyState_ptr const Newstate, int ImportantLevel = 0)
 	{
-
-        if (m_ImportantLevel > ImportantLevel)
+        if ( m_ImportantLevel == DONT_UPDATE_STATE_LEVEL || 
+            m_ImportantLevel > ImportantLevel )
         {
             delete Newstate;
-            return;
+            return false;
         }
 
 		if (m_pNextState)
@@ -66,6 +72,7 @@ public:
 
 		m_pNextState = Newstate;
         m_ImportantLevel = ImportantLevel;
+        return true;
 	}
 	void state_execute()
 	{

@@ -91,7 +91,7 @@ public:
 	BaseballPlayer(const CharacterBase::PlayerInfo& info);
 	~BaseballPlayer();
 
-	void SetState(BaseballState* state, int Important = 0);
+	bool SetState(BaseballState* state, int Important = 0);
 	bool Update();
 	bool CharacterMsg(MsgType mt);
 public:

@@ -24,7 +24,7 @@ public:
 
     bool CharacterMsg(MsgType msg)override;
 
-    void SetState(AmefootState* state, int important = 0);
+    bool SetState(AmefootState* state, int important = 0);
 
     void SetDontThrowBallTimer(int Frame);
 

@@ -49,7 +49,7 @@ void CharacterDamageControll::SetTransform(const Matrix& m)
 //操作解除(通常の吹き飛びステートに移行する)
 void CharacterDamageControll::ToFree()
 {
-    const float MaxMove = 2.0f;
+    const float MaxMove = 0.6f;
 
     if (m_Move.Length() > MaxMove)
     {

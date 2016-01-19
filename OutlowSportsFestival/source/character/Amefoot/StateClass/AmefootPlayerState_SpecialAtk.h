@@ -44,6 +44,8 @@ private:
     void Explode();
 
     void NoDamageUpdate();
+    // ダメージ判定がある状態の更新
+    void UsualDamageUpdate();
 
     RADIAN GetControllAngleSpeed()const;
 

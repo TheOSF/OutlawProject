@@ -70,7 +70,7 @@ public:
 	};
 	static const SkillParam skillparams;
 
-    void SetState(SoccerState* state, int Important = 0);
+    bool SetState(SoccerState* state, int Important = 0);
 	bool Update();
     bool CharacterMsg(MsgType mt);
 
