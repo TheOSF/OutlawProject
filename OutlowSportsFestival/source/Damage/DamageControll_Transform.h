@@ -20,6 +20,7 @@ public:
 
     //付いているキャラクタをすべて放す(デストラクタで自動的に呼ばれる
     void AllFree();
+    void AllFree(CrVector3 Vec);
 
     //操作するキャラクタを追加する
     void AddControllClass(CharacterDamageControll* pControllClass);

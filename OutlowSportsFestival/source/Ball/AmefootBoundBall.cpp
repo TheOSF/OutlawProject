@@ -21,15 +21,12 @@ AmefootBoundBall::AmefootBoundBall(
     AmefootPlayer* const pOwner
     ) :
     m_Locus(15),
-    m_pRigidBody(nullptr),
-    m_pOwner(pOwner)
+    m_pOwner(pOwner),
+    m_ZRotate(0)
 {
     //ボール基本パラメータ初期化
-    m_Params.pos = pos;
-    m_Params.move = first_move;
-    m_Params.pParent = pOwner;
-    m_Params.scale = 0.3f;
-    m_Params.type = BallBase::Type::_CantCounter;
+    m_Pos = pos;
+    m_Move = first_move;
 
     //初期ステートを設定
     SetState(&AmefootBoundBall::StateFly);
@@ -56,22 +53,6 @@ AmefootBoundBall::AmefootBoundBall(
 
         UpdateLocusColor();
     }
-
-    {
-        //ダメージ判定の更新
-        m_Damage.Value = 2.5f;
-        m_Damage.type = DamageBase::Type::_WeekDamage;
-        m_Damage.pParent = pOwner;
-        m_Damage.m_Enable = true;
-        m_Damage.pBall = this;
-        m_Damage.m_Param.size = 1.0f;
-        m_Damage.MaxChrHit = 1;
-        m_Damage.HitMotionFrame = 35;
-
-        UpdateDamage();
-    }
-
-    m_BallEffect.SetParent(this);
 }
 
 
@@ -79,9 +60,6 @@ AmefootBoundBall::~AmefootBoundBall()
 {
     delete m_pBallRenderer;
     m_pBallRenderer = nullptr;
-
-    DefBulletSystem.RemoveRigidBody(m_pRigidBody);
-    m_pRigidBody = nullptr;
 }
 
 
@@ -91,8 +69,6 @@ bool AmefootBoundBall::Update()
 
     UpdateMesh();
     UpdateLocusColor();
-    UpdateDamage();
-    m_BallEffect.Update();
 
     return m_pStateFunc != &AmefootBoundBall::StateFinish;
 }
@@ -110,12 +86,16 @@ void AmefootBoundBall::StateFly()
     const float Glavity = -0.02f;
 
     //重力計算
-    m_Params.move.y += Glavity;
+    m_Move.y += Glavity;
+
+
+    //Ｚ軸回転
+    m_ZRotate += D3DXToRadian(15);
 
     //ステージとの判定
     {
-        Vector3 out, pos(m_Params.pos), vec(Vector3Normalize(m_Params.move));
-        float dist = m_Params.move.Length()*1.5f;
+        Vector3 out, pos(m_Pos), vec(Vector3Normalize(m_Move));
+        float dist = m_Move.Length()*1.5f;
         int material = 0;
 
         //ステージとあたっていたら
@@ -133,9 +113,7 @@ void AmefootBoundBall::StateFly()
             if ( out.y > BallBase::UsualBallShotY*1.5f ||
                 Vector3Normalize(vec).y < 0.5f )
             {
-                SetState(&AmefootBoundBall::StateNoDamage);
-
-                m_Params.move = Vector3Refrect(m_Params.move, vec) * 0.5f;
+                m_Move = Vector3Refrect(m_Move, vec) * 0.6f;
             }
             else
             {
@@ -144,7 +122,7 @@ void AmefootBoundBall::StateFly()
             }
 
             //高さを床の位置に補正する
-            m_Params.pos.y = out.y + m_Params.scale;
+            m_Pos.y = out.y + 1.0f;
             return;
         }
     }
@@ -157,13 +135,11 @@ void AmefootBoundBall::StateFly()
     }
 
     //移動更新
-    m_Params.pos += m_Params.move;
+    m_Pos += m_Move;
 
     //軌跡の点を追加
     AddLocusPoint();
 
-    //エフェクト更新
-    m_BallEffect.Update();
 }
 
 void AmefootBoundBall::StateGroundTouch()
@@ -171,44 +147,39 @@ void AmefootBoundBall::StateGroundTouch()
     //軌跡の点を追加
     AddLocusPoint();
 
-    m_Params.move = Vector3Zero;
+    m_Move = Vector3Zero;
 
-    //あたり判定を有効化
-    m_Damage.m_Enable = true;
-
-    //if ( ++m_Timer > 5 )
     {
 
         //一番近いプレイヤーに向かっていくように設定
         const auto& chr_map = DefCharacterMgr.GetCharacterMap();
         float dist = FLT_MAX;
         CharacterBase* pTarget = m_pOwner;
+
         for ( auto&& chr : chr_map )
         {
-            float temp = (chr.first->m_Params.pos - m_Params.pos).Length();
+            float temp = (chr.first->m_Params.pos - m_Pos).Length();
 
-            if ( dist < temp )continue;
+            if (dist < temp || chr_func::isDie(chr.first))continue;
 
             dist = temp;
             pTarget = chr.first;
         }
 
-        m_Params.move = pTarget->m_Params.pos - m_Params.pos;
-        m_Params.move.y = 0;
+        m_Move = pTarget->m_Params.pos - m_Pos;
+        m_Move.y = 0;
 
-        m_Params.move.Normalize();
-        m_Params.move *= 0.55f;
-
-        m_Params.type = BallBase::Type::_Usual;
+        m_Move.Normalize();
+        m_Move *= 0.55f;
 
         //エフェクト
         {
-            COLORf EffectColor(CharacterBase::GetPlayerColor(m_Params.pParent->m_PlayerInfo.number));
+            COLORf EffectColor(CharacterBase::GetPlayerColor(m_pOwner->m_PlayerInfo.number));
 
             //エフェクトの設定
             new HitEffectObject(
-                m_Params.pos,
-                Vector3Normalize(m_Params.move),
+                m_Pos,
+                Vector3Normalize(m_Move),
                 0.1f,
                 0.1f,
                 Vector3(EffectColor.r, EffectColor.g, EffectColor.b)
@@ -216,7 +187,7 @@ void AmefootBoundBall::StateGroundTouch()
 
             //パーティクル
             EffectFactory::Smoke(
-                m_Params.pos,
+                m_Pos,
                 Vector3Zero,
                 2.0f,
                 1.0f,
@@ -224,120 +195,46 @@ void AmefootBoundBall::StateGroundTouch()
                 );
         }
 
-        {
-            //メッシュを光らせる
-            COLORf Color = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number);
-
-            m_pBallRenderer->m_HDR = Vector3(1, 1, 1) * 0.1f;
-            m_pBallRenderer->m_Lighting = Vector3(1, 1, 1) * 0.1f;
-        }
 
         //ＳＥ
         Sound::Play(Sound::Swing2);
 
         //移動ステートに移行
-        SetState(&AmefootBoundBall::StateMove);
-
-    }
-}
-
-void AmefootBoundBall::StateMove()
-{
-    //床についているので、適切な高さ ( BallBase::UsualBallShotY ) まで上昇する
-    m_Params.pos.y += (BallBase::UsualBallShotY - m_Params.pos.y) * 0.2f;
-
-    //移動
-    m_Params.pos += m_Params.move;
-
-    //ステージとの判定
-    {
-        Vector3 out, pos(m_Params.pos), vec(Vector3Normalize(m_Params.move));
-        float dist = m_Params.move.Length() * 1.5f;
-        int material = 0;
-
-        //ステージとあたっていたら
-        if ( DefCollisionMgr.RayPick(
-            &out,
-            &pos,
-            &vec,
-            &dist,
-            &material,
-            CollisionManager::RayType::_Ball
-            ) != nullptr )
-        {
-            //成功
-            SetState(&AmefootBoundBall::StateNoDamage);
-
-            //高さを床の位置に補正する
-            m_Params.pos.y = out.y + m_Params.scale*0.5f;
-        }
-    }
-
-    //寿命管理(ステージ外につけぬけた場合の応急処置
-    if ( ++m_Timer > 300 )
-    {
         SetState(&AmefootBoundBall::StateFinish);
-    }
 
-    //軌跡の点を追加
-    AddLocusPoint();
-}
-
-void AmefootBoundBall::StateNoDamage()
-{
-    //剛体作成
-    CreateRigidBody();
-
-    //あたり判定を無効化
-    m_Damage.m_Enable = false;
-
-    //ボールタイプをカウンターできないタイプに設定
-    m_Params.type = BallBase::Type::_DontWork;
-
-    //RigidBodyクラスの行列を自身に適用する
-    {
-        Matrix M;
-        Vector3 PrePos = m_Params.pos;
-
-        m_pRigidBody->Get_TransMatrix(M);
-
-        M = m_BaseMatrix * M;
-
-        m_pBallRenderer->SetMatrix(M);
-
-        m_Params.pos = Vector3(M._41, M._42, M._43);
-        m_Params.move = m_Params.pos - PrePos;
 
     }
 
-    //軌跡の太さを徐々に減らしていく
+    //ボールを生成！
     {
-        //軌跡
-        m_Locus.m_StartParam.Color.w *= 0.95f;
+        BallBase::Params p;
 
-        //太さが一定以下なら描画しない
-        if ( m_Locus.m_StartParam.Color.w < 0.1f )
+        p.move = m_Move;
+        p.pos = m_Pos;
+        p.pParent = m_pOwner;
+        p.scale = 0.5f;
+        p.type = BallBase::Type::_Usual;
+        
+        class MoveControll :public UsualBall::MoveControll
         {
-            m_Locus.m_Visible = false;
-        }
+        public:
+            void Move(UsualBall* pBall)
+            {
+                pBall->m_Params.pos.y += (UsualBall::UsualBallShotY - pBall->m_Params.pos.y)*0.2f;
+                pBall->m_Params.pos += pBall->m_Params.move;
+            }
+        };
 
-        if ( m_Locus.m_Visible )
-        {
-            //軌跡の点を追加
-            AddLocusPoint();
-        }
-    }
+        UsualBall* pBall =  new UsualBall(
+            p,
+            DamageBase::Type::_WeekDamage,
+            2.0f,
+            new MoveControll(), 
+            1,
+            60
+            );
 
-    //ライト少く
-    {
-        m_pBallRenderer->m_HDR *= 0.1f;
-        m_pBallRenderer->m_Lighting *= 0.1f;
-    }
-
-    //時間経過でフェードアウト
-    if ( ++m_Timer > 60 )
-    {
-        SetState(&AmefootBoundBall::StateCreateFadeOutBall);
+        pBall->m_RotateSpeed = Vector3(0, D3DXToRadian(10), 0);
     }
 }
 
@@ -346,105 +243,65 @@ void AmefootBoundBall::StateFinish()
 
 }
 
-void AmefootBoundBall::StateCreateFadeOutBall()
-{
-    //フェードアウトして消えるボールクラスを作成する
-    iexMesh* pMesh;
-
-    //剛体作成
-    CreateRigidBody();
-
-    UsualBall::GetBallMesh(m_Params.pParent->m_PlayerInfo.chr_type, &pMesh);
-
-    new BallFadeOutRenderer(
-        pMesh,
-        m_BaseMatrix,
-        m_pRigidBody,
-        60
-        );
-
-    //自身で開放しないようにnullに設定しておく
-    m_pRigidBody = nullptr;
-
-
-    //ステートを終了に設定
-    SetState(&AmefootBoundBall::StateFinish);
-}
-
-void AmefootBoundBall::CreateRigidBody()
-{
-    //すでに作成済みならreturn
-    if ( m_pRigidBody != nullptr )
-    {
-        return;
-    }
-
-    m_BaseMatrix = m_pBallRenderer->GetMatrix();
-
-    m_BaseMatrix._41 = 0;
-    m_BaseMatrix._42 = 0;
-    m_BaseMatrix._43 = 0;
-
-    const UsualBall::PhysicsParam p = UsualBall::GetBallPhysics(m_Params.pParent->m_PlayerInfo.chr_type);
-
-
-    m_pRigidBody = DefBulletSystem.AddRigidSphere(
-        p.Mass,
-        RigidBody::ct_dynamic,
-        m_Params.pos,
-        Vector3Zero,
-        p.Radius,
-        p.Friction,
-        p.Restitution,
-        m_Params.move * 45.0f
-        );
-}
-
 void AmefootBoundBall::SetState(StateFunc pNextState)
 {
     m_pStateFunc = pNextState;
     m_Timer = 0;
 }
 
-void AmefootBoundBall::Counter(CharacterBase* pCounterCharacter)
-{
-    m_Damage.pParent = m_Params.pParent = pCounterCharacter;
-
-    UpdateLocusColor();
-    m_BallEffect.Counter();
-
-    m_Damage.ResetCounts();
-    m_Damage.type = DamageBase::Type::_VanishDamage;
-}
-
-
 void AmefootBoundBall::AddLocusPoint()
 {
     Vector3 v;
-    Vector3Cross(v, m_Params.move, DefCamera.GetForward());
+    Vector3Cross(v, m_Move, DefCamera.GetForward());
     v.Normalize();
 
-    m_Locus.AddPoint(m_Params.pos, v);
+    m_Locus.AddPoint(m_Pos, v);
 }
 
 void AmefootBoundBall::UpdateMesh()
 {
     //メッシュ更新
     const float scale = UsualBall::GetBallScale(CharacterType::_Americanfootball);
-    Matrix m;
+    Matrix T, W;
 
-    D3DXMatrixScaling(&m, scale, scale, scale);
-    m._41 = m_Params.pos.x;
-    m._42 = m_Params.pos.y;
-    m._43 = m_Params.pos.z;
+    D3DXMatrixScaling(&T, scale, scale, scale);
 
-    m_pBallRenderer->SetMatrix(m);
+    {
+        D3DXMatrixRotationY(&W, m_ZRotate);
+        T *= W;
+    }
+
+    {
+        D3DXQUATERNION R;
+        D3DXVECTOR3 Axis, v1, v2;
+        float Angle;
+
+        v1 = D3DXVECTOR3(0, 1, 0);
+        v2 = D3DXVECTOR3(m_Move.x, m_Move.y, m_Move.z);
+
+        D3DXVec3Cross(&Axis, &v1, &v2);
+
+        Angle = D3DXVec3Dot(&v1, &v2) / (D3DXVec3Length(&v1)*D3DXVec3Length(&v2));
+        Angle = acosf(fClamp(Angle, 1, -1));
+
+        D3DXQuaternionRotationAxis(&R, &Axis, Angle);
+
+        D3DXMatrixRotationQuaternion(&W, &R);
+
+        T *= W;
+    }
+
+    T._41 = m_Pos.x;
+    T._42 = m_Pos.y;
+    T._43 = m_Pos.z;
+
+    m_pBallRenderer->SetMatrix(T);
 }
 
 void AmefootBoundBall::UpdateLocusColor()
 {
     //軌跡色更新
-    const COLORf Color = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number);
+    const COLORf Color = CharacterBase::GetPlayerColorF(m_pOwner->m_PlayerInfo.number);
 
     m_Locus.m_StartParam.Color = Color.toVector4();
     m_Locus.m_StartParam.Color.w = 0.3f;
@@ -457,16 +314,5 @@ void AmefootBoundBall::UpdateLocusColor()
 
     m_Locus.m_EndParam.HDRColor = m_Locus.m_StartParam.HDRColor;
     m_Locus.m_EndParam.HDRColor.w = 0;
-
-
 }
-
-
-void AmefootBoundBall::UpdateDamage()     //当たり判定の更新
-{
-    m_Damage.m_Vec = m_Params.move;
-    m_Damage.m_Param.pos = m_Params.pos;
-}
-
-
 

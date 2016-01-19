@@ -125,7 +125,7 @@ Vector3 AmefootPlayerState_SpecialAtk::GetViewVec()
             &pTarget
             ))
         {
-            ret = pTarget->m_Params.pos;
+            ret = pTarget->m_Params.pos - m_pChr->m_Params.pos;
         }
     }
 
@@ -184,7 +184,6 @@ void AmefootPlayerState_SpecialAtk::UpdateDamageTransform()
     D3DXMatrixIdentity(T);
 
     //縦に向ける(X 軸に 90 度)
-    if(0)
     {
         D3DXMatrixRotationX(&W, D3DXToRadian(90));
         *T *= W;
@@ -246,7 +245,7 @@ void AmefootPlayerState_SpecialAtk::Explode()
     {
         Vector3  color(1.0f, 0.5f, 0);
         Vector3 power(0, -0.02f, 0);
-        Vector3 pos = m_pChr->m_Params.pos + Vector3(0, 3, 0);
+        Vector3 pos = m_pChr->m_Params.pos + Vector3(0, 2, 0);
         Vector3 move;
         GlavityLocus* g;
 
@@ -336,6 +335,36 @@ void AmefootPlayerState_SpecialAtk::Explode()
         DefCamera.SetShock(Vector2(0.5f, 0.5f), 30);
     }
     
+}
+
+
+RADIAN AmefootPlayerState_SpecialAtk::GetControllAngleSpeed()const
+{
+    if (m_pChr->m_PlayerInfo.player_type == PlayerType::_Player)
+    {
+        return D3DXToRadian(3);
+    }
+    else
+    {
+        switch (m_pChr->m_PlayerInfo.strong_type)
+        {
+        case StrongType::_Weak:
+            return D3DXToRadian(1);
+
+        case StrongType::_Usual:
+            return D3DXToRadian(2);
+
+        case StrongType::_Strong:
+            return D3DXToRadian(3);
+
+        default:
+            break;
+        }
+    }
+
+    MyAssert(false, "対応していない強さのタイプ");
+
+    return 0.0f;
 }
 
 void AmefootPlayerState_SpecialAtk::NoDamageUpdate()
@@ -450,8 +479,8 @@ void AmefootPlayerState_SpecialAtk::State_Dush()
 {
 
     const int       AllFrame = 180;
-    const RADIAN    AngleSpeed = D3DXToRadian(6);
-    const float     MoveSpeed = 0.35f;
+    const RADIAN    AngleSpeed = GetControllAngleSpeed();
+    const float     MoveSpeed = 0.5f;
 
     //カウント進行
     ++m_Timer;
@@ -487,6 +516,10 @@ void AmefootPlayerState_SpecialAtk::State_Dush()
     //壁に当たっていたら or 時間経過で失敗ステートに移行
     if (isHitWall(5.0f) || (m_Timer > AllFrame))
     {
+        m_pDamage->m_Enable = false;
+        m_pDamageTransform->m_Destroy = true;
+        m_pDamageTransform =  nullptr;
+
         SetState(&AmefootPlayerState_SpecialAtk::State_DushEnd);
     }
 }
@@ -521,7 +554,7 @@ void AmefootPlayerState_SpecialAtk::State_DushEnd()
 
 void AmefootPlayerState_SpecialAtk::State_HangDush()
 {
-    const float MoveSpeed = 0.35f;
+    const float MoveSpeed = 0.6f;
 
     //カウント進行
     ++m_Timer;
@@ -541,7 +574,7 @@ void AmefootPlayerState_SpecialAtk::State_HangDush()
     }
 
     //壁に当たっていたら壁あたりステートに移行
-    if (isHitWall(8.0f))
+    if (isHitWall(10.0f))
     {
         SetState(&AmefootPlayerState_SpecialAtk::State_WallHit);
     }
@@ -550,8 +583,9 @@ void AmefootPlayerState_SpecialAtk::State_HangDush()
 void AmefootPlayerState_SpecialAtk::State_WallHit()
 {
     const int       AllFrame = 48;
-    const int       ExplodeFrame = 1;
-    const float     MoveDownSpeed = 0.15f;
+    const int       ExplodeFrame = 18;
+    const float     MoveDownSpeed = 0.2f;
+    const int       AcceFrame = 15;
 
     //カウント進行
     ++m_Timer;
@@ -562,6 +596,13 @@ void AmefootPlayerState_SpecialAtk::State_WallHit()
         //モーションセット
         m_pChr->m_Renderer.SetMotion(AmefootPlayer::Motion_Special_Attack_Finish);
     }
+
+    //加速
+    if (m_Timer == AcceFrame)
+    {
+        chr_func::AddMoveFront(m_pChr, 0.6f, 1.0f);
+    }
+
 
     //爆発！
     if (m_Timer == ExplodeFrame)

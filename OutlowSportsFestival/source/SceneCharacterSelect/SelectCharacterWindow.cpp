@@ -1,6 +1,6 @@
 #include "SelectCharacterWindow.h"
 #include "../character/CharacterBase.h"
-
+#include "../character/Baseball/BaseballEquip.h"
 
 
 SelectCharacterWindow::SelectCharacterWindow(
@@ -12,10 +12,12 @@ SelectCharacterWindow::SelectCharacterWindow(
     //キャラクタを読み込み
     LoadCharacterModels();
 
-    ////ランダムメッシュ
-    //m_pRandomMesh = new MeshRenderer(
-    //    
-    //    );
+    //ランダムメッシュ
+ /*   m_pRandomMesh = new MeshRenderer(
+        new iexMesh("DATA\\ChrSelect\\Model\\random.imo"), 
+        true,
+        MeshRenderer::RenderType::UseColor
+        );*/
 }
 
 SelectCharacterWindow::~SelectCharacterWindow()
@@ -29,6 +31,12 @@ SelectCharacterWindow::~SelectCharacterWindow()
 void SelectCharacterWindow::DoMotion()
 {
 
+}
+
+
+void SelectCharacterWindow::SelectingRenderer(SelectPointBase::PointType type)
+{
+    
 }
 
 void SelectCharacterWindow::LoadCharacterModels()
@@ -55,6 +63,18 @@ void SelectCharacterWindow::LoadCharacterModels()
             new BlendAnimationMesh(CharacterBase::GetCharacterModelPath(Type))
             );
 
+        //野球のみバットをつける
+        if (Type == CharacterType::_Baseball)
+        {
+            m_pBaseballEquip =  new BaseballEquip(
+                m_ChrRenderers[i],
+                BaseballEquip::MeshType::Bat, 
+                1.0f
+                );
+
+            m_pBaseballEquip->SetVisible(false);
+        }
+
         //構築
         CharacterBase::CreateCharacterModel(m_ChrRenderers[i], Type, (PlayerNum::Value)m_pCursor->m_PlayerInfo.number);
 
@@ -75,7 +95,15 @@ void SelectCharacterWindow::LoadCharacterModels()
         //描画On Off切り替え
         m_ChrRenderers[i]->m_Visible = (Type == m_pCursor->m_PlayerInfo.chr_type);
         
-        m_ChrRenderers[i]->SetMotion(1);
+        if (Type == CharacterType::_Americanfootball)
+        {
+            m_ChrRenderers[i]->SetMotion(2);
+        }
+        else
+        {
+            m_ChrRenderers[i]->SetMotion(1);
+        }
+        
     }
 }
 
@@ -117,9 +145,24 @@ bool SelectCharacterWindow::Update()
         if (m_ChrRenderers.at(i)->m_Visible)
         {
             pSelectCharacter = m_ChrRenderers.at(i);
-            m_ChrRenderers.at(i)->Update(1);
+
+            //サッカーのみ応急処置
+            if (m_pCursor->m_PlayerInfo.chr_type == CharacterType::_Soccer)
+            {
+                m_ChrRenderers.at(i)->Update(0.5f);
+            }
+            else
+            {
+                m_ChrRenderers.at(i)->Update(1);
+            }
         }
     }
+
+    //野球バットの描画フラグをセット
+    m_pBaseballEquip->SetVisible(m_pCursor->m_PlayerInfo.chr_type == CharacterType::_Baseball);
+
+   // m_pRandomMesh
+
 
     if (pSelectCharacter != nullptr)
     {

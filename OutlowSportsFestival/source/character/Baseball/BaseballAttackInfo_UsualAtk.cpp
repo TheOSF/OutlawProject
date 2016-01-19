@@ -47,14 +47,14 @@ void BaseballAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, BaseballPlaye
 	Forward.Normalize();
 
 	//pDmg->m_Param.pos = Pos + Forward*m_Param.DamagePosLength;
-	pDmg->m_Param.pos = pBaseball->m_Params.pos + chr_func::GetFront(pBaseball)*1.5f + Vector3(0, 4, 0);
+	pDmg->m_Param.pos = pBaseball->m_Params.pos + chr_func::GetFront(pBaseball)*m_Param.DamagePosLength + Vector3(0, 2.5f, 0);
 
 	// pDmg->vec = pDmg->m_Param.pos - pTennis->m_Params.pos;
     chr_func::GetFront(pBaseball, &pDmg->m_Vec);
     pDmg->m_Vec.y = 1;
 	//pDmg->m_VecPower.x = 0.2f;
 
-	m_LocusPos = pDmg->m_Param.pos;
+    m_LocusPos = Pos;
 	m_LocusVec = Forward;
 }
 

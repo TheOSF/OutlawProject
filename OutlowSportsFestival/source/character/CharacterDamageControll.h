@@ -30,6 +30,7 @@ public:
 
     //操作解除(通常の吹き飛びステートに移行する)
     void ToFree();
+    void ToFree(CrVector3 Vec);
 
     //ダメージを与える(引数：１　ダメージ量　：２　体力を１残すかどうか)
     void AddDamage(float value, bool dontDie = false);

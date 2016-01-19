@@ -51,15 +51,7 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
 		{
 			if (m_pBaseball->getBatterFlg())
 			{
-				//ボールの位置によってモーション分岐
-				if (chr_func::isRight(m_pBaseball, pCounterBall->m_Params.pos))
-				{
-					m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_CounterRight_B);
-				}
-				else
-				{
-					m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_CounterLeft_B);
-				}
+                m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_CounterRight_B);
 			}
 			else
 			{
@@ -78,8 +70,7 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
 		//打つ
 		void Shot(BallBase* pCounterBall)
 		{
-			chr_func::ResetMove(m_pBaseball);
-			chr_func::AddMoveFront(m_pBaseball, -0.15f, 1000);
+
 		}
 
 		//打ち失敗

@@ -323,15 +323,18 @@ void BaseballState_PlayerControll_Move::Batter(BaseballPlayer* b){
 		b->SetState(new BaseballState_Rolling(new BallBall_Utillity::PlayerRollingControll(b)));
 		return;
 	}
+
+
+
 	//@•KŽE‘Å‚Ä‚é‚È‚ç
-	if (chr_func::isCanSpecialAttack(b))
-	{
-		//@•KŽE‹Z[›]
-		if (controller::GetTRG(controller::button::maru, b->m_PlayerInfo.number)){
-			b->SetState(new BaseballState_SPAttack_B(b));
-			return;
-		}
-	}
+    if (chr_func::isCanSpecialAttack(b))
+    {
+        //@•KŽE‹Z[›]
+        if (controller::GetTRG(controller::button::maru, b->m_PlayerInfo.number)){
+            b->SetState(new BaseballState_SPAttack_B(b));
+            return;
+        }
+    }
 	// ƒJƒEƒ“ƒ^[[R1]
 	if (controller::GetTRG(controller::button::_R1, b->m_PlayerInfo.number))
 	{
@@ -364,15 +367,19 @@ void  BaseballState_PlayerControll_Move::Pitcher(BaseballPlayer* b){
 		b->SetState(new BaseballState_Rolling(new BallBall_Utillity::PlayerRollingControll(b)));
 		return;
 	}
+
 	//@•KŽE‘Å‚Ä‚é‚È‚ç
-	if (chr_func::isCanSpecialAttack(b))
-	{
-		//@•KŽE‹Z[›]
-		if (controller::GetTRG(controller::button::maru, b->m_PlayerInfo.number)){
-			b->SetState(new BaseballState_SPAttack_P());
-			return;
-		}
-	}
+    if (chr_func::isCanSpecialAttack(b))
+    {
+        //@•KŽE‹Z[›]
+        if (controller::GetTRG(controller::button::maru, b->m_PlayerInfo.number)){
+            b->SetState(new BaseballState_SPAttack_P());
+            return;
+        }
+    }
+
+
+
 	// ƒJƒEƒ“ƒ^[[R1]
 	if (controller::GetTRG(controller::button::_R1, b->m_PlayerInfo.number))
 	{

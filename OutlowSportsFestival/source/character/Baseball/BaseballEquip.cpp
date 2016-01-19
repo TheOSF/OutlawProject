@@ -12,7 +12,6 @@
 BaseballEquip::BaseballEquip(CharacterRenderer* pRenderer, MeshType mt, float Scale) :
 m_pChrRenderer(pRenderer),
 m_MeshType(mt),
-m_Locus(15),
 m_pRigitBody(nullptr),
 m_pStateFunc(&BaseballEquip::StateEquip),
 m_MeshScale(Scale),
@@ -50,6 +49,11 @@ void BaseballEquip::Takeoff()
     m_pStateFunc = &BaseballEquip::StatePhysicMove;
 
     SetPhysicsParam();
+}
+
+void BaseballEquip::SetVisible(bool flg)
+{
+    m_pMeshRenderer->m_Visible = flg;
 }
 
 bool BaseballEquip::Update()

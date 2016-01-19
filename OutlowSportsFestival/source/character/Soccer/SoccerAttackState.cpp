@@ -17,9 +17,9 @@
 //          サッカー攻撃ステート
 //-----------------------------------------------//
 
-const float SoccerAttackState::m_DamageValue_FirstKick = 2.0f;
+const float SoccerAttackState::m_DamageValue_FirstKick = 4.0f;
 const float SoccerAttackState::m_DamageValue_ChunliKick = 2.0f;
-const float SoccerAttackState::m_DamageValue_SummerSault = 2.0f;
+const float SoccerAttackState::m_DamageValue_SummerSault = 6.0f;
 
 
 SoccerAttackState::SoccerAttackState(SoccerPlayer* const pChr, bool FistSecond) :

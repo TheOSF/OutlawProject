@@ -2,6 +2,7 @@
 
 #include "../AmefootPlayer.h"
 #include "../../../Damage/Damage.h"
+#include "../../../Effect/SpeedEffect.h"
 
 class AmefootPlayerState_Tackle : public AmefootState
 {
@@ -47,6 +48,8 @@ public:
     void StandupStart();        // 立ち上がり開始の瞬間
     void FailedStart();         // 失敗開始の瞬間
 
+    void SmokeEffect();
+
     //パワーから突進のパラメータを得るゲッタ
     void GetTackleParamByPower(RATIO p, int *pOutFrame, float* pOutMoveValue, float* pOutDamagePower)const;
 
@@ -69,6 +72,7 @@ private:
     DamageShpere               m_Damage;
     DamageControllVanish*      m_pControllDamage;
     DamageControll_Transform*  m_pDamageTransform;
+    SpeedEffect                m_SpeedEffect;
 
     int m_Timer = 0;
     RATIO m_TacklePower = 0.0f;

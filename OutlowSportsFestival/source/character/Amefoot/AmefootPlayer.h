@@ -26,6 +26,9 @@ public:
 
     void SetState(AmefootState* state, int important = 0);
 
+    void SetDontThrowBallTimer(int Frame);
+
+    bool isCanThrowBall()const;
 
 public:
     enum MotionType
@@ -69,8 +72,9 @@ public:
     };
 
 private:
-    AmefootStateMachine* m_pStateMachine;
 
+    AmefootStateMachine*    m_pStateMachine;
+    int                     m_DontThrowBallTimer;
 
 };
 //-----------------------------------------------------------------------------------------

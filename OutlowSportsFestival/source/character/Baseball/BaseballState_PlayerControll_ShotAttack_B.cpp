@@ -77,8 +77,7 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 
 		
 		//キャラの場所に(最終的に腕の位置に？)
-		b->m_Renderer.GetWorldBoneMatirx(param.BoneMat, 20);
-		param.pos = Vector3(param.BoneMat._41, param.BoneMat._42, param.BoneMat._43);
+        param.pos = b->m_Renderer.GetWorldBonePos(20);
 		//親を自分に
 		param.pParent = b;
 
@@ -215,7 +214,7 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 				param.type = BallBase::Type::_Usual;
 
 				//生成
-				new UsualBall(param, DamageBase::Type::_WeekDamage, 8);
+                new UsualBall(param, DamageBase::Type::_WeekDamage, 8, UsualBall::GetUsualMoveControll());
 
 				//コントローラを振動
 				chr_func::SetControllerShock(

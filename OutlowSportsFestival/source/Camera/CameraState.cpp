@@ -379,7 +379,7 @@ Vector2 CameraStateFreeMove::GetRightStick()const
 
 
 
-
+//-----------------------------------------------------------------//
 
 
 //キャラクタにズームするカメラ
@@ -497,4 +497,55 @@ void CameraStateSkillCharacterZoom::Exit(Camera* c)
 Vector3 CameraStateSkillCharacterZoom::GetTargetPos()const
 {
     return m_pZoomCharacter->m_Params.pos + Vector3(0, 1.5f, 0);
+}
+
+
+//---------------------------------------------------------------------------//
+
+
+//スキル時にキャラクタにズームするカメラ
+CameraStateSkillCharacterZoom2::CameraStateSkillCharacterZoom2(
+    LpCharacterBase  pZoomCharacter
+    ) :
+    m_pZoomCharacter(pZoomCharacter),
+    m_Timer(0)
+{
+
+}
+
+void CameraStateSkillCharacterZoom2::Enter(Camera* c)
+{
+    
+}
+
+void CameraStateSkillCharacterZoom2::Execute(Camera* c)
+{
+    
+}
+
+void CameraStateSkillCharacterZoom2::Exit(Camera* c)
+{
+
+}
+
+
+Vector3 CameraStateSkillCharacterZoom2::GetTargetPos()const
+{
+    return m_pZoomCharacter->m_Params.pos + Vector3(0, 1.5f, 0);
+}
+
+
+void CameraStateSkillCharacterZoom2::SetState(StateFunc pSetState)
+{
+
+}
+
+void CameraStateSkillCharacterZoom2::State_AngleMove()
+{
+
+}
+
+void CameraStateSkillCharacterZoom2::State_ZoomChr()
+{
+
 }

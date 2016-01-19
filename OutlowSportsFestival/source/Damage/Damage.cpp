@@ -14,7 +14,7 @@ HitCount(0),
 m_OptionFlags(),
 MaxChrHit(1),
 HitMotionFrame(25),
-AddSkillGaugeValue(1)
+AddSkillGaugeValue(2)
 {
 #ifdef _DEBUG
 	MyAssert(DefDamageMgr.AddDamage(this), "É_ÉÅÅ[ÉWìoò^ÇÃé∏îs");

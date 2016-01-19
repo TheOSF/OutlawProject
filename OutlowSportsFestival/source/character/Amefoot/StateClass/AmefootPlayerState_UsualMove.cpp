@@ -120,7 +120,9 @@ void AmefootPlayerState_UsualMove::ActionStateSwitch(AmefootPlayer* pCharacter)
          pCharacter->SetState(new AmefootPlayerState_SpecialAtk(pCharacter));
      }
      
-     if ( controller::GetTRG(controller::button::sankaku, pCharacter->m_PlayerInfo.number) )
+     if (controller::GetTRG(controller::button::sankaku, pCharacter->m_PlayerInfo.number) && 
+         pCharacter->isCanThrowBall()
+         )
      {// [¢] ‚Å [‰“‹——£UŒ‚]
          pCharacter->SetState(
              new AmefootPlayerState_ThrowBall(

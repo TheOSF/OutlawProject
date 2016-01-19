@@ -691,7 +691,8 @@ void SoccerState_PlayerControll_Shot::Enter(SoccerPlayer* s)
 			param.pParent = m_pSoccer;
 			param.type = BallBase::Type::_Usual;
 			Sound::Play(Sound::Impact2);
-			new UsualBall(param, DamageBase::Type::_WeekDamage, 10);
+
+            new UsualBall(param, DamageBase::Type::_WeekDamage, 10, UsualBall::GetUsualMoveControll());
 		}
 	};
 

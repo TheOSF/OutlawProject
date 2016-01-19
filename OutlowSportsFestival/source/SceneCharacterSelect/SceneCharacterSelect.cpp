@@ -7,7 +7,7 @@
 #include "../Render/LightObject.h"
 #include "../utillity/StaticGameObjectTemplate.h"
 #include "../Render/MeshRenderer.h"
-
+#include "../GameSystem/ResourceManager.h"
 #include "../Sound/Sound.h"
 
 SceneCharacterSelect::SceneCharacterSelect(
@@ -44,6 +44,12 @@ m_BackTex("DATA\\Texture\\mizu.png")
     m_pComputerDefaultPoint->m_Pos = m_pComputerDefaultPoint->m_MoveTargetPos;
 
 
+    //　野球関連
+    DefResource.Regist(
+        Resource::MeshType::Bat,
+        new iexMesh("DATA\\CHR\\SanoBaseball\\bat.imo")
+        );
+
     //キャラクタポイントをセット
     SetCharacterPoint();
 
@@ -69,6 +75,8 @@ SceneCharacterSelect::~SceneCharacterSelect()
 {
     DefGameObjMgr.Release();
 
+
+    DefResource.Release();
     DefCamera.Release();
 
     delete m_pManager;
@@ -240,14 +248,14 @@ void SceneCharacterSelect::SetCharacterPoint()
 
         for (int i = 0; i < (int)ARRAYSIZE(ChrPointData); ++i)
         {
-            p = new SelectPointBase(m_pManager, ChrPointData[i].Type, &m_Texture, RectI(140 * i, 0, 115, 115));
+            p = new SelectPointBase(m_pManager, ChrPointData[i].Type, &m_Texture, RectI(128 * i, 0, 128, 128));
             p->m_Pos = Center;
             p->m_MoveTargetPos = ChrPointData[i].Pos;
 
             m_ChrPoint[i] = p;
         }
 
-        p = new SelectPointBase(m_pManager, SelectPointBase::PointType::Random, &m_Texture, RectI(563, 0, 115, 115));
+        p = new SelectPointBase(m_pManager, SelectPointBase::PointType::Random, &m_Texture, RectI(512, 0, 128, 128));
         p->m_Pos = Center;
         p->m_MoveTargetPos = Center + Vector2(0, 280);
 
@@ -255,8 +263,21 @@ void SceneCharacterSelect::SetCharacterPoint()
 }
 
 
-void SceneCharacterSelect::SetOtherComputerCharacter()
+void SceneCharacterSelect::SetOtherComputerCharacter(CharacterType::Value force)
 {
+	if (force != CharacterType::__ErrorType)
+	{
+		for (auto&& it : m_LoadParams.PlayerArray)
+		{
+			if (it.player_type != PlayerType::_Computer)
+			{
+				continue;
+			}
+			it.chr_type = force;
+		}
+		return;
+	}
+
     struct
     {
         CharacterType::Value Type;
@@ -270,6 +291,7 @@ void SceneCharacterSelect::SetOtherComputerCharacter()
         { CharacterType::_Americanfootball, false },
     };
 
+	// 使われているキャラクタを特定
     for (auto& it : m_LoadParams.PlayerArray)
     {
         if (it.chr_type != CharacterType::__ErrorType)
@@ -320,7 +342,7 @@ void SceneCharacterSelect::State_PreSelect()
                 pInitPoint = m_pComputerDefaultPoint;
             }
 
-            SelectCursor* p = new SelectCursor(m_pManager, (controller::CONTROLLER_NUM)i, &m_Texture, RectI(734, 0, 90, 115), pInitPoint);
+            SelectCursor* p = new SelectCursor(m_pManager, (controller::CONTROLLER_NUM)i, &m_Texture, RectI(0, 128, 256, 256), pInitPoint);
 
             {
                 const CharacterType::Value Type = p->m_PlayerInfo.chr_type;
@@ -359,7 +381,7 @@ void SceneCharacterSelect::State_Selecting()
         m_pManager->GetData(m_LoadParams);
 
         //あいているキャラクタデータにコンピュータを入れる
-        SetOtherComputerCharacter();
+		SetOtherComputerCharacter();
     }
 }
 

@@ -176,19 +176,19 @@ void BaseballPlayerState_ComMove::doMove(BaseballPlayer* b)
 			}
 		}
 
-        //走り終わり
-        void RunEnd()
-        {
-            if (m_pBaseball->getBatterFlg())
-            {
-                m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stop_B);
-            }
-            else
-            {
-                m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stop_P);
-            }
-        }
-    };
+		//走り終わり
+		void RunEnd()
+		{
+			if (m_pBaseball->getBatterFlg())
+			{
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stop_B);
+			}
+			else
+			{
+				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stop_P);
+			}
+		}
+	};
 
 	//移動パラメータを代入
 	CharacterUsualMove::Params p;
@@ -413,10 +413,10 @@ void  BaseballPlayerState_ComMove::doReaction(BaseballPlayer* b)
 			//　遠距離攻撃なら
 			if (hittype == CharacterComputerReactionHitEvent::HitType::CanCounter)
 			{
-				if ((cParam.BallCounter * 100) > ReactionPoint)
-				{
-					//　実行パターン
-					if (m_cBaseball->getBatterFlg()){
+				//　実行パターン
+				if (m_cBaseball->getBatterFlg()){
+					if ((cParam.BallCounter * 100) > ReactionPoint)
+					{
 						//　7：3の割合になるように
 						if (rand() % 10 < 3)
 						{
@@ -437,7 +437,7 @@ void  BaseballPlayerState_ComMove::doReaction(BaseballPlayer* b)
 						if (rand() % 10 >= 3)
 						{
 							//　投手時
-							m_cBaseball->SetState(new BaseballState_PlayerControll_Counter(9));
+							m_cBaseball->SetState(new BaseballState_PlayerControll_Counter(8));
 						}
 						else
 						{

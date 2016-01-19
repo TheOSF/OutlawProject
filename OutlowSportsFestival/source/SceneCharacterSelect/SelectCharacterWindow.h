@@ -5,6 +5,7 @@
 #include "../Render/MeshRenderer.h"
 #include "../character/CharacterRenderer.h"
 #include "CursorObject.h"
+#include "../character/Baseball/BaseballEquip.h"
 #include <array>
 
 //---------------------------------------------------------------//
@@ -29,6 +30,9 @@ private:
     bool                                m_DrawComputerUI;
     MeshRenderer*                       m_pRandomMesh;
     bool                                m_PreFrameIsSelected;
+    BaseballEquip*                      m_pBaseballEquip;
+
+    void SelectingRenderer(SelectPointBase::PointType type);
 
     void LoadCharacterModels();
     Vector3 GetCharacterPos();
