@@ -10,9 +10,6 @@
 #include "../Render/Renderer.h"
 #include "../SceneResult/SceneResult.h"
 
-
-
-
 #include "../GameSystem/GameInitilizer_UsualMatch.h"
 
 //*****************************************************************************************************************************
@@ -93,9 +90,9 @@ BOOL	InitApp( HWND hWnd )
         param.Time = 60 * 60 * 5;
 
         param.PlayerArray[0] = { 0, PlayerType::_Player, CharacterType::_Americanfootball, StrongType::_Usual };
-        param.PlayerArray[1] = { 1, PlayerType::_Computer, CharacterType::_Soccer, StrongType::_Strong };
-        param.PlayerArray[2] = { 2, PlayerType::_Computer, CharacterType::_Soccer, StrongType::_Strong };
-        param.PlayerArray[3] = { 3, PlayerType::_Computer, CharacterType::_Soccer, StrongType::_Usual };
+        param.PlayerArray[1] = { 1, PlayerType::_Computer, CharacterType::_Baseball, StrongType::_Strong };
+        param.PlayerArray[2] = { 2, PlayerType::_Computer, CharacterType::_Baseball, StrongType::_Strong };
+        param.PlayerArray[3] = { 3, PlayerType::_Computer, CharacterType::_Baseball, StrongType::_Usual };
 
         param.pInitializer = new GameInitializer_UsualMatch(GameInitializer_UsualMatch::StageType::Kasennziki,param );
         

@@ -21,3 +21,9 @@ void AmefootPlayerState_BallTouchDown::Exit(AmefootPlayer* pChr)
 {
 
 }
+
+
+void AmefootPlayerState_BallTouchDown::State_CounterPose()
+{
+
+}

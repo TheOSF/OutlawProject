@@ -40,6 +40,8 @@ public:
 	//　解除
 	void Takeoff();
 
+    void SetVisible(bool flg);
+
 private:
     void UpdateMeshFromBonePos();
 	//　物理パラメータセット
@@ -72,7 +74,6 @@ private:
 
     bool(BaseballEquip::*       m_pStateFunc)();
     LpMeshRenderer		        m_pMeshRenderer;
-    LocusHDR                    m_Locus;
     RigidBody*                  m_pRigitBody;
     int                         m_DeleteFrame;
     int                         m_BoneNumber;

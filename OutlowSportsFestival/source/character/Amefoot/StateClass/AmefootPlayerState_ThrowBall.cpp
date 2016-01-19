@@ -35,6 +35,9 @@ void AmefootPlayerState_ThrowBall::Enter(AmefootPlayer* pCharacter)
 
     //モーションセット
     pCharacter->m_Renderer.SetMotion(AmefootPlayer::Motion_Throw_Ball);
+
+    //撃てないタイマーセット
+    pCharacter->SetDontThrowBallTimer(50);
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ThrowBall::Execute(AmefootPlayer* pCharacter)

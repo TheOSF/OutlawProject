@@ -19,6 +19,14 @@ class UsualBall :public GameObjectBase, public BallBase
 {
 public:
 
+    //移動クラス
+    class MoveControll 
+    {
+    public:
+        virtual ~MoveControll(){}
+        virtual void Move(UsualBall* pBall) = 0;
+    };
+
     //物理パラメータ
     struct PhysicsParam
     {
@@ -37,9 +45,11 @@ public:
         BallBase::Params	params,			 //ボールパラメータ
         DamageBase::Type	damage_type,	 //ダメージ判定のタイプ
         float				damage_val,		 //ダメージ量
+        MoveControll*       pMoveControll,   //移動クラス
         UINT                hit_num = 1,     //ヒット数
         UINT                live_frame = 240 //飛行時間
 		);
+
 	~UsualBall();
 
 	//ボールのメッシュを返す
@@ -64,6 +74,9 @@ public:
         Params params // ボールのパラメータ
     );
 
+    static MoveControll* GetUsualMoveControll();
+
+
 	bool Update();
 	bool Msg(MsgType mt);
 
@@ -73,9 +86,15 @@ public:
 
     void ToNoWork();           //攻撃判定のない状態にする
 
+
+
+    Vector3                     m_RotateSpeed;  //各軸の回転速度
+
 private:
 
     bool(UsualBall::*m_pStateFunc)();
+
+    MoveControll*               m_pMoveControll;
 	LpMeshRenderer		        m_pMeshRenderer;
 	DamageCapsure		        m_Damage;
     int                         m_DeleteFrame;
@@ -86,7 +105,6 @@ private:
     UINT                        m_HitCountSave;
     UINT                        m_HitStopFrame;
     int                         m_FlyLiveFrame;
-    Vector3                     m_RotateSpeed;
     const CharacterType::Value  m_FirstParentType;
     BallEffect                  m_BallEffect;
     float                       m_MeshScale;

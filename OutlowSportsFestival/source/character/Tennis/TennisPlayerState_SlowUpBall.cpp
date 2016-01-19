@@ -222,7 +222,7 @@ void TennisPlayerState_SlowUpBall::State_Weak()
         param.type = BallBase::Type::_Usual;
 
         //生成
-        new UsualBall(param, DamageBase::Type::_WeekDamage, 3, 1, 120);
+        new UsualBall(param, DamageBase::Type::_WeekDamage, 3, UsualBall::GetUsualMoveControll(), 1, 120);
 
 
         //コントローラを振動
@@ -307,7 +307,7 @@ void TennisPlayerState_SlowUpBall::State_Usual()
         param.type = BallBase::Type::_Usual;
 
         //生成
-        new UsualBall(param, DamageBase::Type::_WeekDamage, 5);
+        new UsualBall(param, DamageBase::Type::_WeekDamage, 5, UsualBall::GetUsualMoveControll());
 
 
         //コントローラを振動
@@ -386,7 +386,7 @@ void TennisPlayerState_SlowUpBall::State_Smash()
         param.type = BallBase::Type::_Usual;
 
         //生成
-        (new UsualBall(param, DamageBase::Type::_VanishDamage, 15))->Counter(m_pTennis);
+        (new UsualBall(param, DamageBase::Type::_VanishDamage, 15, UsualBall::GetUsualMoveControll() ))->Counter(m_pTennis);
 
 
         //コントローラを振動

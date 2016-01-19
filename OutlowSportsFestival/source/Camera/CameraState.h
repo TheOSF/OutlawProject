@@ -136,4 +136,32 @@ private:
     Vector3          m_MovePos;
 };
 
+//スキル時にキャラクタにズームするカメラ2
+class CameraStateSkillCharacterZoom2 :public CameraState
+{
+public:
+    CameraStateSkillCharacterZoom2(
+        LpCharacterBase  pZoomCharacter
+        );
+
+    void Enter(Camera* c);
+    void Execute(Camera* c);
+    void Exit(Camera* c);
+
+    Vector3 GetTargetPos()const;
+
+private:
+    typedef void(CameraStateSkillCharacterZoom2::*StateFunc)();
+
+    StateFunc        m_pStateFunc;
+    LpCharacterBase  m_pZoomCharacter;
+    int              m_Timer;
+
+
+    void SetState(StateFunc pSetState);
+
+    void State_AngleMove();
+    void State_ZoomChr();
+};
+
 #endif

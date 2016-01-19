@@ -8,7 +8,8 @@
 //-----------------------------------------------------------------------------------------
 AmefootPlayer::AmefootPlayer(const PlayerInfo& info) :
 CharacterBase(info, new BlendAnimationMesh(GetCharacterModelPath(CharacterType::_Americanfootball))),
-     m_pStateMachine(new AmefootStateMachine(this))
+     m_pStateMachine(new AmefootStateMachine(this)),
+     m_DontThrowBallTimer(0)
 {
     m_ModelSize = (0.058f);
 }
@@ -23,6 +24,12 @@ bool AmefootPlayer::Update()
      m_pStateMachine->state_execute();
 
      CharacterBase::BaseUpdate();
+
+     //ボール撃てないたいまーの更新
+     if (m_DontThrowBallTimer > 0)
+     {
+         --m_DontThrowBallTimer;
+     }
 
      return true;
 }
@@ -55,3 +62,12 @@ void AmefootPlayer::SetState(AmefootState* state , int important)
 }
 //-----------------------------------------------------------------------------------------
 
+void AmefootPlayer::SetDontThrowBallTimer(int Frame)
+{
+    m_DontThrowBallTimer = Frame;
+}
+
+bool AmefootPlayer::isCanThrowBall()const
+{
+    return m_DontThrowBallTimer <= 0;
+}

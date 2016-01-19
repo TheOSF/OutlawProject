@@ -12,10 +12,11 @@ void TennisComputerReactionEvent::Reaction(CharacterComputerReactionHitEvent::Hi
     }
     else
     {
-        //ローリング
-        new TennisState_Rolling(
+        m_pTennis->SetState(
+            //ローリング
+            new TennisState_Rolling(
             new TennisComputerUtillityClass::RollingCallBack(m_pTennis, vec)
-            );
+            ));
     }
 }
 

@@ -409,7 +409,7 @@ void SelectCursor::CalcZ()
 void SelectCursor::Render()
 {
     RectI di;
-    const Vector2 Size(50, 60);
+    const Vector2 Size(150, 175);
 
     di.x = (int)(m_Pos.x - Size.x*0.5f);
     di.y = (int)(m_Pos.y - Size.y*0.5f);

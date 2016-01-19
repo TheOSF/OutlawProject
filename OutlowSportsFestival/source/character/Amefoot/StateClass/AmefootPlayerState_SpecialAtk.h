@@ -45,6 +45,7 @@ private:
 
     void NoDamageUpdate();
 
+    RADIAN GetControllAngleSpeed()const;
 
     void State_Pose();
     void State_Dush();

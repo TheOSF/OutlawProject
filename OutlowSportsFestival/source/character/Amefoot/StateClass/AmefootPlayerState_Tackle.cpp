@@ -9,14 +9,15 @@
 #include "../../../Effect/EffectFactory.h"
 #include "../../../Sound/Sound.h"
 #include "../../../Effect/ImpactLightObject.h"
-
+#include "../../../Effect/GlavityLocus.h"
 
 
 AmefootPlayerState_Tackle::AmefootPlayerState_Tackle(AmefootPlayer*const pCharacter) :
 m_pAmefootPlayer(pCharacter),
 m_pStateFunc(&AmefootPlayerState_Tackle::Pose),
 m_pDamageTransform(nullptr),
-m_pControllDamage(nullptr)
+m_pControllDamage(nullptr),
+m_SpeedEffect(1)
 {
     m_Damage.m_Enable = false;
     m_Damage.m_Param.pos = m_pAmefootPlayer->m_Params.pos;
@@ -174,6 +175,14 @@ void AmefootPlayerState_Tackle::Tackle()
     m_Damage.m_Param.pos = m_pAmefootPlayer->m_Params.pos + chr_func::GetFront(m_pAmefootPlayer) * kDamagePosOffset;
 
 
+    {
+        Vector3 chrpos = m_pAmefootPlayer->m_Params.pos;
+        chrpos.y += 2.0f;
+
+        m_SpeedEffect.Update(chrpos, -m_pAmefootPlayer->m_Params.move);
+    }
+
+
     //ヒットしたらステート切り替え
     if (m_Damage.HitCount > 0)
     {
@@ -183,6 +192,8 @@ void AmefootPlayerState_Tackle::Tackle()
     // フレーム経過
     if (m_Timer >= kAllFrame)
     {
+        m_Damage.m_Enable = false;
+
         SetState(&AmefootPlayerState_Tackle::Failed);
     }
 
@@ -350,6 +361,9 @@ void AmefootPlayerState_Tackle::TackleStart(float MoveValue, float DamageValue)
     chr_func::ResetMove(m_pAmefootPlayer);
     chr_func::AddMoveFront(m_pAmefootPlayer, kAcceleration, kAcceleration);
 
+    //ＳＥ
+    Sound::Play(Sound::Sand1);
+
     // ダメージ設定
     m_Damage.m_Enable = true;
     m_Damage.Value = DamageValue;
@@ -429,8 +443,17 @@ void AmefootPlayerState_Tackle::StandupStart()
     //付いているキャラクタを離す
     if (m_pDamageTransform != nullptr)
     {
-        m_pDamageTransform->m_Destroy = true;
-        m_pDamageTransform = nullptr;
+        Vector3 Vec = -chr_func::GetFront(m_pAmefootPlayer);
+        Vec *= 0.3f;
+        Vec.y = 0.35f;
+
+        m_Damage.m_Enable = false;
+
+        m_pDamageTransform->AllFree(Vec);
+
+
+        //エフェクト
+        SmokeEffect();
     }
     
 
@@ -455,6 +478,74 @@ void AmefootPlayerState_Tackle::FailedStart()
     m_pAmefootPlayer->m_Renderer.SetMotion(AmefootPlayer::Motion_Touchdown_Failed);
 }
 
+
+void AmefootPlayerState_Tackle::SmokeEffect()
+{
+    Vector3  color(0.8f, 0.4f, 0.0f);
+    Vector3 Nmove = Vector3AxisY*0.5f;
+    Vector3 power(0, -0.02f, 0);
+    Vector3 move;
+    GlavityLocus* g;
+
+    const Vector4
+        stCol(color.x, color.y, color.z, 1.0f),
+        endCol(color.x, color.y, color.z, 0.5f);
+
+    const Vector4
+        stHdCol(color.x, color.y, color.z, 1.0f),
+        endHdCol(color.x, color.y, color.z, 0.5f);
+
+
+    for (int i = 0; i < 15; ++i)
+    {
+        move = Vector3Rand() + Nmove;
+        move *= frand();
+        move.y *= 2.0f;
+        move *= 0.75f;
+
+        g = new GlavityLocus(
+            m_pAmefootPlayer->m_Params.pos+Vector3Rand(), move, power, 8, 40 + rand() % 20
+            );
+
+        g->m_BoundRatio = 0.5f;
+        g->m_CheckWall = false;
+
+        g->m_Locus.m_StartParam.Color = stCol;
+        g->m_Locus.m_EndParam.Color = endCol;
+
+        g->m_Locus.m_StartParam.HDRColor = stHdCol;
+        g->m_Locus.m_EndParam.HDRColor = endHdCol;
+
+        g->m_Locus.m_StartParam.Width = 0.09f;
+        g->m_Locus.m_EndParam.Width = 0.00f;
+
+        // g->m_Locus.m_pTexture = DefResource.Get(Resource::TextureType::Locus1);
+    }
+
+
+    const float SmokeSize = 3.0f;
+    Vector3 SmokePos;
+
+    for (int i = 0; i < 20; ++i)
+    {
+        SmokePos = m_pAmefootPlayer->m_Params.pos;
+
+        SmokePos.x += (frand() - 0.5f)*5.0f;
+        SmokePos.z += (frand() - 0.5f)*5.0f;
+
+        SmokePos.y += frand()*3.5f + SmokeSize*0.5f;
+
+        EffectFactory::Smoke(
+            SmokePos,
+            Vector3(frand() - 0.5f, 0.5f, frand() - 0.5f)*0.15f,
+            SmokeSize,
+            0.2f
+            );
+    }
+
+    //カメラのゆれ
+    DefCamera.SetShock(Vector2(0.3f, 0.3f), 30);
+}
 
 //パワーから突進のパラメータを得るゲッタ
 void AmefootPlayerState_Tackle::GetTackleParamByPower(

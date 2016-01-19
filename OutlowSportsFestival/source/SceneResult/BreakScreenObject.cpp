@@ -62,15 +62,18 @@ void BreakScreenObject::CalcBreakScreenWorldMatrix(Matrix* T)
 
     //スケール比率を計算
     //const float Scale = ScreenWW / 64.0f;
+
     const float Scale = 0.149960265f * m_Scale;
 
     //ワールド変換行列を算出
     {
-        Matrix S;
-        D3DXMatrixScaling(&S, Scale, Scale, Scale);
+        Matrix R;
 
-        D3DXMatrixRotationY(T, PI);
-        *T *= S;
+        D3DXMatrixScaling(T, Scale, Scale, Scale);
+        D3DXMatrixRotationY(&R, PI);
+
+        *T *= R;
+
 
         T->_41 = Pos.x;
         T->_42 = Pos.y;
@@ -92,7 +95,6 @@ bool BreakScreenObject::Update()
     else if (m_Timer < 38)
     {
         Speed = 1.2f;
-        m_Scale += 0.05f;
     }
     else if (m_Timer < 80)
     {
@@ -101,11 +103,10 @@ bool BreakScreenObject::Update()
     else if (m_Timer < 110)
     {
         Speed = 2.0f;
-        m_Scale += 0.05f;
         m_Alpha *= 0.85f;
 
-        m_MoveY += -0.01f;
-        m_DiffPosY += m_MoveY;
+      //  m_MoveY += -0.01f;
+      //  m_DiffPosY += m_MoveY;
     }
     else
     {

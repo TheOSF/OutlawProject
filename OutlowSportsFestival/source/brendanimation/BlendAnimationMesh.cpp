@@ -251,6 +251,14 @@ void BlendAnimationMesh::Render(iexShader* shader, const std::map<int, const cha
             shader->SetValue("NormalMap", lpNormal[it.first]);
             shader->SetValue("SpecularMap", lpSpecular[it.first]);
             shader->SetValue("HeightMap", lpHeight[it.first]);
+
+            Texture2D* pMat[256];
+
+            for (int i = 0; i < (int)MaterialCount; ++i)
+            {
+                pMat[i] = lpHeight[i];
+            }
+
             shader->CommitChanges();
             //	材質グループ描画
             lpMesh->DrawSubset(it.first);
@@ -481,7 +489,7 @@ BOOL BlendAnimationMesh::CreateFromIEM(char* path, LPIEMFILE lpIem)
         //	テクスチャ読み込み
         strcpy_s<FILENAME_MAX>(Name, lpIem->Texture[i]);
 
-        for (int j = 0; true; ++j)
+        for (int j = strlen(Name) - 1; true; --j)
         {
             if (Name[j] == '.')
             {

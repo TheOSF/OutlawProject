@@ -18,10 +18,11 @@ UsualBall::UsualBall(
     BallBase::Params	params,			//ボールパラメータ
     DamageBase::Type	damage_type,	//ダメージ判定のタイプ
     float				damage_val,		//ダメージ量
+    MoveControll*       pMoveControll,   //移動クラス
     UINT                hit_num,        //ヒット数
     UINT                live_frame   
     ) :
-    m_DeleteFrame(180),
+    m_DeleteFrame(120),
     m_Locus(15),
     m_pRigitBody(nullptr),
     m_HitNum(hit_num),
@@ -30,7 +31,8 @@ UsualBall::UsualBall(
     m_pStateFunc(&UsualBall::StateFlyMove),
     m_RotateSpeed(0.15f, 0.05f, 0.05f),
     m_FirstParentType(params.pParent->m_PlayerInfo.chr_type),
-    m_FlyLiveFrame((int)live_frame)
+    m_FlyLiveFrame((int)live_frame),
+    m_pMoveControll(pMoveControll)
 {
 
 	LPIEXMESH		pBallMesh;
@@ -95,7 +97,9 @@ UsualBall::UsualBall(
 
 UsualBall::~UsualBall()
 {
+    delete m_pMoveControll;
     delete m_pMeshRenderer;
+
     if (m_pRigitBody != nullptr)
     {
         DefBulletSystem.RemoveRigidBody(m_pRigitBody);
@@ -142,7 +146,7 @@ float UsualBall::GetBallScale(
     switch (type)
     {
     case CharacterType::_Americanfootball:
-        return 0.18f;
+        return 0.12f;
 
     case CharacterType::_Baseball:
         return 0.1f;
@@ -239,6 +243,19 @@ RigidBody* UsualBall::CreateRigidBody(
     return nullptr;
 }
 
+UsualBall::MoveControll* UsualBall::GetUsualMoveControll()
+{
+    class UsualMoveControllClass :public UsualBall::MoveControll
+    {
+    public:
+        void Move(UsualBall* pBall)
+        {
+            pBall->m_Params.pos += pBall->m_Params.move;
+        }
+    };
+
+    return new UsualMoveControllClass();
+}
 
 bool UsualBall::Update()
 {
@@ -315,8 +332,8 @@ void UsualBall::UpdateColor()
         //メッシュを光らせる
         COLORf Color = CharacterBase::GetPlayerColorF(m_Params.pParent->m_PlayerInfo.number);
 
-        m_pMeshRenderer->m_HDR = Vector3(1,1,1) * 0.1f;
-        m_pMeshRenderer->m_Lighting = Vector3(1, 1, 1) * 0.3f;
+        m_pMeshRenderer->m_HDR = Vector3(1,1,1) * 0.0f;
+        m_pMeshRenderer->m_Lighting = Vector3(1, 1, 1) * 0.2f;
     }
 }
 
@@ -460,7 +477,8 @@ bool UsualBall::StateFlyMove()
         //ヒットストップフレームなら移動更新をしない
         if (m_HitStopFrame == 0)
         {
-            m_Params.pos += m_Params.move;
+            m_pMoveControll->Move(this);
+           // m_Params.pos += m_Params.move;
         }
         else
         {

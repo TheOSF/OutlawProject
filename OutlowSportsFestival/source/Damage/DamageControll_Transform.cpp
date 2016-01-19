@@ -23,6 +23,20 @@ void DamageControll_Transform::AllFree()
             it->ToFree();
         }
     }
+
+    m_ChrControllArray.fill(nullptr);
+}
+
+void DamageControll_Transform::AllFree(CrVector3 Vec)
+{
+    for (auto& it : m_ChrControllArray)
+    {
+        if (it != nullptr)
+        {
+            it->ToFree(Vec);
+        }
+    }
+    m_ChrControllArray.fill(nullptr);
 }
 
 //‘€ì‚·‚éƒLƒƒƒ‰ƒNƒ^‚ğ’Ç‰Á‚·‚é

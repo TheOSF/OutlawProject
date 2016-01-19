@@ -23,7 +23,8 @@ CharacterDamageControll::CharacterDamageControll(EventClass* pEventClass) :
 m_pEventClass(pEventClass),
 m_Move(Vector3Zero),
 m_Init(false),
-m_NotControllCount(0)
+m_NotControllCount(0),
+m_DamageShockCount(0)
 {
     D3DXMatrixIdentity(&m_Transform);
 
@@ -56,7 +57,12 @@ void CharacterDamageControll::ToFree()
         m_Move *= MaxMove;
     }
 
-    m_pEventClass->SetVanishState(m_Move);
+    ToFree(m_Move);
+}
+
+void CharacterDamageControll::ToFree(CrVector3 Vec)
+{
+    m_pEventClass->SetVanishState(Vec);
 }
 
 //ダメージを与える(引数：１　ダメージ量　：２　体力を１残すかどうか)
