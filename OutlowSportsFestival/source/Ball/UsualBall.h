@@ -74,8 +74,11 @@ public:
         Params params // ボールのパラメータ
     );
 
+    //直線状に呼ぶだけのクラスを返す
     static MoveControll* GetUsualMoveControll();
 
+    //直線状に呼ぶだけのクラスを返す(高さを自動的にキャラクタの位置にあわせる)
+    static MoveControll* GetUsual_ControllHeightMoveControll();  
 
 	bool Update();
 	bool Msg(MsgType mt);

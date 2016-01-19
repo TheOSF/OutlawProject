@@ -95,6 +95,7 @@ void GameInitializer_UsualMatch::GameCreate()
 
 
     //アイテムエミッターの生成
+    if(0)
     {
         new SkillGaugeItemEmitter(60 * 60 * 1);
 

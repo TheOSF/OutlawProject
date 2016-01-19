@@ -53,9 +53,6 @@ bool CharacterShotAttack::Update()
 			);
 	}
 
-	// 座標更新
-	chr_func::PositionUpdate(m_pCharacter);
-
 	// 減速
 	chr_func::XZMoveDown(
 		m_pCharacter,
@@ -78,8 +75,9 @@ bool CharacterShotAttack::Update()
 	// タイマー更新
 	m_Timer++;
 
-	// ダメージ判定をとる
-	chr_func::DamageCheck(m_pCharacter, m_pHitEventBase);
+
+    chr_func::UpdateAll(m_pCharacter, m_pHitEventBase);
+
 
 	return true;
 }

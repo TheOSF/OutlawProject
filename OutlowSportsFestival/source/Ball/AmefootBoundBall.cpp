@@ -214,22 +214,13 @@ void AmefootBoundBall::StateGroundTouch()
         p.pParent = m_pOwner;
         p.scale = 0.5f;
         p.type = BallBase::Type::_Usual;
-        
-        class MoveControll :public UsualBall::MoveControll
-        {
-        public:
-            void Move(UsualBall* pBall)
-            {
-                pBall->m_Params.pos.y += (UsualBall::UsualBallShotY - pBall->m_Params.pos.y)*0.2f;
-                pBall->m_Params.pos += pBall->m_Params.move;
-            }
-        };
+       
 
         UsualBall* pBall =  new UsualBall(
             p,
             DamageBase::Type::_WeekDamage,
             2.0f,
-            new MoveControll(), 
+            UsualBall::GetUsual_ControllHeightMoveControll(), 
             1,
             60
             );

@@ -667,7 +667,6 @@ void SoccerState_PlayerControll_Shot::Enter(SoccerPlayer* s)
 
 		void Update()
 		{
-			m_pSoccer->m_Renderer.Update(1);
 		
 		}
 
@@ -687,20 +686,20 @@ void SoccerState_PlayerControll_Shot::Enter(SoccerPlayer* s)
 			chr_func::GetFront(m_pSoccer, &param.move);
 			param.move *= 0.5f;
 			param.pos = m_pSoccer->m_Params.pos;
-			param.pos.y = BallBase::UsualBallShotY;
+			param.pos.y = 0.1f;
 			param.pParent = m_pSoccer;
 			param.type = BallBase::Type::_Usual;
 			Sound::Play(Sound::Impact2);
 
-            new UsualBall(param, DamageBase::Type::_WeekDamage, 10, UsualBall::GetUsualMoveControll());
+            new UsualBall(param, DamageBase::Type::_WeekDamage, 10, UsualBall::GetUsual_ControllHeightMoveControll());
 		}
 	};
 
 	
 	CharacterShotAttack::AttackParams p;
-	p.AttackPower = 4;
-	p.ShotFrame = 15;
-	p.AllFrame = 35;
+
+	p.ShotFrame = 20;
+	p.AllFrame = 30;
 	p.MoveDownSpeed = 0.075f;
 
 	m_pShotClass = new CharacterShotAttack(s, new SoccerShotEvent(s), p, new SoccerHitEvent(s));
@@ -713,6 +712,7 @@ void SoccerState_PlayerControll_Shot::Execute(SoccerPlayer* s)
 	{
 		s->SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(s));
 	}
+
 	//モデル関連の更新
 	s->m_Renderer.Update(1);
 	chr_func::CreateTransMatrix(s, &s->m_Renderer.m_TransMatrix);
@@ -969,11 +969,7 @@ void SoccerState_PlayerControll_Finisher::Execute(SoccerPlayer* s)
 			new SpecialAttackEffect(s, 55);
 		}
 
-		if (m_Timer == 60)
-		{
-			s->m_Renderer.SetMotion(SoccerPlayer::_ms_Shot);
-		}
-		if (m_Timer >= 80)
+		if (m_Timer >= 55)
 		{
 			timeflg = true;
 			m_Timer = 0;
@@ -1059,7 +1055,6 @@ CharacterShotAttack* SoccerState_PlayerControll_Finisher::SnakeShotClass(SoccerP
 	CharacterShotAttack::AttackParams atk;
 
 	atk.AllFrame = 80;
-	atk.AttackPower = 8;
 	atk.MaxTurnRadian = PI / 4;
 	atk.MoveDownSpeed = 0.3f;
 	atk.ShotFrame = 70;

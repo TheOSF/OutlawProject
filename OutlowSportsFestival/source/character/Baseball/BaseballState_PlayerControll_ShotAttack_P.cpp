@@ -154,7 +154,6 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 	CharacterShotAttack::AttackParams atk;
 
 	atk.AllFrame = 40;
-	atk.AttackPower = 8;
 	atk.MaxTurnRadian = PI / 4;
 	atk.MoveDownSpeed = 0.8f;
 	atk.ShotFrame = 15;

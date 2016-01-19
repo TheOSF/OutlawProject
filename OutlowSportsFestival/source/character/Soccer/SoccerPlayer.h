@@ -46,10 +46,10 @@ public:
         _ms_FallAndDown = 38,
 
         _ms_Counter_Failed = _ms_RunStop, 
-        _ms_Shot = _ms_Atk1,
+        _ms_Shot = 39,
 
-        _ms_Win = _ms_Vanish_Fly,
-        _ms_Lose = _ms_Vanish_Fly,
+        _ms_Win = 40,
+        _ms_Lose = 41,
 
 	};
 protected:

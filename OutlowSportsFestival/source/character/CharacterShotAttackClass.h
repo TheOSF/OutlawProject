@@ -17,7 +17,6 @@ public:
 		int AllFrame;                 // 全フレーム
 		int ShotFrame;              // ボール＆ダメージ判定発生フレーム
 		float MaxTurnRadian;    // 向き補正の角度制限
-		float AttackPower;        // 攻撃力
 		float MoveDownSpeed; // 減速割合
 	};
 

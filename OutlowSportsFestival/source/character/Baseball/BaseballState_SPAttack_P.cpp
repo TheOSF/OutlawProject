@@ -193,7 +193,6 @@ CharacterShotAttack* BaseballState_SPAttack_P::CreateSpAttack_P(BaseballPlayer* 
 	CharacterShotAttack::AttackParams atk;
 
 	atk.AllFrame = 40;
-	atk.AttackPower = 20;
 	atk.MaxTurnRadian = PI / 4;
 	atk.MoveDownSpeed = 1.2f;
 	atk.ShotFrame = 15;

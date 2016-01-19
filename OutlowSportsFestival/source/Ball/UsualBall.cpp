@@ -257,6 +257,22 @@ UsualBall::MoveControll* UsualBall::GetUsualMoveControll()
     return new UsualMoveControllClass();
 }
 
+//直線状に呼ぶだけのクラスを返す(高さを自動的にキャラクタの位置にあわせる)
+UsualBall::MoveControll* UsualBall::GetUsual_ControllHeightMoveControll()
+{
+    class GetUsualControllHeightMoveControllclass :public UsualBall::MoveControll
+    {
+    public:
+        void Move(UsualBall* pBall)
+        {
+            pBall->m_Params.pos += pBall->m_Params.move;
+            pBall->m_Params.pos.y += (UsualBall::UsualBallShotY - pBall->m_Params.pos.y)*0.2f;
+        }
+    };
+
+    return new GetUsualControllHeightMoveControllclass();
+}
+
 bool UsualBall::Update()
 {
     return (this->*m_pStateFunc)();       
