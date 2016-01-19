@@ -48,7 +48,7 @@ private:
     void InitData();
     void SetComputerPoint(UINT Num);
     void SetCharacterPoint();
-    void SetOtherComputerCharacter();
+    void SetOtherComputerCharacter(CharacterType::Value force = CharacterType::__ErrorType);
     void CreateWindows();
     void CreateLight();
     void CreateFloor();

@@ -263,8 +263,21 @@ void SceneCharacterSelect::SetCharacterPoint()
 }
 
 
-void SceneCharacterSelect::SetOtherComputerCharacter()
+void SceneCharacterSelect::SetOtherComputerCharacter(CharacterType::Value force)
 {
+	if (force != CharacterType::__ErrorType)
+	{
+		for (auto&& it : m_LoadParams.PlayerArray)
+		{
+			if (it.player_type != PlayerType::_Computer)
+			{
+				continue;
+			}
+			it.chr_type = force;
+		}
+		return;
+	}
+
     struct
     {
         CharacterType::Value Type;
@@ -278,6 +291,7 @@ void SceneCharacterSelect::SetOtherComputerCharacter()
         { CharacterType::_Americanfootball, false },
     };
 
+	// 使われているキャラクタを特定
     for (auto& it : m_LoadParams.PlayerArray)
     {
         if (it.chr_type != CharacterType::__ErrorType)
@@ -367,7 +381,7 @@ void SceneCharacterSelect::State_Selecting()
         m_pManager->GetData(m_LoadParams);
 
         //あいているキャラクタデータにコンピュータを入れる
-        SetOtherComputerCharacter();
+		SetOtherComputerCharacter();
     }
 }
 
