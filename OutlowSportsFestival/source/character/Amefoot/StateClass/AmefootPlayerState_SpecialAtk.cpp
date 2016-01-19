@@ -1,5 +1,6 @@
 #include "AmefootPlayerState_SpecialAtk.h"
 
+#include "../AmefootUsualHitEvent.h"
 #include "../AmefootPlayerState.h"
 #include "../../CharacterFunction.h"
 #include "../../../Sound/Sound.h"
@@ -72,9 +73,6 @@ void AmefootPlayerState_SpecialAtk::Enter(AmefootPlayer* pCharacter)
 void AmefootPlayerState_SpecialAtk::Execute(AmefootPlayer* pCharacter)
 {
     (this->*m_pStateFunc)();
-
-    //更新
-    NoDamageUpdate();
     
     //ダメージ位置更新
     UpdateDamage();
@@ -427,6 +425,8 @@ void AmefootPlayerState_SpecialAtk::NoDamageUpdate()
                 return false;
             }
 
+            //pDmg->OnHitCharacter(m_pAmefoot);
+
             //エフェクト
             Effect();
 
@@ -435,6 +435,15 @@ void AmefootPlayerState_SpecialAtk::NoDamageUpdate()
     };
 
     chr_func::UpdateAll(m_pChr, &ArmorHitEvent(m_pChr));
+}
+
+
+// ダメージ判定がある状態の更新
+void AmefootPlayerState_SpecialAtk::UsualDamageUpdate() {
+
+    AmefootUsualHitEvent hitevent(m_pChr);
+    chr_func::UpdateAll(m_pChr, &hitevent);
+
 }
 
 //----------------------------StateFunc----------------------------------//
@@ -473,6 +482,9 @@ void AmefootPlayerState_SpecialAtk::State_Pose()
     {
         SetState(&AmefootPlayerState_SpecialAtk::State_Dush);
     }
+
+    //更新
+    NoDamageUpdate();
 }
 
 void AmefootPlayerState_SpecialAtk::State_Dush()
@@ -522,6 +534,9 @@ void AmefootPlayerState_SpecialAtk::State_Dush()
 
         SetState(&AmefootPlayerState_SpecialAtk::State_DushEnd);
     }
+
+    //更新
+    NoDamageUpdate();
 }
 
 
@@ -550,6 +565,9 @@ void AmefootPlayerState_SpecialAtk::State_DushEnd()
     {
         SetState(&AmefootPlayerState_SpecialAtk::State_Finish);
     }
+
+    //更新
+    UsualDamageUpdate();
 }
 
 void AmefootPlayerState_SpecialAtk::State_HangDush()
@@ -578,6 +596,9 @@ void AmefootPlayerState_SpecialAtk::State_HangDush()
     {
         SetState(&AmefootPlayerState_SpecialAtk::State_WallHit);
     }
+
+    //更新
+    NoDamageUpdate();
 }
 
 void AmefootPlayerState_SpecialAtk::State_WallHit()
@@ -620,6 +641,9 @@ void AmefootPlayerState_SpecialAtk::State_WallHit()
     {
         SetState(&AmefootPlayerState_SpecialAtk::State_Finish);
     }
+
+    //更新
+    UsualDamageUpdate();
 }
 
 void AmefootPlayerState_SpecialAtk::State_Finish()

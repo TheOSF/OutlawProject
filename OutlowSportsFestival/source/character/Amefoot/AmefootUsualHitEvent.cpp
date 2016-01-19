@@ -35,8 +35,9 @@ bool AmefootUsualHitEvent::Hit(DamageBase* pDamage)
     {
         //コントロール吹き飛びステートへ
         AmefootState_ControllVanish* p=new AmefootState_ControllVanish(m_pAmefoot);
-        m_pAmefoot->SetState(p, 2);
-        ((DamageControllVanish*)pDamage)->GetDamageControll_Transform()->AddControllClass(p->GetControllClass());
+        if ( m_pAmefoot->SetState(p, AmefootStateMachine::DONT_UPDATE_STATE_LEVEL) ) {
+            ((DamageControllVanish*)pDamage)->GetDamageControll_Transform()->AddControllClass(p->GetControllClass());
+        }
     }
         break;
 

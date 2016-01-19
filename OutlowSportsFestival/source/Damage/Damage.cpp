@@ -322,7 +322,8 @@ void DamageCapsure::DebugDraw()
 DamageControllVanish::DamageControllVanish(
     GetDamageControllTransformClass*     pGetDamageControllClass  //デストラクタでdeleteする
     ):
-    m_pGetDamageControllClass(pGetDamageControllClass)
+    m_pGetDamageControllClass(pGetDamageControllClass),
+    m_Enable(true)
 {
 
 }

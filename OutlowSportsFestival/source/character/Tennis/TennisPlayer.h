@@ -64,7 +64,7 @@ public:
 	TennisPlayer(const CharacterBase::PlayerInfo& info);
 	~TennisPlayer();
 
-    void SetState(TennisState* state, int Important = 0);
+    bool SetState(TennisState* state, int Important = 0);
 
 	bool Update();
     bool CharacterMsg(MsgType mt);

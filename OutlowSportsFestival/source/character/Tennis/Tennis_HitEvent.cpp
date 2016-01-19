@@ -46,8 +46,9 @@ bool TennisHitEvent::Hit(DamageBase* pDmg)
     {
         //コントロール吹き飛びステートへ
         TennisState_ControllVanish* p=new TennisState_ControllVanish(m_pTennis);
-        m_pTennis->SetState(p, 2);
-        ((DamageControllVanish*)pDmg)->GetDamageControll_Transform()->AddControllClass(p->GetControllClass());
+        if ( m_pTennis->SetState(p, TennisStateMachine::DONT_UPDATE_STATE_LEVEL) ) {
+            ((DamageControllVanish*)pDmg)->GetDamageControll_Transform()->AddControllClass(p->GetControllClass());
+        }
     }
         break;
 

@@ -42,8 +42,9 @@ bool SoccerHitEvent::Hit(DamageBase* pDmg)
     {
         //コントロール吹き飛びステートへ
         SoccerState_ControllVanish* p=new SoccerState_ControllVanish(m_pSoccer);
-        m_pSoccer->SetState(p, 2);
-        ((DamageControllVanish*)pDmg)->GetDamageControll_Transform()->AddControllClass(p->GetControllClass());
+        if ( m_pSoccer->SetState(p, SoccerStateMachine::DONT_UPDATE_STATE_LEVEL) ) {
+            ((DamageControllVanish*)pDmg)->GetDamageControll_Transform()->AddControllClass(p->GetControllClass());
+        }
     }
         break;
 

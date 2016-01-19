@@ -56,9 +56,9 @@ bool AmefootPlayer::CharacterMsg(MsgType msg)
      return m_pStateMachine->Msg(msg);
 }
 //-----------------------------------------------------------------------------------------
-void AmefootPlayer::SetState(AmefootState* state , int important)
+bool AmefootPlayer::SetState(AmefootState* state , int important)
 {
-     m_pStateMachine->set_state(state , important);
+     return m_pStateMachine->set_state(state , important);
 }
 //-----------------------------------------------------------------------------------------
 
