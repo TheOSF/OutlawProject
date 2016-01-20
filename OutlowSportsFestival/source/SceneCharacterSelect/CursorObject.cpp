@@ -512,7 +512,7 @@ bool CursorManager::isAllPlayerSelected()const
 {
     for (auto& it : m_CursorData)
     {
-        if (it->m_PlayerInfo.player_type == PlayerType::_Player &&it->m_Selected == false)
+        if ((it->m_PlayerInfo.player_type == PlayerType::_Player) && (it->m_Selected == false))
         {
             return false;
         }

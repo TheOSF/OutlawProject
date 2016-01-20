@@ -57,6 +57,7 @@ private:
     void State_PreSelect();
     void State_Selecting();
     void State_FadeOut();
+    void State_BackToOption();
     void State_Change();
 
 

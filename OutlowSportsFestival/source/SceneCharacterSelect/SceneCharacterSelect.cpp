@@ -9,6 +9,7 @@
 #include "../Render/MeshRenderer.h"
 #include "../GameSystem/ResourceManager.h"
 #include "../Sound/Sound.h"
+#include "../SceneOption/SceneOption.h"
 
 SceneCharacterSelect::SceneCharacterSelect(
     sceneGamePlay::InitParams&  LoadParams,
@@ -95,7 +96,7 @@ void SceneCharacterSelect::Update()
     switch (m_NextSceneType)
     {
     case NextSceneType::Back:
-        
+        MainFrame->ChangeScene(new SceneOption());
         break;
 
     case NextSceneType::Next:
@@ -383,6 +384,12 @@ void SceneCharacterSelect::State_Selecting()
         //あいているキャラクタデータにコンピュータを入れる
 		SetOtherComputerCharacter();
     }
+    else {
+        if ( controller::GetButtonState(controller::button::batu, 0)) {
+            //ステート移行
+            m_pStateFunc = &SceneCharacterSelect::State_BackToOption;
+        }
+    }
 }
 
 void SceneCharacterSelect::State_FadeOut()
@@ -393,7 +400,22 @@ void SceneCharacterSelect::State_FadeOut()
         m_pStateFunc = &SceneCharacterSelect::State_Change;
 
         m_NextSceneType = NextSceneType::Next;
+
+        m_Timer = 0;
     }
+}
+
+void SceneCharacterSelect::State_BackToOption() {
+
+    if ( ++m_Timer > 60 ) {
+        //ステート移行
+        m_pStateFunc = &SceneCharacterSelect::State_Change;
+
+        m_NextSceneType = NextSceneType::Back;
+
+        m_Timer = 0;
+    }
+
 }
 
 void SceneCharacterSelect::State_Change()

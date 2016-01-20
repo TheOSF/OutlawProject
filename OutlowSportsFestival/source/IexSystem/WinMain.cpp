@@ -64,7 +64,7 @@ BOOL	InitApp( HWND hWnd )
         MainFrame->ChangeScene(new SceneCharacterSelect(Param, 1));
 
     }
-    else if (false)
+    else if (true)
     {
         MainFrame->ChangeScene(new SceneOption());
     }
