@@ -210,7 +210,7 @@ void PlayerGauge::GaugeRenderer::PlayerNumRender()
     if (m_PlayerType == PlayerType::_Player)
     {
         TexX = ((int)m_Num % 3) * 70;
-        TexY = 260 + ((int)m_Num / 3);
+        TexY = 260 + ((int)m_Num / 3)*50;
     }
     else
     {
