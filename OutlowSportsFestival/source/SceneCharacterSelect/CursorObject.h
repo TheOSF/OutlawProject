@@ -140,6 +140,7 @@ public:
     bool GetNextPoint(CrVector2 Vec, SelectPointBase* pNow, SelectPointBase** ppOut);
 
     bool isAllPlayerSelected()const;
+    bool isSelected(int player_number)const;
 
     void GetData(sceneGamePlay::InitParams& OutData);
     void RandomMove(SelectCursor* p);

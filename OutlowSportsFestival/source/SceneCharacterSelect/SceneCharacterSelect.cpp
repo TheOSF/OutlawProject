@@ -89,9 +89,10 @@ void SceneCharacterSelect::Update()
     DefCamera.m_Target = Vector3(0, 1.63f, 10);
 
     DefCamera.Update();
-    DefGameObjMgr.Update();
 
     (this->*m_pStateFunc)();
+
+    DefGameObjMgr.Update();
 
     switch (m_NextSceneType)
     {
@@ -384,8 +385,8 @@ void SceneCharacterSelect::State_Selecting()
         //あいているキャラクタデータにコンピュータを入れる
 		SetOtherComputerCharacter();
     }
-    else {
-        if ( controller::GetButtonState(controller::button::batu, 0)) {
+    else if ( !m_pManager->isSelected(0) ) {
+        if ( controller::GetTRG(controller::button::batu, 0) ) {
             //ステート移行
             m_pStateFunc = &SceneCharacterSelect::State_BackToOption;
         }

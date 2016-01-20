@@ -3,6 +3,46 @@
 #include "../character/Baseball/BaseballEquip.h"
 
 
+int GetCharacterSelectedMotion(CharacterType::Value type) {
+
+    switch ( type ) {
+    case CharacterType::_Tennis:
+        return 0;
+    case CharacterType::_Baseball:
+        return 0;
+    case CharacterType::_Soccer:
+        return 0;
+    case CharacterType::_Americanfootball:
+        return 0;
+    case CharacterType::_Volleyball:
+    case CharacterType::_Lacrosse:
+    case CharacterType::__ErrorType:
+    default:
+        MyAssert(false, "使えないキャラクターです。");
+        break;
+    }
+    return 0;
+}
+
+int GetCharacterDeselectedMotion(CharacterType::Value type) {
+
+    switch ( type ) {
+    case CharacterType::_Tennis:
+    case CharacterType::_Baseball:
+    case CharacterType::_Soccer:
+        return 1;
+    case CharacterType::_Americanfootball:
+        return 2;
+    case CharacterType::_Volleyball:
+    case CharacterType::_Lacrosse:
+    case CharacterType::__ErrorType:
+    default:
+        MyAssert(false, "使えないキャラクターです。");
+        break;
+    }
+    return 0;
+}
+
 SelectCharacterWindow::SelectCharacterWindow(
     SelectCursor*   pCursor
     ) :
@@ -95,14 +135,9 @@ void SelectCharacterWindow::LoadCharacterModels()
         //描画On Off切り替え
         m_ChrRenderers[i]->m_Visible = (Type == m_pCursor->m_PlayerInfo.chr_type);
         
-        if (Type == CharacterType::_Americanfootball)
-        {
-            m_ChrRenderers[i]->SetMotion(2);
-        }
-        else
-        {
-            m_ChrRenderers[i]->SetMotion(1);
-        }
+        m_ChrRenderers[i]->SetMotion(
+            GetCharacterDeselectedMotion(Type)
+            );
         
     }
 }
@@ -171,16 +206,24 @@ bool SelectCharacterWindow::Update()
             m_pCursor->m_Selected == true
             )
         {
-            
+            m_PreFrameIsSelected = true;
+            m_ChrRenderers.at((int)m_pCursor->m_PlayerInfo.chr_type)->SetMotion(
+                GetCharacterSelectedMotion(m_pCursor->m_PlayerInfo.chr_type)
+                );
+        }
+        else if( m_PreFrameIsSelected == true &&
+            m_pCursor->m_Selected == false )
+        {
+            m_PreFrameIsSelected = false;
+            m_ChrRenderers.at((int)m_pCursor->m_PlayerInfo.chr_type)->SetMotion(
+                GetCharacterDeselectedMotion(m_pCursor->m_PlayerInfo.chr_type)
+                );
         }
     }
-
-    
 
     //コンピュータ操作で未設定なら//「コンピュータ」ＵＩ表示
     m_DrawComputerUI = 
         (m_pCursor->m_PlayerInfo.chr_type == CharacterType::__ErrorType);
-
 
 
     return true;
