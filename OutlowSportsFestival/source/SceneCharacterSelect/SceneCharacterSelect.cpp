@@ -9,6 +9,7 @@
 #include "../Render/MeshRenderer.h"
 #include "../GameSystem/ResourceManager.h"
 #include "../Sound/Sound.h"
+#include "../SceneOption/SceneOption.h"
 
 SceneCharacterSelect::SceneCharacterSelect(
     sceneGamePlay::InitParams&  LoadParams,
@@ -53,6 +54,9 @@ m_BackTex("DATA\\Texture\\mizu.png")
     //キャラクタポイントをセット
     SetCharacterPoint();
 
+    // シーンUIをセット
+    SetSceneUI();
+
     //コンピュータ用のポイントをセット
     //SetComputerPoint();
 
@@ -88,14 +92,15 @@ void SceneCharacterSelect::Update()
     DefCamera.m_Target = Vector3(0, 1.63f, 10);
 
     DefCamera.Update();
-    DefGameObjMgr.Update();
 
     (this->*m_pStateFunc)();
+
+    DefGameObjMgr.Update();
 
     switch (m_NextSceneType)
     {
     case NextSceneType::Back:
-        
+        MainFrame->ChangeScene(new SceneOption());
         break;
 
     case NextSceneType::Next:
@@ -220,6 +225,18 @@ void SceneCharacterSelect::CreateBack()
 
     new StaticGameObjectTemplate<Renderer>(new Renderer(&m_BackTex));
 
+}
+
+void SceneCharacterSelect::SetSceneUI()
+{
+    SelectPointBase* p = new SelectPointBase(m_pManager, SelectPointBase::PointType::CharacterSelect_Title, &m_Texture, RectI(0, 896, 640, 128));
+    Vector2 Center((float)iexSystem::ScreenWidth*0.5f, (float)iexSystem::ScreenHeight*0.5f);
+    Vector2 StartOffset(0, -(float)iexSystem::ScreenHeight*2.0f);
+    Vector2 EndOffset(0, -(float)iexSystem::ScreenHeight * 0.43f);
+    p->m_Pos = Center + StartOffset;
+    p->m_MoveTargetPos = Center + EndOffset;
+    p->m_SortZ = 0.0f;
+    p->m_Size = Vector2(1000, 120);
 }
 
 void SceneCharacterSelect::SetCharacterPoint()
@@ -383,6 +400,12 @@ void SceneCharacterSelect::State_Selecting()
         //あいているキャラクタデータにコンピュータを入れる
 		SetOtherComputerCharacter();
     }
+    else if ( !m_pManager->isSelected(0) ) {
+        if ( controller::GetTRG(controller::button::batu, 0) ) {
+            //ステート移行
+            m_pStateFunc = &SceneCharacterSelect::State_BackToOption;
+        }
+    }
 }
 
 void SceneCharacterSelect::State_FadeOut()
@@ -393,7 +416,22 @@ void SceneCharacterSelect::State_FadeOut()
         m_pStateFunc = &SceneCharacterSelect::State_Change;
 
         m_NextSceneType = NextSceneType::Next;
+
+        m_Timer = 0;
     }
+}
+
+void SceneCharacterSelect::State_BackToOption() {
+
+    if ( ++m_Timer > 60 ) {
+        //ステート移行
+        m_pStateFunc = &SceneCharacterSelect::State_Change;
+
+        m_NextSceneType = NextSceneType::Back;
+
+        m_Timer = 0;
+    }
+
 }
 
 void SceneCharacterSelect::State_Change()

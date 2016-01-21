@@ -512,13 +512,25 @@ bool CursorManager::isAllPlayerSelected()const
 {
     for (auto& it : m_CursorData)
     {
-        if (it->m_PlayerInfo.player_type == PlayerType::_Player &&it->m_Selected == false)
+        if ((it->m_PlayerInfo.player_type == PlayerType::_Player) && (it->m_Selected == false))
         {
             return false;
         }
     }
 
     return true;
+}
+
+bool CursorManager::isSelected(int player_number)const {
+
+    int count = 0;
+    for ( auto& it : m_CursorData ) {
+        if ( count == player_number ) {
+            return it->m_Selected;
+        }
+        count++;
+    }
+    return false;
 }
 
 void CursorManager::GetData(sceneGamePlay::InitParams& OutData)

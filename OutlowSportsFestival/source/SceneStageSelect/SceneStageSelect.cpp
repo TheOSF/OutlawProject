@@ -8,6 +8,7 @@
 
 #include    "../GameSystem/GameObject.h"
 #include "../GameSystem/GameInitilizer_UsualMatch.h"
+#include "../SceneCharacterSelect/SceneCharacterSelect.h"
 
 static POSITON_SIZE STAGE_POS[2] =
 {
@@ -76,7 +77,14 @@ void SceneStageSelect::Update()
 		}
 		if (controller::GetTRG(controller::button::batu, 0))
 		{
-			MainFrame->ChangeScene(new SceneOption());
+            // TODO : ‹­ˆøH
+            UINT count = 0;
+            for ( auto& it : initparam.PlayerArray ) {
+                if ( it.player_type == PlayerType::_Player ) {
+                    count++;
+                }
+            }
+            MainFrame->ChangeScene(new SceneCharacterSelect(initparam, count));
 		}
 		break;
 	case Decidion:

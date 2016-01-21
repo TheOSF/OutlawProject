@@ -47,6 +47,7 @@ private:
     
     void InitData();
     void SetComputerPoint(UINT Num);
+    void SetSceneUI(); // シーンを構成するパーツを作成
     void SetCharacterPoint();
     void SetOtherComputerCharacter(CharacterType::Value force = CharacterType::__ErrorType);
     void CreateWindows();
@@ -57,6 +58,7 @@ private:
     void State_PreSelect();
     void State_Selecting();
     void State_FadeOut();
+    void State_BackToOption();
     void State_Change();
 
 

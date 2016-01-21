@@ -2,6 +2,53 @@
 #include "../character/CharacterBase.h"
 #include "../character/Baseball/BaseballEquip.h"
 
+#include "character/Tennis/TennisPlayer.h"
+#include "character/Amefoot/AmefootPlayer.h"
+#include "character/Soccer/SoccerPlayer.h"
+#include "character/Baseball/BaseballPlayer.h"
+
+
+int GetCharacterSelectedMotion(CharacterType::Value type) {
+
+    switch ( type ) {
+    case CharacterType::_Tennis:
+        return TennisPlayer::_mt_WinPose;
+    case CharacterType::_Baseball:
+        return 1;
+    case CharacterType::_Soccer:
+        return SoccerPlayer::_ms_Win;
+    case CharacterType::_Americanfootball:
+        return AmefootPlayer::Motion_Win_Pose;
+    case CharacterType::_Volleyball:
+    case CharacterType::_Lacrosse:
+    case CharacterType::__ErrorType:
+    default:
+        MyAssert(false, "使えないキャラクターです。");
+        break;
+    }
+    return 0;
+}
+
+int GetCharacterDeselectedMotion(CharacterType::Value type) {
+
+    switch ( type ) {
+    case CharacterType::_Tennis:
+        return TennisPlayer::_mt_Stand;
+    case CharacterType::_Baseball:
+        return baseball_player::_mb_Stand_B;
+    case CharacterType::_Soccer:
+        return SoccerPlayer::_ms_Stand;
+    case CharacterType::_Americanfootball:
+        return AmefootPlayer::Motion_Stand;
+    case CharacterType::_Volleyball:
+    case CharacterType::_Lacrosse:
+    case CharacterType::__ErrorType:
+    default:
+        MyAssert(false, "使えないキャラクターです。");
+        break;
+    }
+    return 0;
+}
 
 SelectCharacterWindow::SelectCharacterWindow(
     SelectCursor*   pCursor
@@ -11,6 +58,10 @@ SelectCharacterWindow::SelectCharacterWindow(
 {
     //キャラクタを読み込み
     LoadCharacterModels();
+
+    for ( auto& it : m_ChrRenderers ) {
+        it->Update(1.0f);
+    }
 
     //ランダムメッシュ
  /*   m_pRandomMesh = new MeshRenderer(
@@ -95,14 +146,9 @@ void SelectCharacterWindow::LoadCharacterModels()
         //描画On Off切り替え
         m_ChrRenderers[i]->m_Visible = (Type == m_pCursor->m_PlayerInfo.chr_type);
         
-        if (Type == CharacterType::_Americanfootball)
-        {
-            m_ChrRenderers[i]->SetMotion(2);
-        }
-        else
-        {
-            m_ChrRenderers[i]->SetMotion(1);
-        }
+        m_ChrRenderers[i]->SetMotion(
+            GetCharacterDeselectedMotion(Type)
+            );
         
     }
 }
@@ -171,16 +217,24 @@ bool SelectCharacterWindow::Update()
             m_pCursor->m_Selected == true
             )
         {
-            
+            m_PreFrameIsSelected = true;
+            m_ChrRenderers.at((int)m_pCursor->m_PlayerInfo.chr_type)->SetMotion(
+                GetCharacterSelectedMotion(m_pCursor->m_PlayerInfo.chr_type)
+                );
+        }
+        else if( m_PreFrameIsSelected == true &&
+            m_pCursor->m_Selected == false )
+        {
+            m_PreFrameIsSelected = false;
+            m_ChrRenderers.at((int)m_pCursor->m_PlayerInfo.chr_type)->SetMotion(
+                GetCharacterDeselectedMotion(m_pCursor->m_PlayerInfo.chr_type)
+                );
         }
     }
-
-    
 
     //コンピュータ操作で未設定なら//「コンピュータ」ＵＩ表示
     m_DrawComputerUI = 
         (m_pCursor->m_PlayerInfo.chr_type == CharacterType::__ErrorType);
-
 
 
     return true;
