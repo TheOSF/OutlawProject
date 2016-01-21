@@ -26,7 +26,8 @@ Snakeshot::Snakeshot(
     m_pRigidBody(nullptr),
     m_pOriginParent(pParent),
     m_pTornadoEffect(nullptr),
-    m_Timer(0)
+    m_Timer(0),
+    m_pTarget(nullptr)
 {
 	m_pStatefunc = &Snakeshot::State_TargetDecision;
 
@@ -61,6 +62,7 @@ Snakeshot::Snakeshot(
     m_Damage.pBall = this;
     m_Damage.pParent = m_Params.pParent;
     m_Damage.Value = 0.0f;
+    m_Damage.m_Enable = true;
 
     //エフェクト
     TornadoEffect::Param param;
@@ -236,7 +238,6 @@ void Snakeshot::UpdateMesh()
     Matrix m;
 
     float Ballsize = UsualBall::GetBallScale(CharacterType::_Soccer);
-
 
     SetTransformMatrixXYZ(&m, m_Params.pos.x, m_Params.pos.y, m_Params.pos.z, m_Angle.x, m_Angle.y, m_Angle.z);
 

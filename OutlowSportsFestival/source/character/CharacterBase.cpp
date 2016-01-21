@@ -47,6 +47,7 @@ m_Renderer(pMesh)
   
     //ƒ‚ƒfƒ‹\’z
     CharacterBase::CreateCharacterModel(&m_Renderer, m_PlayerInfo.chr_type, m_PlayerInfo.number);
+    chr_func::CreateTransMatrix(this, &m_Renderer.m_TransMatrix);
 }
 
 CharacterBase::~CharacterBase()
