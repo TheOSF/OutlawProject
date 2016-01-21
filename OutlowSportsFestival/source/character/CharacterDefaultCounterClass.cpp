@@ -106,6 +106,10 @@ void CharacterDefaultCounter::Pose()
 {
     //カウンタ更新
     ++m_Count;
+
+
+    //移動量を減速
+    chr_func::XZMoveDown(m_pOwner, 0.15f);
     
     if (m_Count == 1)
     {
@@ -128,9 +132,7 @@ void CharacterDefaultCounter::Pose()
 
         //イベントクラス通知
         m_pEventClass->Pose();
-        
-        //移動量を初期化
-        chr_func::XZMoveDown(m_pOwner, 1);
+       
     }
 
     //カウンター可能なフレームなら

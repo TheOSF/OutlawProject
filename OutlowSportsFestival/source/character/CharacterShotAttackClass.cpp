@@ -44,14 +44,24 @@ bool CharacterShotAttack::Update()
 	if (m_Timer == 0)
 	{// UŒ‚ŠJŽn
 		m_pEvent->AttackStart();
-
-		// Œü‚«•â³
-		chr_func::AngleControll(
-			m_pCharacter,
-			m_pCharacter->m_Params.pos + Vector3(m_StickValue.x, 0, m_StickValue.y),
-			m_AttackParams.MaxTurnRadian
-			);
 	}
+
+    if (m_Timer < m_AttackParams.ShotFrame)
+    {
+        CharacterBase* pTarget = nullptr;
+        
+        if (chr_func::CalcAtkTarget(m_pCharacter, D3DXToRadian(90), 60.0f, &pTarget))
+        {
+            // Œü‚«•â³
+            chr_func::AngleControll(
+                m_pCharacter,
+                pTarget->m_Params.pos,
+                D3DXToRadian(10)
+                );
+        }
+
+        
+    }
 
 	// Œ¸‘¬
 	chr_func::XZMoveDown(

@@ -114,7 +114,8 @@ void AmefootPlayerState_UsualMove::ActionStateSwitch(AmefootPlayer* pCharacter)
           pCharacter->SetState(new AmefootPlayerState_Evasion());
      }
 
-     if ( controller::GetTRG(controller::button::maru, pCharacter->m_PlayerInfo.number) )
+     if (chr_func::isCanSpecialAttack(pCharacter) &&
+         controller::GetTRG(controller::button::maru, pCharacter->m_PlayerInfo.number))
      {
          // [›] ‚Å [•KŽE‹Z]
          pCharacter->SetState(new AmefootPlayerState_SpecialAtk(pCharacter));

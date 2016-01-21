@@ -46,8 +46,8 @@ public:
         DamageBase::Type	damage_type,	 //ダメージ判定のタイプ
         float				damage_val,		 //ダメージ量
         MoveControll*       pMoveControll,   //移動クラス
-        UINT                hit_num = 1,     //ヒット数
-        UINT                live_frame = 240 //飛行時間
+        int                 hit_num = 1,     //ヒット数
+        int                 live_frame = 240 //飛行時間
 		);
 
 	~UsualBall();
@@ -104,9 +104,9 @@ private:
     LocusHDR                    m_Locus;
     Matrix                      m_BaseMatrix;
     RigidBody*                  m_pRigitBody;
-    const UINT                  m_HitNum;
-    UINT                        m_HitCountSave;
-    UINT                        m_HitStopFrame;
+    const int                   m_HitNum;
+    int                         m_HitCountSave;
+    int                         m_HitStopFrame;
     int                         m_FlyLiveFrame;
     const CharacterType::Value  m_FirstParentType;
     BallEffect                  m_BallEffect;

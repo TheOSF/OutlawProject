@@ -19,8 +19,8 @@ UsualBall::UsualBall(
     DamageBase::Type	damage_type,	//ダメージ判定のタイプ
     float				damage_val,		//ダメージ量
     MoveControll*       pMoveControll,   //移動クラス
-    UINT                hit_num,        //ヒット数
-    UINT                live_frame   
+    int                 hit_num,        //ヒット数
+    int                 live_frame   
     ) :
     m_DeleteFrame(120),
     m_Locus(15),
@@ -34,11 +34,14 @@ UsualBall::UsualBall(
     m_FlyLiveFrame((int)live_frame),
     m_pMoveControll(pMoveControll)
 {
-
+    
 	LPIEXMESH		pBallMesh;
 
 	//パラメータ代入
     m_Params = params;
+
+
+    D3DXMatrixIdentity(&m_BaseMatrix);
 
     {
         //ダメージ判定のパラメータを代入

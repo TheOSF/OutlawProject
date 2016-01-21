@@ -18,7 +18,8 @@ TennisHeartBall::TennisHeartBall(
     m_LiveCount(4),
     m_MoveCount(0),
     m_ScaleCount(0.15f),
-    m_ScaleMove(0.0025f)
+    m_ScaleMove(0.0025f),
+    m_isLive(true)
 {
     {
         m_PrePos = pos;
