@@ -2,18 +2,23 @@
 #include "../character/CharacterBase.h"
 #include "../character/Baseball/BaseballEquip.h"
 
+#include "character/Tennis/TennisPlayer.h"
+#include "character/Amefoot/AmefootPlayer.h"
+#include "character/Soccer/SoccerPlayer.h"
+#include "character/Baseball/BaseballPlayer.h"
+
 
 int GetCharacterSelectedMotion(CharacterType::Value type) {
 
     switch ( type ) {
     case CharacterType::_Tennis:
-        return 0;
+        return TennisPlayer::_mt_WinPose;
     case CharacterType::_Baseball:
-        return 0;
+        return 1;
     case CharacterType::_Soccer:
-        return 0;
+        return SoccerPlayer::_ms_Win;
     case CharacterType::_Americanfootball:
-        return 0;
+        return AmefootPlayer::Motion_Win_Pose;
     case CharacterType::_Volleyball:
     case CharacterType::_Lacrosse:
     case CharacterType::__ErrorType:
@@ -28,11 +33,13 @@ int GetCharacterDeselectedMotion(CharacterType::Value type) {
 
     switch ( type ) {
     case CharacterType::_Tennis:
+        return TennisPlayer::_mt_Stand;
     case CharacterType::_Baseball:
+        return baseball_player::_mb_Stand_B;
     case CharacterType::_Soccer:
-        return 1;
+        return SoccerPlayer::_ms_Stand;
     case CharacterType::_Americanfootball:
-        return 2;
+        return AmefootPlayer::Motion_Stand;
     case CharacterType::_Volleyball:
     case CharacterType::_Lacrosse:
     case CharacterType::__ErrorType:

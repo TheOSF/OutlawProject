@@ -54,6 +54,9 @@ m_BackTex("DATA\\Texture\\mizu.png")
     //キャラクタポイントをセット
     SetCharacterPoint();
 
+    // シーンUIをセット
+    SetSceneUI();
+
     //コンピュータ用のポイントをセット
     //SetComputerPoint();
 
@@ -222,6 +225,18 @@ void SceneCharacterSelect::CreateBack()
 
     new StaticGameObjectTemplate<Renderer>(new Renderer(&m_BackTex));
 
+}
+
+void SceneCharacterSelect::SetSceneUI()
+{
+    SelectPointBase* p = new SelectPointBase(m_pManager, SelectPointBase::PointType::CharacterSelect_Title, &m_Texture, RectI(0, 896, 640, 128));
+    Vector2 Center((float)iexSystem::ScreenWidth*0.5f, (float)iexSystem::ScreenHeight*0.5f);
+    Vector2 StartOffset(0, -(float)iexSystem::ScreenHeight*2.0f);
+    Vector2 EndOffset(0, -(float)iexSystem::ScreenHeight * 0.43f);
+    p->m_Pos = Center + StartOffset;
+    p->m_MoveTargetPos = Center + EndOffset;
+    p->m_SortZ = 0.0f;
+    p->m_Size = Vector2(1000, 120);
 }
 
 void SceneCharacterSelect::SetCharacterPoint()

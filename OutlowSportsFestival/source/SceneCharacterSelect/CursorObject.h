@@ -26,7 +26,9 @@ public:
         ComputerDefaultPoint,
 
         ComputerStrong,
-        ComputerChrSelect
+        ComputerChrSelect,
+
+        CharacterSelect_Title,
     };
 
     Vector2         m_MoveTargetPos;
