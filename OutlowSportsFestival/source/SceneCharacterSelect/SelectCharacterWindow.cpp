@@ -52,6 +52,10 @@ SelectCharacterWindow::SelectCharacterWindow(
     //キャラクタを読み込み
     LoadCharacterModels();
 
+    for ( auto& it : m_ChrRenderers ) {
+        it->Update(1.0f);
+    }
+
     //ランダムメッシュ
  /*   m_pRandomMesh = new MeshRenderer(
         new iexMesh("DATA\\ChrSelect\\Model\\random.imo"), 
