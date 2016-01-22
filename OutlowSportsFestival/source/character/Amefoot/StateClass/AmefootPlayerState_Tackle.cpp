@@ -11,6 +11,7 @@
 #include "../../../Effect/ImpactLightObject.h"
 #include "../../../Effect/GlavityLocus.h"
 
+static const float g_TackleDamageValue = 25.0f;
 
 AmefootPlayerState_Tackle::AmefootPlayerState_Tackle(AmefootPlayer*const pCharacter) :
 m_pAmefootPlayer(pCharacter),
@@ -151,15 +152,14 @@ void AmefootPlayerState_Tackle::Tackle()
     const RADIAN kAngleControlSpeed = 0.04f; // 角度補正スピード
 
     int kAllFrame = 0;
-    float DamageValue = 0.0f;
     float MoveValue = 0.0f;
 
     //パラメータ取得
-    GetTackleParamByPower(m_TacklePower, &kAllFrame, &MoveValue, &DamageValue);
+    GetTackleParamByPower(m_TacklePower, &kAllFrame, &MoveValue);
 
 
     // 開始
-    if (m_Timer == 0) { TackleStart(MoveValue, DamageValue); }
+    if (m_Timer == 0) { TackleStart(MoveValue ); }
     ++m_Timer;
 
     CharacterBase* pTargetCharacter = nullptr;
@@ -353,7 +353,7 @@ void AmefootPlayerState_Tackle::PoseStart()
 
 
 // タックル開始の瞬間
-void AmefootPlayerState_Tackle::TackleStart(float MoveValue, float DamageValue)
+void AmefootPlayerState_Tackle::TackleStart(float MoveValue)
 {
     const float kAcceleration = MoveValue;
 
@@ -366,7 +366,7 @@ void AmefootPlayerState_Tackle::TackleStart(float MoveValue, float DamageValue)
 
     // ダメージ設定
     m_Damage.m_Enable = true;
-    m_Damage.Value = DamageValue;
+    m_Damage.Value = 0.0f;
     m_Damage.type = DamageBase::Type::_WeekDamage;
 
     m_pAmefootPlayer->m_Renderer.SetMotion(AmefootPlayer::Motion_Tackle_Charge);
@@ -449,6 +449,7 @@ void AmefootPlayerState_Tackle::StandupStart()
 
         m_Damage.m_Enable = false;
 
+        m_pDamageTransform->AddDamage(g_TackleDamageValue);
         m_pDamageTransform->AllFree(Vec);
 
 
@@ -549,22 +550,21 @@ void AmefootPlayerState_Tackle::SmokeEffect()
 
 //パワーから突進のパラメータを得るゲッタ
 void AmefootPlayerState_Tackle::GetTackleParamByPower(
-    RATIO p, int *pOutFrame, float* pOutMoveValue, float* pOutDamagePower)const
+    RATIO p, int *pOutFrame, float* pOutMoveValue)const
 {
     struct
     {
         RATIO ok_value;
         int   Frame;
         float MoveValue;
-        float Damage;
     }
     Params[] =
     {
-        { 1.0f, 22, 0.7f, 1.0f },  //最大パワー時
-        { 0.75f, 22, 0.6f, 1.0f },
-        { 0.5f, 20, 0.55f, 1.0f },
-        { 0.25f, 19, 0.5f, 1.0f },
-        { 0.0f, 18, 0.4f, 1.0f }, //最弱パワー時
+        { 1.0f, 22, 0.7f},  //最大パワー時
+        { 0.75f, 22, 0.6f },
+        { 0.5f, 20, 0.55f },
+        { 0.25f, 19, 0.5f },
+        { 0.0f, 18, 0.4f}, //最弱パワー時
     };
 
     for (auto& it : Params)
@@ -573,7 +573,6 @@ void AmefootPlayerState_Tackle::GetTackleParamByPower(
         {
             *pOutFrame = it.Frame;
             *pOutMoveValue = it.MoveValue;
-            *pOutDamagePower = it.Damage;
 
             return;
         }

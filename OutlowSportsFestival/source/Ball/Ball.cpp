@@ -64,12 +64,6 @@ void BallManager::Release()
 //	return &m_BallData;
 //}
 
-#define MyDebugStringC(str,...)\
-{\
-    char temp[512]; \
-    sprintf_s<512>(temp, str, __VA_ARGS__); \
-    OutputDebugString(temp); \
-}
 
 //もっともカウンターするのに適したボールを得る
 bool BallManager::GetCounterBall(
@@ -149,9 +143,9 @@ BallBase::BallID BallManager::AddBall(BallBase* pBall)
     //空きインデックスに追加する
     for (size_t i = 0; i < MaxBallNum; ++i)
     {
-        if (m_BallData[i] == nullptr)
+        if (m_BallData.at(i) == nullptr)
         {
-            m_BallData[i] = pBall;
+            m_BallData.at(i) = pBall;
             
             id = m_IdSetCount;
 
@@ -185,9 +179,9 @@ bool BallManager::EraceBall(BallBase* pBall)
     
     for (i = 0; i < MaxBallNum; ++i)
     {
-        if (m_BallData[i] == pBall)
+        if (m_BallData.at(i) == pBall)
         {
-            m_BallData[i] = nullptr;
+            m_BallData.at(i) = nullptr;
             break;
         }
     }

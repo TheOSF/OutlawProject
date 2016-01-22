@@ -251,6 +251,8 @@ void BaseballState_SPAttack_B::FreezeGame(UINT frame)
 {
 	std::list<LpGameObjectBase> UpdateObjList;
 
+    UpdateObjList.push_back(m_pBaseBall->GetHead());
+    UpdateObjList.push_back(m_pBaseBall->GetWeapon());
 	UpdateObjList.push_back(m_pBaseBall);
 
 	DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, frame, true);

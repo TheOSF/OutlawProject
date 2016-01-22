@@ -440,6 +440,9 @@ void UsualBall::ScaleUpdate()
 
 void UsualBall::Counter(CharacterBase* pCounterCharacter)
 {
+    //ˆÚ“®ƒNƒ‰ƒX‚É’Ê’m
+    m_pMoveControll->Counter(pCounterCharacter, this);
+
     m_Damage.pParent = m_Params.pParent = pCounterCharacter;
 
     UpdateColor();
@@ -459,7 +462,7 @@ void UsualBall::Counter(CharacterBase* pCounterCharacter)
 void UsualBall::ToNoWork()
 {
     //‚·‚Å‚ÉUŒ‚”»’è‚Ì‚È‚¢ó‘Ô‚É‚È‚Á‚Ä‚¢‚½‚çreturn
-    if (m_Params.type == BallBase::Type::_DontWork)
+    if (m_pRigitBody != nullptr)
     {
         return;
     }

@@ -686,7 +686,7 @@ void SoccerState_PlayerControll_Shot::Enter(SoccerPlayer* s)
 			chr_func::GetFront(m_pSoccer, &param.move);
 			param.move *= 0.5f;
 			param.pos = m_pSoccer->m_Params.pos;
-			param.pos.y = 0.1f;
+			param.pos.y = 0.4f;
 			param.pParent = m_pSoccer;
 			param.type = BallBase::Type::_Usual;
 			Sound::Play(Sound::Impact2);
@@ -1054,10 +1054,10 @@ CharacterShotAttack* SoccerState_PlayerControll_Finisher::SnakeShotClass(SoccerP
 
 	CharacterShotAttack::AttackParams atk;
 
-	atk.AllFrame = 80;
+	atk.AllFrame = 55;
 	atk.MaxTurnRadian = PI / 4;
 	atk.MoveDownSpeed = 0.3f;
-	atk.ShotFrame = 70;
+	atk.ShotFrame = 55;
 
 	return m_pSnakeShotClass = new CharacterShotAttack(
 		s,

@@ -63,7 +63,7 @@ void AmefootPlayerState_SpecialAtk::Enter(AmefootPlayer* pCharacter)
         );
 
     m_pDamage->pParent = m_pChr;
-    m_pDamage->m_Param.size = 3.0f;
+    m_pDamage->m_Param.size = 2.2f;
     m_pDamage->Value = 0.0f;
     m_pDamage->type = DamageBase::Type::_ControllDamage;
 
@@ -216,6 +216,7 @@ void AmefootPlayerState_SpecialAtk::UpdateDamageTransform()
 void AmefootPlayerState_SpecialAtk::Explode()
 {
     //付いているキャラクタを離す
+    m_pDamageTransform->AddDamage(m_DamageValue);
     m_pDamageTransform->m_Destroy = true;
     m_pDamageTransform = nullptr;
 
@@ -234,7 +235,7 @@ void AmefootPlayerState_SpecialAtk::Explode()
     pDamage->m_VecType = DamageShpere::DamageVecType::MemberParam;
 
     pDamage->pParent = m_pChr;
-    pDamage->Value = m_DamageValue;
+    pDamage->Value = 0;
 
     new DamageObject(pDamage, 5);
 
@@ -525,6 +526,11 @@ void AmefootPlayerState_SpecialAtk::State_Dush()
     if (m_pDamage->HitCount > 0)
     {
         SetState(&AmefootPlayerState_SpecialAtk::State_HangDush);
+
+        //更新
+        NoDamageUpdate();
+
+        return;
     }
 
     //壁に当たっていたら or 時間経過で失敗ステートに移行

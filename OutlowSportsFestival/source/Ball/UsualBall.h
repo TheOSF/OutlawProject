@@ -24,6 +24,8 @@ public:
     {
     public:
         virtual ~MoveControll(){}
+
+        virtual void Counter(CharacterBase* pCounterChr, UsualBall* pBall){}
         virtual void Move(UsualBall* pBall) = 0;
     };
 

@@ -52,7 +52,6 @@ CharacterDamageMotion::~CharacterDamageMotion()
 void CharacterDamageMotion::Update()
 {
     const float AllFrame = 25;
-    const float NoDamageFrame = 5;
     const float AddSpeed = (m_Params.counter_hit) ? (0.33333f) : (25.0f / (float)m_Params.frame);
 
 	//フレーム更新
@@ -147,33 +146,17 @@ void CharacterDamageMotion::Update()
         m_pEvent->End();
     }
 
-    //無敵フレーム判定
-    if (m_Timer > NoDamageFrame)
-    {
-        //ダメージ判定
-        chr_func::DamageCheck(m_pCharacter, m_pHitEvent);
-    }
 
     //前回のフレームで揺れて動いた分を元に戻す
     m_pCharacter->m_Params.pos = m_Pos;
 
 
-    //キャラクタ更新
+    
     {
         //ヒットバック減衰
         chr_func::XZMoveDown(m_pCharacter, 0.1f*AddSpeed);
 
-        //重力加算
-        chr_func::UpdateMoveY(m_pCharacter, AddSpeed);
-
-        //位置を更新
-        chr_func::PositionUpdate(m_pCharacter, AddSpeed);
-
-        //壁との接触判定
-        chr_func::CheckWall(m_pCharacter);
-
-        //床との接触判定
-        chr_func::CheckGround(m_pCharacter);
-
+        //キャラクタ更新
+        chr_func::UpdateAll(m_pCharacter, m_pHitEvent, AddSpeed);
     }
 }

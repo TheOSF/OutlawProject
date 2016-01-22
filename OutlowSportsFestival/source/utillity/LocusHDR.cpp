@@ -31,7 +31,7 @@ void LocusHDR::AddPoint(
     )
 {
     //‚Ð‚Æ‚ÂŒã‚ë‚É‚¸‚ç‚·
-    for (int i = m_UseCount; i >= 0; --i)
+    for (int i = (int)m_UseCount; i > 0; --i)
     {
         m_pPointData[i] = m_pPointData[i - 1];
     }

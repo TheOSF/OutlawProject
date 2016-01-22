@@ -36,6 +36,8 @@ public:
     //カウンターパラメータ
     struct Param
     {
+        Param();
+
         UINT     PoseFrame;       //構えを行うフレーム
         UINT     CanCounterFrame; //カウンター移行が可能なフレーム
         UINT     ShotFrame;       //ボールを検知してからキャッチするまでのフレーム

@@ -109,6 +109,8 @@ public:
 	void setChangeFlg(bool flg){ changeflg = flg; }
 	bool getChangeFlg(){ return changeflg; }
 
+    BaseballEquip* GetWeapon(){ return WeaponEquip; }
+    BaseballEquip* GetHead(){ return HeadEquip; }
 public:
 
 };

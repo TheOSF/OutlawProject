@@ -114,10 +114,16 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 			param.pos.y = UsualBall::UsualBallShotY;
 
 			param.pParent = m_pBaseball;
-			//param.scale = 1.0f;
+			param.scale = 1.0f;
 			param.type = BallBase::Type::_Milder;
+
 			//¶¬
-			new MilderHoming(param, 5, m_pBaseball);
+            new UsualBall(
+                param,
+                DamageBase::Type::_WeekDamage,
+                5.0f,
+                MilderHoming::GetMilderHomingMove()
+                );
 
             //ƒRƒ“ƒgƒ[ƒ‰‚ğU“®
             chr_func::SetControllerShock(

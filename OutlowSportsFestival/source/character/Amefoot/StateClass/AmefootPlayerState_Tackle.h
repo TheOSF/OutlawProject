@@ -41,7 +41,7 @@ public:
     void HitStop();             // ヒットストップ
 
     void PoseStart();           // 構え開始の瞬間
-    void TackleStart(float MoveValue, float DamageValue); // タックル開始の瞬間
+    void TackleStart(float MoveValue); // タックル開始の瞬間
     void JumpStart();           // ジャンプ開始の瞬間
     void DrivaAwayStart();      // タックル打ち上げ開始の瞬間
     void TouchdownStart();      // タッチダウン開始の瞬間
@@ -51,7 +51,7 @@ public:
     void SmokeEffect();
 
     //パワーから突進のパラメータを得るゲッタ
-    void GetTackleParamByPower(RATIO p, int *pOutFrame, float* pOutMoveValue, float* pOutDamagePower)const;
+    void GetTackleParamByPower(RATIO p, int *pOutFrame, float* pOutMoveValue)const;
 
     //引っ付きクラスを腕の位置に更新する
     void UpdateDamageTransform();

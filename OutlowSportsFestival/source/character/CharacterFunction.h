@@ -107,6 +107,10 @@ namespace chr_func
     //攻撃のターゲットを得る(複数のターゲットがいた場合、自身のもっとも前にいるキャラクタを選ぶ)
     bool CalcAtkTarget(CharacterBase* pOwner, RADIAN check_angle, float check_distance, CharacterBase** ppOut);
 
+    //攻撃のターゲットを得る(複数のターゲットがいた場合、自身のもっとも前にいるキャラクタを選ぶ)
+    bool CalcAtkTarget(CharacterBase* pOwner, CrVector3 OwnerPos, CrVector3 OwnerViewVec, RADIAN check_angle, float check_distance, CharacterBase** ppOut);
+
+
     //キャラクタのラウンド勝利数を加算する
     void AddWinPoint(CharacterBase* p);
 

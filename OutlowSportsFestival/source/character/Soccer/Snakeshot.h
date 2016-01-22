@@ -34,6 +34,7 @@ public:
     RigidBody*           m_pRigidBody;
     Vector3              m_Angle;
     int                  m_Timer;
+    int                  m_CounterNoDamage;
 
 	void(Snakeshot::*m_pStatefunc)();
 
@@ -49,12 +50,10 @@ public:
 	void UpdateMesh();
 	bool isHitWall();
     void UpdateEffect();
-	void FreezeGame(UINT frame);
 
 	void Counter(CharacterBase* pCounterCharacter)override;
 
-	void ToNoWork();
-
+    void DeleteEffect();
     void EffectApper(int n, RATIO scale);
 public:
 	//　遠距離ターゲット選定(もしなかったらnullptrを返す)

@@ -599,6 +599,25 @@ bool chr_func::CalcAtkTarget(
     float           check_distance,
     CharacterBase** ppOut)
 {
+    return CalcAtkTarget(
+        pOwner,
+        pOwner->m_Params.pos,
+        GetFront(pOwner),
+        check_angle,
+        check_distance,
+        ppOut
+        );
+}
+
+//攻撃のターゲットを得る(複数のターゲットがいた場合、自身のもっとも前にいるキャラクタを選ぶ)
+bool chr_func::CalcAtkTarget(
+    CharacterBase* pOwner, 
+    CrVector3 OwnerPos, 
+    CrVector3 OwnerViewVec,
+    RADIAN check_angle,
+    float check_distance,
+    CharacterBase** ppOut)
+{
     //ターゲット選定＆向き補正
     CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
 
@@ -606,8 +625,7 @@ bool chr_func::CalcAtkTarget(
     RADIAN TempAngle;
 
     Vector3 toEnemy;
-    Vector3 MyFront;      //自身の前方ベクトル
-    chr_func::GetFront(pOwner, &MyFront);
+    Vector3 MyFront = OwnerViewVec;
 
     auto it = ChrMap.begin();
 
@@ -627,7 +645,7 @@ bool chr_func::CalcAtkTarget(
         }
 
         //敵へのベクトル
-        toEnemy = it->first->m_Params.pos - pOwner->m_Params.pos;
+        toEnemy = it->first->m_Params.pos - OwnerPos;
 
         //距離外ならcontinue
         if (toEnemy.Length() > check_distance)

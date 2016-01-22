@@ -27,7 +27,8 @@ Snakeshot::Snakeshot(
     m_pOriginParent(pParent),
     m_pTornadoEffect(nullptr),
     m_Timer(0),
-    m_pTarget(nullptr)
+    m_pTarget(nullptr),
+    m_CounterNoDamage(0)
 {
 	m_pStatefunc = &Snakeshot::State_TargetDecision;
 
@@ -106,6 +107,15 @@ bool Snakeshot::Update()
 }
 bool Snakeshot::Msg(MsgType mt)
 {
+    if (mt == MsgType::_GameSet &&
+        m_pStatefunc == &Snakeshot::State_ToTagetMove || 
+        m_pStatefunc == &Snakeshot::State_TargetDecision 
+        )
+    {
+        m_pStatefunc = &Snakeshot::State_NoWork;
+
+        return true;
+    }
 
 	return false;
 }
@@ -132,6 +142,12 @@ void Snakeshot::State_ToTagetMove()
 	//ターゲットに向かって移動し、もしターゲットが死んでいたら再度
 	//State_TargetDecisionに移行
 
+    //カウンター直後はダメージ判定なし！
+    if (m_Damage.m_Enable == false)
+    {
+        m_Damage.m_Enable = --m_CounterNoDamage <= 0;
+    }
+    
 	//もしターゲットが死んでいたら再度State_TargetDecisionに移行
 	if (chr_func::isDie(m_pTarget))
 	{
@@ -194,6 +210,23 @@ void Snakeshot::State_NoWork()
     m_Params.type = BallBase::Type::_DontWork;
 
     m_pStatefunc = &Snakeshot::State_Delete;
+
+    //ポトンと落ちる用のボール
+    {
+        BallBase::Params param = m_Params;
+
+        param.type = BallBase::Type::_DontWork;
+        param.pParent = m_pOriginParent;
+
+        new UsualBall(
+            param,
+            DamageBase::Type::_WeekDamage,
+            0,
+            UsualBall::GetUsualMoveControll(),
+            1,
+            1
+            );
+    }
 }
 
 
@@ -211,8 +244,11 @@ void Snakeshot::State_Attack()
     //回転しながら停滞
     m_Params.type = BallBase::Type::_DontWork;
     m_Damage.m_Enable = false;
+
+    m_Params.move = Vector3Zero;
+    m_Angle.y += 3.0f*(1 - ((float)m_Timer / (float)50));
     
-    if (++m_Timer > 120)
+    if (++m_Timer > 50)
     {
         m_pStatefunc = &Snakeshot::State_NoWork;
     }
@@ -304,12 +340,29 @@ void Snakeshot::Counter(CharacterBase* pCounterCharacter)
                 break;
             }
         }
+
+        //10フレーム間判定なしに
+        m_CounterNoDamage = 10;
+        m_Damage.m_Enable = false;
     }
     else
     {
         m_Damage.pParent = m_Params.pParent = pCounterCharacter;
 
         m_pStatefunc = &Snakeshot::State_TargetDecision;
+    }
+}
+
+void Snakeshot::DeleteEffect()
+{
+    for (int i = 0; i < 10; ++i)
+    {
+        EffectFactory::Smoke(
+            m_Params.pos + Vector3Rand(),
+            Vector3(0, 0.05f, 0),
+            2.0f,
+            0.1f
+            );
     }
 }
 

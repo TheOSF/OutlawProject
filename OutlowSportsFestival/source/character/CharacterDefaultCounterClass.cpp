@@ -16,6 +16,21 @@
 
 const float CharacterDefaultCounter::m_SkillUpValue = 0.05f; //スキルゲージが上がる量
 
+CharacterDefaultCounter::Param::Param()
+{
+    PoseFrame = 0;
+    CanCounterFrame = 0;
+    ShotFrame = 0;
+    AfterShotFrame = 0;
+    FailedFrame = 0;
+
+    CatchFrame = 0;
+    CatchBoneNumber = 0;
+
+    CatchAriaSize = 1.0f;
+    ControllRadian = D3DXToRadian(45);
+    BallSpeed = 0.8f;
+}
 
 CharacterDefaultCounter::CharacterDefaultCounter(
     CharacterBase*               pOwner,        //オーナーキャラクタ
@@ -415,6 +430,7 @@ void CharacterDefaultCounter::Shot()
 
         //ボールの移動値を計算
         float m = m_pCounterBall->m_Params.move.Length()*1.1f;
+        m = max(m, m_Param.BallSpeed);
         m = min(m, 2.5f);
 
         m_pEventClass->Shot(m_pCounterBall);
