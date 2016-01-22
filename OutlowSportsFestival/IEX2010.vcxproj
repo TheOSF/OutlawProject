@@ -351,6 +351,7 @@
     <ClCompile Include="source\UI\PlayerCursorBillbord.cpp" />
     <ClCompile Include="source\UI\PlayerGauge.cpp" />
     <ClCompile Include="source\UI\RoundUI.cpp" />
+    <ClCompile Include="source\UI\SceneCharacterSelectUI.cpp" />
     <ClCompile Include="source\UI\SelectMenuUI.cpp" />
     <ClCompile Include="source\UI\SelectMenuUI_ControllerPlayer.cpp" />
     <ClCompile Include="source\utillity\ColorUtility.cpp" />
@@ -619,6 +620,7 @@
     <ClInclude Include="source\UI\PlayerCursorBillbord.h" />
     <ClInclude Include="source\UI\PlayerGauge.h" />
     <ClInclude Include="source\UI\RoundUI.h" />
+    <ClInclude Include="source\UI\SceneCharacterSelectUI.h" />
     <ClInclude Include="source\UI\SelectMenuUI.h" />
     <ClInclude Include="source\UI\SelectMenuUI_ControllerPlayer.h" />
     <ClInclude Include="source\utillity\Collision.h" />

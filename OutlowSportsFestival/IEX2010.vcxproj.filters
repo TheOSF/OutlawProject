@@ -233,6 +233,7 @@
     <ClCompile Include="source\character\Soccer\SoccerPlayerState.cpp" />
     <ClCompile Include="source\utillity\ScreenEffect.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_BallTouchDown.cpp" />
+    <ClCompile Include="source\UI\SceneCharacterSelectUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -478,6 +479,7 @@
     <ClInclude Include="source\character\Amefoot\MoveClass\AmefootThrowBall.h" />
     <ClInclude Include="source\utillity\ScreenEffect.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_BallTouchDown.h" />
+    <ClInclude Include="source\UI\SceneCharacterSelectUI.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DATA\Shader\3DEx.fx" />
