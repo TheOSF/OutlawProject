@@ -142,7 +142,7 @@ void SelectPointBase::Select(SelectCursor* p)
     case PointType::ComputerChrSelect:
         if (p->m_PlayerInfo.player_type == PlayerType::_Player)
         {
-            
+            //p->m_Lock = true;
         }
         break;
 
@@ -178,6 +178,13 @@ void SelectPointBase::Cancel(SelectCursor* p)
         p->m_Selected = false;
         break;
 
+    case PointType::ComputerChrSelect:
+    {
+        if ( p->m_PlayerInfo.player_type = PlayerType::_Player ) {
+            p->m_Lock = false;
+        }
+    }
+        
     default:
         return;
     }
@@ -237,7 +244,6 @@ StrongType::Value SelectPointBase::GetChangeStrongType(StrongType::Value Now)
         return StrongType::_Weak;
 
     default:
-
         break;
     }
 
@@ -246,6 +252,8 @@ StrongType::Value SelectPointBase::GetChangeStrongType(StrongType::Value Now)
 
 void SelectPointBase::Render()
 {
+    if ( m_pTexture == nullptr )return;
+
     RectI di;
 
     di.x = (int)(m_Pos.x - m_Size.x*0.5f);
@@ -254,10 +262,11 @@ void SelectPointBase::Render()
     di.w = (int)m_Size.x;
     di.h = (int)m_Size.y;
 
-    m_pTexture->Render(
-        di,
-        m_TexRect
-        );
+        m_pTexture->Render(
+            di,
+            m_TexRect
+            );
+    
 }
 
 //--------------------------------------------------------------------

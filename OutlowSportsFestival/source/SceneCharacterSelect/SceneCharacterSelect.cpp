@@ -10,6 +10,7 @@
 #include "../GameSystem/ResourceManager.h"
 #include "../Sound/Sound.h"
 #include "../SceneOption/SceneOption.h"
+#include "UI/SceneCharacterSelectUI.h"
 
 SceneCharacterSelect::SceneCharacterSelect(
     sceneGamePlay::InitParams&  LoadParams,
@@ -58,7 +59,7 @@ m_BackTex("DATA\\Texture\\mizu.png")
     SetSceneUI();
 
     //コンピュータ用のポイントをセット
-    //SetComputerPoint();
+    //SetComputerPoint(4 - PlayerNum);
 
     //ライトセット
     CreateLight();
@@ -89,7 +90,7 @@ SceneCharacterSelect::~SceneCharacterSelect()
 void SceneCharacterSelect::Update()
 {
     DefCamera.m_Position = Vector3(0, 2.45f, 0);
-    DefCamera.m_Target = Vector3(0, 1.63f, 10);
+    DefCamera.m_Target = Vector3(0, 1.98f, 10);
 
     DefCamera.Update();
 
@@ -229,14 +230,33 @@ void SceneCharacterSelect::CreateBack()
 
 void SceneCharacterSelect::SetSceneUI()
 {
-    SelectPointBase* p = new SelectPointBase(m_pManager, SelectPointBase::PointType::CharacterSelect_Title, &m_Texture, RectI(0, 896, 640, 128));
+    SceneCharacterSelectUI* p = new SceneCharacterSelectUI(&m_Texture, RectI(0, 896, 600, 128));
     Vector2 Center((float)iexSystem::ScreenWidth*0.5f, (float)iexSystem::ScreenHeight*0.5f);
     Vector2 StartOffset(0, -(float)iexSystem::ScreenHeight*2.0f);
     Vector2 EndOffset(0, -(float)iexSystem::ScreenHeight * 0.43f);
-    p->m_Pos = Center + StartOffset;
-    p->m_MoveTargetPos = Center + EndOffset;
-    p->m_SortZ = 0.0f;
-    p->m_Size = Vector2(1000, 120);
+    p->m_Current.Pos = Center + StartOffset;
+    p->m_Target.Pos = Center + EndOffset;
+    p->m_Current.Size = p->m_Target.Size = Vector2(600, 128);
+}
+
+void SceneCharacterSelect::SetComputerPoint(UINT Num) 
+{
+    Vector2 Center((float)iexSystem::ScreenWidth*0.5f, (float)iexSystem::ScreenHeight*0.5f);
+
+    Vector2 ComPoints[4] = {
+        Center + Vector2(-420,0),
+        Center + Vector2(-160,0),
+        Center + Vector2(160,0),
+        Center + Vector2(420,0)
+    };
+
+    for ( UINT i = 0; i < Num; i++ ) {
+
+        SelectPointBase* p;
+
+        p = new SelectPointBase(m_pManager, SelectPointBase::PointType::ComputerChrSelect, &m_Texture, RectI(0, 0, 128, 128));
+        p->m_Pos = p->m_MoveTargetPos = ComPoints[i + (4 - Num)];
+    }
 }
 
 void SceneCharacterSelect::SetCharacterPoint()
@@ -247,8 +267,8 @@ void SceneCharacterSelect::SetCharacterPoint()
         Vector2 Center((float)iexSystem::ScreenWidth*0.5f, (float)iexSystem::ScreenHeight*0.5f);
         const float Space = 240.0f;
 
-        Vector2 PosA = Vector2(-300, 200);
-        Vector2 PosB = Vector2(-100, 150);
+        Vector2 PosA = Vector2(-300, 230);
+        Vector2 PosB = Vector2(-100, 180);
 
         struct
         {
@@ -410,7 +430,7 @@ void SceneCharacterSelect::State_Selecting()
 
 void SceneCharacterSelect::State_FadeOut()
 {
-    if (++m_Timer > 60)
+    if (++m_Timer > 180)
     {
         //ステート移行
         m_pStateFunc = &SceneCharacterSelect::State_Change;

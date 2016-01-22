@@ -27,8 +27,6 @@ public:
 
         ComputerStrong,
         ComputerChrSelect,
-
-        CharacterSelect_Title,
     };
 
     Vector2         m_MoveTargetPos;

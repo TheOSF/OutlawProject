@@ -11,6 +11,8 @@
 #include "../GameSystem/GameSystem.h"
 #include "../GameScene/SceneGamePlay.h"
 
+class SceneCharacterSelectUI;
+
 class SceneCharacterSelect : public Scene
 {
 public:
