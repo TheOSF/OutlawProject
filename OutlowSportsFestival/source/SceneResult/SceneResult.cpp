@@ -115,6 +115,8 @@ void SceneResult::State_Initialize()
     //画面砕け散るステートへ
     m_pStateFunc = &SceneResult::State_ScreenVanish;
 
+    /*
+
     //キャラクタをセット
     Vector3 pos = Vector3(-5.2f, 1.95f, 0);
     const float Width = -pos.x / 1.5f;
@@ -124,6 +126,8 @@ void SceneResult::State_Initialize()
         SetCharacter(pos, it);
         pos.x += Width;
     }
+
+    */
 
     //スクリーンモデルにテクスチャを張り替える
 

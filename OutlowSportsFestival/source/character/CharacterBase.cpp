@@ -155,7 +155,7 @@ int CharacterBase::GetWinMotion(CharacterType::Value chr_type)
     int Motions[]=
     {
         (int)TennisPlayer::_mt_WinPose,
-        (int)baseball_player::_mb_Damage_Vanish_Fly,
+        (int)baseball_player::_mb_Stand_P,
         (int)SoccerPlayer::_ms_Win,
         (int)AmefootPlayer::Motion_Win_Pose,
     };
@@ -170,7 +170,7 @@ int CharacterBase::GetLoseMotion(CharacterType::Value chr_type)
     int Motions[] =
     {
         (int)TennisPlayer::_mt_LosePose,
-        (int)baseball_player::_mb_Damage_Vanish_Fly,
+        (int)baseball_player::_mb_Stand_P,
         (int)SoccerPlayer::_ms_Lose,
         (int)AmefootPlayer::Motion_Lose_Pose,
     };
