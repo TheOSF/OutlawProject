@@ -85,10 +85,8 @@ void BaseballAttackClass::State_Attack()
 		m_DamageHitCount = m_Damage.HitCount;
 		pNowAtk->HitAttack(&m_Damage);
 		m_DoHit = true;
-
-		
-		//    m_HitStopCount = 5;
 	}
+
 	//角度更新
 	RADIAN ControllRadian = 0;
 
@@ -134,6 +132,7 @@ void BaseballAttackClass::State_Attack()
 			m_pStateFunc = &BaseballAttackClass::State_NextAtk;
 		}
 	}
+
 	//ダメージ有効・無効
 	m_Damage.m_Enable = pNowAtk->isDamageEnable(m_Timer);
 
@@ -161,6 +160,7 @@ void BaseballAttackClass::State_NextAtk()
 
 	m_Timer = 0;
 	m_DoCombo = false;
+    m_Damage.m_Enable = false;
 
 	m_pStateFunc = &BaseballAttackClass::State_Attack;
 }
