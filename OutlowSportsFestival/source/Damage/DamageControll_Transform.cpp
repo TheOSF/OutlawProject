@@ -1,7 +1,10 @@
 #include "DamageControll_Transform.h"
+#include "../character/CharacterFunction.h"
 
 DamageControll_Transform::DamageControll_Transform() :
-m_Destroy(false)
+m_Destroy(false),
+m_AddSkillGaugeValue(2),
+m_pParent(nullptr)
 {
     m_ChrControllArray.fill(nullptr);
     m_ChrArray.fill(nullptr);
@@ -69,8 +72,15 @@ void DamageControll_Transform::AddDamage(float value, bool dontDie)
         if (it != nullptr)
         {
             it->AddDamage(value, dontDie);
+
+            if (m_pParent != nullptr)
+            {
+                chr_func::AddSkillGauge(m_pParent, value*0.01f);
+            }
         }
     }
+
+    
 }
 
 bool DamageControll_Transform::Update()

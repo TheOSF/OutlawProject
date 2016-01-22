@@ -35,6 +35,7 @@ Baseball_SpAtk_Ball::Baseball_SpAtk_Ball(
         m_Damage.m_Enable = true;
         m_Damage.m_Param.pos1 = pos;
         m_Damage.m_Param.pos2 = pos;
+        m_Damage.AddSkillGaugeValue = 0;
 
         UpdateDamageClass();
     }

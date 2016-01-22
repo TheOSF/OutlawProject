@@ -27,6 +27,8 @@ BaseballState_SPAttack_B::BaseballState_SPAttack_B(BaseballPlayer* b) :timeflg(f
 	m_Damage.Value = 0.0f;
 	m_Damage.m_Vec = Vector3AxisZ;
 
+    m_Damage.AddSkillGaugeValue = 0;
+
 	m_Light.Visible = false;
 }
 
@@ -51,7 +53,7 @@ void  BaseballState_SPAttack_B::Enter(BaseballPlayer* b)
 
 
 	//　スキルゲージリセット
-	//chr_func::ResetSkillGauge(b);
+	chr_func::ResetSkillGauge(b);
 
 }
 

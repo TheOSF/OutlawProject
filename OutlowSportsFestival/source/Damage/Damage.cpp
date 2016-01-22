@@ -62,7 +62,7 @@ void DamageBase::OnHitCharacter(CharacterBase* pHitChr)
     //スキルゲージ加算
     if (pParent != nullptr)
     {
-        chr_func::AddSkillGauge(pParent, Value*AddSkillGaugeValue*0.01f);
+        chr_func::AddSkillGauge(pParent, Value * AddSkillGaugeValue * 0.01f);
     }
 }
 

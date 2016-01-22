@@ -158,6 +158,7 @@ void TennisSpecialBall::StateStop()
         m_Damage.m_Enable = true;
         m_Damage.m_Param.size = 5.0f;
         m_Damage.m_Param.pos = m_Pos;
+        m_Damage.AddSkillGaugeValue = 0;
     }
     else
     {

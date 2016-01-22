@@ -14,6 +14,8 @@ public:
 
     bool    m_Destroy;       //削除するかどうか(このクラスを)(このフラグをtrueにする以外でこのクラスは削除されない)
     Matrix  m_Transform;     //姿勢行列(キャラクタ操作)
+    CharacterBase*  m_pParent; //親キャラ(無ければスキルゲージが加算されない)
+    float           m_AddSkillGaugeValue;
 
     DamageControll_Transform();
     ~DamageControll_Transform();

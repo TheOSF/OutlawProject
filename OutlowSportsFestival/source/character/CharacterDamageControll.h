@@ -33,7 +33,7 @@ public:
     void ToFree(CrVector3 Vec);
 
     //ダメージを与える(引数：１　ダメージ量　：２　体力を１残すかどうか)
-    void AddDamage(float value, bool dontDie = false);
+    void AddDamage(float value, bool dontDie);
 
     //毎フレームの更新
     void Update();

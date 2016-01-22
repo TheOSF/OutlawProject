@@ -24,9 +24,11 @@ m_SpeedEffect(1)
     m_Damage.m_Param.pos = m_pAmefootPlayer->m_Params.pos;
     m_Damage.m_Param.size = 2.8f;
     m_Damage.pParent = m_pAmefootPlayer;
+    m_Damage.Value = 0.0f;
 
     //ˆø‚Á•t‚«ƒNƒ‰ƒX‚ðì¬
     m_pDamageTransform = new DamageControll_Transform();
+    m_pDamageTransform->m_pParent = pCharacter;
 }
 
 AmefootPlayerState_Tackle::~AmefootPlayerState_Tackle()
