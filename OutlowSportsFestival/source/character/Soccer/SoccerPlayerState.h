@@ -38,6 +38,36 @@ public:
 	void Exit(SoccerPlayer* s);
 };
 
+class SoccerMoveEvent :public CharacterUsualMove::MoveEvent
+{
+    SoccerPlayer* m_pSoccer;
+public:
+    SoccerMoveEvent(SoccerPlayer* pSoccer) :
+        m_pSoccer(pSoccer){}
+
+    //アニメーションの更新
+    void Update(bool isRun, RATIO speed_ratio)
+    {
+        m_pSoccer->m_Renderer.Update(0.5f);
+    }
+    //走り始めにモーションをセット
+    void RunStart()
+    {
+        m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Run);
+    }
+    //立ちはじめにモーションをセット
+    void StandStart()
+    {
+        m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Stand);
+    }
+
+    //走り終わり
+    void RunEnd()
+    {
+        m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_RunStop);
+    }
+};
+
 //プレイヤー操作のスライディングクラス
 class SoccerState_Sliding :public SoccerState
 {
@@ -141,6 +171,30 @@ public:
 	void Execute(SoccerPlayer* s);
 	void Exit(SoccerPlayer* s);
 };
+
+class SoccerDashEvent
+{
+    SoccerPlayer* m_pSoccer;
+public:
+    SoccerDashEvent(SoccerPlayer* pSoccer) :
+        m_pSoccer(pSoccer){}
+
+    void Update(bool isRun, RATIO speed_ratio)
+    {
+        m_pSoccer->m_Renderer.Update(1.5f);
+    }
+
+    void RunStart()
+    {
+        m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Run);
+    }
+
+    void StandStart()
+    {
+        m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Stand);
+    }
+};
+
 //プレイヤー操作の必殺技クラス
 class SoccerState_PlayerControll_Finisher : public SoccerState
 {

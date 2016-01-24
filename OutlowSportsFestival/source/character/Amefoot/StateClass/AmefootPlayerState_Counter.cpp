@@ -133,7 +133,7 @@ void AmefootPlayerState_Counter::CounterEvent::ShotFaild()
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_Counter::CounterEvent::End()
 {
-     m_pAmefoot->SetState(new AmefootPlayerState_UsualMove());
+    m_pAmefoot->SetState(AmefootPlayerState_UsualMove::GetPlayerControllMove(m_pAmefoot));
 }
 //-----------------------------------------------------------------------------------------
 Vector3 AmefootPlayerState_Counter::CounterEvent::ClacLocalOffset(bool Right)

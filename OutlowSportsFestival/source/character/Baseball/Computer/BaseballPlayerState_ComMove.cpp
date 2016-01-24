@@ -21,46 +21,98 @@
 #include "../../CharacterShotAttackClass.h"
 #include "../../Computer/CharacterComputerReactionHitEvent.h"
 #include "../../CharacterManager.h"
-
-
-class BaseballPlayerComputerrUtillityClass
-{
-public:
-	//ローリングの方向制御クラス
-	class ComputerRollingControll :public  BaseballState_Rolling::CallBackClass
-	{
-	public:
-		BaseballPlayer*const cb;
-		ComputerRollingControll(BaseballPlayer* pb, Vector3 vec) :cb(cb), stick(vec) {}
-		Vector3 stick;
-
-
-		Vector3 GetVec()override
-		{
-			float v = PI / (1 + rand() % 4);
-			Vector3 vec(stick.x + v, 0, stick.z - v);
-
-			return vec;
-
-		}
-	};
-
-};
+#include "BaseballComputerUtillityClass.h"
 
 //ステート開始
 void BaseballPlayerState_ComMove::Enter(BaseballPlayer* b)
 {
+    {
+        //移動パラメータを代入
+        CharacterUsualMove::Params p;
 
+        p.Acceleration = 0.15f;
+        p.MaxSpeed = 0.28f;
+        p.TurnSpeed = 0.3f;
+        p.DownSpeed = 0.08f;
+        p.RunEndFrame = 35;
+
+        //移動クラスの作成
+        m_pMoveClass = new CharacterUsualMove(
+            b,
+            p,
+            new BaseballMoveEvent(b),
+            new BaseballHitEvent(b)
+            );
+    }
+
+    //移動ＡＩクラスの生成
+    {
+        CharacterComputerMove::InParam param;
+
+        if (b->getBatterFlg())
+        {
+            param.m_BestLenList.push_back({ 5.0f, 0.7f });
+            param.m_BestLenList.push_back({ 20.0f, 0.3f });
+        }
+        else
+        {
+            param.m_BestLenList.push_back({ 50.0f, 0.9f });
+            param.m_BestLenList.push_back({ 5.0f, 0.1f });
+        }
+
+        m_pMoveControllClass = new CharacterComputerMove(
+            b,
+            param
+            );
+    }
+
+    //行動ＡＩクラスの生成
+    {
+        m_pDoActionClass = new CharacterComputerDoAction(
+            b,
+            m_pMoveControllClass,
+            new BaseballComputerUtillityClass::AttackEvent(b)
+            );
+    }
+
+    //反応ＡＩクラスの生成
+    {
+        m_pReactionClass = new CharacterComputerReaction(
+            b,
+            BaseballComputerUtillityClass::ReactionEvent::GetInParam(),
+            new BaseballComputerUtillityClass::ReactionEvent(b)
+            );
+    }
 }
 
 
 void BaseballPlayerState_ComMove::Execute(BaseballPlayer* b)
 {
 
+    if (BaseballState_PlayerControll_Move::SwitchGameState(b) == false)
+    {
+        //ＡＩ更新
+        m_pMoveControllClass->Update();
 
-	//モデルのワールド変換行列を更新
-	chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
+        m_pDoActionClass->Update();
 
+        m_pReactionClass->Update();
+
+        //スティック値をセット
+        m_pMoveClass->SetStickValue(m_pMoveControllClass->GetMoveVec());
+
+    }
+    else
+    {
+        //スティックの値セット（移動しない）
+        m_pMoveClass->SetStickValue(Vector2(0, 0));
+    }
+
+    //更新
+    m_pMoveClass->Update();
+
+    //モデルのワールド変換行列を更新
+    chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
 }
 
 void BaseballPlayerState_ComMove::Exit(BaseballPlayer* b)
@@ -70,97 +122,3 @@ void BaseballPlayerState_ComMove::Exit(BaseballPlayer* b)
 	delete m_pDoActionClass;
 	delete m_pReactionClass;
 }
-//
-////　移動
-//void BaseballPlayerState_ComMove::doMove(BaseballPlayer* b)
-//{
-//	//移動イベントクラス
-//	class BaseballMoveEvent :public CharacterUsualMove::MoveEvent
-//	{
-//		BaseballPlayer* m_pBaseball;
-//	public:
-//		BaseballMoveEvent(BaseballPlayer* pBaseball) :
-//			m_pBaseball(pBaseball){}
-//
-//		//アニメーションの更新
-//		void Update(bool isRun, RATIO speed_ratio)
-//		{
-//			m_pBaseball->m_Renderer.Update(1);
-//		}
-//		//走り始めにモーションをセット
-//		void RunStart()
-//		{
-//			if (m_pBaseball->getBatterFlg())
-//			{
-//				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Run_B);
-//			}
-//			else
-//			{
-//				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Run_P);
-//			}
-//		}
-//		//立ちはじめにモーションをセット
-//		void StandStart()
-//		{
-//			if (m_pBaseball->getBatterFlg())
-//			{
-//				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand_B);
-//			}
-//			else
-//			{
-//				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand_P);
-//			}
-//		}
-//
-//		//走り終わり
-//		void RunEnd()
-//		{
-//			if (m_pBaseball->getBatterFlg())
-//			{
-//				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stop_B);
-//			}
-//			else
-//			{
-//				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stop_P);
-//			}
-//		}
-//	};
-//
-//	//移動パラメータを代入
-//	CharacterUsualMove::Params p;
-//
-//
-//	p.Acceleration = 0.15f;
-//	p.MaxSpeed = 0.32f;
-//	p.TurnSpeed = 0.3f;
-//	p.DownSpeed = 0.08f;
-//    p.RunEndFrame = 35;
-//
-//
-//    //移動コントロールクラスの作成
-//    {
-//        CharacterComputerMove::InParam param;
-//
-//        param.m_BestLenList.push_back({ 5, 0.5f });
-//        param.m_BestLenList.push_back({ 20, 0.5f });
-//
-//        m_pMoveControllClass = new CharacterComputerMove(b, param);
-//    }
-//
-//	//移動クラスの作成
-//	m_pMoveClass = new CharacterUsualMove(
-//		b,
-//		p,
-//		new BaseballMoveEvent(b),
-//		new BaseballHitEvent(b)
-//		);
-//}
-//
-////　攻撃
-//void BaseballPlayerState_ComMove::doAction(BaseballPlayer* b)
-//{
-//
-//
-//}
-
-

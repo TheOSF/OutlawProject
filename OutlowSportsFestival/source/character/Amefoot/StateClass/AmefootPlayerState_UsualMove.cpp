@@ -7,30 +7,9 @@
 #include "../../CharacterFunction.h"
 #include "../../CharacterHitEventFunc.h"
 #include "../AmefootUsualHitEvent.h"
-#include "../UtilityClass/AmefootPlayer_ThrowBallControll.h"
 #include "../AmefootPlayerState.h"
-
-//-----------------------------------------------------------------------------------------
-// MoveEvent
-//-----------------------------------------------------------------------------------------
-typedef class AmefootPlayerState_UsualMove::MoveEvent : public CharacterUsualMove::MoveEvent
-{
-public:
-     MoveEvent(AmefootPlayer* pAmefoot);
-
-     void Update(bool isRun , RATIO speed)override;
-
-     void RunStart()override;
-
-     void StandStart()override;
-
-     void RunEnd()override;
-
-private:
-     AmefootPlayer* m_pAmefoot;
-
-}AmefootUsualMove_MoveEvent;
-//-----------------------------------------------------------------------------------------
+#include "AmefootComputerState_UsualMove.h"
+#include "AmefootCommonState_PoseMotion.h"
 
 //-----------------------------------------------------------------------------------------
 // AmefootPlayerState_UsualMove
@@ -85,19 +64,7 @@ AmefootState* AmefootPlayerState_UsualMove::GetPlayerControllMove(AmefootPlayer*
         return new AmefootPlayerState_UsualMove();
 
     case PlayerType::_Computer:
-        return new AmefootPlayerState_UsualMove();
-
-        switch ( player->m_PlayerInfo.strong_type )
-        {
-        case StrongType::_Weak:
-            //return new 弱い通常移動
-        case StrongType::_Usual:
-            //return new 普通の通常移動
-        case StrongType::_Strong:
-            //return new 強い通常移動
-        default:
-            break;
-        }
+        return new AmefootComputerState_UsualMove();
 
     default:
         break;
@@ -106,6 +73,36 @@ AmefootState* AmefootPlayerState_UsualMove::GetPlayerControllMove(AmefootPlayer*
     assert("通常ステートが作成できないキャラクタタイプです AmefootPlayerState_UsualMove::GetPlayerControllMove" && 0);
     return nullptr;
 }
+//-----------------------------------------------------------------------------------------
+bool AmefootPlayerState_UsualMove::SwitchGameState(AmefootPlayer* player)
+{
+    switch (player->GetStateType())
+    {
+    case CharacterBase::State::Usual:
+
+        return false;
+
+    case CharacterBase::State::Freeze:
+
+        return true;
+
+    case CharacterBase::State::LosePose:
+        player->SetState(new AmefootCommonState_PoseMotion(AmefootPlayer::Motion_Lose_Pose, 0.2f, 1000));
+        return true;
+
+    case CharacterBase::State::WinPose:
+        player->SetState(new AmefootCommonState_PoseMotion(AmefootPlayer::Motion_Win_Pose, 0.2f, 1000));
+
+        return true;
+    default:
+        break;
+    }
+
+    return false;
+
+
+}
+
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_UsualMove::ActionStateSwitch(AmefootPlayer* pCharacter)
 {
@@ -125,10 +122,8 @@ void AmefootPlayerState_UsualMove::ActionStateSwitch(AmefootPlayer* pCharacter)
          pCharacter->isCanThrowBall()
          )
      {// [△] で [遠距離攻撃]
-         pCharacter->SetState(
-             new AmefootPlayerState_ThrowBall(
-                 new AmefootPlayer_ThrowBallControll(pCharacter))
-             );
+         pCharacter->SetState(new AmefootPlayerState_ThrowBall());
+             
      }
      
      if ( controller::GetTRG(controller::button::shikaku, pCharacter->m_PlayerInfo.number) )
@@ -154,11 +149,11 @@ void AmefootPlayerState_UsualMove::ActionStateSwitch(AmefootPlayer* pCharacter)
 //-----------------------------------------------------------------------------------------
 // MoveEvent
 //-----------------------------------------------------------------------------------------
-AmefootPlayerState_UsualMove::MoveEvent::MoveEvent(AmefootPlayer* pAmefoot) :
+AmefootUsualMove_MoveEvent::AmefootUsualMove_MoveEvent(AmefootPlayer* pAmefoot) :
      m_pAmefoot(pAmefoot)
 {}
 //-----------------------------------------------------------------------------------------
-void AmefootPlayerState_UsualMove::MoveEvent::Update(bool isRun , RATIO speed)
+void AmefootUsualMove_MoveEvent::Update(bool isRun, RATIO speed)
 {
      m_pAmefoot->m_Renderer.Update(1);
 
@@ -169,17 +164,17 @@ void AmefootPlayerState_UsualMove::MoveEvent::Update(bool isRun , RATIO speed)
           );
 }
 //-----------------------------------------------------------------------------------------
-void AmefootPlayerState_UsualMove::MoveEvent::RunStart()
+void AmefootUsualMove_MoveEvent::RunStart()
 {
      m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Run);
 }
 //-----------------------------------------------------------------------------------------
-void AmefootPlayerState_UsualMove::MoveEvent::StandStart()
+void AmefootUsualMove_MoveEvent::StandStart()
 {
     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Stand);
 }
 //-----------------------------------------------------------------------------------------
-void AmefootPlayerState_UsualMove::MoveEvent::RunEnd()
+void AmefootUsualMove_MoveEvent::RunEnd()
 {
     m_pAmefoot->m_Renderer.SetMotion(AmefootPlayer::Motion_Run_End);
 }

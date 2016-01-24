@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../AmefootPlayer.h"
+#include "../../CharacterMoveClass.h"
 
 //-----------------------------------------------------------------------------------------
 // AmefootPlayerState_UsualMove
@@ -18,9 +19,7 @@ public:
      void Exit(AmefootPlayer* pCharacter)override;
 
      static AmefootState* GetPlayerControllMove(AmefootPlayer* player);
-
-private:
-     class MoveEvent;
+     static bool SwitchGameState(AmefootPlayer* player);
 
 private:
      void ActionStateSwitch(AmefootPlayer* pCharacter);
@@ -29,5 +28,25 @@ private:
      CharacterUsualMove* m_pCharacterUsualMove;
 
 };
-//-----------------------------------------------------------------------------------------
 
+//-----------------------------------------------------------------------------------------
+// MoveEvent
+//-----------------------------------------------------------------------------------------
+class AmefootUsualMove_MoveEvent : public CharacterUsualMove::MoveEvent
+{
+public:
+    AmefootUsualMove_MoveEvent(AmefootPlayer* pAmefoot);
+
+    void Update(bool isRun, RATIO speed)override;
+
+    void RunStart()override;
+
+    void StandStart()override;
+
+    void RunEnd()override;
+
+private:
+    AmefootPlayer* m_pAmefoot;
+
+};
+//-----------------------------------------------------------------------------------------

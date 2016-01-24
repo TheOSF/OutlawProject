@@ -33,6 +33,7 @@ public:
 	CharacterBase*       m_pTarget;
     RigidBody*           m_pRigidBody;
     Vector3              m_Angle;
+    float                m_Speed;
     int                  m_Timer;
     int                  m_CounterNoDamage;
 

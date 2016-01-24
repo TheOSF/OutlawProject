@@ -35,7 +35,7 @@ bool TennisComputerUtillityClass::AttackEvent::Action(CharacterBase* pTarget, fl
             return true;
         }
 
-        if (m_pTennis->isCanBoundBallAtk() && frand() < 0.5f)
+        if (m_pTennis->isCanBoundBallAtk() && frand() < 0.75f)
         {
             m_pTennis->SetState(new TennisState_BoundShot());
         }

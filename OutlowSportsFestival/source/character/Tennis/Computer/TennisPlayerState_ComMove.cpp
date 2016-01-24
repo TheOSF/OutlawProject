@@ -12,27 +12,29 @@
 #include "../TennisUtillityClass.h"
 #include "TennisComputerUtillityClass.h"
 #include "TennisComputerReactionEvent.h"
+#include "../TennisPlayerState_UsualMove.h"
 
 //ステート開始
 void TennisState_ComputerControll_Move::Enter(TennisPlayer* t)
 {
+    {
+        //移動パラメータを代入
+        CharacterUsualMove::Params p;
 
-    //移動パラメータを代入
-    CharacterUsualMove::Params p;
+        p.Acceleration = 0.15f;
+        p.MaxSpeed = 0.28f;
+        p.TurnSpeed = 0.3f;
+        p.DownSpeed = 0.08f;
+        p.RunEndFrame = 35;
 
-    p.Acceleration = 0.15f;
-    p.MaxSpeed = 0.28f;
-    p.TurnSpeed = 0.3f;
-    p.DownSpeed = 0.08f;
-    p.RunEndFrame = 35;
-
-    //移動クラスの作成
-    m_pMoveClass = new CharacterUsualMove(
-        t,
-        p,
-        new TennisUtillityClass::TennisMoveEvent(t),
-        new TennisHitEvent(t)
-        );
+        //移動クラスの作成
+        m_pMoveClass = new CharacterUsualMove(
+            t,
+            p,
+            new TennisUtillityClass::TennisMoveEvent(t),
+            new TennisHitEvent(t)
+            );
+    }
 
     //移動ＡＩクラスの生成
     {
@@ -48,6 +50,7 @@ void TennisState_ComputerControll_Move::Enter(TennisPlayer* t)
             );
     }
 
+    //行動ＡＩクラスの生成
     {
         m_pCharacterComputerDoAction = new CharacterComputerDoAction(
             t,
@@ -56,8 +59,8 @@ void TennisState_ComputerControll_Move::Enter(TennisPlayer* t)
             );
     }
 
+    //反応ＡＩクラスの生成
     {
-
         m_pCharacterComputerReaction = new CharacterComputerReaction(
             t,
             TennisComputerReactionEvent::GetCharacterComputerReactionInParam(),
@@ -69,16 +72,25 @@ void TennisState_ComputerControll_Move::Enter(TennisPlayer* t)
 
 void TennisState_ComputerControll_Move::Execute(TennisPlayer* t)
 {
-    //ＡＩ更新
-    m_pCharacterComputerMove->Update();
+    if (TennisState_PlayerControll_Move::SwitchGameState(t) == false)
+    {
+        //ＡＩ更新
+        m_pCharacterComputerMove->Update();
 
-    m_pCharacterComputerDoAction->Update();
+        m_pCharacterComputerDoAction->Update();
 
-    m_pCharacterComputerReaction->Update();
+        m_pCharacterComputerReaction->Update();
 
-    //スティック値をセット
-    m_pMoveClass->SetStickValue(m_pCharacterComputerMove->GetMoveVec());
+        //スティック値をセット
+        m_pMoveClass->SetStickValue(m_pCharacterComputerMove->GetMoveVec());
 
+    }
+    else
+    {
+        //スティックの値セット（移動しない）
+        m_pMoveClass->SetStickValue(Vector2(0, 0));
+    }
+    
     //更新
     m_pMoveClass->Update();
 

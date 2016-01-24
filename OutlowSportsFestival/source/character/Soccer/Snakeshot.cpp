@@ -28,12 +28,13 @@ Snakeshot::Snakeshot(
     m_pTornadoEffect(nullptr),
     m_Timer(0),
     m_pTarget(nullptr),
-    m_CounterNoDamage(0)
+    m_CounterNoDamage(0),
+    m_Speed(0.5f)
 {
 	m_pStatefunc = &Snakeshot::State_TargetDecision;
 
     m_Params.pos = pos;
-    m_Params.move = vec * 0.5f;  //スピード
+    m_Params.move = Vector3Normalize(vec) * m_Speed;  //スピード
     m_Params.pParent = pParent;
     m_Params.scale = 1.0f;
     m_Params.type = BallBase::Type::_Usual;
@@ -97,6 +98,7 @@ bool Snakeshot::Update()
 
 	(this->*m_pStatefunc)();
 
+    m_Params.move = Vector3Normalize(m_Params.move)*m_Speed;
     m_Params.pos += m_Params.move;
 
     UpdateDamageClass();
@@ -351,6 +353,9 @@ void Snakeshot::Counter(CharacterBase* pCounterCharacter)
 
         m_pStatefunc = &Snakeshot::State_TargetDecision;
     }
+
+    //スピードUP!
+    m_Speed *= 1.1f;
 }
 
 void Snakeshot::DeleteEffect()

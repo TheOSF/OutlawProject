@@ -53,8 +53,30 @@ public:
 	Vector3 GetVec();
 
 	bool DoOtherAction();
-	bool DoOtherAction_Com();
 	bool DoShotAfterAction();
 };
+
+//------------------------------------------------------------------//
+
+//　移動イベントクラス
+class BaseballMoveEvent :public CharacterUsualMove::MoveEvent
+{
+    BaseballPlayer* m_pBaseball;
+public:
+    BaseballMoveEvent(BaseballPlayer* pBaseball);
+
+    static CharacterUsualMove::Params GetMoveParams();
+
+    //　アニメーション更新
+    void Update(bool isRun, RATIO speed_ratio);
+    //　走り始めにモーションセット
+    void RunStart();
+    //　立ち始めにモーションセット
+    void StandStart();
+    //走り終わり
+    void RunEnd();
+};
+
+
 
 #endif

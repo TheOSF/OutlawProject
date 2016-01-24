@@ -11,17 +11,7 @@
 class AmefootPlayerState_ThrowBall : public AmefootState
 {
 public:
-    class ControllClass
-    {
-    public:
-        virtual ~ControllClass() {}
-        virtual Vector3 GetVec() = 0;
-        virtual bool DoOtherAction() = 0;
-        virtual bool DoShotAfterAction() = 0;
-    };
-
-
-    AmefootPlayerState_ThrowBall(ControllClass* pControllClass);
+    AmefootPlayerState_ThrowBall();
 
 
     ~AmefootPlayerState_ThrowBall();
@@ -35,7 +25,6 @@ public:
 
 private:
     int m_Timer;
-    ControllClass* m_pControllClass;
 };
 
 //-----------------------------------------------------------------------------------------

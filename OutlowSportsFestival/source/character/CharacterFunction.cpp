@@ -434,8 +434,6 @@ bool chr_func::IsHitWall(CharacterBase* p)
 		0,
 		PI / 3,
 		-PI / 3,
-
-		
 	};
 
 	//計算用パラメータ
@@ -559,7 +557,7 @@ void chr_func::ResetSkillGauge(CharacterBase* p)
 //引数のキャラクタが必殺技を発動できるかどうか
 bool chr_func::isCanSpecialAttack(CharacterBase* p)
 {
-    return p->m_Params.SP >= 0.5f;
+    return isCanSpecialAttack(p->m_Params.SP);
 }
 
 //引数のキャラクタのＳＰが０かどうか

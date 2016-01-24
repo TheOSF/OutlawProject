@@ -155,6 +155,8 @@
     <ClCompile Include="source\character\Amefoot\MoveClass\AmefootAttackClass.cpp" />
     <ClCompile Include="source\character\Amefoot\MoveClass\AmefootEvasionStandUpClass.cpp" />
     <ClCompile Include="source\character\Amefoot\MoveClass\AmefootThrowBall.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootCommonState_PoseMotion.cpp" />
+    <ClCompile Include="source\character\Amefoot\StateClass\AmefootComputerState_UsualMove.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_BallTouchDown.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_Counter.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_Die.cpp" />
@@ -166,10 +168,11 @@
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_Tackle.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_ThrowBall.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_UsualMove.cpp" />
-    <ClCompile Include="source\character\Amefoot\UtilityClass\AmefootPlayer_ThrowBallControll.cpp" />
+    <ClCompile Include="source\character\Amefoot\UtilityClass\AmefootComputerUtillityClass.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballEquip.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballPlayerState_Controll_Vanish.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballState_PoseMotion.cpp" />
+    <ClCompile Include="source\character\Baseball\Computer\BaseballComputerUtillityClass.cpp" />
     <ClCompile Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.cpp" />
     <ClCompile Include="source\character\CharacterDamageControll.cpp" />
     <ClCompile Include="source\character\CharacterHitEventFunc.cpp" />
@@ -417,10 +420,12 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="source\character\Amefoot\MoveClass\AmefootThrowBall.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootComputerState_UsualMove.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_BallTouchDown.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_Counter.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_Die.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_Evasion.h" />
+    <ClInclude Include="source\character\Amefoot\StateClass\AmefootCommonState_PoseMotion.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveControllVanish.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveVanishDamage.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveWeakDamage.h" />
@@ -428,10 +433,11 @@
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_Tackle.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ThrowBall.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_UsualMove.h" />
-    <ClInclude Include="source\character\Amefoot\UtilityClass\AmefootPlayer_ThrowBallControll.h" />
+    <ClInclude Include="source\character\Amefoot\UtilityClass\AmefootComputerUtillityClass.h" />
     <ClInclude Include="source\character\Baseball\BaseballEquip.h" />
     <ClInclude Include="source\character\Baseball\BaseballPlayerState_Controll_Vanish.h" />
     <ClInclude Include="source\character\Baseball\BaseballState_PoseMotion.h" />
+    <ClInclude Include="source\character\Baseball\Computer\BaseballComputerUtillityClass.h" />
     <ClInclude Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.h" />
     <ClInclude Include="source\character\CharacterDamageControll.h" />
     <ClInclude Include="source\character\CharacterHitEventFunc.h" />

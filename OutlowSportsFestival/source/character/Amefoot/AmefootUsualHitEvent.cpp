@@ -20,7 +20,7 @@ bool AmefootUsualHitEvent::Hit(DamageBase* pDamage)
     switch ( type )
     {
     case CharacterHitEventFunc::SetType::Weak_Hit:
-        m_pAmefoot->SetState(new AmefootPlayerState_ReceiveWeakDamage(damageVec));
+        m_pAmefoot->SetState(new AmefootPlayerState_ReceiveWeakDamage(damageVec, pDamage->HitMotionFrame));
         break;
 
     case CharacterHitEventFunc::SetType::Vanish_Hit:

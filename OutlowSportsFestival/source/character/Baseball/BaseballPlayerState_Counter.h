@@ -14,7 +14,7 @@ class BaseballState_PlayerControll_Counter : public BaseballState
 private:
 	float areasize;
 public:
-	BaseballState_PlayerControll_Counter(int size);
+	BaseballState_PlayerControll_Counter();
 	// ステート開始
 	void Enter(BaseballPlayer* b)override;
 

@@ -61,7 +61,6 @@ TennisState* TennisState_PlayerControll_Move::GetPlayerControllMove(
 
 bool TennisState_PlayerControll_Move::SwitchGameState(TennisPlayer* pt)
 {
-    Vector3 v;
 
     switch (pt->GetStateType())
     {

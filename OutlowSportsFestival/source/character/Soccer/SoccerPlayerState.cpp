@@ -130,7 +130,7 @@ void SoccerState_PlayerControll_Move::ActionStateSwitch(SoccerPlayer*s)
 	// [〇] で 必殺技
 	if (controller::GetTRG(controller::button::maru, s->m_PlayerInfo.number))
 	{
-		//if (chr_func::isCanSpecialAttack(s))
+		if (chr_func::isCanSpecialAttack(s))
 		{
 			s->SetState(new SoccerState_PlayerControll_Finisher);
 		}
@@ -149,36 +149,6 @@ void SoccerState_PlayerControll_Move::ActionStateSwitch(SoccerPlayer*s)
 //-------------移動ステートクラス-------------
 void SoccerState_PlayerControll_Move::Enter(SoccerPlayer* s)
 {
-	class SoccerMoveEvent :public CharacterUsualMove::MoveEvent
-	{
-		SoccerPlayer* m_pSoccer;
-	public:
-		SoccerMoveEvent(SoccerPlayer* pSoccer) :
-			m_pSoccer(pSoccer){}
-
-		//アニメーションの更新
-		void Update(bool isRun, RATIO speed_ratio)
-		{
-            m_pSoccer->m_Renderer.Update(0.5f);
-		}
-		//走り始めにモーションをセット
-		void RunStart()
-		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Run);
-		}
-		//立ちはじめにモーションをセット
-		void StandStart()
-		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Stand);
-		}
-        
-        //走り終わり
-        void RunEnd()
-        {
-            m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_RunStop);
-        }
-	};
-
 	CharacterUsualMove::Params p;
 
 	p.Acceleration = 0.25f;
@@ -193,8 +163,10 @@ void SoccerState_PlayerControll_Move::Enter(SoccerPlayer* s)
 		new SoccerMoveEvent(s),
 		new SoccerHitEvent(s)
 		);
+
 	//初期のたちモーションセット
 	s->m_Renderer.SetMotion(SoccerPlayer::_ms_Stand);
+
 }
 void SoccerState_PlayerControll_Move::Execute(SoccerPlayer* s)
 {
@@ -817,30 +789,6 @@ void SoccerState_PlayerControll_Counter::Exit(SoccerPlayer* s)
 
 void SoccerState_PlayerControll_Dash::Enter(SoccerPlayer* s)
 {
-	class SoccerDashEvent 
-	{
-		SoccerPlayer* m_pSoccer;
-	public:
-		SoccerDashEvent(SoccerPlayer* pSoccer) :
-			m_pSoccer(pSoccer){}
-
-		void Update(bool isRun, RATIO speed_ratio)
-		{
-			m_pSoccer->m_Renderer.Update(1.5f);
-		}
-
-		void RunStart()
-		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Run);
-		}
-
-		void StandStart()
-		{
-			m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_Stand);
-		}
-	};
-	m_timer = 0;
-	Sound::Play(Sound::Soccer_Speed_Up1);
 	m_pMoveClass = new SoccerDash(
 		s
 		);
@@ -848,89 +796,82 @@ void SoccerState_PlayerControll_Dash::Enter(SoccerPlayer* s)
 void SoccerState_PlayerControll_Dash::Execute(SoccerPlayer* s)
 {
 
-	
-	++m_timer;
-	if (SoccerState_PlayerControll_Move::SwitchGameState(s) == false)
+    if (SoccerState_PlayerControll_Move::SwitchGameState(s) == false)
 	{
-		Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
+        {
 
-		// [L1]離す / カーソル倒さないと戻る
-		if (!controller::GetPush(controller::button::_L1, s->m_PlayerInfo.number) || (st.x == 0 && st.y == 0))
-		{
-			s->SetState(new SoccerState_brake(s));
-		}
-		else
-		{
-			m_pMoveClass->SetStickValue(st);
-		}
-		// [△] で ショット
-		if (controller::GetTRG(controller::button::sankaku, s->m_PlayerInfo.number))
-		{
-			s->SetState(new SoccerState_PlayerControll_Shot);
-		}
-		// [×] で ローリング
-		if (controller::GetTRG(controller::button::batu, s->m_PlayerInfo.number))
-		{
-			s->SetState(new SoccerState_Rolling(new SoccerUtillityClass::PlayerRollingControll(s), true));
-		}
-		// [□] で スライディング
-		if (controller::GetTRG(controller::button::shikaku, s->m_PlayerInfo.number))
-		{
-			s->SetState(new SoccerState_Sliding(s));
-		}
-		// [〇] で 必殺技
-		if (controller::GetTRG(controller::button::maru, s->m_PlayerInfo.number))
-		{
-			if (chr_func::isCanSpecialAttack(s))
-			{
-				s->SetState(new SoccerState_PlayerControll_Finisher);
-			}
-		}
-		// [R1] で カウンター
-		if (controller::GetTRG(controller::button::_R1, s->m_PlayerInfo.number))
-		{
-			s->SetState(new SoccerState_PlayerControll_Counter());
-		}
+            Vector2 st = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
 
-		if (m_timer % 19 == 5)
-		{
-			Sound::Play(Sound::Sand1);
+            Vector3 F, R;
 
-		}
-		if (m_timer % 3 == 2)
-		{
-			EffectFactory::Smoke(
-				s->m_Params.pos + Vector3(frand() - 0.5f, frand()+0.5f, frand() - 0.5f)*2.0f,
-				Vector3Zero,
-				1.8f,
-				1.0f,
-				true
-				);
-		}
+            F = DefCamera.GetForward();
+            F.y = 0.0f;
+            F.Normalize();
 
-		
+            R = DefCamera.GetRight();
+            R.y = 0.0f;
+            R.Normalize();
 
+            m_pMoveClass->SetDashVec(F*st.y + R*st.x);
+        }
+
+
+        if (m_pMoveClass->isDash())
+        {
+
+            // [△] で ショット
+            if (controller::GetTRG(controller::button::sankaku, s->m_PlayerInfo.number))
+            {
+                s->SetState(new SoccerState_PlayerControll_Shot);
+            }
+            // [×] で ローリング
+            if (controller::GetTRG(controller::button::batu, s->m_PlayerInfo.number))
+            {
+                s->SetState(new SoccerState_Rolling(new SoccerUtillityClass::PlayerRollingControll(s), true));
+            }
+            // [□] で スライディング
+            if (controller::GetTRG(controller::button::shikaku, s->m_PlayerInfo.number))
+            {
+                s->SetState(new SoccerState_Sliding(s));
+            }
+            // [〇] で 必殺技
+            if (controller::GetTRG(controller::button::maru, s->m_PlayerInfo.number))
+            {
+                if (chr_func::isCanSpecialAttack(s))
+                {
+                    s->SetState(new SoccerState_PlayerControll_Finisher);
+                }
+            }
+            // [R1] で カウンター
+            if (controller::GetTRG(controller::button::_R1, s->m_PlayerInfo.number))
+            {
+                s->SetState(new SoccerState_PlayerControll_Counter());
+            }
+        }
+
+        // [L1]を押してなかったら 走るのやめる
+        if (!controller::GetPush(controller::button::_L1, s->m_PlayerInfo.number))
+        {
+            m_pMoveClass->SetEnd();
+        }
 	}
 	else
 	{
-		//スティックの値セット
-		m_pMoveClass->SetStickValue(Vector2(0, 0));
+        m_pMoveClass->SetEnd();
 	}
-
-
-	
-	
-	
 
 	
 	m_pMoveClass->Update();
 
 	chr_func::CreateTransMatrix(s, &s->m_Renderer.m_TransMatrix);
 }
+
 void SoccerState_PlayerControll_Dash::Exit(SoccerPlayer* s)
 {
 	delete m_pMoveClass;
 }
+
+
 
 void SoccerState_SmallDamage(SoccerPlayer* s)
 {

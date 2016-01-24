@@ -34,17 +34,21 @@ private:
 // AmefootPlayerState_ReceiveWeakDamage
 // [ アメフト ] 弱いダメージを受けるステートクラス
 //-----------------------------------------------------------------------------------------
-AmefootPlayerState_ReceiveWeakDamage::AmefootPlayerState_ReceiveWeakDamage(Vector3 const& damageVec) :
+AmefootPlayerState_ReceiveWeakDamage::AmefootPlayerState_ReceiveWeakDamage(Vector3 const& damageVec, int AllFrame) :
      m_pCharacterDamageMotion(nullptr) ,
-     m_damageVec(damageVec)
+     m_damageVec(damageVec),
+     m_AllFrame(AllFrame)
 {}
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveWeakDamage::Enter(AmefootPlayer* pCharacter)
 {
      // パラメータ設定
      CharacterDamageMotion::Params params;
-     params.damage_vec = m_damageVec;
 
+     params.damage_vec = m_damageVec;
+     params.counter_hit = false;
+     params.frame = m_AllFrame;
+     
      // ダメージモーションクラス作成
      m_pCharacterDamageMotion = new CharacterDamageMotion(
           pCharacter ,
@@ -81,7 +85,7 @@ AmefootPlayerState_ReceiveWeakDamage::MotionEvent::MotionEvent(AmefootPlayer* pA
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveWeakDamage::MotionEvent::Update(RATIO speed)
 {
-     m_pAmefoot->m_Renderer.Update(1);
+    m_pAmefoot->m_Renderer.Update(speed);
 
      // モデルのワールド変換行列を更新
      chr_func::CreateTransMatrix(
@@ -97,7 +101,7 @@ void AmefootPlayerState_ReceiveWeakDamage::MotionEvent::Start()
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveWeakDamage::MotionEvent::End()
 {
-     m_pAmefoot->SetState(new AmefootPlayerState_UsualMove());
+    m_pAmefoot->SetState(AmefootPlayerState_UsualMove::GetPlayerControllMove(m_pAmefoot));
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveWeakDamage::MotionEvent::SetLight(RATIO power)

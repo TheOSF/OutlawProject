@@ -19,6 +19,7 @@ public:
 
      void Exit(AmefootPlayer* pCharacter)override;
 
+     void StateMachineExit(AmefootPlayer* pCharacter)override;
 private:
      class VanishEvent;
 

@@ -98,3 +98,8 @@ void TennisState_DamageMotion_Weak::Exit(TennisPlayer* t)
 {
     delete m_pDamageMotionClass;
 }
+
+void TennisState_DamageMotion_Weak::StateMachineExit(TennisPlayer* t)
+{
+    Exit(t);
+}

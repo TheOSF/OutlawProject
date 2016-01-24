@@ -55,9 +55,8 @@ static void CreateCharacter(
         break;
 
     case CharacterType::_Americanfootball:
-        //–¢ì¬
         pChr = new AmefootPlayer(info);
-        ((AmefootPlayer*)pChr)->SetState(new AmefootPlayerState_UsualMove());
+        ((AmefootPlayer*)pChr)->SetState(AmefootPlayerState_UsualMove::GetPlayerControllMove((AmefootPlayer*)pChr));
         break;
 
     }

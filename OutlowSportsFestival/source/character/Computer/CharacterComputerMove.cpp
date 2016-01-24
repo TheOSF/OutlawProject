@@ -45,11 +45,6 @@ void CharacterComputerMove::Update()
 
     //ステート関数を実行
     (this->*m_pStateFunc)();
-
-#ifdef _DEBUG
-    //デバッグ
-    new DebugDrawSphere(m_MoveTargetPos + Vector3(0, 2, 0), 0.5f, COLORf(1, 0, 0, 1));
-#endif
 }
 
 Vector2 CharacterComputerMove::GetMoveVec()

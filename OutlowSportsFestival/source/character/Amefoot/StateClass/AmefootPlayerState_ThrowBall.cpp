@@ -19,13 +19,12 @@
 // AmefootPlayerState_ThrowBall
 // [ アメフト ] 遠距離攻撃(ボール投げ)をするステートクラス
 //-----------------------------------------------------------------------------------------
-AmefootPlayerState_ThrowBall::AmefootPlayerState_ThrowBall(ControllClass* pControllClass) :
-    m_pControllClass(pControllClass)
+AmefootPlayerState_ThrowBall::AmefootPlayerState_ThrowBall() 
 {}
 //-----------------------------------------------------------------------------------------
 AmefootPlayerState_ThrowBall::~AmefootPlayerState_ThrowBall()
 {
-    delete m_pControllClass;
+    
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ThrowBall::Enter(AmefootPlayer* pCharacter)
@@ -49,33 +48,9 @@ void AmefootPlayerState_ThrowBall::Execute(AmefootPlayer* pCharacter)
     //カウント更新
     ++m_Timer;
 
-    //撃ち始めの方向補正
-    if ( m_Timer < 3 )
-    {
-        Vector3 vec = m_pControllClass->GetVec();
-        chr_func::AngleControll(pCharacter, pCharacter->m_Params.pos + vec);
-    }
-
     //移動値ダウン
     {
         chr_func::XZMoveDown(pCharacter, 0.1f);
-    }
-
-    //ショット後のアクション
-    if ( m_Timer > AfterAction && m_Timer < EndFrame )
-    {
-        m_pControllClass->DoShotAfterAction();
-    }
-
-    //方向補正
-    if ( m_Timer < ShotFrame )
-    {
-        const float AngleSpeed = D3DXToRadian(10);
-
-
-        Vector3 vec = m_pControllClass->GetVec();
-        chr_func::AngleControll(pCharacter, pCharacter->m_Params.pos + vec, AngleSpeed);
-
     }
 
     //サウンド

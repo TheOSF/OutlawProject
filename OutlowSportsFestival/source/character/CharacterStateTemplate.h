@@ -15,6 +15,8 @@ public:
 	virtual void Execute(_Client_type_ptr){}
 	virtual void Exit(_Client_type_ptr){}
 
+    virtual void StateMachineExit(_Client_type_ptr p){ Exit(p); }
+
 	virtual bool Msg(Msg_t){ return false; }
 };
 
@@ -50,7 +52,7 @@ public:
 	{
 		if (m_pState)
 		{
-			m_pState->Exit(m_pClient);
+            m_pState->StateMachineExit(m_pClient);
 			delete m_pState;
 		}
 		if (m_pNextState)delete m_pNextState;

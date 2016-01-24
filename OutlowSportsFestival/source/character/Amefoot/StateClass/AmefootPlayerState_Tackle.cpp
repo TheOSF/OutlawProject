@@ -16,30 +16,47 @@ static const float g_TackleDamageValue = 25.0f;
 AmefootPlayerState_Tackle::AmefootPlayerState_Tackle(AmefootPlayer*const pCharacter) :
 m_pAmefootPlayer(pCharacter),
 m_pStateFunc(&AmefootPlayerState_Tackle::Pose),
-m_pDamageTransform(nullptr),
-m_pControllDamage(nullptr),
 m_SpeedEffect(1)
 {
-    m_Damage.m_Enable = false;
-    m_Damage.m_Param.pos = m_pAmefootPlayer->m_Params.pos;
-    m_Damage.m_Param.size = 2.8f;
-    m_Damage.pParent = m_pAmefootPlayer;
-    m_Damage.Value = 0.0f;
 
-    //引っ付きクラスを作成
-    m_pDamageTransform = new DamageControll_Transform();
-    m_pDamageTransform->m_pParent = pCharacter;
+
 }
 
 AmefootPlayerState_Tackle::~AmefootPlayerState_Tackle()
 {
-
+    
 }
 
 
 void AmefootPlayerState_Tackle::Enter(AmefootPlayer* pCharacter)
 {
-    
+    //自身の引っ付きクラスのゲッタクラス
+    class GetTransform :public DamageControllVanish::GetDamageControllTransformClass
+    {
+        DamageControll_Transform* const m_pTransform;
+    public:
+        GetTransform(DamageControll_Transform* const pTransform) :
+            m_pTransform(pTransform)
+        {}
+
+        DamageControll_Transform* Get()
+        {
+            return m_pTransform;
+        }
+    };
+
+    //引っ付きクラスを作成
+    m_pDamageTransform = new DamageControll_Transform();
+    m_pDamageTransform->m_pParent = pCharacter;
+
+
+    //ダメージクラスを作成
+    m_pControllDamage = new DamageControllVanish(new GetTransform(m_pDamageTransform));
+    m_pControllDamage->m_Enable = false;
+    m_pControllDamage->pParent = m_pAmefootPlayer;
+    m_pControllDamage->Value = 0.0f;
+    m_pControllDamage->type = DamageBase::Type::_ControllDamage;
+    m_pControllDamage->m_Param.size = 2.5f;
 }
 
 void AmefootPlayerState_Tackle::Execute(AmefootPlayer* pCharacter)
@@ -64,23 +81,26 @@ void AmefootPlayerState_Tackle::Exit(AmefootPlayer* pCharacter)
     pCharacter->m_Params.DoCheckOtherChrSpace = true;
 }
 
+void AmefootPlayerState_Tackle::StateMachineExit(AmefootPlayer* pCharacter)
+{
+    delete m_pControllDamage;
+}
 
 // ステート切り替え
 void AmefootPlayerState_Tackle::SetState(StateFunc state)
 {
     m_pStateFunc = state;
     m_Timer = 0;
-    m_Damage.m_Enable = false;
 }
 
 //-------------------------------------------------------//
 // 構え中
 void AmefootPlayerState_Tackle::Pose()
 {
-    const int kAllFrame = 10; // 構えフレーム
-    const int kAdditionalFrame = 60; // 延長できるフレーム
-    const RADIAN kAngleControlSpeed = 0.04f; // 角度補正スピード
-    bool go_next = false; // ステート移行するかどうか
+    const int kAllFrame = 10;               // 構えフレーム
+    const int kAdditionalFrame = 60;        // 延長できるフレーム
+    const RADIAN kAngleControlSpeed = 0.04f;// 角度補正スピード
+    bool go_next = false;                   // ステート移行するかどうか
     const float kMoveDownSpeed = 0.2f;
 
     // 開始
@@ -101,18 +121,11 @@ void AmefootPlayerState_Tackle::Pose()
     else
     {
         const Vector2 Stick = GetControllVec();
+        const Vector3 Vec(Stick.x, 0, Stick.y);
 
-        //スティックが一定以上倒されているかどうか
-        if (Vector2Length(Stick) > 0.25f)
-        {
-            Vector3 Vec(Stick.x, 0, Stick.y);
+        //キャラクタ回転
+        chr_func::AngleControll(m_pAmefootPlayer, m_pAmefootPlayer->m_Params.pos + Vec, kAngleControlSpeed);
 
-            //スティック値をカメラ空間に
-            //Vec = DefCamera.GetForward()*Stick.y + DefCamera.GetRight()*Stick.x;
-
-            //キャラクタ回転
-            chr_func::AngleControll(m_pAmefootPlayer, m_pAmefootPlayer->m_Params.pos + Vec, kAngleControlSpeed);
-        }
     }
 
 
@@ -138,7 +151,6 @@ void AmefootPlayerState_Tackle::Pose()
     // 次のステートへ
     if (go_next)
     {
-
         SetState(&AmefootPlayerState_Tackle::Tackle);
     }
 
@@ -174,7 +186,8 @@ void AmefootPlayerState_Tackle::Tackle()
     }
 
     // ダメージ座標設定
-    m_Damage.m_Param.pos = m_pAmefootPlayer->m_Params.pos + chr_func::GetFront(m_pAmefootPlayer) * kDamagePosOffset;
+    m_pControllDamage->m_Param.pos = 
+        m_pAmefootPlayer->m_Params.pos + chr_func::GetFront(m_pAmefootPlayer) * kDamagePosOffset;
 
 
     {
@@ -186,15 +199,17 @@ void AmefootPlayerState_Tackle::Tackle()
 
 
     //ヒットしたらステート切り替え
-    if (m_Damage.HitCount > 0)
+    if (m_pControllDamage->HitCount > 0)
     {
+        m_pControllDamage->m_Enable = false;
+       
         SetState(&AmefootPlayerState_Tackle::DriveAway);
     }
 
     // フレーム経過
     if (m_Timer >= kAllFrame)
     {
-        m_Damage.m_Enable = false;
+        m_pControllDamage->m_Enable = false;
 
         SetState(&AmefootPlayerState_Tackle::Failed);
     }
@@ -224,9 +239,6 @@ void AmefootPlayerState_Tackle::DriveAway()
     }
 
     ++m_Timer;
-
-    // ダメージ座標設定
-    m_Damage.m_Param.pos = m_pAmefootPlayer->m_Params.pos + chr_func::GetFront(m_pAmefootPlayer) * kDamagePosOffset;
 
     // フレーム経過
     if (m_Timer >= kAllFrame)
@@ -344,7 +356,7 @@ void AmefootPlayerState_Tackle::Failed()
 // 終了
 void AmefootPlayerState_Tackle::End()
 {
-    m_pAmefootPlayer->SetState(new AmefootPlayerState_UsualMove());
+    m_pAmefootPlayer->SetState(AmefootPlayerState_UsualMove::GetPlayerControllMove(m_pAmefootPlayer));
 }
 
 // 構え開始の瞬間
@@ -367,9 +379,7 @@ void AmefootPlayerState_Tackle::TackleStart(float MoveValue)
     Sound::Play(Sound::Sand1);
 
     // ダメージ設定
-    m_Damage.m_Enable = true;
-    m_Damage.Value = 0.0f;
-    m_Damage.type = DamageBase::Type::_WeekDamage;
+    m_pControllDamage->m_Enable = true;
 
     m_pAmefootPlayer->m_Renderer.SetMotion(AmefootPlayer::Motion_Tackle_Charge);
 }
@@ -378,33 +388,6 @@ void AmefootPlayerState_Tackle::TackleStart(float MoveValue)
 // タックル打ち上げ開始の瞬間
 void AmefootPlayerState_Tackle::DrivaAwayStart()
 {
-    m_Damage.m_Enable = false;  //通常ダメージをoffに
-
-    //コントロールダメージ作成
-    {
-        class GetTransform :public DamageControllVanish::GetDamageControllTransformClass
-        {
-            DamageControll_Transform* const m_pTransform;
-        public:
-            GetTransform(DamageControll_Transform* const pTransform) :
-                m_pTransform(pTransform)
-            {}
-
-            DamageControll_Transform* Get()
-            {
-                return m_pTransform;
-            }
-        };
-
-        //生成
-        m_pControllDamage = new DamageControllVanish(new GetTransform(m_pDamageTransform));
-
-        //パラメータセット
-        m_pControllDamage->m_Enable = true;
-        m_pControllDamage->pParent = m_pAmefootPlayer;
-        m_pControllDamage->type = DamageBase::Type::_ControllDamage;
-    }
-
     //他のキャラを押し出さないように(つかむので)
     m_pAmefootPlayer->m_Params.DoCheckOtherChrSpace = false;
 
@@ -448,8 +431,6 @@ void AmefootPlayerState_Tackle::StandupStart()
         Vector3 Vec = -chr_func::GetFront(m_pAmefootPlayer);
         Vec *= 0.3f;
         Vec.y = 0.35f;
-
-        m_Damage.m_Enable = false;
 
         m_pDamageTransform->AddDamage(g_TackleDamageValue);
         m_pDamageTransform->AllFree(Vec);
@@ -686,6 +667,8 @@ bool AmefootPlayerState_Tackle::isPoseContinue()const
             20.0f,
             &pTarget
             );
+
+        ret = !ret;
 
         //乱数
         const RATIO random = 0.02f;

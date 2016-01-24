@@ -16,13 +16,34 @@ class SoccerDash;
 class SoccerState_ComputerControll_Dash :public SoccerState
 {
 public:
+    //–Ú“I
+    enum class MoveType
+    {
+        TargetAttack,
+        Escape,
+        SaveDistance
+    };
 	
-	SoccerState_ComputerControll_Dash(SoccerPlayer* s);
+    SoccerState_ComputerControll_Dash(
+        SoccerPlayer* s,
+        MoveType type,
+        CharacterBase* pTarget);
 
 	void Enter(SoccerPlayer* s)override;
 	void Execute(SoccerPlayer* s)override;
 	void Exit(SoccerPlayer* s)override;
 
 private:
-	
+
+    CharacterBase* const m_pTarget;
+    SoccerPlayer*  const m_pChr;
+    Vector3(SoccerState_ComputerControll_Dash::*m_pStateFunc)();
+
+    SoccerDash*		     m_pMoveClass;
+    bool                 m_isRightTurn;
+    int                  m_Timer;
+
+    Vector3 State_Attack();
+    Vector3 State_Escape();
+    Vector3 State_SaveDistance();
 };

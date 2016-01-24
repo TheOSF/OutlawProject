@@ -425,6 +425,9 @@ void TennisState_SpecialAtk::Execute(TennisPlayer* t)
 
         //ＳＥ
         Sound::Play(Sound::AtkHit2);
+
+        //ゲージリセット
+        chr_func::ResetSkillGauge(m_pTennis);
     }
 
 

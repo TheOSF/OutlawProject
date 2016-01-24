@@ -52,11 +52,11 @@ bool CharacterComputerDoAction::isDoAttack()
     switch (m_pChr->m_PlayerInfo.strong_type)
     {
     case StrongType::_Weak:
-        val = 0.01f;
+        val = 0.005f;
         break;
 
     case StrongType::_Usual:
-        val = 0.03f;
+        val = 0.01f;
         break;
 
     case StrongType::_Strong:

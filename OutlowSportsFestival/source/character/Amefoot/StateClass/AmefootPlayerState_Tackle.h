@@ -19,6 +19,7 @@ public:
 
     void Exit(AmefootPlayer* pCharacter)override;
 
+    void StateMachineExit(AmefootPlayer* pCharacter)override;
 
 private:
 
@@ -69,7 +70,6 @@ public:
     void CharacterNoDamageUpdate();
 
 private:
-    DamageShpere               m_Damage;
     DamageControllVanish*      m_pControllDamage;
     DamageControll_Transform*  m_pDamageTransform;
     SpeedEffect                m_SpeedEffect;

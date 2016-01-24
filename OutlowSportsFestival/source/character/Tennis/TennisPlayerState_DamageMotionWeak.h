@@ -26,6 +26,8 @@ public:
 	// ステート終了
 	void Exit(TennisPlayer* t)override;
 
+    void StateMachineExit(TennisPlayer* t)override;
+
 private:
 	CharacterDamageMotion*   m_pDamageMotionClass;	//ひるみ更新クラス
 	TennisPlayer*            m_pTennis;

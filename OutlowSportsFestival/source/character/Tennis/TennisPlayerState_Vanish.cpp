@@ -180,3 +180,8 @@ void TennisState_DamageVanish::Exit(TennisPlayer* t)
 {
     delete m_pDamageVanishClass;
 }
+
+void TennisState_DamageVanish::StateMachineExit(TennisPlayer* t)
+{
+    Exit(t);
+}

@@ -87,6 +87,12 @@ void AmefootPlayerState_ReceiveVanishDamage::Exit(AmefootPlayer* pCharacter)
 {
      delete m_pCharacterDamageVanish;
 }
+
+void AmefootPlayerState_ReceiveVanishDamage::StateMachineExit(AmefootPlayer* pCharacter)
+{
+    Exit(pCharacter);
+}
+
 //-----------------------------------------------------------------------------------------
 
 
@@ -146,7 +152,7 @@ void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::StandUping()
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::End()
 {
-     m_pAmefoot->SetState(new AmefootPlayerState_UsualMove());
+    m_pAmefoot->SetState(AmefootPlayerState_UsualMove::GetPlayerControllMove(m_pAmefoot));
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::HitWall()

@@ -4,18 +4,22 @@
 #include "Baseball_HitEvent.h"
 #include "../../Effect/EffectFactory.h"
 #include "../../Sound/Sound.h"
+#include "../../GameSystem/GameController.h"
 
 
-
-BaseballState_Rolling::BaseballState_Rolling(CallBackClass* pCallBackClass) :
-m_pCallBackClass(pCallBackClass)
+BaseballState_Rolling::BaseballState_Rolling()
 {
+    m_Vec = Vector3Zero;
+}
 
+BaseballState_Rolling::BaseballState_Rolling(CrVector3 Vec)
+{
+    m_Vec = Vec;
 }
 
 BaseballState_Rolling::~BaseballState_Rolling()
 {
-	delete m_pCallBackClass;
+
 }
 
 
@@ -25,34 +29,21 @@ void BaseballState_Rolling::Enter(BaseballPlayer* b)
 	m_Timer = 0;
 
 	//デフォルトのローリング方向としてキャラの前ベクトルを入れる
-	chr_func::GetFront(b, &m_Vec);
+    if (m_Vec.Length() < 0.1f)
+    {
+        chr_func::GetFront(b, &m_Vec);
+    }
 
 	//キャラクタの移動量を初期化
 	chr_func::ResetMove(b);
+
+    SetParam(b);
 }
 
 // ステート実行
 void BaseballState_Rolling::Execute(BaseballPlayer* b)
 {
-	const int EndFrame = 27;          //終了までのフレーム
 	const int CanControllFrame = 4;   //移動方向をコントロールできるフレーム
-	const int NoDamageFrame = 10;     //無敵時間
-	//const int CanCancel = 15;         //キャンセル可能フレーム
-
-	float DownValue = 0.5f;     //減速量
-	float MoveValue = 0.05f;
-
-	//　バッターorピッチャーの移動量
-	if (b->getBatterFlg())
-	{
-		MoveValue = 0.5f;    //バッター時
-		DownValue = 0.05f;     //減速量
-	}
-	else
-	{
-		MoveValue = 0.6f;    //ピッチャー時
-		DownValue = 0.08f;     //減速量
-	}
 
 	//フレームカウント更新
 	++m_Timer;
@@ -60,44 +51,39 @@ void BaseballState_Rolling::Execute(BaseballPlayer* b)
 	//モーションセット
 	if (m_Timer == 1)
 	{
-		if (b->getBatterFlg())
-		{
-			b->m_Renderer.SetMotion(baseball_player::_mb_Evasion_B);
-		}
-		else
-		{
-			b->m_Renderer.SetMotion(baseball_player::_mb_Evasion_P);
-		}
+        b->m_Renderer.SetMotion(m_Param.Motion);
+
+        //ズザー音
+        Sound::Play(Sound::Sand1);
 	}
 
 	//移動方向をコントロール
 	if (m_Timer < CanControllFrame)
 	{
-		Vector3 Vec = m_pCallBackClass->GetVec();
+        if (b->m_PlayerInfo.player_type == PlayerType::_Player)
+        {
+            m_Vec = GetPlayerControllMoveVec(b);
+        }
 
-		//値があった場合は更新
-		if (Vec != Vector3Zero)
-		{
-			m_Vec = Vec;
-			chr_func::AngleControll(b, b->m_Params.pos + m_Vec, 0.3f);
-		}
+        //移動方向をコントロール
+        chr_func::AngleControll(b, b->m_Params.pos + m_Vec, 0.3f);
 	}
+
+    //移動値を徐々にダウン
+    chr_func::XZMoveDown(b, m_Param.MoveDownFrame);
 
 	//コントロールできるフレームが終わった場合向きと移動を設定
 	if (m_Timer == CanControllFrame)
 	{
-		/*m_Vec.y = 0;
-		m_Vec.Normalize();*/
-
 		chr_func::AngleControll(b, b->m_Params.pos + m_Vec);
 
-		chr_func::AddMoveFront(b, MoveValue, MoveValue);
+		chr_func::AddMoveFront(b, m_Param.MoveValue, 100.0f);
 	}
 
 
 
 	//終了
-	if (m_Timer == EndFrame)
+	if (m_Timer >= m_Param.AllFrame)
 	{
 		//通常ステートに移行
 		b->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(b));
@@ -151,27 +137,14 @@ void BaseballState_Rolling::Execute(BaseballPlayer* b)
 
 	}
 
-	//サウンド
-	if (m_Timer == EndFrame - 25)
-	{
-		//ズザー音
-		Sound::Play(Sound::Sand1);
-	}
-
 	//基本的な更新
 	{
 		DamageManager::HitEventBase NoDmgHitEvent;   //ノーダメージ
-		BaseballHitEvent              UsualHitEvent(b);//通常
+		BaseballHitEvent            UsualHitEvent(b);//通常
 
-
-		//移動量の減衰
-		if (m_Timer > EndFrame - 13)
-		{
-			chr_func::XZMoveDown(b, DownValue);
-		}
 
 		//無敵フレームかによってヒットイベントクラスの分岐
-		if (m_Timer < NoDamageFrame)
+		if (m_Timer < m_Param.NoDamageFrame)
 		{
 			chr_func::UpdateAll(b, &NoDmgHitEvent);
 		}
@@ -192,4 +165,32 @@ void BaseballState_Rolling::Execute(BaseballPlayer* b)
 void BaseballState_Rolling::Exit(BaseballPlayer* b)
 {
 
+}
+
+Vector3 BaseballState_Rolling::GetPlayerControllMoveVec(BaseballPlayer* b)
+{   
+    Vector2 st = controller::GetStickValue(controller::stick::left, b->m_PlayerInfo.number);
+    Vector3 ret(st.x, 0, st.y);
+
+    return ret;
+}
+
+void BaseballState_Rolling::SetParam(BaseballPlayer* b)
+{
+    if (b->getBatterFlg())
+    {
+        m_Param.AllFrame = 40;
+        m_Param.Motion = baseball_player::_mb_Evasion_B;
+        m_Param.NoDamageFrame = 15;
+        m_Param.MoveValue = 0.5f;
+        m_Param.MoveDownFrame = 0.05f;
+    }
+    else
+    {
+        m_Param.AllFrame = 30;
+        m_Param.Motion = baseball_player::_mb_Evasion_P;
+        m_Param.NoDamageFrame = 10;
+        m_Param.MoveValue = 0.6f;
+        m_Param.MoveDownFrame = 0.08f;
+    }
 }

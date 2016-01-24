@@ -14,9 +14,9 @@
 //		プレイヤー操作の カウンタークラス
 //***************************************************
 
-BaseballState_PlayerControll_Counter::BaseballState_PlayerControll_Counter(int size)
+BaseballState_PlayerControll_Counter::BaseballState_PlayerControll_Counter()
 {
-	areasize = (float)size;
+
 }
 
 // ステート開始
@@ -97,14 +97,28 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
 	//カウンターパラメータ設定
 	CharacterDefaultCounter::Param param;
 
-	param.AfterShotFrame = 15;
-	param.CanCounterFrame = 30;
-	param.CatchAriaSize = areasize;
-	param.ControllRadian = D3DXToRadian(33);
-	param.FailedFrame = 20;
-	param.PoseFrame = 24;
-	param.ShotFrame = 6;
-	param.BallSpeed = 0.85f;
+    if (b->getBatterFlg())
+    {
+        param.AfterShotFrame = 15;
+        param.CanCounterFrame = 30;
+        param.CatchAriaSize = areasize;
+        param.ControllRadian = D3DXToRadian(33);
+        param.FailedFrame = 20;
+        param.PoseFrame = 24;
+        param.ShotFrame = 6;
+        param.BallSpeed = 0.85f;
+    }
+    else
+    {
+        param.AfterShotFrame = 15;
+        param.CanCounterFrame = 30;
+        param.CatchAriaSize = areasize;
+        param.ControllRadian = D3DXToRadian(33);
+        param.FailedFrame = 20;
+        param.PoseFrame = 24;
+        param.ShotFrame = 6;
+        param.BallSpeed = 0.85f;
+    }
 
 	// カウンタークラス作成
 	m_pCounter = new CharacterDefaultCounter(
@@ -119,7 +133,6 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
 // ステート実行
 void BaseballState_PlayerControll_Counter::Execute(BaseballPlayer* b)
 {
-	m_pCounter->SetStickValue(controller::GetStickValue(controller::stick::left, b->m_PlayerInfo.number));
 	//更新
 	m_pCounter->Update();
 
@@ -127,7 +140,7 @@ void BaseballState_PlayerControll_Counter::Execute(BaseballPlayer* b)
 	chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
 
 	//モデル更新
-	b->m_Renderer.Update(2);
+	b->m_Renderer.Update(1);
 }
 
 

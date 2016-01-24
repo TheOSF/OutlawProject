@@ -22,5 +22,8 @@ public:
 	void Exit(SoccerPlayer* s)override;
 
 private:
-
+    CharacterUsualMove*		    m_pMoveClass;
+    CharacterComputerMove*      m_pCharacterComputerMove;
+    CharacterComputerDoAction*  m_pCharacterComputerDoAction;
+    CharacterComputerReaction*  m_pCharacterComputerReaction;
 };

@@ -1,7 +1,6 @@
-#ifndef __CHARACTER_DASH_CLASS_H__
-#define __CHARACTER_DASH_CLASS_H__
 
-#include "iextreme.h"
+#pragma once
+
 #include "SoccerPlayer.h"
 #include "../../Damage/Damage.h"
 #include "../../utillity/Locus.h"
@@ -20,20 +19,32 @@ public:
 		SoccerPlayer* pParent	//操るキャラクタのポインタ
 		);
 
-
 	~SoccerDash();
 
-	void Update();	//更新
-	void UpdateLocusColor();
-	void SetStickValue(CrVector2 StickValue);
-	typedef DamageManager::HitEventBase HitEventBase;
+    void SetDashVec(CrVector3 Vec);  //向きをセット
+    bool SetEnd(); //走るのやめる
 
-	SoccerPlayer*	m_pParent;
-	Vector2			m_StickValue;
-	Locus           m_Locus;
-	SpeedEffect     m_SpeedEffect;
-	bool			m_isRun;
-	bool            m_Init;
-	int             m_count;
+    bool isDash()const; //走っているかどうか
+
+	void Update();	//更新
+
+private:
+    typedef void(SoccerDash::*StateFunc)();
+
+    SoccerPlayer* const m_pChr;
+    StateFunc           m_pStateFunc;
+    int                 m_StateTimer;
+    SpeedEffect         m_SpeedEffect;
+
+    bool isHitWall();
+    void UpdateSpeed();
+    void SetState(StateFunc pState);
+
+    void State_Start();
+    void State_Dash();
+
+    void State_DashEnd();
+    void State_HitWall();
+
+    void State_Finish();
 };
-#endif

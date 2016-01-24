@@ -92,10 +92,10 @@ CharacterComputerReaction::StrongParam CharacterComputerReaction::GetParam()
     {
     case StrongType::_Weak:
         ret.CounterSuccess = 0.5f;
-        ret.CounterReactionSpeed = 10.0f;
+        ret.CounterReactionSpeed = 15.0f;
 
         ret.NearEnemySuccess = 0.5f;
-        ret.NearEnemyReactionSpeed = 20;
+        ret.NearEnemyReactionSpeed = 30;
 
         ret.DamageEscapeSuccess = 0.5f;
         ret.DamageEscapeReactionSpeed = 10.0f;
@@ -103,10 +103,10 @@ CharacterComputerReaction::StrongParam CharacterComputerReaction::GetParam()
 
     case StrongType::_Usual:
         ret.CounterSuccess = 0.75f;
-        ret.CounterReactionSpeed = 8.0f;
+        ret.CounterReactionSpeed = 12.0f;
 
         ret.NearEnemySuccess = 0.75f;
-        ret.NearEnemyReactionSpeed = 10;
+        ret.NearEnemyReactionSpeed = 20;
 
         ret.DamageEscapeSuccess = 0.75f;
         ret.DamageEscapeReactionSpeed = 5.0f;

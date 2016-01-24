@@ -11,7 +11,7 @@ class CharacterDamageMotion;
 class AmefootPlayerState_ReceiveWeakDamage : public AmefootState
 {
 public:
-     AmefootPlayerState_ReceiveWeakDamage(Vector3 const& damageVec);
+     AmefootPlayerState_ReceiveWeakDamage(Vector3 const& damageVec,int AllFrame);
 
      void Enter(AmefootPlayer* pCharacter)override;
 
@@ -24,7 +24,8 @@ private:
      
 private:
      CharacterDamageMotion* m_pCharacterDamageMotion;
-     Vector3 const m_damageVec;
+     Vector3 const          m_damageVec;
+     const int              m_AllFrame;
 };
 //-----------------------------------------------------------------------------------------
 

@@ -25,39 +25,6 @@
 #include "../../Damage/Damage.h"
 #include "../../Camera/Camera.h"
 
-class BallBall_Utillity
-{
-public:
-	//ローリングの方向制御クラス
-	class PlayerRollingControll :public BaseballState_Rolling::CallBackClass
-	{
-	public:
-		BaseballPlayer*const pb;
-
-		PlayerRollingControll(BaseballPlayer* pb) :pb(pb){}
-
-
-		Vector3 GetVec()override
-		{
-			Vector2 stick = controller::GetStickValue(controller::stick::left, pb->m_PlayerInfo.number);
-			Vector3 vec(stick.x, 0, stick.y);
-
-			if (vec.Length() < 0.25f)
-			{
-				return Vector3Zero;
-			}
-
-			vec = DefCamera.GetRight()*vec.x + DefCamera.GetForward()*vec.z;
-			vec.y = 0;
-			vec.Normalize();
-			return vec;
-		}
-	};
-};
-
-
-
-
 //ショット中のコントロールクラス
 
 Vector3 PlayerShotControllClass_B::GetVec()
@@ -89,28 +56,18 @@ bool PlayerShotControllClass_B::DoOtherAction()
 	//　回避行動[×]
 	if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number))
 	{
-		b->SetState(new BaseballState_Rolling(new BallBall_Utillity::PlayerRollingControll(b)));
+		b->SetState(new BaseballState_Rolling());
 		return true;
 	}
 
 	// カウンター[R1]
 	if (controller::GetTRG(controller::button::_R1, b->m_PlayerInfo.number))
 	{
-		b->SetState(new  BaseballState_PlayerControll_Counter(5));
+		b->SetState(new  BaseballState_PlayerControll_Counter());
 		return true;
 	}
 
 	return false;
-}
-
-//　コンピューター
-bool PlayerShotControllClass_B::DoOtherAction_Com()
-{
-	BaseballPlayer * const b = m_pBaseball;
-
-	b->SetState(new BaseballState_Rolling(new BallBall_Utillity::PlayerRollingControll(b)));
-	return true;
-
 }
 
 bool PlayerShotControllClass_B::DoShotAfterAction()
@@ -192,68 +149,10 @@ bool BaseballState_PlayerControll_Move::SwitchGameState(BaseballPlayer* pb)
 //　ステート開始
 void BaseballState_PlayerControll_Move::Enter(BaseballPlayer* b)
 {
-	//　移動イベントクラス(ローカルクラス)
-	class BaseballMoveEvent :public CharacterUsualMove::MoveEvent
-	{
-		BaseballPlayer* m_pBaseball;
-	public:
-		BaseballMoveEvent(BaseballPlayer* pBaseball) :
-			m_pBaseball(pBaseball){}
-
-		//　アニメーション更新
-		void Update(bool isRun, RATIO speed_ratio){
-			m_pBaseball->m_Renderer.Update(1);
-		}
-		//　走り始めにモーションセット
-		void RunStart(){
-			//　実行パターン
-			if (m_pBaseball->getBatterFlg())
-			{
-				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Run_B);
-			}
-			else
-			{
-				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Run_P);
-			}
-		}
-		//　立ち始めにモーションセット
-		void StandStart(){
-			if (m_pBaseball->getBatterFlg())
-			{
-				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand_B);
-			}
-			else
-			{
-				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand_P);
-			}
-		}
-        //走り終わり
-        void RunEnd()
-        {
-            if (m_pBaseball->getBatterFlg())
-            {
-                m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stop_B);
-            }
-            else
-            {
-                m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stop_P);
-            }
-        }
-	};
-
-	//　移動パラメータを代入
-	CharacterUsualMove::Params p;
-
-	p.Acceleration = 0.15f;
-	p.MaxSpeed = 0.32f;
-	p.TurnSpeed = 0.3f;
-	p.DownSpeed = 0.08f;
-	p.RunEndFrame = 35;
-
 	//　移動クラスの作成
 	m_pMoveClass = new CharacterUsualMove(
 		b,
-		p,
+		BaseballMoveEvent::GetMoveParams(),
 		new BaseballMoveEvent(b),
 		new BaseballHitEvent(b)
 		);
@@ -320,7 +219,7 @@ void BaseballState_PlayerControll_Move::Batter(BaseballPlayer* b){
 	}
 	//　回避行動[×]
 	if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number)){
-		b->SetState(new BaseballState_Rolling(new BallBall_Utillity::PlayerRollingControll(b)));
+		b->SetState(new BaseballState_Rolling());
 		return;
 	}
 
@@ -338,7 +237,7 @@ void BaseballState_PlayerControll_Move::Batter(BaseballPlayer* b){
 	// カウンター[R1]
 	if (controller::GetTRG(controller::button::_R1, b->m_PlayerInfo.number))
 	{
-		b->SetState(new  BaseballState_PlayerControll_Counter(5));
+		b->SetState(new  BaseballState_PlayerControll_Counter());
 		return;
 	}
 	// 切り替え[L1]
@@ -364,7 +263,7 @@ void  BaseballState_PlayerControll_Move::Pitcher(BaseballPlayer* b){
 	}
 	//　回避行動[×]
 	if (controller::GetTRG(controller::button::batu, b->m_PlayerInfo.number)){
-		b->SetState(new BaseballState_Rolling(new BallBall_Utillity::PlayerRollingControll(b)));
+		b->SetState(new BaseballState_Rolling());
 		return;
 	}
 
@@ -383,7 +282,7 @@ void  BaseballState_PlayerControll_Move::Pitcher(BaseballPlayer* b){
 	// カウンター[R1]
 	if (controller::GetTRG(controller::button::_R1, b->m_PlayerInfo.number))
 	{
-		b->SetState(new  BaseballState_PlayerControll_Counter(9));
+		b->SetState(new  BaseballState_PlayerControll_Counter());
 		return;
 	}
 	// 切り替え[L1]
@@ -393,4 +292,67 @@ void  BaseballState_PlayerControll_Move::Pitcher(BaseballPlayer* b){
 		b->SetState(new BaseballState_Change());
 		return;
 	}
+}
+
+
+//----------------------------------------------------------------------------------
+
+BaseballMoveEvent::BaseballMoveEvent(BaseballPlayer* pBaseball) :
+m_pBaseball(pBaseball){}
+
+CharacterUsualMove::Params BaseballMoveEvent::GetMoveParams()
+{
+    CharacterUsualMove::Params ret;
+
+    ret.Acceleration = 0.15f;
+    ret.MaxSpeed = 0.32f;
+    ret.TurnSpeed = 0.3f;
+    ret.DownSpeed = 0.08f;
+    ret.RunEndFrame = 35;
+
+    return ret;
+}
+
+//　アニメーション更新
+void BaseballMoveEvent::Update(bool isRun, RATIO speed_ratio){
+    m_pBaseball->m_Renderer.Update(1);
+}
+
+//　走り始めにモーションセット
+void BaseballMoveEvent::RunStart(){
+    //　実行パターン
+    if (m_pBaseball->getBatterFlg())
+    {
+        m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Run_B);
+    }
+    else
+    {
+        m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Run_P);
+    }
+}
+
+//　立ち始めにモーションセット
+void BaseballMoveEvent::StandStart(){
+    if (m_pBaseball->getBatterFlg())
+    {
+        m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand_B);
+    }
+    else
+    {
+        m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand_P);
+    }
+}
+
+
+//走り終わり
+void BaseballMoveEvent::RunEnd()
+{
+    if (m_pBaseball->getBatterFlg())
+    {
+        m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stop_B);
+    }
+    else
+    {
+        m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stop_P);
+    }
 }
