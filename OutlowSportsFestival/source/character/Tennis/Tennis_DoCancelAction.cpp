@@ -71,7 +71,7 @@ bool Tennis_DoCancelAction_Player::DoAction()
     if (isCanAction(NearAtk) && controller::GetTRG(controller::button::_L1, t->m_PlayerInfo.number) &&
         t->isCanBoundBallAtk())
     {// [L1] で ボールを上に投げる攻撃
-        t->SetState(new TennisState_BoundShot(new TennisUtillityClass::PlayerShotControllClass(t)));
+        t->SetState(new TennisState_BoundShot());
         return true;
     }
 
@@ -84,12 +84,10 @@ Tennis_DoCancelAction_Computer::Tennis_DoCancelAction_Computer(TennisPlayer* pTe
 Tennis_DoCancelAction(pTennis)
 {
     {
-        //反応クラス
-        CharacterComputerMove::Param Param;
-
-        CharacterComputerMove::GetParams(Param, pTennis->m_PlayerInfo.strong_type);
-
-        m_pReaction = new CharacterComputerReaction(pTennis, Param, new TennisComputerReactionEvent(pTennis));
+        m_pReaction = new CharacterComputerReaction(
+            pTennis,
+            TennisComputerReactionEvent::GetCharacterComputerReactionInParam(),
+            new TennisComputerReactionEvent(pTennis));
     }
 }
 

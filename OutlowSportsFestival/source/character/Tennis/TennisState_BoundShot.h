@@ -10,18 +10,7 @@
 class TennisState_BoundShot :public TennisState
 {
 public:
-    class ControllClass
-    {
-    public:
-        virtual ~ControllClass(){}
-        virtual Vector3 GetVec() = 0;
-        virtual bool DoOtherAction() = 0;
-        virtual bool DoShotAfterAction() = 0;
-    };
-    
-    TennisState_BoundShot(
-        ControllClass*       pControllClass //èIóπéûÇ…deleteÇ∑ÇÈ
-        );
+    TennisState_BoundShot();
 
     ~TennisState_BoundShot();
 
@@ -32,9 +21,9 @@ public:
 
 private:
     int                  m_Timer;
-    ControllClass*       m_pControllClass;
 
     const CharacterBase* GetFrontTarget(TennisPlayer* t)const;
+    Vector3 GetVec();
 
 };
 

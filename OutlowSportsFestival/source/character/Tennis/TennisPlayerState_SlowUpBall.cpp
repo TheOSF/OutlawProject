@@ -109,7 +109,7 @@ void TennisPlayerState_SlowUpBall::State_SlowUp()
     //打ちフラグの更新
     if (m_isDoShot == false)
     {
-        m_isDoShot = m_pControllClass->isShot();
+        m_isDoShot = m_pControllClass->isShot(GetShotType(m_Timer) == ShotType::Smash);
     }
 
 

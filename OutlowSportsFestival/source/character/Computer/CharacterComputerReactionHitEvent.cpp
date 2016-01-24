@@ -32,5 +32,6 @@ bool CharacterComputerReactionHitEvent::Hit(DamageBase* pDmg)
 	{
 		hittype = Escape;
 	}
+
 	return false;
 }

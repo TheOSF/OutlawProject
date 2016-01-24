@@ -19,6 +19,7 @@ public:
 	bool HitDamage;
 	HitType hittype;
 	DamageBase* pDmg;
+
 	bool Hit(DamageBase* pDmg);//“–‚½‚Á‚½‚ÉŒÄ‚Î‚ê‚éŠÖ”(–ß‚è’lF“–‚½‚Á‚½‚©‚Ç‚¤‚©)
 private:
 	CharacterBase* m_cCharacter;

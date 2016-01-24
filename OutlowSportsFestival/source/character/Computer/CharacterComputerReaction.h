@@ -10,34 +10,69 @@
 class CharacterComputerReaction
 {
 public:
-	//CharacterComputerMove::Param m_params;
+
 	class ActionEvent
 	{
 	public:
+        struct TypeParam
+        {
+            bool isEnemyNear;
+            bool isStrongDamage;
+            bool isBall;
+            bool isCanCounter;
+            bool isWeakDamage;
+        };
+
 		virtual~ActionEvent() {}
-		virtual void Reaction(CharacterComputerReactionHitEvent::HitType hittype,Vector3 vec) = 0;			//攻撃開始時に呼ばれる関数
+        virtual void Reaction(const TypeParam& param, CrVector3 vec) = 0; //攻撃開始時に呼ばれる関数
 	};
 
+    struct InParam
+    {
+        float CounterAreaSize;
+        float CanNearAtkAreaSize;
+    };
+
 	CharacterComputerReaction(
-		CharacterBase*					    pParent,	//操るキャラクタのポインタ
-		const CharacterComputerMove::Param&	param,		
-		ActionEvent*						ActionEvent	
+		CharacterBase*      pParent,	//操るキャラクタのポインタ
+        InParam             param,
+		ActionEvent*	    ActionEvent	
 		);
 
 	~CharacterComputerReaction();
 
 	void Update();
+    bool Reactioned()const;
 
 private:
+ 
+    struct StrongParam
+    {
+        RATIO CounterSuccess;           //カウンター検知　　　成功率
+        float CounterReactionSpeed;     //カウンター検知　　　反射の速度
 
-	CharacterBase*	                  m_pCharacter;
-	ActionEvent*  	                  m_pActionEvent;
-	CharacterComputerMove::Param	  m_Params;
+        RATIO NearEnemySuccess;         //敵が近くにいる検知　成功率
+        float NearEnemyReactionSpeed;   //敵が近くにいる検知  反射の速度
 
-    CharacterComputerReactionHitEvent::HitType m_HitType;
-    Vector3                                    m_DamageVec;
+        RATIO DamageEscapeSuccess;      //ダメージ判定の検知　成功率
+        float DamageEscapeReactionSpeed;//ダメージ判定の検知  反射の速度
+    };
 
-    int                               m_DoActionCount;
+	CharacterBase*	const   m_pChr;
+	ActionEvent*  	        m_pActionEvent;
+    const InParam           m_InParam;
+
+    ActionEvent::TypeParam  m_ReactionTypeParam;
+    Vector3                 m_DamageVec;
+
+    int                     m_DoActionCount;
+    bool                    m_Reactioned;
+
+    int                     m_DontCheckCounter;
+    int                     m_DontCheckNearEnemy;
+    int                     m_DontCheckDamageEscape;
+
+    StrongParam GetParam();
 
     bool CheckBall();
     bool CheckNearCharacter();

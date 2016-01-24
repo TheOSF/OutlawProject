@@ -103,4 +103,7 @@ private:
 
     //カウンターヒットフレームかどうか
     bool isCounterHitFrame(int Frame);
+
+
+    int GetComboButtonFrame();
 };

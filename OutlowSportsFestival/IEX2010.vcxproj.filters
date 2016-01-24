@@ -234,6 +234,8 @@
     <ClCompile Include="source\utillity\ScreenEffect.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_BallTouchDown.cpp" />
     <ClCompile Include="source\UI\SceneCharacterSelectUI.cpp" />
+    <ClCompile Include="source\character\Tennis\Computer\TennisComputerUtillityClass.cpp" />
+    <ClCompile Include="source\character\Tennis\Computer\TennisComputerState_Attack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -480,6 +482,7 @@
     <ClInclude Include="source\utillity\ScreenEffect.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_BallTouchDown.h" />
     <ClInclude Include="source\UI\SceneCharacterSelectUI.h" />
+    <ClInclude Include="source\character\Tennis\Computer\TennisComputerState_Attack.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DATA\Shader\3DEx.fx" />

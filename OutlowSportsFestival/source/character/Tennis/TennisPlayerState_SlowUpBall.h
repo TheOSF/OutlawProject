@@ -30,7 +30,7 @@ public:
         virtual Vector3 GetVec() = 0;
         virtual bool    DoOtherAction() = 0;
         virtual bool    DoShotAfterAction() = 0;
-        virtual bool    isShot() = 0;
+        virtual bool    isShot(bool isSmashFrame) = 0;
     };
 
     TennisPlayerState_SlowUpBall(

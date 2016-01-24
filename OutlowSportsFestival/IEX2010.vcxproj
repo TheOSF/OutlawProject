@@ -235,6 +235,8 @@
     <ClCompile Include="source\character\Soccer\SoccerRolling.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerSliding.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerState_ControllVanish.cpp" />
+    <ClCompile Include="source\character\Tennis\Computer\TennisComputerState_Attack.cpp" />
+    <ClCompile Include="source\character\Tennis\Computer\TennisComputerUtillityClass.cpp" />
     <ClCompile Include="source\character\Tennis\Computer\TennisPlayerState_ComMove.cpp" />
     <ClCompile Include="source\character\Tennis\Computer\TennisComputerReactionEvent.cpp" />
     <ClCompile Include="source\character\Tennis\TennisAttackClass.cpp" />
@@ -499,6 +501,7 @@
     <ClInclude Include="source\character\Soccer\SoccerRolling.h" />
     <ClInclude Include="source\character\Soccer\SoccerSliding.h" />
     <ClInclude Include="source\character\Soccer\SoccerState_ControllVanish.h" />
+    <ClInclude Include="source\character\Tennis\Computer\TennisComputerState_Attack.h" />
     <ClInclude Include="source\character\Tennis\Computer\TennisComputerUtillityClass.h" />
     <ClInclude Include="source\character\Tennis\Computer\TennisPlayerState_ComMove.h" />
     <ClInclude Include="source\character\Tennis\Computer\TennisComputerReactionEvent.h" />

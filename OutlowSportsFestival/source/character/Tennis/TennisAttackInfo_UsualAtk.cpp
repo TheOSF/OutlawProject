@@ -224,3 +224,8 @@ bool TennisAttackInfo_UsualAtk::isCounterHitFrame(int Frame)
 {
     return Frame < m_Param.DamageEnableEnd;
 }
+
+int TennisAttackInfo_UsualAtk::GetComboButtonFrame()
+{
+    return m_Param.AllFrame - m_Param.CanComboButtonPushFrame;
+}

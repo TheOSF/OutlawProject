@@ -2,21 +2,77 @@
 #include "../TennisPlayerState_Counter.h"
 #include "../TennisState_Rolling.h"
 #include "TennisComputerUtillityClass.h"
+#include "TennisComputerState_Attack.h"
 
-
-void TennisComputerReactionEvent::Reaction(CharacterComputerReactionHitEvent::HitType hittype, Vector3 vec)
+CharacterComputerReaction::InParam TennisComputerReactionEvent::GetCharacterComputerReactionInParam()
 {
-    if (hittype == CharacterComputerReactionHitEvent::HitType::CanCounter && isDoAction(m_Param.BallCounter))
+    CharacterComputerReaction::InParam param;
+
+    param.CanNearAtkAreaSize = 15.0f;
+    param.CounterAreaSize = 12.0f;
+
+    return param;
+}
+
+void TennisComputerReactionEvent::Reaction(const TypeParam& param, CrVector3 vec)
+{
+    if (param.isCanCounter)
     {
-        m_pTennis->SetState(new TennisState_Counter());
+        if (frand() < 0.7f)
+        {
+            m_pTennis->SetState(new TennisState_Counter());
+        }
+        else
+        {
+            Vector3 EscapeVec;
+
+            Vector3Cross(EscapeVec, vec, Vector3AxisY);
+
+            if (frand() < 0.5f)
+            {
+                EscapeVec = -EscapeVec;
+            }
+
+            m_pTennis->SetState(
+                //ローリング
+                new TennisState_Rolling(
+                new TennisComputerUtillityClass::RollingCallBack(m_pTennis, EscapeVec)
+                ));
+        }
+        
     }
     else
     {
-        m_pTennis->SetState(
-            //ローリング
-            new TennisState_Rolling(
-            new TennisComputerUtillityClass::RollingCallBack(m_pTennis, vec)
-            ));
+        if (param.isEnemyNear)
+        {
+            if (frand() < 0.5f)
+            {
+                
+                m_pTennis->SetState(
+                    //ローリング
+                    new TennisState_Rolling(
+                    new TennisComputerUtillityClass::RollingCallBack(m_pTennis, Vector3RotateAxis(Vector3AxisY, frand()*PI*0.5f, -vec)
+                    )));
+            }
+            else
+            {
+                m_pTennis->SetState(
+                    //ローリング
+                    new TennisComputerState_Attack(m_pTennis, false)
+                    );
+            }
+            
+        }
+        else
+        {
+            m_pTennis->SetState(
+                //ローリング
+                new TennisState_Rolling(
+                new TennisComputerUtillityClass::RollingCallBack(m_pTennis, vec)
+                ));
+        }
     }
+
+    
 }
 

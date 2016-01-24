@@ -43,21 +43,6 @@ m_pStatefunc(&TennisSpecialBall::StateMove)
         //‹OÕ
         const COLORf Color = CharacterBase::GetPlayerColorF(t->m_PlayerInfo.number);
 
-        /*m_Locus.m_StartParam.Width = 0.32f;
-        m_Locus.m_StartParam.Color = Vector4(0, 0.5f, 1.0f, 1);
-        m_Locus.m_StartParam.HDRColor = Vector4(1.0f, 1.0f, 1.0f, 1);
-
-        m_Locus.m_EndParam.Width = 0.0f;
-        m_Locus.m_EndParam.Color = Vector4(0, 0.5f, 1.0f, 0);
-        m_Locus.m_EndParam.HDRColor = Vector4(1.0f, 1.0f, 1.0f, 0);
-
-        m_Locus.m_StartParam.Color = Vector4(1, 1, 1, 1);
-        m_Locus.m_StartParam.HDRColor = Vector4(Color.r, Color.g, Color.b, 1);
-
-        m_Locus.m_EndParam.Width = 0.0f;
-        m_Locus.m_EndParam.Color = Vector4(1,1,1,0);
-        m_Locus.m_EndParam.HDRColor = Vector4(Color.r, Color.g, Color.b, 0);*/
-
         m_Locus.m_StartParam.Width = 0.5f;
         m_Locus.m_StartParam.Color = Vector4(0, 0.5f, 1.0f, 1);
         m_Locus.m_StartParam.HDRColor = Vector4(1.0f, 1.0f, 1.0f, 1)*2.0f;
@@ -77,6 +62,7 @@ m_pStatefunc(&TennisSpecialBall::StateMove)
         m_Damage.pParent = m_pTennis;
         m_Damage.type = DamageBase::Type::_VanishDamage;
         m_Damage.m_VecType = DamageShpere::DamageVecType::CenterToPosXZ;
+        m_Damage.AddSkillGaugeValue = 0.0f;
 
         m_Damage.m_VecPower.x = 0.8f;
         m_Damage.m_VecPower.y = 0.35f;
@@ -367,11 +353,6 @@ void TennisState_SpecialAtk::Execute(TennisPlayer* t)
     const float BallSpeed = 3.0f;
     const float HitBack = 1.0f;
 
-    //const float MoveY = 0.70f;
-    //const RADIAN BallShotAngle = D3DXToRadian(35);
-    //const float FrontMoveValue = 0.02f;
-
-
     const float MoveY = 0.62f;
     const RADIAN BallShotAngle = D3DXToRadian(35);
     const float FrontMoveValue = 0.1f;
@@ -500,7 +481,7 @@ bool TennisState_SpecialAtk::CalcToBestTargetVec(CrVector3 ShotPos, CrVector3 Sh
     RADIAN MostMinAngle = D3DXToRadian(30);   //‚à‚Á‚Æ‚à‹·‚¢Šp“x
     RADIAN TempAngle;
 
-    Vector3 toEnemy;
+    Vector3 toEnemy, EnemyPos;
 
     //–ß‚è’l‚ð‰Šú‰»
     bool ret = false;
@@ -517,7 +498,12 @@ bool TennisState_SpecialAtk::CalcToBestTargetVec(CrVector3 ShotPos, CrVector3 Sh
         }
 
         //“G‚Ö‚ÌƒxƒNƒgƒ‹
-        toEnemy = (it.first->m_Params.pos - Vector3Normalize(Vector3(ShotVec.x, 0, ShotVec.z))) - ShotPos;
+        {
+            EnemyPos = it.first->m_Params.pos;
+            EnemyPos.y = 0.0f;
+
+            toEnemy = (EnemyPos - Vector3Normalize(Vector3(ShotVec.x, 0, ShotVec.z))) - ShotPos;
+        }
 
         TempAngle = Vector3Radian(toEnemy, ShotVec);
 

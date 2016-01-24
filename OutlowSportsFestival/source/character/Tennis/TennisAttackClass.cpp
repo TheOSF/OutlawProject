@@ -81,7 +81,7 @@ void TennisAttackClass::State_Attack()
     if (m_DoCombo == false &&
         pNowAtk->isComboButtonFrame(m_Timer))
     {
-        m_DoCombo = m_pEvent->isDoCombo();
+        m_DoCombo = m_pEvent->isDoCombo(m_Damage.HitCount > 0, pNowAtk->GetComboButtonFrame());
     }
 
     if (pNowAtk->isHitStopFrame())

@@ -18,37 +18,11 @@ class SoccerState_ComputerControll_Dash :public SoccerState
 public:
 	
 	SoccerState_ComputerControll_Dash(SoccerPlayer* s);
+
 	void Enter(SoccerPlayer* s)override;
 	void Execute(SoccerPlayer* s)override;
 	void Exit(SoccerPlayer* s)override;
 
-	Vector2 StateMoveFront(SoccerPlayer* s);//　ターゲットに前進
-	Vector2 StateMoveDistance(SoccerPlayer* s);//　ターゲットとの距離をとる
-	Vector2 StateMoveCenter(SoccerPlayer* s);
-	Vector2 StateWait(SoccerPlayer* s);//　立ち止まる
-
-	static bool SwitchGameState(SoccerPlayer* ps);
-	Vector2 SwitchAction(SoccerPlayer* s);
 private:
-
-	//分岐用enum
-	enum MoveMode
-	{
-		Stop,
-		Forward,
-		Distance,
-		MoveCenter,
-		Wait,
-		clash
-	};
-	CharacterComputerMove::Param m_cParam;
-	MoveMode movemode;
-	int       m_Count;
-	Vector3   m_MoveTargetPos;
-	SoccerDash*		m_pDashClass;
-	CharacterComputerReaction*  m_pReactionClass;
-	CharacterComputerDoAction*  m_pDoActionClass;
-
-	SoccerPlayer* const m_cSoccer;
 	
 };

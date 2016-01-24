@@ -132,79 +132,13 @@ public:
             return false;
         }
 
-        bool isShot()
+        bool isShot(bool isSmashFrame)
         {
             return !controller::GetPush(controller::button::sankaku, m_pTennis->m_PlayerInfo.number);
             //return controller::GetTRG(controller::button::sankaku, m_pTennis->m_PlayerInfo.number);
         }
     };
 
-
-    //ショット中のコントロールクラス
-    class PlayerShotControllClass :public TennisState_BoundShot::ControllClass
-    {
-        TennisPlayer* const   m_pTennis;
-    public:
-        PlayerShotControllClass(TennisPlayer* pTennis) :
-            m_pTennis(pTennis){}
-
-        Vector3 GetVec()
-        {
-            Vector2 stick = controller::GetStickValue(controller::stick::left, m_pTennis->m_PlayerInfo.number);
-            Vector3 vec(stick.x, 0, stick.y);
-
-            if (vec.Length() < 0.25f)
-            {
-                return Vector3Zero;
-            }
-
-            vec = DefCamera.GetRight()*vec.x + DefCamera.GetForward()*vec.z;
-            vec.Normalize();
-
-            return vec;
-        }
-
-        bool DoOtherAction()
-        {
-            if (controller::GetTRG(controller::button::shikaku, m_pTennis->m_PlayerInfo.number))
-            {// [□] で [近距離攻撃]
-                m_pTennis->SetState(new TennisState_PlayerControll_Attack(m_pTennis,true));
-                return true;
-            }
-
-            if (controller::GetTRG(controller::button::batu, m_pTennis->m_PlayerInfo.number))
-            {// [×] で [ローリング]
-                m_pTennis->SetState(new TennisState_Rolling(new PlayerRollingControll(m_pTennis)));
-                return true;
-            }
-
-            if (controller::GetTRG(controller::button::_R1, m_pTennis->m_PlayerInfo.number))
-            {// [R1] で [ダブルカウンター！？
-                m_pTennis->SetState(new TennisState_Counter());
-                return true;
-            }
-
-            if (controller::GetTRG(controller::button::_L1, m_pTennis->m_PlayerInfo.number))
-            {// [L1] で [通常移動ステートへ
-                m_pTennis->SetState(TennisState_PlayerControll_Move::GetPlayerControllMove(m_pTennis));
-                return true;
-            }
-
-            return false;
-        }
-
-        bool DoShotAfterAction()
-        {
-
-            if (controller::GetTRG(controller::button::shikaku, m_pTennis->m_PlayerInfo.number))
-            {// [□] で [近距離攻撃]
-                m_pTennis->SetState(new TennisState_PlayerControll_Attack(m_pTennis,true));
-                return true;
-            }
-
-            return false;
-        }
-    };
 
     //移動イベントクラス
     class TennisMoveEvent :public CharacterUsualMove::MoveEvent

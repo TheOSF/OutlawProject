@@ -4,89 +4,69 @@
 #include"../../Damage/Damage.h"
 
 CharacterComputerDoAction::CharacterComputerDoAction(
-	CharacterBase*					pParent,	//操るキャラクタのポインタ
-	const CharacterComputerMove::Param&	param,		//移動パラメータ構造体
-	ActionEvent*						pActionEvent,	//移動イベントに反応するクラス
-	DamageManager::HitEventBase*	pHitEventBase//ダメージを受けた時に反応するクラス
-	) :
-	m_cCharacter(pParent), m_Params(param), m_ActionEvent(pActionEvent), m_pHitEventBase(pHitEventBase)
+    CharacterBase*			pParent,	            //操るキャラクタのポインタ
+    CharacterComputerMove*  pCharacterComputerMove, //AI移動クラスへのポインタ
+    ActionEvent*			pActionEvent	            //移動イベントに反応するクラス
+    ) :
+    m_pCharacterComputerMove(pCharacterComputerMove),
+    m_pChr(pParent),
+    m_pActionEvent(pActionEvent),
+    m_DoAttack(false)
 {
 
 
 }
+
 CharacterComputerDoAction::~CharacterComputerDoAction()
 {
-	delete m_ActionEvent;
-	delete m_pHitEventBase;
+    delete m_pActionEvent;
 }
+
 void CharacterComputerDoAction::Update()
 {
-	SphereParam sp;
-	sp.pos = m_cCharacter->m_Params.pos;
+    //攻撃フラグを更新
+    if (m_DoAttack == false && isDoAttack())
+    {
+        m_DoAttack = true;
+    }
 
+    //攻撃を実行
+    if (m_DoAttack)
+    {
+        CharacterBase* pTarget = nullptr;
 
-
-	//攻撃する時ならば
-	if (rand() % 10 == 0)
-	{
-		//距離を測り、攻撃する
-		m_ActionEvent->Attack(GetMoveTargetLength());
-
-	}
+        if (m_pCharacterComputerMove->GetTargetCharacter(&pTarget) && 
+            m_pActionEvent->Action(pTarget, Vector3Distance(pTarget->m_Params.pos, m_pChr->m_Params.pos)))
+        {
+            m_DoAttack = false;
+        }
+    }
 }
 
-float CharacterComputerDoAction::GetMoveTargetLength()
+
+
+bool CharacterComputerDoAction::isDoAttack()
 {
-	Vector3 v1, v2;
-	const float AngleRange = PI / 4;
-	Vector3 ret;
-	float MostNear = 10000.0f;
+    RATIO val = 0.0f;
 
-	CharacterBase* pTarget = nullptr;
+    switch (m_pChr->m_PlayerInfo.strong_type)
+    {
+    case StrongType::_Weak:
+        val = 0.01f;
+        break;
 
-	struct TargetInfo
-	{
-		bool      ok;
-		Vector3   pos;
-	};
+    case StrongType::_Usual:
+        val = 0.03f;
+        break;
 
-	TargetInfo targets[8];
+    case StrongType::_Strong:
+        val = 0.05f;
+        break;
 
-	const CharacterManager::CharacterMap& ChrMap = DefCharacterMgr.GetCharacterMap();
+    default:
+        MyAssert(false, "対応していない強さタイプ");
+        break;
+    }
 
-	for (auto it = ChrMap.begin(); it != ChrMap.end(); ++it)
-	{
-
-		//　死んでるor自分ならcontinue
-		if (chr_func::isDie(it->first) ||
-			it->first->m_PlayerInfo.number == m_cCharacter->m_PlayerInfo.number)
-		{
-			continue;
-		}
-		//　視野角計算
-		chr_func::GetFront(m_cCharacter, &v1);
-
-		v2 = it->first->m_Params.pos - m_cCharacter->m_Params.pos;
-		v2.y = 0;
-
-		//角度外なら適していない
-		if (Vector3Radian(v1, v2) > AngleRange)
-		{
-			continue;
-		}
-
-		float len = Vector3Distance(m_cCharacter->m_Params.pos, it->first->m_Params.pos);
-		//最も距離が近い敵をターゲットに
-		if (len < MostNear)
-		{
-			pTarget = it->first;
-			MostNear = len;
-		}
-	}
-	//MostNearの変化なしなら0ベク返す
-	if (MostNear >= 9990.0f)
-	{
-		return 10000;
-	}
-	return MostNear;
+    return frand() < val;
 }

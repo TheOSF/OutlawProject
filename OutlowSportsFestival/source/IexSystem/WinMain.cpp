@@ -64,7 +64,7 @@ BOOL	InitApp( HWND hWnd )
         MainFrame->ChangeScene(new SceneCharacterSelect(Param, 1));
 
     }
-    else if (true)
+    else if (false)
     {
         MainFrame->ChangeScene(new SceneOption());
     }
@@ -89,10 +89,10 @@ BOOL	InitApp( HWND hWnd )
         param.Round = 3;
         param.Time = 60 * 60 * 5;
 
-        param.PlayerArray[0] = { 0, PlayerType::_Player, CharacterType::_Baseball, StrongType::_Usual };
-        param.PlayerArray[1] = { 1, PlayerType::_Computer, CharacterType::_Baseball, StrongType::_Strong };
-        param.PlayerArray[2] = { 2, PlayerType::_Computer, CharacterType::_Baseball, StrongType::_Strong };
-        param.PlayerArray[3] = { 3, PlayerType::_Computer, CharacterType::_Baseball, StrongType::_Usual };
+        param.PlayerArray[0] = { 0, PlayerType::_Player, CharacterType::_Tennis, StrongType::_Usual };
+        param.PlayerArray[1] = { 1, PlayerType::_Computer, CharacterType::_Tennis, StrongType::_Weak };
+        param.PlayerArray[2] = { -1, PlayerType::_Computer, CharacterType::_Tennis, StrongType::_Usual };
+        param.PlayerArray[3] = { -1, PlayerType::_Computer, CharacterType::_Tennis, StrongType::_Strong };
 
         param.pInitializer = new GameInitializer_UsualMatch(GameInitializer_UsualMatch::StageType::Kasennziki,param );
         

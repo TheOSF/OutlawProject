@@ -20,8 +20,8 @@ public:
     {
     public:
         virtual ~ControllEvent(){}
-        virtual bool isDoCombo() = 0;    //戻りとしてtrueを返すとコンボ実行をする
-        virtual void AngleControll(RADIAN angle) = 0;//アングル変更を行えるフレームに呼ばれる
+        virtual bool isDoCombo(bool isHit, int CheckFrame) = 0;    //戻りとしてtrueを返すとコンボ実行をする
+        virtual void AngleControll(RADIAN angle) = 0;              //アングル変更を行えるフレームに呼ばれる
     };
 
     //攻撃情報クラス
@@ -69,6 +69,8 @@ public:
 
         //カウンターヒットフレームかどうか
         virtual bool isCounterHitFrame(int Frame) = 0;
+
+        virtual int GetComboButtonFrame() = 0;
     };
 
     typedef std::vector<AttackInfo*> AttackInfoArray;

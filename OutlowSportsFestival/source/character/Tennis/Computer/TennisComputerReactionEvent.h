@@ -11,7 +11,6 @@
 class TennisComputerReactionEvent :public CharacterComputerReaction::ActionEvent
 {
     TennisPlayer*                   m_pTennis;
-    CharacterComputerMove::Param    m_Param;
 
     bool isDoAction(RATIO value)
     {
@@ -23,10 +22,11 @@ public:
     TennisComputerReactionEvent(TennisPlayer* pTennis) :
         m_pTennis(pTennis)
     {
-        //反応パラメータを取得
-        CharacterComputerMove::GetParams(m_Param, m_pTennis->m_PlayerInfo.strong_type);
+
     }
 
+    static CharacterComputerReaction::InParam GetCharacterComputerReactionInParam();
+
     //ダメージに対して反応する
-    void Reaction(CharacterComputerReactionHitEvent::HitType hittype, Vector3 vec)override;
+    void Reaction(const TypeParam& param, CrVector3 vec)override;
 };

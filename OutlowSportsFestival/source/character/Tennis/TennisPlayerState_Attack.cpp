@@ -14,7 +14,7 @@ m_pTennis(pTennis)
 
 }
 
-bool TennisState_PlayerControll_Attack::PlayerControllEvent::isDoCombo()
+bool TennisState_PlayerControll_Attack::PlayerControllEvent::isDoCombo(bool isHit, int CheckFrame)
 {
     return controller::GetTRG(controller::button::shikaku, m_pTennis->m_PlayerInfo.number);
 }

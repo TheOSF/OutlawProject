@@ -1,9 +1,6 @@
 #pragma once
 #include "../CharacterBase.h"
-#include "../CharacterRenderer.h"
-#include "../CharacterStateTemplate.h"
 #include "CharacterComputerMove.h"
-#include "../../Damage/Damage.h"
 
 class CharacterBase;
 
@@ -16,28 +13,31 @@ class CharacterBase;
 class CharacterComputerDoAction
 {
 public:
-	//CharacterComputerMove::Param m_params;
+
 	class ActionEvent
 	{
 	public:
 		virtual~ActionEvent() {}
-		virtual void Attack(float len) = 0;			//攻撃開始時に呼ばれる関数
+        virtual bool Action(CharacterBase* pTarget, float len) = 0;			//攻撃開始時に呼ばれる関数
 	};
+
 	CharacterComputerDoAction(
-		CharacterBase*					pParent,	//操るキャラクタのポインタ
-		const CharacterComputerMove::Param&	param,		//移動パラメータ構造体
-		ActionEvent*						ActionEvent,	//移動イベントに反応するクラス
-		DamageManager::HitEventBase*	pHitEventBase//ダメージを受けた時に反応するクラス
+		CharacterBase*			pParent,	            //操るキャラクタのポインタ
+        CharacterComputerMove*  pCharacterComputerMove, //AI移動クラスへのポインタ
+		ActionEvent*			pActionEvent	        //移動イベントに反応するクラス
 		);
 
 	~CharacterComputerDoAction();
-	void Update();
-	float GetMoveTargetLength();
-private:
-	typedef DamageManager::HitEventBase HitEventBase;
 
-	CharacterBase*	                  m_cCharacter;
-	ActionEvent*  	                  m_ActionEvent;
-	HitEventBase*	                  m_pHitEventBase;
-	CharacterComputerMove::Param	  m_Params;
+	void Update();
+
+private:
+    CharacterComputerMove* const    m_pCharacterComputerMove;
+    CharacterBase* const            m_pChr;
+	ActionEvent* const              m_pActionEvent;
+
+
+    bool                 m_DoAttack;
+
+    bool isDoAttack();
 };

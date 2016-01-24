@@ -191,7 +191,7 @@ void TennisState_PlayerControll_Move::ActionStateSwitch(TennisPlayer* t)
     if (controller::GetTRG(controller::button::_L1, t->m_PlayerInfo.number) &&
         t->isCanBoundBallAtk())
     {// [L1] で ハートショット
-        t->SetState(new TennisState_BoundShot(new TennisUtillityClass::PlayerShotControllClass(t)));
+        t->SetState(new TennisState_BoundShot());
         return;
     }
 }

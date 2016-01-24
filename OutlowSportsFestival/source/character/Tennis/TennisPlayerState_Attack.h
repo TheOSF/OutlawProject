@@ -18,7 +18,7 @@ public:
     public:
         PlayerControllEvent(TennisPlayer*const pTennis);
 
-        bool isDoCombo();
+        bool isDoCombo(bool isHit, int CheckFrame);
         void AngleControll(RADIAN angle);
 
     private:
