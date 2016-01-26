@@ -651,7 +651,7 @@ void AmefootPlayerState_SpecialAtk::State_WallHit()
     }
 
     //çXêV
-    UsualDamageUpdate();
+    NoDamageUpdate();
 }
 
 void AmefootPlayerState_SpecialAtk::State_Finish()

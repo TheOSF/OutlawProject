@@ -195,12 +195,12 @@ void Kasennziki_Manager::SetSunsetObject()
 
 void Kasennziki_Manager::SetNoonObject()
 {
-    //ãÛÇçÌèú
-    if (m_pSkyObject != nullptr)
-    {
-        m_pSkyObject->m_DeleteFlg = true;
-        m_pSkyObject = nullptr;
-    }
+    ////ãÛÇçÌèú
+    //if (m_pSkyObject != nullptr)
+    //{
+    //    m_pSkyObject->m_DeleteFlg = true;
+    //    m_pSkyObject = nullptr;
+    //}
 
     //ì«Ç›çûÇ›
     StageEditer::Load(StageObjFileName);

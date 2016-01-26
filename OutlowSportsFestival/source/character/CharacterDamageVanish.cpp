@@ -389,6 +389,7 @@ void CharacterDamageVanish::HitFloorAndStandUp()
 {
     const int StandUpStart = 10;
     const int StandUpEnd = 50;
+    const bool CanCancelAction = StandUpStart < m_Count;
 
     //床に当たったイベント
     if (m_Count == 0)
@@ -428,12 +429,23 @@ void CharacterDamageVanish::HitFloorAndStandUp()
     }
 
     //起き上がり途中は他のアクションでキャンセル可能
-    m_pEvent->CanActionUpdate();
+    if (CanCancelAction)
+    {
+        m_pEvent->CanActionUpdate();
+    }
     
     //移動更新
     {
         chr_func::XZMoveDown(m_pCharacter, 0.15f);
-        chr_func::UpdateAll(m_pCharacter, m_pHitEvent);
+
+        if (CanCancelAction)
+        {
+            chr_func::UpdateAll(m_pCharacter, m_pHitEvent);
+        }
+        else
+        {
+            chr_func::UpdateAll(m_pCharacter, &DamageManager::HitEventBase());
+        }
     }
 
     //イベント更新

@@ -20,37 +20,6 @@
 #include "SoccerCommonState.h"
 #include "SoccerState_ControllVanish.h"
 
-class SoccerUtillityClass
-{
-public:
-	//ローリングの方向制御クラス
-	class PlayerRollingControll :public SoccerState_Rolling::CallBackClass
-	{
-	public:
-		SoccerPlayer*const ps;
-
-		PlayerRollingControll(SoccerPlayer* ps) :ps(ps){}
-
-
-		Vector3 GetVec()override
-		{
-			Vector2 stick = controller::GetStickValue(controller::stick::left, ps->m_PlayerInfo.number);
-			Vector3 vec(stick.x, 0, stick.y);
-
-			if (vec.Length() < 0.25f)
-			{
-				return Vector3Zero;
-			}
-
-			vec = DefCamera.GetRight()*vec.x + DefCamera.GetForward()*vec.z;
-			vec.y = 0;
-			vec.Normalize();
-
-			return vec;
-		}
-	};
-
-};
 SoccerState* SoccerState_PlayerControll_Move::GetPlayerControllMove(
 	SoccerPlayer* ps)
 {
@@ -382,7 +351,11 @@ void SoccerState_Sliding::AutoAngleControll()
         }
         else
         {
-            if (chr_func::CalcAtkTarget(m_pChr, D3DXToRadian(45), 8.0f, &pTarget))
+            if (chr_func::CalcAtkTarget(m_pChr, D3DXToRadian(45), 15.0f, &pTarget))
+            {
+                chr_func::AngleControll(m_pChr, pTarget->m_Params.pos, AngleSpeed);
+            }
+            else if (chr_func::CalcAtkTarget(m_pChr, D3DXToRadian(90), 50.0f, &pTarget))
             {
                 chr_func::AngleControll(m_pChr, pTarget->m_Params.pos, AngleSpeed);
             }
@@ -675,11 +648,11 @@ void SoccerState_PlayerControll_Shot::Enter(SoccerPlayer* s)
 	p.MoveDownSpeed = 0.075f;
 
 	m_pShotClass = new CharacterShotAttack(s, new SoccerShotEvent(s), p, new SoccerHitEvent(s));
+
 }
 void SoccerState_PlayerControll_Shot::Execute(SoccerPlayer* s)
 {
 
-	
 	if (!m_pShotClass->Update())
 	{
 		s->SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(s));

@@ -16,12 +16,45 @@
 
 #include "../CharacterShotAttackClass.h"
 #include "../CharacterDamageMotion.h"
-
+#include "SoccerRolling.h"
+#include "../../GameSystem/GameController.h"
 
 //****************************************************
 //	サッカープレイヤーの操作クラスヘッダー
 //****************************************************
 
+
+class SoccerUtillityClass
+{
+public:
+    //ローリングの方向制御クラス
+    class PlayerRollingControll :public SoccerState_Rolling::CallBackClass
+    {
+    public:
+        SoccerPlayer*const ps;
+
+        PlayerRollingControll(SoccerPlayer* ps) :ps(ps){}
+
+
+        Vector3 GetVec()override
+        {
+            Vector2 stick = controller::GetStickValue(controller::stick::left, ps->m_PlayerInfo.number);
+            Vector3 vec(stick.x, 0, stick.y);
+
+            if (vec.Length() < 0.25f)
+            {
+                return Vector3Zero;
+            }
+
+            vec = DefCamera.GetRight()*vec.x + DefCamera.GetForward()*vec.z;
+            vec.y = 0;
+            vec.Normalize();
+
+            return vec;
+        }
+    };
+
+};
 
 //プレイヤー操作の移動クラス
 class SoccerState_PlayerControll_Move :public SoccerState

@@ -4,6 +4,7 @@
 #include "../CharacterFunction.h"
 #include "../../Effect/EffectFactory.h"
 #include "../../GameSystem/GameController.h"
+#include "BaseballState_PlayerControll_Evasion.h"
 
 BaseballState_DamageVanish::BaseballState_DamageVanish(
 	BaseballPlayer* pBaseball,
@@ -104,11 +105,24 @@ void BaseballState_DamageVanish::Enter(BaseballPlayer* b)
 			chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->m_Renderer.m_TransMatrix);
 		}
 
-		//void CanActionUpdate()
-		//{
-		//	//行動分岐が可能なときに呼ばれる
-		//	m_pDoCancelAction->DoAction();
-		//}
+		void CanActionUpdate()
+		{
+			//行動分岐が可能なときに呼ばれる
+            if (m_pBaseball->m_PlayerInfo.player_type == PlayerType::_Player)
+            {
+                if (controller::GetPush(controller::button::batu, m_pBaseball->m_PlayerInfo.number))
+                {
+                    m_pBaseball->SetState(new BaseballState_Rolling());
+                }
+            }
+            else
+            {
+                if (frand() < 0.02f)
+                {
+                    m_pBaseball->SetState(new BaseballState_Rolling(Vector3Rand() - Vector3Normalize(m_pBaseball->m_Params.pos)));
+                }
+            }
+		}
 
 	private:
 		BaseballPlayer*  m_pBaseball;

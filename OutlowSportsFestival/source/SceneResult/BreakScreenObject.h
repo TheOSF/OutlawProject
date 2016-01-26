@@ -32,6 +32,7 @@ private:
     bool Update();
     bool Msg(MsgType mt);
 
+    void Effect(int num);
 
     void CalcZ();
 

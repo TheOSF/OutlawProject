@@ -182,7 +182,7 @@ void BaseballState_Rolling::SetParam(BaseballPlayer* b)
         m_Param.AllFrame = 40;
         m_Param.Motion = baseball_player::_mb_Evasion_B;
         m_Param.NoDamageFrame = 15;
-        m_Param.MoveValue = 0.5f;
+        m_Param.MoveValue = 0.8f;
         m_Param.MoveDownFrame = 0.05f;
     }
     else
@@ -190,7 +190,7 @@ void BaseballState_Rolling::SetParam(BaseballPlayer* b)
         m_Param.AllFrame = 30;
         m_Param.Motion = baseball_player::_mb_Evasion_P;
         m_Param.NoDamageFrame = 10;
-        m_Param.MoveValue = 0.6f;
+        m_Param.MoveValue = 0.8f;
         m_Param.MoveDownFrame = 0.08f;
     }
 }

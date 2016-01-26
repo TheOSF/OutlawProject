@@ -37,15 +37,25 @@ void AmefootPlayerState_UsualMove::Enter(AmefootPlayer* pCharacter)
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_UsualMove::Execute(AmefootPlayer* pCharacter)
 {
-     this->ActionStateSwitch(pCharacter);
 
-     Vector2 stickScreen = controller::GetStickValue(controller::stick::left , pCharacter->m_PlayerInfo.number);
-     Vector3 stickWorld = DefCamera.GetRight() *stickScreen.x + DefCamera.GetForward()* stickScreen.y;
-     stickScreen.x = stickWorld.x;
-     stickScreen.y = stickWorld.z;
+     if (AmefootPlayerState_UsualMove::SwitchGameState(pCharacter) == false)
+     {
+         Vector2 stickScreen = controller::GetStickValue(controller::stick::left, pCharacter->m_PlayerInfo.number);
+         Vector3 stickWorld = DefCamera.GetRight() *stickScreen.x + DefCamera.GetForward()* stickScreen.y;
+         stickScreen.x = stickWorld.x;
+         stickScreen.y = stickWorld.z;
 
-     // スティックの値をセット
-     m_pCharacterUsualMove->SetStickValue(stickScreen);
+         // スティックの値をセット
+         m_pCharacterUsualMove->SetStickValue(stickScreen);
+
+         this->ActionStateSwitch(pCharacter);
+     }
+     else
+     {
+         //スティックの値セット（移動しない）
+         m_pCharacterUsualMove->SetStickValue(Vector2(0, 0));
+     }
+
 
      // 移動クラス更新
      m_pCharacterUsualMove->Update();
@@ -155,6 +165,7 @@ AmefootUsualMove_MoveEvent::AmefootUsualMove_MoveEvent(AmefootPlayer* pAmefoot) 
 //-----------------------------------------------------------------------------------------
 void AmefootUsualMove_MoveEvent::Update(bool isRun, RATIO speed)
 {
+
      m_pAmefoot->m_Renderer.Update(1);
 
      // モデルのワールド変換行列を更新

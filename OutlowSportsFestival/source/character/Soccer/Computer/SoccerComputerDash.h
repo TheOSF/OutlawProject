@@ -21,7 +21,8 @@ public:
     {
         TargetAttack,
         Escape,
-        SaveDistance
+        SaveDistance,
+
     };
 	
     SoccerState_ComputerControll_Dash(

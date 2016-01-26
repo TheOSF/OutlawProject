@@ -11,8 +11,6 @@
 
 class BaseballState_PlayerControll_Counter : public BaseballState
 {
-private:
-	float areasize;
 public:
 	BaseballState_PlayerControll_Counter();
 	// ステート開始

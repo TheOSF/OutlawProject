@@ -34,6 +34,11 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
             if (pTennis->m_PlayerInfo.player_type == PlayerType::_Player)
             {
                 m_pDoCancelAction = new Tennis_DoCancelAction_Player(pTennis);
+
+                m_pDoCancelAction->SetDontActions(Tennis_DoCancelAction_Player::Action::BoundBallShot);
+                m_pDoCancelAction->SetDontActions(Tennis_DoCancelAction_Player::Action::Counter);
+                m_pDoCancelAction->SetDontActions(Tennis_DoCancelAction_Player::Action::FarAtk);
+                m_pDoCancelAction->SetDontActions(Tennis_DoCancelAction_Player::Action::NearAtk);
             }
             else
             {

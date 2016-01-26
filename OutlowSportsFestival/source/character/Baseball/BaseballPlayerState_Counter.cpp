@@ -101,23 +101,25 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
     {
         param.AfterShotFrame = 15;
         param.CanCounterFrame = 30;
-        param.CatchAriaSize = areasize;
+        param.CatchAriaSize = 8.0f;
         param.ControllRadian = D3DXToRadian(33);
         param.FailedFrame = 20;
         param.PoseFrame = 24;
         param.ShotFrame = 6;
-        param.BallSpeed = 0.85f;
+        param.BallSpeed = 1.2f;
     }
     else
     {
-        param.AfterShotFrame = 15;
+        param.AfterShotFrame = 30;
         param.CanCounterFrame = 30;
-        param.CatchAriaSize = areasize;
+        param.CatchAriaSize = 12.0f;
         param.ControllRadian = D3DXToRadian(33);
         param.FailedFrame = 20;
         param.PoseFrame = 24;
-        param.ShotFrame = 6;
+        param.ShotFrame = 14;
         param.BallSpeed = 0.85f;
+        param.CatchFrame = 20;
+        param.CatchBoneNumber = 32;
     }
 
 	// カウンタークラス作成

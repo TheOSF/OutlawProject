@@ -31,11 +31,11 @@ SoccerState_ComputerControll_Dash::SoccerState_ComputerControll_Dash(
         break;
 
     case MoveType::Escape:
-        m_pStateFunc = &SoccerState_ComputerControll_Dash::State_Attack;
+        m_pStateFunc = &SoccerState_ComputerControll_Dash::State_Escape;
         break;
 
     case MoveType::SaveDistance:
-        m_pStateFunc = &SoccerState_ComputerControll_Dash::State_Attack;
+        m_pStateFunc = &SoccerState_ComputerControll_Dash::State_SaveDistance;
         break;
 
     default:
@@ -85,9 +85,19 @@ void SoccerState_ComputerControll_Dash::Exit(SoccerPlayer* s)
 
 Vector3 SoccerState_ComputerControll_Dash::State_Attack()
 {
-    if (m_pMoveClass->isDash() &&  Vector3Distance(m_pChr->m_Params.pos, m_pTarget->m_Params.pos) < 25.0f)
+    if (m_pMoveClass->isDash() &&
+        Vector3Distance(m_pChr->m_Params.pos, m_pTarget->m_Params.pos) < 25.0f&&
+        Vector3Radian(chr_func::GetFront(m_pChr), m_pTarget->m_Params.pos - m_pChr->m_Params.pos) < D3DXToRadian(45)
+        )
     {
         m_pChr->SetState(new SoccerState_Sliding(m_pChr));
+    }
+
+    if (frand() <= 0.005f && m_Timer > 30)
+    {
+        m_pChr->SetState(
+            new SoccerState_Rolling(new SocceComputerrUtillityClass::ComputerRollingControll(m_pChr, m_pChr->m_Params.pos- m_pTarget->m_Params.pos), false)
+            );
     }
 
     return m_pTarget->m_Params.pos;

@@ -67,7 +67,7 @@ bool SocceComputerrUtillityClass::AttackEvent::Action(CharacterBase* pTarget, fl
     }
     else
     {
-        if (chr_func::isCanSpecialAttack(m_pChr) && frand() < 0.1f)
+        if (chr_func::isCanSpecialAttack(m_pChr) && frand() < 0.2f)
         {
             //•KŽE‹Z‚Ô‚Á‚Ï
             m_pChr->SetState(new SoccerState_PlayerControll_Finisher());

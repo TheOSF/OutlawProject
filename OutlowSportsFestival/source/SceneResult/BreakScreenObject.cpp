@@ -2,6 +2,7 @@
 #include "../Camera/Camera.h"
 #include "../GameSystem/GameController.h"
 
+#include "../Effect/GlavityLocus.h"
 
 BreakScreenObject::BreakScreenObject(iex2DObj* pTexture) :
 m_BreakScreenModel("DATA\\RESULT\\BreakScreen\\wall_break.iem"),
@@ -94,6 +95,14 @@ bool BreakScreenObject::Update()
     }
     else if (m_Timer < 38)
     {
+        //ƒJƒƒ‰‚Ì‚ä‚ê
+        if (m_Timer == 30)
+        {
+            DefCamera.SetShock(Vector2(0.1f, 0.1f), 15);
+
+            Effect(20);
+        }
+
         Speed = 1.2f;
     }
     else if (m_Timer < 80)
@@ -102,6 +111,13 @@ bool BreakScreenObject::Update()
     }
     else if (m_Timer < 110)
     {
+        //ƒJƒƒ‰‚Ì‚ä‚ê
+        if (m_Timer == 80)
+        {
+            Effect(20);
+            DefCamera.SetShock(Vector2(0.1f, 0.1f), 15);
+        }
+
         Speed = 2.0f;
         m_Alpha *= 0.85f;
 
@@ -124,6 +140,52 @@ bool BreakScreenObject::Update()
 bool BreakScreenObject::Msg(MsgType mt)
 {
     return false;
+}
+
+void BreakScreenObject::Effect(int num)
+{
+    return;////////////////////////////////
+
+    Vector3  color(1.0f, 0.5f, 0);
+    Vector3 Nmove = -Vector3AxisZ;
+    Vector3 power(0, -0.02f, 0);
+    Vector3 move;
+    GlavityLocus* g;
+
+    const Vector4
+        stCol(color.x, color.y, color.z, 1.0f),
+        endCol(color.x, color.y, color.z, 0.5f);
+
+    const Vector4
+        stHdCol(color.x, color.y, color.z, 1.0f),
+        endHdCol(color.x, color.y, color.z, 0.5f);
+
+    Vector3 pos = m_BreakScreenModel.GetPos();
+
+    for (int i = 0; i < num; ++i)
+    {
+        move = Vector3Rand() + Nmove;
+        move *= frand();
+        move *= 0.1f;
+
+        g = new GlavityLocus(
+            pos, move, power, 8, 40 + rand() % 20
+            );
+
+        g->m_BoundRatio = 0.5f;
+        g->m_CheckWall = false;
+
+        g->m_Locus.m_StartParam.Color = stCol;
+        g->m_Locus.m_EndParam.Color = endCol;
+
+        g->m_Locus.m_StartParam.HDRColor = stHdCol;
+        g->m_Locus.m_EndParam.HDRColor = endHdCol;
+
+        g->m_Locus.m_StartParam.Width = 0.09f;
+        g->m_Locus.m_EndParam.Width = 0.00f;
+
+        // g->m_Locus.m_pTexture = DefResource.Get(Resource::TextureType::Locus1);
+    }
 }
 
 void BreakScreenObject::CalcZ()

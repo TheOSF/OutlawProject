@@ -20,6 +20,7 @@ AmefootPlayerState_Evasion::AmefootPlayerState_Evasion()
 void AmefootPlayerState_Evasion::Enter(AmefootPlayer* pCharacter)
 {
     m_pChr = pCharacter;
+    m_pChr->m_Params.DoCheckOtherChrSpace = false;
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_Evasion::Execute(AmefootPlayer* pCharacter)
@@ -29,11 +30,13 @@ void AmefootPlayerState_Evasion::Execute(AmefootPlayer* pCharacter)
     (this->*m_pStateFunc)();
 
     chr_func::CreateTransMatrix(m_pChr, &m_pChr->m_Renderer.m_TransMatrix);
+
+    
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_Evasion::Exit(AmefootPlayer* pCharacter)
 {
-
+    m_pChr->m_Params.DoCheckOtherChrSpace = true;
 }
 //-----------------------------------------------------------------------------------------
 
@@ -139,6 +142,8 @@ void AmefootPlayerState_Evasion::State_Downing()
 void AmefootPlayerState_Evasion::State_StandUp()
 {
     const int DownFrame = 30;
+
+    m_pChr->m_Params.DoCheckOtherChrSpace = true;
 
     //モーションセット
     if (m_Timer++ == 0)

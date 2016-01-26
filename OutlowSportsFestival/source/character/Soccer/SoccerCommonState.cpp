@@ -7,6 +7,9 @@
 #include "../CharacterFunction.h"
 #include "../../Effect/EffectFactory.h"
 #include "../../Camera/Camera.h"
+#include "../../GameSystem/GameController.h"
+#include "SoccerRolling.h"
+#include "Computer\SoccerComputerUtilityClass.h"
 
 SoccerState_SmallDamage::SoccerState_SmallDamage(
 	SoccerPlayer* pSoccer,
@@ -187,7 +190,20 @@ void SoccerState_DamageVanish::Enter(SoccerPlayer* s)
         void CanActionUpdate()
         {
             //s“®•ªŠò‚ª‰Â”\‚È‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
-           // m_pDoCancelAction->DoAction();
+            if (m_pSoccer->m_PlayerInfo.player_type == PlayerType::_Player)
+            {
+                if (controller::GetPush(controller::button::batu, m_pSoccer->m_PlayerInfo.number))
+                {
+                    m_pSoccer->SetState(new SoccerState_Rolling(new SoccerUtillityClass::PlayerRollingControll(m_pSoccer), false));
+                }
+            }
+            else
+            {
+                if (frand() < 0.02f)
+                {
+                    m_pSoccer->SetState(new SoccerState_Rolling(new SocceComputerrUtillityClass::ComputerRollingControll(m_pSoccer, -Vector3Normalize(m_pSoccer->m_Params.pos)), false));
+                }
+            }
         }
 
 

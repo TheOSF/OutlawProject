@@ -80,19 +80,6 @@ TennisSpecialBall::~TennisSpecialBall()
 bool TennisSpecialBall::Update()
 {
 
-    //BallBase::Params p;
-    //p = m_Params;
-    //p.type = BallBase::Type::_Usual;
-
-    //UsualBall* dontwork = 
-    //new UsualBall(
-    //    p,
-    //    DamageBase::Type::_WeekDamage,
-    //    0.5f
-    //    );
-
-    //dontwork->ToNoWork();
-
     (this->*m_pStatefunc)();
 
 
@@ -392,7 +379,6 @@ void TennisState_SpecialAtk::Execute(TennisPlayer* t)
     //”­ŽË
     if (m_Timer == ShotFrame)
     {
-       
         {
             Vector3 pos, move, auto_move;
 

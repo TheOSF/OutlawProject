@@ -293,6 +293,12 @@ bool TornadoVanishControll::Update()
     //消去フレームなら操作しているクラスも消す
     if (live_flg == false)
     {
+        Vector3 Vec = -m_Param.from;
+        Vec.y = 0.0f;
+        Vec.Normalize();
+        Vec.y = 0.5f;
+
+        m_pControll_Transform->AllFree(Vec);
         m_pControll_Transform->m_Destroy = true;
     }
 

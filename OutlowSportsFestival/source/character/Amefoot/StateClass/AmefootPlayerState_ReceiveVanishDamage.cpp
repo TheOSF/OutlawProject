@@ -5,6 +5,8 @@
 #include "../AmefootUsualHitEvent.h"
 #include "AmefootPlayerState_UsualMove.h"
 #include "../../../Effect/EffectFactory.h"
+#include "../../../GameSystem/GameController.h"
+#include "AmefootPlayerState_Evasion.h"
 
 //-----------------------------------------------------------------------------------------
 // VanishEvent
@@ -181,5 +183,20 @@ void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::HitWallUpdate()
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_ReceiveVanishDamage::VanishEvent::CanActionUpdate()
-{}
+{
+    if (m_pAmefoot->m_PlayerInfo.player_type == PlayerType::_Player)
+    {
+        if (controller::GetPush(controller::button::batu, m_pAmefoot->m_PlayerInfo.number))
+        {
+            m_pAmefoot->SetState(new AmefootPlayerState_Evasion());
+        }
+    }
+    else
+    {
+        if (frand() < 0.01f)
+        {
+            m_pAmefoot->SetState(new AmefootPlayerState_Evasion());
+        }
+    }
+}
 //-----------------------------------------------------------------------------------------

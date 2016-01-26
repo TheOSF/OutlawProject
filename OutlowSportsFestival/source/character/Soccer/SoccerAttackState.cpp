@@ -56,6 +56,7 @@ void SoccerAttackState::Enter(SoccerPlayer* p)
     m_Damage.pParent = m_pChr;
     m_Damage.type = DamageBase::Type::_WeekDamage;
     m_Damage.Value = 1.0f;
+    m_Damage.AddSkillGaugeValue = 4.0f;
 
     m_LocalPosOffset = Vector3(0, 2, 2);
     m_LocalVec = Vector3(0, 0, 1);
