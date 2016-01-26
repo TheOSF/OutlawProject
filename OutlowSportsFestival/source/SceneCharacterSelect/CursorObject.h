@@ -142,6 +142,8 @@ public:
     bool isAllPlayerSelected()const;
     bool isSelected(int player_number)const;
 
+    bool isLocked(int player_number)const;
+
     void GetData(sceneGamePlay::InitParams& OutData);
     void RandomMove(SelectCursor* p);
 

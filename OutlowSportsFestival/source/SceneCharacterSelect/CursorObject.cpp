@@ -76,7 +76,6 @@ void SelectPointBase::OnCursor(SelectCursor* p)
 
     switch (m_Type)
     {
-
     case PointType::Tennis:
         p->m_PlayerInfo.chr_type = CharacterType::_Tennis;
         break;
@@ -91,6 +90,9 @@ void SelectPointBase::OnCursor(SelectCursor* p)
 
     case PointType::AmericanFootBall:
         p->m_PlayerInfo.chr_type = CharacterType::_Americanfootball;
+        break;
+    case PointType::ComputerDefaultPoint:
+        p->m_PlayerInfo.player_type = PlayerType::_Computer;
         break;
     }
 }
@@ -142,7 +144,7 @@ void SelectPointBase::Select(SelectCursor* p)
     case PointType::ComputerChrSelect:
         if (p->m_PlayerInfo.player_type == PlayerType::_Player)
         {
-            //p->m_Lock = true;
+            p->m_Lock = true;
         }
         break;
 
@@ -180,7 +182,8 @@ void SelectPointBase::Cancel(SelectCursor* p)
 
     case PointType::ComputerChrSelect:
     {
-        if ( p->m_PlayerInfo.player_type = PlayerType::_Player ) {
+        if ( p->m_PlayerInfo.player_type == PlayerType::_Player )
+        {
             p->m_Lock = false;
         }
     }
@@ -394,7 +397,6 @@ bool SelectCursor::Update()
             }
         }
     }
-    
 
     //ˆÚ“®
     if (m_pPoint != nullptr)
@@ -513,7 +515,6 @@ bool CursorManager::GetNextPoint(
         MostNear = TempLen;
         *ppOut = it;
     }
-    
     return *ppOut != nullptr;
 }
 
@@ -521,23 +522,31 @@ bool CursorManager::isAllPlayerSelected()const
 {
     for (auto& it : m_CursorData)
     {
-        if ((it->m_PlayerInfo.player_type == PlayerType::_Player) && (it->m_Selected == false))
+        if ((it->m_PlayerInfo.player_type == PlayerType::_Player) && 
+            (it->m_Selected == false))
         {
             return false;
         }
     }
-
     return true;
 }
 
-bool CursorManager::isSelected(int player_number)const {
-
-    int count = 0;
+bool CursorManager::isSelected(int player_number)const 
+{
     for ( auto& it : m_CursorData ) {
-        if ( count == player_number ) {
+        if ( it->m_PlayerInfo.number == player_number ) {
             return it->m_Selected;
         }
-        count++;
+    }
+    return false;
+}
+
+bool CursorManager::isLocked(int player_number)const
+{
+    for ( auto& it : m_CursorData ) {
+        if ( it->m_PlayerInfo.number == player_number ) {
+            return it->m_Lock;
+        }
     }
     return false;
 }
