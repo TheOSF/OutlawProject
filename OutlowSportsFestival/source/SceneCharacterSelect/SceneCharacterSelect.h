@@ -51,8 +51,8 @@ private:
     void SetComputerPoint(UINT Num);
     void SetSceneUI(); // シーンを構成するパーツを作成
     void SetCharacterPoint();
-    void SetOtherComputerCharacter(CharacterType::Value force = CharacterType::__ErrorType);
-    void CreateWindows();
+    void SetOtherComputerCharacter();
+    //void CreateWindows();
     void CreateLight();
     void CreateFloor();
     void CreateBack();

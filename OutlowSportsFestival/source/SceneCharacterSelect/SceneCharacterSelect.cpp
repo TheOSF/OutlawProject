@@ -45,7 +45,6 @@ m_BackTex("DATA\\Texture\\mizu.png")
     m_pComputerDefaultPoint->m_MoveTargetPos = Vector2((float)iexSystem::ScreenWidth / 2, -500);
     m_pComputerDefaultPoint->m_Pos = m_pComputerDefaultPoint->m_MoveTargetPos;
 
-
     //　野球関連
     DefResource.Regist(
         Resource::MeshType::Bat,
@@ -59,7 +58,7 @@ m_BackTex("DATA\\Texture\\mizu.png")
     SetSceneUI();
 
     //コンピュータ用のポイントをセット
-    //SetComputerPoint(4 - PlayerNum);
+    SetComputerPoint(4 - PlayerNum);
 
     //ライトセット
     CreateLight();
@@ -251,7 +250,6 @@ void SceneCharacterSelect::SetComputerPoint(UINT Num)
     };
 
     for ( UINT i = 0; i < Num; i++ ) {
-
         SelectPointBase* p;
 
         p = new SelectPointBase(m_pManager, SelectPointBase::PointType::ComputerChrSelect, &m_Texture, RectI(0, 0, 128, 128));
@@ -295,26 +293,12 @@ void SceneCharacterSelect::SetCharacterPoint()
         p = new SelectPointBase(m_pManager, SelectPointBase::PointType::Random, &m_Texture, RectI(512, 0, 128, 128));
         p->m_Pos = Center;
         p->m_MoveTargetPos = Center + Vector2(0, 280);
-
     }
 }
 
 
-void SceneCharacterSelect::SetOtherComputerCharacter(CharacterType::Value force)
+void SceneCharacterSelect::SetOtherComputerCharacter()
 {
-	if (force != CharacterType::__ErrorType)
-	{
-		for (auto&& it : m_LoadParams.PlayerArray)
-		{
-			if (it.player_type != PlayerType::_Computer)
-			{
-				continue;
-			}
-			it.chr_type = force;
-		}
-		return;
-	}
-
     struct
     {
         CharacterType::Value Type;
@@ -379,20 +363,25 @@ void SceneCharacterSelect::State_PreSelect()
                 pInitPoint = m_pComputerDefaultPoint;
             }
 
-            SelectCursor* p = new SelectCursor(m_pManager, (controller::CONTROLLER_NUM)i, &m_Texture, RectI(0, 128, 256, 256), pInitPoint);
+            SelectCursor* p = new SelectCursor(
+                m_pManager, 
+                (controller::CONTROLLER_NUM)i, 
+                &m_Texture, 
+                RectI(0, 128, 256, 256), 
+                pInitPoint);
 
             {
                 const CharacterType::Value Type = p->m_PlayerInfo.chr_type;
 
                 p->m_PlayerInfo = m_LoadParams.PlayerArray.at(i);
                 p->m_PlayerInfo.chr_type = Type;
-            }
 
-            //操作不能に
-            if (p->m_PlayerInfo.player_type == PlayerType::_Computer)
-            {
-                p->m_PlayerInfo.chr_type = CharacterType::__ErrorType;
-                p->m_ControllerNum = controller::__ERROR_CONTROLLER_NUM;
+                //操作不能に
+                if ( p->m_PlayerInfo.player_type == PlayerType::_Computer ) 
+                {
+                    p->m_PlayerInfo.chr_type = CharacterType::__ErrorType;
+                    p->m_ControllerNum = controller::__ERROR_CONTROLLER_NUM;
+                }
             }
 
             //キャラクタ表示クラスを作る
@@ -420,7 +409,7 @@ void SceneCharacterSelect::State_Selecting()
         //あいているキャラクタデータにコンピュータを入れる
 		SetOtherComputerCharacter();
     }
-    else if ( !m_pManager->isSelected(0) ) {
+    else if ( !m_pManager->isLocked(0) ) {
         if ( controller::GetTRG(controller::button::batu, 0) ) {
             //ステート移行
             m_pStateFunc = &SceneCharacterSelect::State_BackToOption;

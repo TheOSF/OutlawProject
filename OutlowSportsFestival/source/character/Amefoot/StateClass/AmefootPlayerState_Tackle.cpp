@@ -11,6 +11,8 @@
 #include "../../../Effect/ImpactLightObject.h"
 #include "../../../Effect/GlavityLocus.h"
 
+#include "../../../Ball/Ball.h"
+
 static const float g_TackleDamageValue = 25.0f;
 
 AmefootPlayerState_Tackle::AmefootPlayerState_Tackle(AmefootPlayer*const pCharacter) :
@@ -282,7 +284,8 @@ void AmefootPlayerState_Tackle::Jump()
 void AmefootPlayerState_Tackle::Touchdown()
 {
     const float kMoveDownSpeed = 0.1f;
-    const int StopFrame = 30;
+    const int StopFrame = 28;
+    const int AllFrame = 40;
 
     // 開始
     if (m_Timer == 0) { TouchdownStart(); }
@@ -297,13 +300,13 @@ void AmefootPlayerState_Tackle::Touchdown()
 
     if (m_Timer == StopFrame)
     {
-        m_pAmefootPlayer->m_Params.move.y = -0.8f;
+        m_pAmefootPlayer->m_Params.move.y = -0.45f;
     }
 
     // m_pAmefootPlayer->m_Params.move.y = kMoveY;
 
     //地面についていたら移行
-    if (chr_func::isTouchGround(m_pAmefootPlayer))
+    if ( m_Timer >= AllFrame )
     {
         SetState(&AmefootPlayerState_Tackle::Standup);
     }
@@ -400,7 +403,7 @@ void AmefootPlayerState_Tackle::JumpStart()
 {
 
     const float kMoveSpeed = 0.6f;
-    const float kMoveY = 0.55f;
+    const float kMoveY = 0.6f;
 
     // 移動
     chr_func::ResetMove(m_pAmefootPlayer);
@@ -577,7 +580,7 @@ void AmefootPlayerState_Tackle::UpdateDamageTransform()
     Matrix* T = &m_pDamageTransform->m_Transform;
 
     //腕の行列を取得
-    m_pAmefootPlayer->m_Renderer.GetWorldBoneMatirx(*T, 22);
+    m_pAmefootPlayer->m_Renderer.GetWorldBoneMatirx(*T, 30);
 
     //ボーン行列のスケール成分を正規化
     for (int i = 0; i < 3; ++i)
@@ -590,17 +593,19 @@ void AmefootPlayerState_Tackle::UpdateDamageTransform()
         }
     }
 
+    Matrix Trans;
+    const Vector3 offset(0, -3.48f, 0);
+    D3DXMatrixTranslation(&Trans, offset.x, offset.y, offset.z);
+    *T = Trans*(*T);
 
-    //座標は右腕と左腕の中間に
-    {
-        const Vector3 Pos =
-            (m_pAmefootPlayer->m_Renderer.GetWorldBonePos(22) +
-            m_pAmefootPlayer->m_Renderer.GetWorldBonePos(28))*0.5f;
+    //座標は右腕に
+    /*{
+        const Vector3 Pos = m_pAmefootPlayer->m_Renderer.GetWorldBonePos(30);
 
         T->_41 = Pos.x;
         T->_42 = Pos.y;
         T->_43 = Pos.z;
-    }
+    }*/
 }
 
 
