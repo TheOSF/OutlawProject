@@ -13,7 +13,7 @@ m_pTennis(pTennis)
 
 bool TennisComputerUtillityClass::AttackEvent::Action(CharacterBase* pTarget, float len)
 {
-   
+    
     if (len < 10.0f)
     {
         if (frand() < 0.5f)
@@ -24,11 +24,13 @@ bool TennisComputerUtillityClass::AttackEvent::Action(CharacterBase* pTarget, fl
         {
             m_pTennis->SetState(new TennisPlayerState_SlowUpBall(new SlowUpBallControllClass(m_pTennis, frand() < 0.3f)));
         }
-        
+        chr_func::AngleControll(m_pTennis, pTarget);
         return true;
     }
     else if (len < 25.0f)
     {
+        chr_func::AngleControll(m_pTennis, pTarget);
+
         if (chr_func::isCanSpecialAttack(m_pTennis) && frand() < 0.2f)
         {
             m_pTennis->SetState(new TennisState_SpecialAtk(m_pTennis));
@@ -47,6 +49,8 @@ bool TennisComputerUtillityClass::AttackEvent::Action(CharacterBase* pTarget, fl
     }
     else
     {
+        chr_func::AngleControll(m_pTennis, pTarget);
+
         if (chr_func::isCanSpecialAttack(m_pTennis) && frand() < 0.2f)
         {
             m_pTennis->SetState(new TennisState_SpecialAtk(m_pTennis));

@@ -23,9 +23,4 @@ public:
 	void Exit(BaseballPlayer* b)override;
 
 private:
-	void(BaseballState_Change::*m_pStateFunc)();
-
-	void State_Change();
-	void State_End();
-
 };

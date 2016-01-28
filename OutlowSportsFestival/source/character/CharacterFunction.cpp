@@ -160,6 +160,12 @@ void chr_func::AngleControll(CharacterBase* p, CrVector3 view_pos)
 	}
 }
 
+//指定したキャラクタに向く(一瞬で)
+void chr_func::AngleControll(CharacterBase* p, const CharacterBase* target)
+{
+    AngleControll(p, target->m_Params.pos);
+}
+
 //現在の位置、現在のangle、Scaleをもとに変換行列を生成する
 void chr_func::CreateTransMatrix(CharacterBase* p, Matrix* pOutMatrix)
 {

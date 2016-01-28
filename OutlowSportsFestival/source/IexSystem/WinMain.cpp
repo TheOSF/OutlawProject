@@ -89,10 +89,10 @@ BOOL	InitApp( HWND hWnd )
         param.Round = 20;
         param.Time = 60 * 60 * 1;
 
-        param.PlayerArray[0] = { 0, PlayerType::_Player, CharacterType::_Baseball, StrongType::_Strong };
-        param.PlayerArray[1] = { 1, PlayerType::_Computer, CharacterType::_Baseball, StrongType::_Strong };
-        param.PlayerArray[2] = { 2, PlayerType::_Computer, CharacterType::_Tennis, StrongType::_Strong };
-        param.PlayerArray[3] = { 3, PlayerType::_Computer, CharacterType::_Americanfootball, StrongType::_Strong };
+        param.PlayerArray[0] = { 0, PlayerType::_Computer, CharacterType::_Americanfootball, StrongType::_Weak };
+        param.PlayerArray[1] = { 1, PlayerType::_Computer, CharacterType::_Americanfootball, StrongType::_Usual };
+        param.PlayerArray[2] = { 2, PlayerType::_Computer, CharacterType::_Americanfootball, StrongType::_Strong };
+        param.PlayerArray[3] = { 3, PlayerType::_Computer, CharacterType::_Americanfootball, StrongType::_Weak };
 
         param.pInitializer = new GameInitializer_UsualMatch(GameInitializer_UsualMatch::StageType::Kasennziki,param );
         

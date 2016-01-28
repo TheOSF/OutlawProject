@@ -28,15 +28,22 @@ m_pChr(p)
 
 bool SocceComputerrUtillityClass::AttackEvent::Action(CharacterBase* pTarget, float len)
 {
+    
     if (len < 15.0f)
     {
+        
+
         if (chr_func::isCanSpecialAttack(m_pChr) && frand() < 0.3f)
         {
+            chr_func::AngleControll(m_pChr, pTarget);
+
             //•KŽE‹Z‚Ô‚Á‚Ï
             m_pChr->SetState(new SoccerState_PlayerControll_Finisher());
         }
         else if (frand() < 0.3f)
         {
+            chr_func::AngleControll(m_pChr, pTarget);
+
             //‹ß‹——£UŒ‚
             m_pChr->SetState(new SoccerAttackState(m_pChr));
         }
@@ -74,6 +81,8 @@ bool SocceComputerrUtillityClass::AttackEvent::Action(CharacterBase* pTarget, fl
         }
         else if (frand() < 0.3f)
         {
+            chr_func::AngleControll(m_pChr, pTarget);
+
             //‰“‹——£UŒ‚
             m_pChr->SetState(new SoccerState_PlayerControll_Shot());
         }
@@ -157,6 +166,8 @@ void SocceComputerrUtillityClass::ReactionEvent::Reaction(const TypeParam& param
             }
             else
             {
+                chr_func::AngleControll(m_pChr, m_pChr->m_Params.pos + vec);
+
                 m_pChr->SetState(new SoccerAttackState(m_pChr));
             }
             return;

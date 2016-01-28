@@ -38,6 +38,10 @@ namespace chr_func
 	//指定した場所に向く(一瞬で)
 	void AngleControll(CharacterBase* p, CrVector3 view_pos);
 
+    //指定したキャラクタに向く(一瞬で)
+    void AngleControll(CharacterBase* p, const CharacterBase* target);
+
+
 	//現在の位置、現在のangle、Scaleをもとに変換行列を生成する
 	void CreateTransMatrix(CharacterBase* p, Matrix* pOutMatrix);
 

@@ -3,6 +3,7 @@
 #include "../TennisState_Rolling.h"
 #include "TennisComputerUtillityClass.h"
 #include "TennisComputerState_Attack.h"
+#include "../../CharacterFunction.h"
 
 CharacterComputerReaction::InParam TennisComputerReactionEvent::GetCharacterComputerReactionInParam()
 {
@@ -47,15 +48,29 @@ void TennisComputerReactionEvent::Reaction(const TypeParam& param, CrVector3 vec
         {
             if (frand() < 0.5f)
             {
+                Vector3 EscapeVec;
+
+                if (frand() < 0.5f)
+                {
+                    EscapeVec = -Vector3Normalize(m_pTennis->m_Params.pos);
+                }
+                else
+                {
+                    EscapeVec = -vec;
+                }
+
+                EscapeVec = Vector3RotateAxis(Vector3AxisY, (frand() - 0.5f)*PI, EscapeVec);
                 
                 m_pTennis->SetState(
                     //ローリング
                     new TennisState_Rolling(
-                    new TennisComputerUtillityClass::RollingCallBack(m_pTennis, Vector3RotateAxis(Vector3AxisY, frand()*PI*0.5f, -vec)
+                    new TennisComputerUtillityClass::RollingCallBack(m_pTennis, EscapeVec
                     )));
             }
             else
             {
+                chr_func::AngleControll(m_pTennis, m_pTennis->m_Params.pos + vec);
+
                 m_pTennis->SetState(
                     //ローリング
                     new TennisComputerState_Attack(m_pTennis, false)
@@ -65,11 +80,24 @@ void TennisComputerReactionEvent::Reaction(const TypeParam& param, CrVector3 vec
         }
         else
         {
+            Vector3 EscapeVec;
+
+            if (frand() < 0.5f)
+            {
+                EscapeVec = -Vector3Normalize(m_pTennis->m_Params.pos);
+            }
+            else
+            {
+                EscapeVec = -vec;
+            }
+
+            EscapeVec = Vector3RotateAxis(Vector3AxisY, (frand() - 0.5f)*PI, EscapeVec);
+
             m_pTennis->SetState(
                 //ローリング
                 new TennisState_Rolling(
-                new TennisComputerUtillityClass::RollingCallBack(m_pTennis, vec)
-                ));
+                new TennisComputerUtillityClass::RollingCallBack(m_pTennis, EscapeVec
+                )));
         }
     }
 

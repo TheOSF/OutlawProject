@@ -34,7 +34,6 @@
     <ClCompile Include="source\character\Baseball\BaseballState_PoseMotion.cpp" />
     <ClCompile Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.cpp" />
     <ClCompile Include="source\character\CharacterHitEventFunc.cpp" />
-    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerDash.cpp" />
     <ClCompile Include="source\Ball\Ball.cpp" />
     <ClCompile Include="source\Ball\BallFadeOutRenderer.cpp" />
     <ClCompile Include="source\Ball\Baseball_SpAtk_Ball.cpp" />
@@ -77,16 +76,6 @@
     <ClCompile Include="source\character\CharacterDefaultCounterClass.cpp" />
     <ClCompile Include="source\character\CharacterEvasionClass.cpp" />
     <ClCompile Include="source\character\CharacterShotAttackClass.cpp" />
-    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerMove.cpp" />
-    <ClCompile Include="source\character\Soccer\Snakeshot.cpp" />
-    <ClCompile Include="source\character\Soccer\SoccerAttackInfo_UsualAttack.cpp" />
-    <ClCompile Include="source\character\Soccer\SoccerCommonState.cpp" />
-    <ClCompile Include="source\character\Soccer\SoccerDash.cpp" />
-    <ClCompile Include="source\character\Soccer\SoccerHitEvent.cpp" />
-    <ClCompile Include="source\character\Soccer\SoccerPlayer.cpp" />
-    <ClCompile Include="source\character\Soccer\SoccerPlayerState_PoseMotion.cpp" />
-    <ClCompile Include="source\character\Soccer\SoccerRolling.cpp" />
-    <ClCompile Include="source\character\Soccer\SoccerSliding.cpp" />
     <ClCompile Include="source\character\Tennis\Computer\TennisPlayerState_ComMove.cpp" />
     <ClCompile Include="source\character\Tennis\TennisAttackClass.cpp" />
     <ClCompile Include="source\character\Tennis\TennisAttackInfo_UsualAtk.cpp" />
@@ -192,8 +181,6 @@
     <ClCompile Include="source\Item\Item_WallBoundBall.cpp" />
     <ClCompile Include="source\Item\Item_BellEmitter.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_Counter.cpp" />
-    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerUtilityClass.cpp" />
-    <ClCompile Include="source\character\Soccer\SoccerAttackClass.cpp" />
     <ClCompile Include="source\character\Tennis\Tennis_DoCancelAction.cpp" />
     <ClCompile Include="source\Effect\LocusBarObject.cpp" />
     <ClCompile Include="source\Item\RainbowSkillBall.cpp" />
@@ -217,15 +204,12 @@
     <ClCompile Include="source\SceneCharacterSelect\SelectCharacterWindow.cpp" />
     <ClCompile Include="source\SceneResult\BreakScreenObject.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballPlayerState_Controll_Vanish.cpp" />
-    <ClCompile Include="source\character\Soccer\SoccerState_ControllVanish.cpp" />
     <ClCompile Include="source\character\Amefoot\MoveClass\AmefootAttackClass.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_Tackle.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveControllVanish.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_SpecialAtk.cpp" />
     <ClCompile Include="source\utillity\DamageObject.cpp" />
-    <ClCompile Include="source\character\Soccer\SoccerAttackState.cpp" />
     <ClCompile Include="source\character\Amefoot\MoveClass\AmefootThrowBall.cpp" />
-    <ClCompile Include="source\character\Soccer\SoccerPlayerState.cpp" />
     <ClCompile Include="source\utillity\ScreenEffect.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_BallTouchDown.cpp" />
     <ClCompile Include="source\UI\SceneCharacterSelectUI.cpp" />
@@ -239,6 +223,22 @@
     <ClCompile Include="source\character\Computer\CharacterComputerMove.cpp" />
     <ClCompile Include="source\character\Computer\CharacterComputerReaction.cpp" />
     <ClCompile Include="source\character\Computer\CharacterComputerReactionHitEvent.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerDash.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerMove.cpp" />
+    <ClCompile Include="source\character\Soccer\Computer\SoccerComputerUtilityClass.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerAttackClass.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerAttackInfo_UsualAttack.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerAttackState.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerCommonState.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerDash.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerHitEvent.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerPlayer.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerPlayerState.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerPlayerState_PoseMotion.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerRolling.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerSliding.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerState_ControllVanish.cpp" />
+    <ClCompile Include="source\character\Soccer\Snakeshot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -264,7 +264,6 @@
     <ClInclude Include="source\character\Baseball\BaseballState_PoseMotion.h" />
     <ClInclude Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.h" />
     <ClInclude Include="source\character\CharacterHitEventFunc.h" />
-    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerDash.h" />
     <ClInclude Include="source\Ball\Ball.h" />
     <ClInclude Include="source\Ball\BallFadeOutRenderer.h" />
     <ClInclude Include="source\Ball\Baseball_SpAtk_Ball.h" />
@@ -311,18 +310,6 @@
     <ClInclude Include="source\character\CharacterDefaultCounterClass.h" />
     <ClInclude Include="source\character\CharacterEvasionClass.h" />
     <ClInclude Include="source\character\CharacterShotAttackClass.h" />
-    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerMove.h" />
-    <ClInclude Include="source\character\Soccer\Snakeshot.h" />
-    <ClInclude Include="source\character\Soccer\SoccerAttackClass.h" />
-    <ClInclude Include="source\character\Soccer\SoccerAttackInfo_UsualAttack.h" />
-    <ClInclude Include="source\character\Soccer\SoccerCommonState.h" />
-    <ClInclude Include="source\character\Soccer\SoccerDash.h" />
-    <ClInclude Include="source\character\Soccer\SoccerHitEvent.h" />
-    <ClInclude Include="source\character\Soccer\SoccerPlayer.h" />
-    <ClInclude Include="source\character\Soccer\SoccerPlayerState.h" />
-    <ClInclude Include="source\character\Soccer\SoccerPlayerState_PoseMotion.h" />
-    <ClInclude Include="source\character\Soccer\SoccerRolling.h" />
-    <ClInclude Include="source\character\Soccer\SoccerSliding.h" />
     <ClInclude Include="source\character\Tennis\Computer\TennisPlayerState_ComMove.h" />
     <ClInclude Include="source\character\Tennis\TennisAttackClass.h" />
     <ClInclude Include="source\character\Tennis\TennisAttackInfo_UsualAtk.h" />
@@ -441,7 +428,6 @@
     <ClInclude Include="source\Item\Item_BellEmitter.h" />
     <ClInclude Include="IEX\IEX_Input.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_Counter.h" />
-    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerUtilityClass.h" />
     <ClInclude Include="source\character\Tennis\Tennis_DoCancelAction.h" />
     <ClInclude Include="source\character\Tennis\TennisUtillityClass.h" />
     <ClInclude Include="source\Effect\LocusBarObject.h" />
@@ -468,14 +454,12 @@
     <ClInclude Include="source\SceneCharacterSelect\SelectCharacterWindow.h" />
     <ClInclude Include="source\SceneResult\BreakScreenObject.h" />
     <ClInclude Include="source\character\Baseball\BaseballPlayerState_Controll_Vanish.h" />
-    <ClInclude Include="source\character\Soccer\SoccerState_ControllVanish.h" />
     <ClInclude Include="source\character\Amefoot\MoveClass\AmefootAttackClass.h" />
     <ClInclude Include="source\character\Amefoot\MoveClass\AmefootTackleVanishControl.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_ReceiveControllVanish.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_Tackle.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_SpecialAtk.h" />
     <ClInclude Include="source\utillity\DamageObject.h" />
-    <ClInclude Include="source\character\Soccer\SoccerAttackState.h" />
     <ClInclude Include="source\character\Amefoot\MoveClass\AmefootThrowBall.h" />
     <ClInclude Include="source\utillity\ScreenEffect.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_BallTouchDown.h" />
@@ -489,6 +473,22 @@
     <ClInclude Include="source\character\Computer\CharacterComputerMove.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerReaction.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerReactionHitEvent.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerDash.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerMove.h" />
+    <ClInclude Include="source\character\Soccer\Computer\SoccerComputerUtilityClass.h" />
+    <ClInclude Include="source\character\Soccer\Snakeshot.h" />
+    <ClInclude Include="source\character\Soccer\SoccerAttackClass.h" />
+    <ClInclude Include="source\character\Soccer\SoccerAttackInfo_UsualAttack.h" />
+    <ClInclude Include="source\character\Soccer\SoccerAttackState.h" />
+    <ClInclude Include="source\character\Soccer\SoccerCommonState.h" />
+    <ClInclude Include="source\character\Soccer\SoccerDash.h" />
+    <ClInclude Include="source\character\Soccer\SoccerHitEvent.h" />
+    <ClInclude Include="source\character\Soccer\SoccerPlayer.h" />
+    <ClInclude Include="source\character\Soccer\SoccerPlayerState.h" />
+    <ClInclude Include="source\character\Soccer\SoccerPlayerState_PoseMotion.h" />
+    <ClInclude Include="source\character\Soccer\SoccerRolling.h" />
+    <ClInclude Include="source\character\Soccer\SoccerSliding.h" />
+    <ClInclude Include="source\character\Soccer\SoccerState_ControllVanish.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DATA\Shader\3DEx.fx" />

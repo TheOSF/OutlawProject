@@ -40,8 +40,6 @@ public:
 
 		int                LocusBoneNum;
 
-		float              AddSkillValue;
-
 		Vector2            VanishValue;
 
 		bool			   changeFlg;

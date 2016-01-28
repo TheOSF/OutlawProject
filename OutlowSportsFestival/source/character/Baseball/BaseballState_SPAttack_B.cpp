@@ -239,11 +239,6 @@ void BaseballState_SPAttack_B::State_Atk()
 		{
 			m_Timer = 0;
 			m_pStateFunc = &BaseballState_SPAttack_B::State_Finish;
-
-			if (m_pBaseBall->m_PlayerInfo.player_type == PlayerType::_Computer)
-			{
-				m_pBaseBall->setChangeFlg(true);
-			}
 		}
 	}
 }
@@ -253,8 +248,6 @@ void BaseballState_SPAttack_B::FreezeGame(UINT frame)
 {
 	std::list<LpGameObjectBase> UpdateObjList;
 
-    UpdateObjList.push_back(m_pBaseBall->GetHead());
-    UpdateObjList.push_back(m_pBaseBall->GetWeapon());
 	UpdateObjList.push_back(m_pBaseBall);
 
 	DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, frame, true);

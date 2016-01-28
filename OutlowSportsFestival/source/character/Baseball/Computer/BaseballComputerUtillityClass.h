@@ -34,7 +34,7 @@ public:
 
         void Reaction(const TypeParam& param, CrVector3 vec);
 
-        static CharacterComputerReaction::InParam GetInParam();
+        static CharacterComputerReaction::InParam GetInParam(bool batter);
 
     private:
         BaseballPlayer* const m_pChr;

@@ -19,8 +19,10 @@ typedef ChrState< BaseballPlayer, CharacterBase::MsgType>BaseballState;
 //		野球プレイヤークラス
 //*************************************************************
 
-namespace baseball_player{
-	enum MotionType{
+namespace baseball_player
+{
+	enum MotionType
+    {
 		//　バッター
         _mb_Stand_B = 1,				//　待機
         _mb_Run_B,				        //　走り
@@ -56,62 +58,49 @@ namespace baseball_player{
 		_mb_CounterRight_P,				//　カウンター（右）
 		_mb_CounterLeft_P,				//　カウンター（左）
 	};
-
-	enum PositionMode
-	{
-		_pm_Butter,
-		_pm_Pitcher,
-	};
 }
 
 class BaseballPlayer :public CharacterBase
 {
-protected:
-	bool batterflg;//　(true:バッター,false:投手)
-	bool temp_batterflg;//　一時保存
-	int changetime;
-	bool changeflg;//　Com用
 private:
 	BaseballStateMachine*		m_pStateMachine;
-    BaseballEquip* HeadEquip;
-    BaseballEquip* WeaponEquip;
+    CharacterRenderer*          m_pBatterModel;
+    CharacterRenderer*          m_pPitcherModel;
+    bool                        m_BatterFlg; //　(true:バッター,false:投手)
 public:
-
-	//　攻撃によるスキルゲージ増加量
-	struct SkillParam
-	{
-		float atk1Value;//　近初撃
-		float atk2Value;//　2撃
-		float atk3Value;//　3撃
-
-	};
-	static const SkillParam skillparams;
-
 
 	BaseballPlayer(const CharacterBase::PlayerInfo& info);
 	~BaseballPlayer();
 
+    //現在フォームのモデルにモーションをセット
+    void SetMotion(int motion);
+
+    //現在フォームのモデルを更新
+    void ModelUpdate(RATIO Speed = 1.0f);
+
 	bool SetState(BaseballState* state, int Important = 0);
 	bool Update();
 	bool CharacterMsg(MsgType mt);
-public:
+
 	//　装備切り替え
-	void CheangeEquip();
-	//　リセット
-	void Riset();
+	void ChangeMode();
 
-public:
+    //フォームを指定してセットする
+    bool SetMode(bool isBatter);
+
 	//　ゲッター・セッター
-	bool getBatterFlg(){ return batterflg; }
-	int getChangeTime(){ return changetime; }
-	void setChangeTime(int t){ changetime = t; }
-	void setBatterFlg(bool flg){ batterflg = flg; }
-	void setChangeFlg(bool flg){ changeflg = flg; }
-	bool getChangeFlg(){ return changeflg; }
+    bool getBatterFlg()const{ return m_BatterFlg; }
+    bool getPitcherFlg()const{ return !m_BatterFlg; }
 
-    BaseballEquip* GetWeapon(){ return WeaponEquip; }
-    BaseballEquip* GetHead(){ return HeadEquip; }
-public:
+    bool isBatter()const{ return m_BatterFlg; }
+    bool isPitcher()const{ return !m_BatterFlg; }
 
+    //現在フォームのモデルをゲット
+    CharacterRenderer* getNowModeModel();
+
+private:
+    //　リセット
+    void Reset();
 };
+
 #endif

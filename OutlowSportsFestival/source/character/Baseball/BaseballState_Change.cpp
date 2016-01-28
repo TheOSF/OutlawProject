@@ -25,19 +25,30 @@ BaseballState_Change::~BaseballState_Change()
 void  BaseballState_Change::Enter(BaseballPlayer* b)
 {
 	m_pBaseball = b;
-	m_pStateFunc = &BaseballState_Change::State_Change;
 }
 
 
 // ステート実行
 void BaseballState_Change::Execute(BaseballPlayer* b)
 {
+    ++m_Timer;
+
+    chr_func::XZMoveDown(b, 0.05f);
+
+    if (m_Timer == 1)
+    {
+        //　エフェクト
+        EffectFactory::Change(Vector3(m_pBaseball->m_Params.pos.x, m_pBaseball->m_Params.pos.y + 2.0f, m_pBaseball->m_Params.pos.z), 10.0f);
+        //　効果音
+        Sound::Play(Sound::Change);
+
+        b->ChangeMode();
+    }
+
 	
-	chr_func::XZMoveDown(b, 0.05f);
-	(this->*m_pStateFunc)();
 	chr_func::UpdateAll(b, &BaseballHitEvent(b));
-	b->m_Renderer.Update(1);
-	chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
+    b->ModelUpdate();
+    chr_func::CreateTransMatrix(b, &b->getNowModeModel()->m_TransMatrix);
 }
 
 // ステート終了
@@ -46,51 +57,3 @@ void BaseballState_Change::Exit(BaseballPlayer* b)
 
 }
 
-void BaseballState_Change::State_Change()
-{
-
-
-	if (m_pBaseball->getChangeTime() >= 20)
-	{
-		m_Timer++;
-		if (m_Timer == 1)
-		{
-			batterflg = m_pBaseball->getBatterFlg();
-
-			//　エフェクト
-			EffectFactory::Change(Vector3(m_pBaseball->m_Params.pos.x, m_pBaseball->m_Params.pos.y + 2.0f, m_pBaseball->m_Params.pos.z), 10.0f);
-			//　効果音
-			Sound::Play(Sound::Change);
-			
-		}
-
-		if (m_Timer == 3)
-		{
-			if (batterflg)
-			{
-				m_pBaseball->setBatterFlg(false);
-				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Change_B);
-			}
-			else{
-				m_pBaseball->setBatterFlg(true);
-				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Change_P);
-			}
-			m_pStateFunc = &BaseballState_Change::State_End;
-		}
-
-	}
-
-}
-
-void BaseballState_Change::State_End()
-{
-	const int EndFrame = 20;
-
-	if (++m_Timer > EndFrame)
-	{
-		//　リセット
-		m_Timer = 0;
-		m_pBaseball->setChangeTime(0);
-		m_pBaseball->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(m_pBaseball));
-	}
-}

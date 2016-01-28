@@ -45,6 +45,8 @@ void CharacterComputerMove::Update()
 
     //ステート関数を実行
     (this->*m_pStateFunc)();
+
+
 }
 
 Vector2 CharacterComputerMove::GetMoveVec()
@@ -275,6 +277,35 @@ Vector3 CharacterComputerMove::GetMovePosition()
         }
 
         ret = m_pTargetChr->m_Params.pos + Vec;
+    }
+
+
+    //壁なら位置を調節する
+    {
+        const float CheckHeight = 2.0f;
+        Vector3 out, pos, vec;
+        float dist;
+        int mat;
+
+        pos = m_pChr->m_Params.pos + Vector3(0, CheckHeight, 0);
+        
+        vec = ret - pos;
+        vec.y = 0.0f;
+
+        dist = vec.Length();
+
+        if (DefCollisionMgr.RayPick(
+            &out,
+            &pos,
+            &vec,
+            &dist,
+            &mat,
+            CollisionManager::RayType::_Character
+            ) != nullptr)
+        {
+            ret = out;
+            ret.y = m_pTargetChr->m_Params.pos.y;
+        }
     }
 
     return ret;

@@ -137,7 +137,7 @@ void BaseballAttackInfo_UsualAtk::HitAttack(DamageShpere* pDmg)
         0.5f,
         0.15f
         );
-	m_pOwner->setChangeFlg(m_Param.changeFlg);
+
 }
 
 

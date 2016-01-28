@@ -79,7 +79,7 @@ void BaseballPlayerState_ComMove::Enter(BaseballPlayer* b)
     {
         m_pReactionClass = new CharacterComputerReaction(
             b,
-            BaseballComputerUtillityClass::ReactionEvent::GetInParam(),
+            BaseballComputerUtillityClass::ReactionEvent::GetInParam(b->getBatterFlg()),
             new BaseballComputerUtillityClass::ReactionEvent(b)
             );
     }

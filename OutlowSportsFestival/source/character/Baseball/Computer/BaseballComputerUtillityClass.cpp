@@ -229,12 +229,20 @@ void BaseballComputerUtillityClass::ReactionEvent::Reaction_P(const TypeParam& p
     }
 }
 
-CharacterComputerReaction::InParam BaseballComputerUtillityClass::ReactionEvent::GetInParam()
+CharacterComputerReaction::InParam BaseballComputerUtillityClass::ReactionEvent::GetInParam(bool batter)
 {
     CharacterComputerReaction::InParam param;
 
-    param.CanNearAtkAreaSize = 20.0f;
-    param.CounterAreaSize = 8.0f;
+    if (batter)
+    {
+        param.CanNearAtkAreaSize = 20.0f;
+        param.CounterAreaSize = 12.0f;
+    }
+    else
+    {
+        param.CanNearAtkAreaSize = 12.0f;
+        param.CounterAreaSize = 12.0f;
+    }
 
     return param;
 }
@@ -247,8 +255,8 @@ BaseballComputerUtillityClass::ShotControllClass_B::ShotControllClass_B(Baseball
 m_pBaseball(pBaseball)
 {
     m_pReaction = new CharacterComputerReaction(
-        pBaseball,
-        ReactionEvent::GetInParam(),
+        pBaseball, 
+        ReactionEvent::GetInParam(m_pBaseball->getBatterFlg()),
         new BaseballComputerUtillityClass::ReactionEvent(pBaseball)
         );
 }

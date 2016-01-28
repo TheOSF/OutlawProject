@@ -15,27 +15,15 @@
 //		野球プレイヤークラス
 //*************************************************************
 
-const BaseballPlayer::SkillParam BaseballPlayer::skillparams =
-{
-	0.05f,
-	0.05f,
-	0.05f,
-};
-
 //　コンストラクタ
 BaseballPlayer::BaseballPlayer(const CharacterBase::PlayerInfo& info) :
-CharacterBase(info, new  BlendAnimationMesh(GetCharacterModelPath(CharacterType::_Baseball))), batterflg(true), changetime(20),
-changeflg(false)
+CharacterBase(info, new  BlendAnimationMesh(GetCharacterModelPath(CharacterType::_Baseball))),
+m_BatterFlg(true)
 {
 	m_pStateMachine = new BaseballStateMachine(this);
 	SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(this));
-	//　体力低下(デバック用)
-	m_Params.maxHP = m_Params.HP = 100;
-	//m_Params.size = 1.8f;
-	temp_batterflg = batterflg;
 
-    HeadEquip = new BaseballEquip(&m_Renderer, BaseballEquip::MeshType::Helmet, 1);
-    WeaponEquip = new BaseballEquip(&m_Renderer, BaseballEquip::MeshType::Bat, 1);
+	m_Params.maxHP = m_Params.HP = 100;
 	
     m_ModelSize = 0.06f;
 }
@@ -45,6 +33,20 @@ BaseballPlayer::~BaseballPlayer()
 {
 	delete m_pStateMachine;
 	
+}
+
+//現在フォームのモデルにモーションをセット
+void BaseballPlayer::SetMotion(int motion)
+{
+    CharacterRenderer* const pNow = getNowModeModel();
+    
+    pNow->SetMotion(motion);
+}
+
+//現在フォームのモデルを更新
+void BaseballPlayer::ModelUpdate(RATIO Speed)
+{
+    getNowModeModel()->Update(Speed);
 }
 
 //　ステートセット
@@ -57,16 +59,9 @@ bool BaseballPlayer::SetState(BaseballState* state, int Important)
 //　更新
 bool BaseballPlayer::Update()
 {
-
-	//　切り替え可能時間増加
-	changetime++;
 	// ステート実行
 	m_pStateMachine->state_execute();
-	//　装備品切替
-	if (temp_batterflg != batterflg)
-	{
-		CheangeEquip();
-	}
+
 	//キャラクタ基本更新
 	BaseUpdate();
 	
@@ -79,51 +74,51 @@ bool  BaseballPlayer::CharacterMsg(MsgType mt)
 	//　ラウンドごとにリセット
 	if (mt == MsgType::_RoundReset)
 	{
-		Riset();
+		Reset();
 	}
 
 	return m_pStateMachine->Msg(mt);
 }
 
-void BaseballPlayer::CheangeEquip()
+//　装備切り替え
+void BaseballPlayer::ChangeMode()
 {
-		//　バッターへ
-		if (batterflg)
-		{
-			//　現在装備している物を物理挙動&nullptr代入
-            HeadEquip->Takeoff();
-            WeaponEquip->Takeoff();
+    SetMode(!m_BatterFlg);
+}
 
-			//　新しい装備をnew
-            HeadEquip = new BaseballEquip(&m_Renderer, BaseballEquip::MeshType::Helmet, 1);
-            WeaponEquip = new BaseballEquip(&m_Renderer, BaseballEquip::MeshType::Bat, 1);
+//フォームを指定してセットする
+bool BaseballPlayer::SetMode(bool isBatter)
+{
+    //同じだった場合
+    if (isBatter == m_BatterFlg)
+    {
+        return false;
+    }
 
-		}
-		else
-		{
-			//　現在装備している物を物理挙動&nullptr代入
-            HeadEquip->Takeoff();
-            WeaponEquip->Takeoff();
+    CharacterRenderer*const pPre = getNowModeModel();
 
-			//　新しい装備をnew
-            HeadEquip = new BaseballEquip(&m_Renderer, BaseballEquip::MeshType::Cap, 1);
-            WeaponEquip = new BaseballEquip(&m_Renderer, BaseballEquip::MeshType::Grove, 1);
+    m_BatterFlg = isBatter;
 
-		}
-		//　一時保存に今のフラグを代入
-		temp_batterflg = batterflg;
-	
+    //行列を同期
+    getNowModeModel()->m_TransMatrix = pPre->m_TransMatrix;
+
+    return true;
 }
 
 //　リセット
-void BaseballPlayer::Riset()
+void BaseballPlayer::Reset()
 {
 	SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(this));
-	
-	m_Renderer.SetMotion(baseball_player::_mb_Stand_B);
-	m_Renderer.Update(0);
-	//batterflg = true;
-	changetime = 20;
-
 }
 
+
+//現在フォームのモデルをゲット
+CharacterRenderer* BaseballPlayer::getNowModeModel()
+{
+    if (isBatter())
+    {
+        return m_pBatterModel;
+    }
+
+    return m_pPitcherModel;
+}

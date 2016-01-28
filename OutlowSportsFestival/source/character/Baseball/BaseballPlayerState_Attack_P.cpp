@@ -148,8 +148,8 @@ void  Baseball_PlayerControll_Attack_P::Enter(BaseballPlayer* b)
 	BaseballAttackInfo_UsualAtk::Param AtkParam[] =
 	{
 
-		{ 4, 1.2f, 1.5f, DamageBase::Type::_WeekDamage, 28, 40, 0.07f, 5, 10, baseball_player::_mb_Atk1_P, 60, 30, 35, 35, 0, 15, D3DXToRadian(8), 20, BaseballPlayer::skillparams.atk1Value, Vector2(0.2f, 0), false },
-		{ 6, 1.2f, 1.5f, DamageBase::Type::_VanishDamage, 10, 18, 0.02f, 1, 5, baseball_player::_mb_Atk2_P, 50, -1, -1, -1, 0, 5, D3DXToRadian(8), 32, BaseballPlayer::skillparams.atk2Value, Vector2(1.0f, 0.2f), false },
+		{ 4, 1.2f, 1.5f, DamageBase::Type::_WeekDamage, 28, 40, 0.07f, 5, 10, baseball_player::_mb_Atk1_P, 60, 30, 35, 35, 0, 15, D3DXToRadian(8), 20, Vector2(0.2f, 0), false },
+		{ 6, 1.2f, 1.5f, DamageBase::Type::_VanishDamage, 10, 18, 0.02f, 1, 5, baseball_player::_mb_Atk2_P, 50, -1, -1, -1, 0, 5, D3DXToRadian(8), 32, Vector2(1.0f, 0.2f), false },
 		
 	};
 
