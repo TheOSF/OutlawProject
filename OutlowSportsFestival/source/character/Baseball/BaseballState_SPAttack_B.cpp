@@ -12,6 +12,7 @@
 #include "../../Sound/Sound.h"
 #include "../../Effect/SpecialAttackEffect.h"
 #include "../../GameSystem/ResourceManager.h"
+#include "../../Effect/ImpactLightObject.h"
 
 
 //攻撃力
@@ -22,16 +23,19 @@ BaseballState_SPAttack_B::BaseballState_SPAttack_B(BaseballPlayer* b) :
 m_pChr(b),
 m_pStateFunc(&BaseballState_SPAttack_B::State_PreAtk),
 m_StateTimer(0),
-m_BatScale(0.1f, 0.1f, 0.1f)
+m_BatScale(0.1f, 0.1f, 0.1f),
+m_ChrLiveCount(0),
+m_DoOnHit(false)
 {
     {
         //ダメージ初期化
         m_Damage.m_Enable = false;
         m_Damage.AddSkillGaugeValue = 0.0f;
-        m_Damage.m_Param.width = 1.5f;
+        m_Damage.m_Param.width = 3.5f;
         m_Damage.m_Vec = chr_func::GetFront(m_pChr);
-        m_Damage.m_VecPower.x = 1.2f;
-        m_Damage.m_VecPower.y = 0.5f;
+        m_Damage.m_Vec.y = 0.8f;
+        m_Damage.m_VecPower.x = 1.0f;
+        m_Damage.m_VecPower.y = 1.5f;
         m_Damage.m_VecType = DamageCapsure::DamageVecType::MemberParam;
         m_Damage.pParent = m_pChr;
         m_Damage.type = DamageBase::Type::_VanishDamage;
@@ -45,6 +49,8 @@ m_BatScale(0.1f, 0.1f, 0.1f)
         false,
         MeshRenderer::RenderType::UseColor
         );
+
+    m_pBatMesh->m_HDR = Vector3(1, 0.5f, 0);
 
     //初期更新
     UpdateBatMesh();
@@ -100,7 +106,7 @@ void BaseballState_SPAttack_B::Execute(BaseballPlayer* b)
 void BaseballState_SPAttack_B::Exit(BaseballPlayer* b)
 {
     //スキルゲージをなくす
-  //  chr_func::ResetSkillGauge(m_pChr);
+    chr_func::ResetSkillGauge(m_pChr);
 }
 
 //-------------------------------------------------------------------//
@@ -151,38 +157,112 @@ void BaseballState_SPAttack_B::UpdateBatMesh()
 
 void BaseballState_SPAttack_B::UpdateDamagePos()
 {
-    Vector3 Vec;
-    Matrix T;
+    //Vector3 Vec;
+    //Matrix T;
 
-    //バットのボーン行列を取得
-    m_pChr->getNowModeModel()->GetWorldBoneMatirx(T, 32);
+    ////バットのボーン行列を取得
+    //m_pChr->getNowModeModel()->GetWorldBoneMatirx(T, 32);
 
-    //バットの伸びるベクトル
-    Vec = -Vector3(T._31, T._32, T._33);
-    Vec.Normalize();
+    ////バットの伸びるベクトル
+    //Vec = -Vector3(T._31, T._32, T._33);
+    //Vec.Normalize();
 
-    //ダメージ位置をセット
-    m_Damage.m_Param.pos1 = Vector3(T._41, T._42, T._43);
-    m_Damage.m_Param.pos2 = m_Damage.m_Param.pos1 + Vec * 9.0f;
+    ////ダメージ位置をセット
+    //m_Damage.m_Param.pos1 = Vector3(T._41, T._42, T._43);
+    //m_Damage.m_Param.pos2 = m_Damage.m_Param.pos1 + Vec * 9.0f;
 
+    Vector3 pos = m_pChr->m_Params.pos;
+
+    pos += chr_func::GetFront(m_pChr)*3.0f;
+    
+    m_Damage.m_Param.pos2 = pos;
+
+    pos += Vector3(0, 2, 0);
+
+    m_Damage.m_Param.pos1 = pos;
 }
 
 
 void BaseballState_SPAttack_B::OnHit()
 {
-    //SE
+    //　カキーン
     Sound::Play(Sound::BaseBall_SP);
 
-    //時間をとめる
+    Vector3 power(0, -0.02f, 0);
+    GlavityLocus* g;
+
+    const Vector4
+        stCol(1, 1, 1, 0.0f),
+        endCol(1, 1, 1, 0);
+
+    const Vector4
+        stHdCol(1, 1, 1, 0.5f),
+        endHdCol(1, 1, 1, 0);
+
+    const Vector3 move = Vector3Normalize(m_Damage.m_Vec)*0.8f;
+
+    Vector3 pos = m_Damage.m_Param.pos1;
+
+
+    //　エフェクト
+    for (int i = 0; i < 60; ++i)
+    {
+        g = new GlavityLocus(
+            pos, move*1.5f + Vector3Rand() * 0.8f, power, 4, 40 + rand() % 30
+            );
+
+        g->m_BoundRatio = 0.2f;
+        g->m_CheckWall = false;
+
+        g->m_Locus.m_StartParam.Color = stCol;
+        g->m_Locus.m_EndParam.Color = endCol;
+
+        g->m_Locus.m_StartParam.HDRColor = stHdCol;
+        g->m_Locus.m_EndParam.HDRColor = endHdCol;
+
+        g->m_Locus.m_StartParam.Width = 0.1f;
+        g->m_Locus.m_EndParam.Width = 0.00f;
+
+    }
+
+    //　雷
+    for (int i = 0; i < 8; i++)
+    {
+        new ThunderEffect
+            (pos/* - move*0.2f*i,*/,
+            pos + move * 10 + Vector3Rand() * 10,
+            4.5f,
+            0.1f,
+            10,
+            Vector4(1, 0.5f, 0, 0),
+            15);
+    }
+
+    new ImpactLightObject(
+        pos,
+        50.0f,
+        Vector3(0, 0.4f, 0.8f),
+        0.1f
+        );
+
+
+    //　ブラー
+    new BlurImpactSphere(
+        pos,
+        30,
+        100,
+        10
+        );
+
+    //　画面揺れ
+    DefCamera.SetShock(Vector2(0.5f, 0.5f), 50);
+
+    if (m_ChrLiveCount == DefCharacterMgr.GetCharacterLiveCount())
     {
         std::list<LpGameObjectBase> UpdateObjList;
 
-        DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, 20, true);
+        DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, 20);
     }
-
-    //エフェクト
-
-    
 }
 
 
@@ -192,7 +272,7 @@ void BaseballState_SPAttack_B::State_PreAtk()
     const int AllFrame = 50;
     const int BatScaleUpFrame = 35;
 
-    const Vector3 batScaleTarget(0.2f, 0.2f, 0.2f);
+    const Vector3 batScaleTarget(0.125f, 0.125f, 0.125f);
 
     //腕にバットをセット
     UpdateBatMesh();
@@ -206,6 +286,9 @@ void BaseballState_SPAttack_B::State_PreAtk()
     //フレーム経過で攻撃ステートへ
     if (m_StateTimer > AllFrame)
     {
+        //生存人数を保存
+        m_ChrLiveCount = DefCharacterMgr.GetCharacterLiveCount();
+
         SetState(&BaseballState_SPAttack_B::State_Atk);
     }
 }
@@ -226,6 +309,13 @@ void BaseballState_SPAttack_B::State_Atk()
     //ダメージの有効・無効をセット
     m_Damage.m_Enable = (m_StateTimer < DamageEndFrame);
 
+
+    //ヒットした場合エフェクト関数を呼ぶ
+    if (m_Damage.HitCount > 0 && m_DoOnHit == false)
+    {
+        m_DoOnHit = true;
+        OnHit();
+    }
 
     //バットを小さくする
     if (m_StateTimer > BatSmallFrame)

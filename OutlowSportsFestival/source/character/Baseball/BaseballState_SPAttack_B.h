@@ -36,6 +36,9 @@ private:
 
     MeshRenderer*           m_pBatMesh;
     Vector3                 m_BatScale;
+    bool                    m_DoOnHit;
+
+    UINT                    m_ChrLiveCount;
 
     void SetState(StateFunc state);
     void UpdateBatMesh();
