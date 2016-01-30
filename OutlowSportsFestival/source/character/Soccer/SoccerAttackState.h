@@ -48,6 +48,7 @@ private:
     void UpdateDoCombo();
     void UpdateDamage();
 
+    void SetHitStop(int frame);
     void SetState(StateFunc next);
     void SetDamage(UINT Frame);
 

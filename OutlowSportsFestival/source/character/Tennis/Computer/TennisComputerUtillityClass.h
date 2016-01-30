@@ -49,9 +49,15 @@ public:
 
         RollingCallBack(
             TennisPlayer*   pTennis,
-            CrVector3       DamageVec
+            CrVector3       EscapeVec
             ) :
-            m_pTennis(pTennis)
+            m_pTennis(pTennis),
+            m_EscapeVec(EscapeVec)
+        {
+            
+        }
+
+        void CalcEscapeVec_fromDamageVec(CrVector3 DamageVec)
         {
             //‰ñ”ğ‚·‚é•ûŒü‚ğZo
             Vector3 EscapeVec = Vector3Zero;
@@ -68,11 +74,10 @@ public:
             }
 
             //—”’²®
-            EscapeVec += Vector3Rand();
+          //  EscapeVec += Vector3Rand();
 
             EscapeVec.y = 0;
             EscapeVec.Normalize();
-
         }
 
         Vector3 GetVec()override

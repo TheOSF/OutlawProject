@@ -83,7 +83,6 @@ Snakeshot::Snakeshot(
 
     m_pTornadoEffect = new TornadoEffect(param, 3, 30);
 
-
     UpdateEffect();
 }
 
@@ -155,6 +154,12 @@ void Snakeshot::State_ToTagetMove()
 	{
 		m_pStatefunc = &Snakeshot::State_TargetDecision;
 	}
+
+    if (++m_Timer > 480)
+    {
+        DeleteEffect();
+        m_pStatefunc = &Snakeshot::State_NoWork;
+    }
 
 	//“G‚É“–‚½‚Á‚Ä‚¢‚½‚çUŒ‚”»’è‚ð‚È‚­‚·
     if (m_Damage.HitCount > 0 || isHitWall())

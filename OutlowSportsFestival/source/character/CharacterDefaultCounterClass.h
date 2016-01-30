@@ -68,6 +68,9 @@ public:
     //スティック値のセット(打ち返し時の方向を決める)
     void SetStickValue(CrVector2 stick);
 
+    //キャッチするときに参照するモデルをセット(デフォルトでは通常キャラクタのレンダラーが使われる
+    void SetCatchModel(CharacterRenderer* p);
+
 private:
 
     //ボールのダメージをカットするクラス(デコレートパターン？)
@@ -111,6 +114,7 @@ private:
     Event* const                        m_pEventClass;  //イベントクラスへのポインタ(中でdeleteする)
     DamageManager::HitEventBase* const  m_pHitEventClass;//ヒットイベント(中でdeleteする)
     UINT                                m_HitStopFrame;
+    CharacterRenderer*                  m_pRenderer;        
 
     void(CharacterDefaultCounter::*m_pNowState)();       //ステート関数
     UINT        m_Count;

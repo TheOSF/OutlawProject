@@ -24,7 +24,7 @@ BaseballState_PoseMotion::~BaseballState_PoseMotion()
 // ステート開始
 void BaseballState_PoseMotion::Enter(BaseballPlayer* b)
 {
-	b->m_Renderer.SetMotion(m_Motion);
+	b->SetMotion(m_Motion);
     chr_func::XZMoveDown(b, 1);
 }
 
@@ -41,9 +41,9 @@ void  BaseballState_PoseMotion::Execute(BaseballPlayer* b)
 
 	chr_func::UpdateAll(b, &DamageManager::HitEventBase());
 
-	chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
+    chr_func::CreateTransMatrix(b, &b->getNowModeModel()->m_TransMatrix);
 
-	b->m_Renderer.Update(1);
+	b->ModelUpdate(1);
 }
 
 

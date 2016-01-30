@@ -446,6 +446,7 @@ void UsualBall::Counter(CharacterBase* pCounterCharacter)
     m_Damage.pParent = m_Params.pParent = pCounterCharacter;
 
     UpdateColor();
+    m_Locus.m_StartParam.HDRColor.w = 0.65f;
 
     m_FlyLiveFrame = 180;
 

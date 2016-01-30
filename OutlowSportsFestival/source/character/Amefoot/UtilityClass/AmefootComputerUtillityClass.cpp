@@ -15,26 +15,42 @@ m_pAmefoot(pAmefoot)
 
 bool AmefootComputerUtillityClass::AttackEvent::Action(CharacterBase* pTarget, float len)
 {
+    if (chr_func::isCanSpecialAttack(m_pAmefoot) && frand() < 0.1f)
+    {
+        chr_func::AngleControll(m_pAmefoot, pTarget);
+        m_pAmefoot->SetState(new AmefootPlayerState_SpecialAtk(m_pAmefoot));
+        return true;
+    }
+
     if (len < 15.0f)
     {
-        if (chr_func::isCanSpecialAttack(m_pAmefoot) && frand() < 0.3f)
+        if (frand() < 0.5f)
         {
-            m_pAmefoot->SetState(new AmefootPlayerState_SpecialAtk(m_pAmefoot));
+            chr_func::AngleControll(m_pAmefoot, pTarget);
+            m_pAmefoot->SetState(new AmefootPlayerState_BallTouchDown(m_pAmefoot));
         }
         else
         {
+            chr_func::AngleControll(m_pAmefoot, pTarget);
             m_pAmefoot->SetState(new AmefootPlayerState_Tackle(m_pAmefoot));
         }
-     
+        return true;
+    }
+    else if (len < 25.0f)
+    {
+        if (frand() < 0.5f)
+        {
+            chr_func::AngleControll(m_pAmefoot, pTarget);
+            m_pAmefoot->SetState(new AmefootPlayerState_BallTouchDown(m_pAmefoot));
+        }
+        else
+        {
+            m_pAmefoot->SetState(new AmefootPlayerState_ThrowBall());
+        }
         return true;
     }
     else if (len < 50.0f)
     {
-        if (chr_func::isCanSpecialAttack(m_pAmefoot) && frand() < 0.1f)
-        {
-            m_pAmefoot->SetState(new AmefootPlayerState_SpecialAtk(m_pAmefoot));
-            return true;
-        }
         
         if (m_pAmefoot->isCanThrowBall())
         {
@@ -75,6 +91,7 @@ void AmefootComputerUtillityClass::ReactionEvent::Reaction(const TypeParam& para
     {
         if (frand() < 0.75f)
         {
+            chr_func::AngleControll(m_pAmefoot, m_pAmefoot->m_Params.pos + vec);
             m_pAmefoot->SetState(new AmefootPlayerState_Tackle(m_pAmefoot));
         }
         else
@@ -86,7 +103,15 @@ void AmefootComputerUtillityClass::ReactionEvent::Reaction(const TypeParam& para
 
     if (param.isStrongDamage)
     {
-        m_pAmefoot->SetState(new AmefootPlayerState_Evasion());
+        if (frand() < 0.5f)
+        {
+            m_pAmefoot->SetState(new AmefootPlayerState_Evasion());
+        }
+        else
+        {
+            chr_func::AngleControll(m_pAmefoot, Vector3Zero);
+            m_pAmefoot->SetState(new AmefootPlayerState_BallTouchDown(m_pAmefoot));
+        }
         return;
     }
 
@@ -96,7 +121,7 @@ CharacterComputerReaction::InParam AmefootComputerUtillityClass::ReactionEvent::
 {
     CharacterComputerReaction::InParam param;
 
-    param.CanNearAtkAreaSize = 20.0f;
+    param.CanNearAtkAreaSize = 10.0f;
     param.CounterAreaSize = 8.0f;
 
     return param;

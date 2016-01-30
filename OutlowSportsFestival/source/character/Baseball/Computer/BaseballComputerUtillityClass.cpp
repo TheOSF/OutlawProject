@@ -36,6 +36,12 @@ bool BaseballComputerUtillityClass::AttackEvent::Action(CharacterBase* pTarget, 
 
 bool BaseballComputerUtillityClass::AttackEvent::Action_B(CharacterBase* pTarget, float len)
 {
+    if (frand() < 0.1f)
+    {
+        m_pChr->SetState(new BaseballState_Change());
+        return true;
+    }
+
     if (len < 15.0f)
     {
         if (chr_func::isCanSpecialAttack(m_pChr) && len < 10.0f)
@@ -92,6 +98,10 @@ bool BaseballComputerUtillityClass::AttackEvent::Action_P(CharacterBase* pTarget
         if (frand() < 0.2f)
         {
             m_pChr->SetState(new BaseballState_Change());
+        }
+        else if (frand() < 0.5f)
+        {
+            m_pChr->SetState(new Baseball_PlayerControll_Attack_P(m_pChr));
         }
         else
         {

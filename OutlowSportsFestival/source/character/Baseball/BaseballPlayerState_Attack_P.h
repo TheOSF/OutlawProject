@@ -12,23 +12,6 @@ class Baseball_PlayerControll_Attack_P : public BaseballState
 {
 public:
 
-	//攻撃操作クラス
-	class PlayerControllEvent :public BaseballAttackClass::ControllEvent
-	{
-	public:
-		PlayerControllEvent(BaseballPlayer*const pBaseball, BaseballAttackClass* Attack);
-
-		bool isDoCombo();
-		void AngleControll(RADIAN angle);
-		bool ComDoCombo();
-
-	private:
-		BaseballPlayer*const m_pBaseball;
-		BaseballAttackClass* m_Attack;
-
-		const CharacterBase* GetFrontTargetEnemy();
-	};
-
 	Baseball_PlayerControll_Attack_P(BaseballPlayer* b);
 	~Baseball_PlayerControll_Attack_P();
 
@@ -42,7 +25,31 @@ public:
 	void Exit(BaseballPlayer* b)override;
 
 private:
-	BaseballAttackClass   m_Attack;        //攻撃クラスへのポインタ
+    typedef void(Baseball_PlayerControll_Attack_P::*StateFunc)();
+
+    enum class NextType
+    {
+        DoCombo,
+        DoFarAtk,
+
+        None,
+        _PreSelect
+    };
+
+    static const int m_sMaxCombo;
+
+    BaseballPlayer* const   m_pChr;
+    StateFunc               m_pStateFunc;
+    NextType                m_NextType;
+    int                     m_StateTimer;
+    int                     m_ComboCount;
+
+
+    void SetState(StateFunc state);
+    void UpdateNextType();
+    void AngleControll(RADIAN angle);
+
+    void State_Atk();
 };
 
 #endif

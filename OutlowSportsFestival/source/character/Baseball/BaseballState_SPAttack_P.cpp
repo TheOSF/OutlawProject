@@ -50,8 +50,8 @@ void BaseballState_SPAttack_P::Execute(BaseballPlayer* b)
 	(this->*m_pStateFunc)();
 
 	//　モーション更新とか
-	b->m_Renderer.Update(2);
-	chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
+	b->ModelUpdate(2);
+    chr_func::CreateTransMatrix(b, &b->getNowModeModel()->m_TransMatrix);
 
 
 }
@@ -72,7 +72,7 @@ void BaseballState_SPAttack_P::State_Shot()
 			FreezeGame(55);
 			//エフェクト
 			new SpecialAttackEffect(m_pBaseBall, 55);
-			m_pBaseBall->m_Renderer.SetMotion(baseball_player::_mb_Stand_B);
+			m_pBaseBall->SetMotion(baseball_player::_mb_Stand_B);
 		}
 		if (m_Timer == 56)
 		{
@@ -142,12 +142,12 @@ CharacterShotAttack* BaseballState_SPAttack_P::CreateSpAttack_P(BaseballPlayer* 
 		void Update()override{
 
 			//　モデル更新
-			m_pBaseball->m_Renderer.Update(2);
+			m_pBaseball->ModelUpdate(2);
 
 			// 転送行列更新
 			chr_func::CreateTransMatrix(
 				m_pBaseball,
-				&m_pBaseball->m_Renderer.m_TransMatrix);
+                &m_pBaseball->getNowModeModel()->m_TransMatrix);
 
 		}
 
@@ -171,7 +171,7 @@ CharacterShotAttack* BaseballState_SPAttack_P::CreateSpAttack_P(BaseballPlayer* 
 		{
 
 			//　☆モーション
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Shot_P);
+			m_pBaseball->SetMotion(baseball_player::_mb_Shot_P);
 		}
 
 		void AttackEnd()

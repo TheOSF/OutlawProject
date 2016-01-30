@@ -10,3 +10,4 @@
 #include "StateClass/AmefootPlayerState_Die.h"
 #include "StateClass/AmefootPlayerState_Tackle.h"
 #include "StateClass\AmefootPlayerState_SpecialAtk.h"
+#include "StateClass\AmefootPlayerState_BallTouchDown.h"

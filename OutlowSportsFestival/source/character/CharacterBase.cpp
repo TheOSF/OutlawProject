@@ -205,7 +205,7 @@ void CharacterBase::ResetRound()
 void CharacterBase::BaseUpdate()
 {
     m_PhysicObj.Update();
-    RendererUpdate();
+    RendererUpdate(&m_Renderer);
     CameraDrawObjUpdate();
 }
 
@@ -225,9 +225,11 @@ bool CharacterBase::Msg(MsgType mt)
     case MsgType::_GameSet:
         m_StateType = State::Freeze;
         break;
+
 	case MsgType::_LosePose:
-		m_StateType = State::Freeze;
+		m_StateType = State::LosePose;
 		break;
+
     case MsgType::_WinPose:
         m_StateType = State::WinPose;
         break;
@@ -245,10 +247,10 @@ CharacterBase::State CharacterBase::GetStateType()const
     return m_StateType;
 }
 
-void CharacterBase::RendererUpdate()
+void CharacterBase::RendererUpdate(CharacterRenderer* pRenderer)
 {
     Vector3  LerpColor(0, 0, 0);
-    Vector3  Color(m_Renderer.m_OutlineColor.r, m_Renderer.m_OutlineColor.g, m_Renderer.m_OutlineColor.b);
+    Vector3  Color(pRenderer->m_OutlineColor.r, pRenderer->m_OutlineColor.g, pRenderer->m_OutlineColor.b);
 
     if (chr_func::isCanSpecialAttack(this) && chr_func::isDie(this) == false)
     {
@@ -266,8 +268,8 @@ void CharacterBase::RendererUpdate()
         break;
     }
 
-    m_Renderer.m_OutlineColor = COLORf(0, Color.x, Color.y, Color.z);
-    m_Renderer.m_OutlineVisible = Color.Length() > 0.1f;
+    pRenderer->m_OutlineColor = COLORf(0, Color.x, Color.y, Color.z);
+    pRenderer->m_OutlineVisible = Color.Length() > 0.1f;
 }
 
 void CharacterBase::CameraDrawObjUpdate()

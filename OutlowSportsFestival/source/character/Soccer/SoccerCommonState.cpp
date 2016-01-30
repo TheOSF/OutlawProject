@@ -218,6 +218,7 @@ void SoccerState_DamageVanish::Enter(SoccerPlayer* s)
 	Param.rotate_speed = Vector3(0.0f, 0.0f, 0.0);
 	Param.move = m_Damage_vec;
 	Param.standup_frame = 50;
+    Param.down_frame = 0;
 
 	//‚Ğ‚é‚İƒNƒ‰ƒX‚ğì¬
     m_pDamageVanishClass = new CharacterDamageVanish(

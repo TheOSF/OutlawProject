@@ -122,7 +122,7 @@ void SoccerState_PlayerControll_Move::Enter(SoccerPlayer* s)
 
 	p.Acceleration = 0.25f;
 	p.MaxSpeed = 0.35f;
-	p.TurnSpeed = 0.3f;
+	p.TurnSpeed = 0.45f;
 	p.DownSpeed = 0.08f;
 	p.RunEndFrame = 35;
 
@@ -844,141 +844,73 @@ void SoccerState_PlayerControll_Dash::Exit(SoccerPlayer* s)
 	delete m_pMoveClass;
 }
 
-
-
-void SoccerState_SmallDamage(SoccerPlayer* s)
+SoccerState_PlayerControll_Finisher::SoccerState_PlayerControll_Finisher()
 {
 
 }
-SoccerState_PlayerControll_Finisher::SoccerState_PlayerControll_Finisher() :
-m_pSnakeShotClass(nullptr)
-{
 
-}
 void SoccerState_PlayerControll_Finisher::Enter(SoccerPlayer* s)
 {
-	m_pSnakeShotClass = this->SnakeShotClass(s);
-	
-	timeflg = false;
-	m_Timer = 0;
-	chr_func::ResetSkillGauge(s);
+    m_Timer = 0;
+    
+    s->m_Renderer.SetMotion(SoccerPlayer::_ms_SpecialAtk);
 }
+
 void SoccerState_PlayerControll_Finisher::Execute(SoccerPlayer* s)
 {
 	m_Timer++;
 
-	if (!timeflg)
-	{
-		//　発動音再生&The World
-		if (m_Timer == 1)
-		{
-			Sound::Play(Sound::Skill);
-			
-            std::list<LpGameObjectBase> UpdateObjList;
+    chr_func::XZMoveDown(s, 0.05f);
 
-            UpdateObjList.push_back(s);
+	//　発動音再生&The World
+    if (m_Timer == 1)
+    {
+        Sound::Play(Sound::Skill);
 
-            DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, 55, true);
+        std::list<LpGameObjectBase> UpdateObjList;
 
-			new SpecialAttackEffect(s, 55);
-		}
+        UpdateObjList.push_back(s);
 
-		if (m_Timer >= 55)
-		{
-			timeflg = true;
-			m_Timer = 0;
-		}
-	}
-	else
-	{
-		m_pSnakeShotClass->SetStickValue(
-			controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number));
-	}
+        DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, 55, true);
+
+        new SpecialAttackEffect(s, 55);
+    }
+
+    if (m_Timer == 55)
+    {
+        //　遠距離攻撃(param計算)
+        Vector3 pos, vec;
+
+        chr_func::GetFront(s, &vec);
+
+        pos = s->m_Params.pos;
+        pos.y = UsualBall::UsualBallShotY;
+
+        //生成
+        Sound::Play(Sound::Beam2);
+        new Snakeshot(pos, vec, s, 1);
+    }
+
+    if (m_Timer == 56)
+    {
+        chr_func::ResetSkillGauge(s);
+        s->SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(s));
+    }
+
 	//無敵
 	{
-		DamageManager::HitEventBase NoDmgHitEvent;   //ノーダメージ
-
-		chr_func::UpdateAll(s, &NoDmgHitEvent);
-	}
-	
-	// 更新
-	if (m_pSnakeShotClass->Update() == false)
-	{
-		return;
+        chr_func::UpdateAll(s, &DamageManager::HitEventBase());
 	}
 
+    chr_func::CreateTransMatrix(s, &s->m_Renderer.m_TransMatrix);
+    s->m_Renderer.Update(1);
 }
+
+
 void SoccerState_PlayerControll_Finisher::Exit(SoccerPlayer* s)
 {
-	delete m_pSnakeShotClass;
+
 }
-//　遠距離クラス
-CharacterShotAttack* SoccerState_PlayerControll_Finisher::SnakeShotClass(SoccerPlayer* s){
-	class ShotAttackEvent :public CharacterShotAttack::Event{
-		SoccerPlayer* m_pSoccer;
-		Snakeshot* snake;
-	public:
-		//　ボール
-		BallBase::Params param;
-		//　ターゲット
-		Vector3 target;
-	public:
-		//　コンストラクタ
-		ShotAttackEvent(SoccerPlayer* pSoccer) :target(0, 0, 0),
-			m_pSoccer(pSoccer){}
-		//　更新
-		void Update()override{
-			//　モデル更新
-			m_pSoccer->m_Renderer.Update(1.0f);
 
-			// 転送行列更新
-			chr_func::CreateTransMatrix(
-				m_pSoccer,
-				&m_pSoccer->m_Renderer.m_TransMatrix);
-		}
-	public:
-		// ダメージ判定開始 & ボール発射
-		void Shot()
-		{
-			//　遠距離攻撃(param計算)
-            Vector3 pos, vec;
-
-            chr_func::GetFront(m_pSoccer, &vec);
-			
-            pos = m_pSoccer->m_Params.pos;
-            pos.y = UsualBall::UsualBallShotY;
-
-			//生成
-			Sound::Play(Sound::Beam2);
-            new Snakeshot(pos, vec, m_pSoccer, 1);
-		}
-
-		//　遠距離攻撃開始
-		void AttackStart()override{
-			//　☆モーション
-            m_pSoccer->m_Renderer.SetMotion(SoccerPlayer::_ms_SpecialAtk);
-		}
-
-		void AttackEnd()
-		{
-			//攻撃終了時に通常移動モードに戻る
-			m_pSoccer->SetState(SoccerState_PlayerControll_Move::GetPlayerControllMove(m_pSoccer));
-		}
-	};
-
-	CharacterShotAttack::AttackParams atk;
-
-	atk.AllFrame = 55;
-	atk.MaxTurnRadian = PI / 4;
-	atk.MoveDownSpeed = 0.3f;
-	atk.ShotFrame = 55;
-
-	return m_pSnakeShotClass = new CharacterShotAttack(
-		s,
-		new ShotAttackEvent(s),
-		atk,
-		new  DamageManager::HitEventBase()
-		);
-}
 
 

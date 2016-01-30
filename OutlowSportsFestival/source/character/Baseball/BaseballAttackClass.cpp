@@ -43,7 +43,7 @@ BaseballAttackClass::~BaseballAttackClass()
 
 void BaseballAttackClass::Update()
 {
-	m_pOwner->m_Renderer.Update(1);
+	m_pOwner->ModelUpdate(1);
 
 	(this->*m_pStateFunc)();
 
@@ -55,7 +55,7 @@ void BaseballAttackClass::Update()
 		chr_func::UpdateAll(m_pOwner, &HitEvent);
 	}
 
-	chr_func::CreateTransMatrix(m_pOwner, &m_pOwner->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(m_pOwner, &m_pOwner->getNowModeModel()->m_TransMatrix);
 }
 
 bool BaseballAttackClass::isEnd()const

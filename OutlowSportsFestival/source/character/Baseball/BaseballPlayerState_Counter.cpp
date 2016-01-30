@@ -38,11 +38,11 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
 		{
 			if (m_pBaseball->getBatterFlg())
 			{
-				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_CounterPose_B);
+				m_pBaseball->SetMotion(baseball_player::_mb_CounterPose_B);
 			}
 			else
 			{
-				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_CounterPose_P);
+                m_pBaseball->SetMotion(baseball_player::_mb_CounterPose_P);
 			}
 		}
 
@@ -51,18 +51,18 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
 		{
 			if (m_pBaseball->getBatterFlg())
 			{
-                m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_CounterRight_B);
+                m_pBaseball->SetMotion(baseball_player::_mb_CounterRight_B);
 			}
 			else
 			{
 				//ボールの位置によってモーション分岐
 				if (chr_func::isRight(m_pBaseball, pCounterBall->m_Params.pos))
 				{
-					m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_CounterRight_P);
+                    m_pBaseball->SetMotion(baseball_player::_mb_CounterRight_P);
 				}
 				else
 				{
-					m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_CounterLeft_P);
+                    m_pBaseball->SetMotion(baseball_player::_mb_CounterLeft_P);
 				}
 			}
 		}
@@ -78,11 +78,11 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
 		{
 			if (m_pBaseball->getBatterFlg())
 			{
-				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand_B);
+                m_pBaseball->SetMotion(baseball_player::_mb_Stand_B);
 			}
 			else
 			{
-				m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand_P);
+                m_pBaseball->SetMotion(baseball_player::_mb_Stand_P);
 			}
 		}
 
@@ -129,6 +129,8 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
 		new CounterEvent(b),
 		new BaseballHitEvent(b)
 		);
+
+    m_pCounter->SetCatchModel(b->getNowModeModel());
 }
 
 
@@ -139,10 +141,10 @@ void BaseballState_PlayerControll_Counter::Execute(BaseballPlayer* b)
 	m_pCounter->Update();
 
 	//モデルのワールド変換行列を更新
-	chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
+	chr_func::CreateTransMatrix(b, &b->getNowModeModel()->m_TransMatrix);
 
 	//モデル更新
-	b->m_Renderer.Update(1);
+	b->ModelUpdate(1);
 }
 
 

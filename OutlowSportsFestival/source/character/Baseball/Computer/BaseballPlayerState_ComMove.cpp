@@ -111,8 +111,8 @@ void BaseballPlayerState_ComMove::Execute(BaseballPlayer* b)
     //更新
     m_pMoveClass->Update();
 
-    //モデルのワールド変換行列を更新
-    chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
+    //　モデルのワールド変換行列を更新
+    chr_func::CreateTransMatrix(b, &b->getNowModeModel()->m_TransMatrix);
 }
 
 void BaseballPlayerState_ComMove::Exit(BaseballPlayer* b)

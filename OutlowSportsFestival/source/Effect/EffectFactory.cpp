@@ -17,7 +17,7 @@
 #include "GlavityLocus.h"
 
 
-void EffectFactory::Smoke(CrVector3 pos, CrVector3 move, float size, float alpha,bool Soft)
+void EffectFactory::Smoke(CrVector3 pos, CrVector3 move, float size, float alpha, bool Soft)
 {
     ParticleRenderer* r = new ParticleRenderer();
 
@@ -88,28 +88,26 @@ void EffectFactory::Counter(CrVector3 pos, float size)
 }
 
 //　切り替え
-void EffectFactory::Change(CrVector3 pos, float size)
+void EffectFactory::Change(CrVector3 pos)
 {
-	ParticleHDRRenderer* r = new ParticleHDRRenderer();
+    const Vector3 origin_pos = pos - DefCamera.GetForward()*2.5f;
+    Vector3 setpos;
 
-	r->m_pTexture = DefResource.Get(Resource::TextureType::Anime_Change);
-	r->m_Param.pos = pos;
-	r->m_Param.color = COLORf(0x40FFFFFF);
-	r->m_HDRcolor = 0xA0FFFFFF;
-	r->m_Param.dw_Flag = RS_COPY;
-	r->m_Param.size = Vector2(size, size);
-	r->m_Zenable = false;
+    const float particle_size = 2.5f;
+    const float xz_size = 0.5f;
+    const float y_size = 2.0f;
 
-	ParticleMoveObject* m =
-		new ParticleMoveObject(
-		r,
-		Vector3Zero,
-		Vector3Zero,
-		32,
-		true,
-		8,
-		4
-		);
+    for (int i = 0; i < 25; ++i)
+    {
+        setpos = origin_pos;
+        setpos.x += (frand()*2.0f - 1.0f)*xz_size;
+        setpos.z += (frand()*2.0f - 1.0f)*xz_size;
+
+        setpos.y += (frand()*2.0f - 1.0f)*y_size;
+
+        SmokeParticle(setpos, Vector3Rand()*0.085f, 20, particle_size, 0x10FFFFFF);
+    }
+    
 
 }
 
@@ -263,6 +261,25 @@ void EffectFactory::ParticleHDR(
 		1,
 		1
 		);
+}
+
+//ショット時のエフェクト
+void EffectFactory::ShotEffect(
+    PlayerNum::Value    num,
+    CrVector3           pos,
+    CrVector3           vec
+    )
+{
+    COLORf EffectColor(CharacterBase::GetPlayerColor(num));
+
+    //エフェクトの設定
+    new HitEffectObject(
+        pos,
+        Vector3Normalize(vec),
+        0.1f,
+        0.1f,
+        Vector3(EffectColor.r, EffectColor.g, EffectColor.b)
+        );
 }
 
 //攻撃ヒット時のエフェクト

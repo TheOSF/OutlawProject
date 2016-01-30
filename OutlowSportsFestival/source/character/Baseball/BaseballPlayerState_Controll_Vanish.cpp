@@ -13,7 +13,7 @@ m_pBaseBall(pBaseball)
         BaseballPlayer* const m_pBaseball;
     public:
         BaseballDamageControllEvent(BaseballPlayer* p) :
-            EventClass(p, baseball_player::_mb_Damage_Vanish_Fly),
+            EventClass(p, baseball_player::_mb_Damage_Vanish_Fly, p->getNowModeModel()), 
             m_pBaseball(p)
         {
 

@@ -30,13 +30,13 @@ void BaseballState_DamageMotion_Weak::Enter(BaseballPlayer* t)
 		void Update(float speed)
 		{
 			//モデルの更新のみ
-			m_pBaseball->m_Renderer.Update(speed);
-			chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->m_Renderer.m_TransMatrix);
+            m_pBaseball->getNowModeModel()->Update(speed);
+            chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->getNowModeModel()->m_TransMatrix);
 		}
 		void Start()
 		{
 			//ひるみモーションをセット
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Damage_Weak);
+            m_pBaseball->getNowModeModel()->SetMotion(baseball_player::_mb_Damage_Weak);
 		}
 		void End()
 		{

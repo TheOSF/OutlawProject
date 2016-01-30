@@ -91,7 +91,7 @@ void TennisComputerReactionEvent::Reaction(const TypeParam& param, CrVector3 vec
                 EscapeVec = -vec;
             }
 
-            EscapeVec = Vector3RotateAxis(Vector3AxisY, (frand() - 0.5f)*PI, EscapeVec);
+            EscapeVec = Vector3RotateAxis(Vector3AxisY, (frand() - 0.5f)*PI*0.5f, EscapeVec);
 
             m_pTennis->SetState(
                 //ƒ[ƒŠƒ“ƒO

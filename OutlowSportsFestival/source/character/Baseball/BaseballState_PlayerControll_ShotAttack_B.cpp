@@ -34,7 +34,7 @@ void  BaseballState_PlayerControll_ShotAttack_B::Enter(BaseballPlayer* b)
 	//カウント初期化
 	m_Timer = 0;
 	//モーションセット
-	b->m_Renderer.SetMotion(baseball_player::_mb_Shot_B);
+	b->SetMotion(baseball_player::_mb_Shot_B);
 
 }
 
@@ -77,7 +77,7 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 
 		
 		//キャラの場所に(最終的に腕の位置に？)
-        param.pos = b->m_Renderer.GetWorldBonePos(20);
+        param.pos = b->getNowModeModel()->GetWorldBonePos(20);
 		//親を自分に
 		param.pParent = b;
 
@@ -217,8 +217,8 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 			chr_func::UpdateAll(b, &HitEvent);
 
 			//モデル関連の更新
-			b->m_Renderer.Update(2);
-			chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
+			b->ModelUpdate(2);
+            chr_func::CreateTransMatrix(b, &b->getNowModeModel()->m_TransMatrix);
 		}
 	}
 }

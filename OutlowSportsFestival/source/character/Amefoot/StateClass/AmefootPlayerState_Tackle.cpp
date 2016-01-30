@@ -65,7 +65,15 @@ void AmefootPlayerState_Tackle::Execute(AmefootPlayer* pCharacter)
 {
     (this->*m_pStateFunc)();
 
-    pCharacter->m_Renderer.Update(1);
+    if (m_pStateFunc != &AmefootPlayerState_Tackle::Touchdown)
+    {
+        pCharacter->m_Renderer.Update(1);
+    }
+    else
+    {
+        pCharacter->m_Renderer.Update(1.35f);
+    }
+
     chr_func::CreateTransMatrix(pCharacter, &pCharacter->m_Renderer.m_TransMatrix);
 
     UpdateDamageTransform();
@@ -164,7 +172,7 @@ void AmefootPlayerState_Tackle::Pose()
 // タックル中
 void AmefootPlayerState_Tackle::Tackle()
 {
-    const float kDamagePosOffset = 4.0f;
+    const float kDamagePosOffset = 2.0f;
     const RADIAN kAngleControlSpeed = 0.04f; // 角度補正スピード
 
     int kAllFrame = 0;
@@ -188,8 +196,14 @@ void AmefootPlayerState_Tackle::Tackle()
     }
 
     // ダメージ座標設定
-    m_pControllDamage->m_Param.pos = 
-        m_pAmefootPlayer->m_Params.pos + chr_func::GetFront(m_pAmefootPlayer) * kDamagePosOffset;
+    {
+        Vector3 pos = m_pAmefootPlayer->m_Params.pos;
+
+        pos += chr_func::GetFront(m_pAmefootPlayer) * kDamagePosOffset;
+        pos.y += 2.0f;
+
+        m_pControllDamage->m_Param.pos = pos;
+    }
 
 
     {
@@ -432,7 +446,7 @@ void AmefootPlayerState_Tackle::StandupStart()
     if (m_pDamageTransform != nullptr)
     {
         Vector3 Vec = -chr_func::GetFront(m_pAmefootPlayer);
-        Vec *= 0.3f;
+        Vec *= 0.5f;
         Vec.y = 0.35f;
 
         m_pDamageTransform->AddDamage(g_TackleDamageValue);

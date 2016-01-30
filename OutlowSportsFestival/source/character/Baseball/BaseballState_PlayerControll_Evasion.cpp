@@ -51,7 +51,7 @@ void BaseballState_Rolling::Execute(BaseballPlayer* b)
 	//モーションセット
 	if (m_Timer == 1)
 	{
-        b->m_Renderer.SetMotion(m_Param.Motion);
+        b->SetMotion(m_Param.Motion);
 
         //ズザー音
         Sound::Play(Sound::Sand1);
@@ -154,10 +154,10 @@ void BaseballState_Rolling::Execute(BaseballPlayer* b)
 		}
 
 		//モデル更新
-		b->m_Renderer.Update(2);
+		b->ModelUpdate(2);
 
 		//行列更新
-		chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
+        chr_func::CreateTransMatrix(b, &b->getNowModeModel()->m_TransMatrix);
 	}
 }
 

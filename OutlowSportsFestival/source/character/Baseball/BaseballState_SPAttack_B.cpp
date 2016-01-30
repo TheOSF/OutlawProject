@@ -70,8 +70,8 @@ void BaseballState_SPAttack_B::Execute(BaseballPlayer* b)
 	//　無敵
 	chr_func::UpdateAll(b, &NoDmgHitEvent);
 
-	b->m_Renderer.Update(2);
-	chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
+    b->ModelUpdate(2);
+    chr_func::CreateTransMatrix(b, &b->getNowModeModel()->m_TransMatrix);
 
 	if (m_pStateFunc == &BaseballState_SPAttack_B::State_Finish)
 	{
@@ -115,13 +115,9 @@ void BaseballState_SPAttack_B::State_Atk()
 		//　モーション開始
 		if (m_Timer == 1)
 		{
-			m_pBaseBall->m_Renderer.SetMotion(baseball_player::_mb_SpAtk_B);
+			m_pBaseBall->SetMotion(baseball_player::_mb_SpAtk_B);
 		}
 
-		/*if (m_Timer == 33)
-		{
-			m_pBaseBall->m_Renderer.SetMotion(baseball_player::_mb_SpAtk2);
-		}*/
 		if (m_Timer >= 56)
 		{
 			timeflg = true;
@@ -262,7 +258,7 @@ void BaseballState_SPAttack_B::ThunderInvoke(UINT point_num)
 	Vector3 Forward;
 	Vector3 Pos;
 	Vector3 Thundderpos;
-	m_pBaseBall->m_Renderer.GetWorldBoneMatirx(BoneMat, 8);
+    m_pBaseBall->getNowModeModel()->GetWorldBoneMatirx(BoneMat, 8);
 
 	Pos = Vector3(BoneMat._41, BoneMat._42, BoneMat._43);
 

@@ -195,7 +195,7 @@ void BaseballState_PlayerControll_Move::Execute(BaseballPlayer* b)
 	//　更新
 	m_pMoveClass->Update();
 	//　モデルのワールド変換行列を更新
-	chr_func::CreateTransMatrix(b, &b->m_Renderer.m_TransMatrix);
+    chr_func::CreateTransMatrix(b, &b->getNowModeModel()->m_TransMatrix);
 
 }
 
@@ -243,7 +243,6 @@ void BaseballState_PlayerControll_Move::Batter(BaseballPlayer* b){
 	// 切り替え[L1]
 	if (controller::GetTRG(controller::button::_L1, b->m_PlayerInfo.number))
 	{
-		MyDebugString("Start=%3.3f \n", b->m_Params.move.Length());
 		b->SetState(new BaseballState_Change());
 		return;
 	}
@@ -288,7 +287,6 @@ void  BaseballState_PlayerControll_Move::Pitcher(BaseballPlayer* b){
 	// 切り替え[L1]
 	if (controller::GetTRG(controller::button::_L1, b->m_PlayerInfo.number))
 	{
-		MyDebugString("Start=%3.3f \n", b->m_Params.move.Length());
 		b->SetState(new BaseballState_Change());
 		return;
 	}
@@ -315,7 +313,7 @@ CharacterUsualMove::Params BaseballMoveEvent::GetMoveParams()
 
 //　アニメーション更新
 void BaseballMoveEvent::Update(bool isRun, RATIO speed_ratio){
-    m_pBaseball->m_Renderer.Update(1);
+    m_pBaseball->getNowModeModel()->Update(1);
 }
 
 //　走り始めにモーションセット
@@ -323,11 +321,11 @@ void BaseballMoveEvent::RunStart(){
     //　実行パターン
     if (m_pBaseball->getBatterFlg())
     {
-        m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Run_B);
+        m_pBaseball->SetMotion(baseball_player::_mb_Run_B);
     }
     else
     {
-        m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Run_P);
+        m_pBaseball->SetMotion(baseball_player::_mb_Run_P);
     }
 }
 
@@ -335,11 +333,11 @@ void BaseballMoveEvent::RunStart(){
 void BaseballMoveEvent::StandStart(){
     if (m_pBaseball->getBatterFlg())
     {
-        m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand_B);
+        m_pBaseball->SetMotion(baseball_player::_mb_Stand_B);
     }
     else
     {
-        m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stand_P);
+        m_pBaseball->SetMotion(baseball_player::_mb_Stand_P);
     }
 }
 
@@ -349,10 +347,10 @@ void BaseballMoveEvent::RunEnd()
 {
     if (m_pBaseball->getBatterFlg())
     {
-        m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stop_B);
+        m_pBaseball->SetMotion(baseball_player::_mb_Stop_B);
     }
     else
     {
-        m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Stop_P);
+        m_pBaseball->SetMotion(baseball_player::_mb_Stop_P);
     }
 }

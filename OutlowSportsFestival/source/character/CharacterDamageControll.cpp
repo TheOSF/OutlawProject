@@ -5,14 +5,15 @@
 #include "../Effect/EffectFactory.h"
 
 
-CharacterDamageControll::EventClass::EventClass(CharacterBase*  pOwner, int VanishMotion):
+CharacterDamageControll::EventClass::EventClass(CharacterBase*  pOwner, int VanishMotion, CharacterRenderer* pRenderer) :
 pOwner(pOwner),
-VanishMotion(VanishMotion)
+VanishMotion(VanishMotion),
+pRenderer(pRenderer)
 {
 
 }
 
-CharacterDamageControll::EventClass:: ~EventClass()
+CharacterDamageControll::EventClass::~EventClass()
 {
 
 }
@@ -93,7 +94,7 @@ void CharacterDamageControll::Update()
     if (m_Init == false)
     {
         m_Init = true;
-        m_pEventClass->pOwner->m_Renderer.SetMotion(m_pEventClass->VanishMotion);
+        m_pEventClass->pRenderer->SetMotion(m_pEventClass->VanishMotion);
     }
     
     const float ShockValue = 0.5f;  //ダメージのゆれ具合 
@@ -103,7 +104,7 @@ void CharacterDamageControll::Update()
     Vector3 DamageShockDiffPos = Vector3Zero;
 
     //アニメーション更新
-    pChr->m_Renderer.Update(1);
+    m_pEventClass->pRenderer->Update(1);
 
 
     //ダメージによる振動の位置を更新
@@ -119,17 +120,17 @@ void CharacterDamageControll::Update()
 
         D3DXMatrixScaling(&ScaleMat, pChr->m_ModelSize, pChr->m_ModelSize, pChr->m_ModelSize);
 
-        pChr->m_Renderer.m_TransMatrix = ScaleMat;
-        pChr->m_Renderer.m_TransMatrix *= m_Transform;
+        m_pEventClass->pRenderer->m_TransMatrix = ScaleMat;
+        m_pEventClass->pRenderer->m_TransMatrix *= m_Transform;
 
         {
-            Matrix* p = &pChr->m_Renderer.m_TransMatrix;
+            Matrix* p = &m_pEventClass->pRenderer->m_TransMatrix;
 
             pChr->m_Params.pos = Vector3(p->_41, p->_42, p->_43);
         }
 
         {
-            Matrix* p = &pChr->m_Renderer.m_TransMatrix;
+            Matrix* p = &m_pEventClass->pRenderer->m_TransMatrix;
 
             p->_41 += DamageShockDiffPos.x;
             p->_42 += DamageShockDiffPos.y;
@@ -142,7 +143,7 @@ void CharacterDamageControll::Update()
         m_Move = m_pEventClass->pOwner->m_Params.move = (pChr->m_Params.pos - PrePos);
     }
 
-    if (m_NotControllCount++ > 60)
+    if (m_NotControllCount++ > 5)
     {
         ToFree();
     }

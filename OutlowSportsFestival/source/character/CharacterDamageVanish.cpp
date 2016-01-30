@@ -88,6 +88,12 @@ void CharacterDamageVanish::Initialize()
     Sound::Play(Sound::Damage2);
 
     
+    //コントローラを振動
+    chr_func::SetControllerShock(
+        m_pCharacter,
+        0.8f,
+        0.2f
+        );
 }
 
 void CharacterDamageVanish::Flying()
@@ -205,6 +211,13 @@ void CharacterDamageVanish::Flying()
                         Vector2(8, 8), 
                         0xFFFFFFFF,
                         0x80FFFFFF
+                        );
+
+                    //コントローラを振動
+                    chr_func::SetControllerShock(
+                        m_pCharacter,
+                        0.8f,
+                        0.1f
                         );
                 }
             }
@@ -387,8 +400,8 @@ void CharacterDamageVanish::HitWallAndDown()
 
 void CharacterDamageVanish::HitFloorAndStandUp()
 {
-    const int StandUpStart = 10;
-    const int StandUpEnd = 50;
+    const int StandUpStart = m_Param.down_frame;
+    const int StandUpEnd = m_Param.standup_frame;
     const bool CanCancelAction = StandUpStart < m_Count;
 
     //床に当たったイベント
@@ -438,14 +451,7 @@ void CharacterDamageVanish::HitFloorAndStandUp()
     {
         chr_func::XZMoveDown(m_pCharacter, 0.15f);
 
-        if (CanCancelAction)
-        {
-            chr_func::UpdateAll(m_pCharacter, m_pHitEvent);
-        }
-        else
-        {
-            chr_func::UpdateAll(m_pCharacter, &DamageManager::HitEventBase());
-        }
+        chr_func::UpdateAll(m_pCharacter, &DamageManager::HitEventBase());
     }
 
     //イベント更新

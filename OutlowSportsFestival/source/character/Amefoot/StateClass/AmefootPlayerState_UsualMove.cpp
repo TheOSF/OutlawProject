@@ -10,6 +10,7 @@
 #include "../AmefootPlayerState.h"
 #include "AmefootComputerState_UsualMove.h"
 #include "AmefootCommonState_PoseMotion.h"
+#include "AmefootPlayerState_BallTouchDown.h"
 
 //-----------------------------------------------------------------------------------------
 // AmefootPlayerState_UsualMove
@@ -149,8 +150,8 @@ void AmefootPlayerState_UsualMove::ActionStateSwitch(AmefootPlayer* pCharacter)
      }
      
      if ( controller::GetTRG(controller::button::_L1, pCharacter->m_PlayerInfo.number) )
-     {
-
+     {// [R1] で [カウンター]
+         pCharacter->SetState(new AmefootPlayerState_BallTouchDown(pCharacter));
      }
 }
 //-----------------------------------------------------------------------------------------

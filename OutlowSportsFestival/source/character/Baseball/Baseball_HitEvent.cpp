@@ -47,7 +47,8 @@ bool BaseballHitEvent::Hit(DamageBase* pDmg)
     {
         //コントロール吹き飛びステートへ
         BaseballState_ControllVanish* p = new BaseballState_ControllVanish(m_pBaseball);
-        if ( m_pBaseball->SetState(p, BaseballStateMachine::DONT_UPDATE_STATE_LEVEL) ) {
+        if (m_pBaseball->SetState(p, BaseballStateMachine::DONT_UPDATE_STATE_LEVEL))
+        {
             ((DamageControllVanish*)pDmg)->GetDamageControll_Transform()->AddControllClass(p->GetControllClass());
         }
     }

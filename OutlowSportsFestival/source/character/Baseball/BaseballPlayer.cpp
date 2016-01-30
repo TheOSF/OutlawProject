@@ -11,17 +11,25 @@
 #include "../CharacterFunction.h"
 #include "../CharacterManager.h"
 
-//*************************************************************
+//----------------------------------
 //		野球プレイヤークラス
-//*************************************************************
+//----------------------------------
 
-//　コンストラクタ
+//コンストラクタ
 BaseballPlayer::BaseballPlayer(const CharacterBase::PlayerInfo& info) :
 CharacterBase(info, new  BlendAnimationMesh(GetCharacterModelPath(CharacterType::_Baseball))),
-m_BatterFlg(true)
+m_BatterFlg(false)
 {
 	m_pStateMachine = new BaseballStateMachine(this);
-	SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(this));
+    SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(this));
+
+    {
+        m_pBatterModel = &m_Renderer;
+        m_pPitcherModel = new CharacterRenderer(new  BlendAnimationMesh("DATA\\CHR\\SanoBaseBall\\baseball.iem"));
+        CreateCharacterModel(m_pPitcherModel, CharacterType::_Baseball, m_PlayerInfo.number);
+
+        SetMode(true);
+    }
 
 	m_Params.maxHP = m_Params.HP = 100;
 	
@@ -32,7 +40,7 @@ m_BatterFlg(true)
 BaseballPlayer::~BaseballPlayer()
 {
 	delete m_pStateMachine;
-	
+    delete m_pPitcherModel;
 }
 
 //現在フォームのモデルにモーションをセット
@@ -64,6 +72,9 @@ bool BaseballPlayer::Update()
 
 	//キャラクタ基本更新
 	BaseUpdate();
+
+    //ピッチャー用のモデルは自身で更新
+    RendererUpdate(m_pPitcherModel);
 	
 	return true;	//常にtrueを返すと消去されない
 }
@@ -89,6 +100,10 @@ void BaseballPlayer::ChangeMode()
 //フォームを指定してセットする
 bool BaseballPlayer::SetMode(bool isBatter)
 {
+
+    m_pBatterModel->m_Visible = isBatter;
+    m_pPitcherModel->m_Visible = !isBatter;
+
     //同じだった場合
     if (isBatter == m_BatterFlg)
     {

@@ -39,20 +39,17 @@ void BaseballAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, BaseballPlaye
 	Vector3 Forward;
 	Vector3 Pos;
 
-	m_pOwner->m_Renderer.GetWorldBoneMatirx(BoneMat, m_Param.LocusBoneNum);
+    m_pOwner->getNowModeModel()->GetWorldBoneMatirx(BoneMat, m_Param.LocusBoneNum);
 
 	Pos = Vector3(BoneMat._41, BoneMat._42, BoneMat._43);
 
 	Forward = Vector3(BoneMat._31, BoneMat._32, BoneMat._33);
 	Forward.Normalize();
 
-	//pDmg->m_Param.pos = Pos + Forward*m_Param.DamagePosLength;
-	pDmg->m_Param.pos = pBaseball->m_Params.pos + chr_func::GetFront(pBaseball)*m_Param.DamagePosLength + Vector3(0, 2.5f, 0);
+	pDmg->m_Param.pos = pBaseball->m_Params.pos + chr_func::GetFront(pBaseball) * m_Param.DamagePosLength + Vector3(0, 2.5f, 0);
 
-	// pDmg->vec = pDmg->m_Param.pos - pTennis->m_Params.pos;
     chr_func::GetFront(pBaseball, &pDmg->m_Vec);
     pDmg->m_Vec.y = 1;
-	//pDmg->m_VecPower.x = 0.2f;
 
     m_LocusPos = Pos;
 	m_LocusVec = Forward;
@@ -62,7 +59,7 @@ void BaseballAttackInfo_UsualAtk::DamagePosSet(DamageShpere* pDmg, BaseballPlaye
 //モーションをセット
 void BaseballAttackInfo_UsualAtk::MotionSet(BaseballPlayer* pTennis)
 {
-	pTennis->m_Renderer.SetMotion(m_Param.Motion);
+    m_pOwner->getNowModeModel()->SetMotion(m_Param.Motion);
 }
 
 

@@ -228,7 +228,7 @@ void TennisPlayerState_SlowUpBall::State_Weak()
         //コントローラを振動
         chr_func::SetControllerShock(
             m_pTennis,
-            0.5f,
+            0.6f,
             0.15f
             );
 
@@ -313,7 +313,7 @@ void TennisPlayerState_SlowUpBall::State_Usual()
         //コントローラを振動
         chr_func::SetControllerShock(
             m_pTennis,
-            0.5f,
+            0.6f,
             0.15f
             );
 

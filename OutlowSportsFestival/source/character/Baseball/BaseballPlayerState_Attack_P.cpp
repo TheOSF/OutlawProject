@@ -4,131 +4,21 @@
 #include "../CharacterFunction.h"
 #include "../CharacterManager.h"
 #include "BaseballAttackInfo_UsualAtk.h"
+#include "Baseball_HitEvent.h"
+#include "../../Effect/EffectFactory.h"
+#include "BaseballState_PlayerControll_ShotAttack_P.h"
 
+const int Baseball_PlayerControll_Attack_P::m_sMaxCombo = 3;
 
-//------------プレイヤー操作の攻撃操作クラス--------------
-
-Baseball_PlayerControll_Attack_P::PlayerControllEvent::PlayerControllEvent(BaseballPlayer*const pBaseball, BaseballAttackClass* Attack) :
-m_pBaseball(pBaseball), m_Attack(Attack)
-{
-
-}
-
-bool Baseball_PlayerControll_Attack_P::PlayerControllEvent::isDoCombo()
-{
-	//　コンピューターなら
-	if (m_pBaseball->m_PlayerInfo.player_type == PlayerType::_Computer)
-	{
-		return ComDoCombo();
-	}
-	return controller::GetTRG(controller::button::shikaku, m_pBaseball->m_PlayerInfo.number);
-}
-
-void  Baseball_PlayerControll_Attack_P::PlayerControllEvent::AngleControll(RADIAN angle)
-{
-	const CharacterBase* const pTargetCharacter = GetFrontTargetEnemy();
-
-	if (pTargetCharacter == nullptr)
-	{
-		return;
-	}
-
-	//　コンピューターなら
-	if (m_pBaseball->m_PlayerInfo.player_type == PlayerType::_Computer)
-	{
-		//自動回転
-		chr_func::AngleControll(m_pBaseball, pTargetCharacter->m_Params.pos, angle);
-	}
-	//　プレイヤーなら
-	else
-	{
-		if (pTargetCharacter != nullptr)
-		{
-			//自動回転
-			chr_func::AngleControll(m_pBaseball, pTargetCharacter->m_Params.pos, angle);
-		}
-		else
-		{
-			const Vector2 Stick = controller::GetStickValue(controller::stick::left, m_pBaseball->m_PlayerInfo.number);
-
-			//スティックが一定以上倒されているかどうか
-			if (Vector2Length(Stick) > 0.25f)
-			{
-				Vector3 Vec(Stick.x, 0, Stick.y);
-
-				//スティック値をカメラ空間に
-				Vec = Vector3MulMatrix3x3(Vec, matView);
-
-				//キャラクタ回転
-				chr_func::AngleControll(m_pBaseball, m_pBaseball->m_Params.pos + Vec, angle);
-			}
-		}
-	}
-}
-
-const CharacterBase*  Baseball_PlayerControll_Attack_P::PlayerControllEvent::GetFrontTargetEnemy()
-{
-	CharacterManager::CharacterMap ChrMap = DefCharacterMgr.GetCharacterMap();
-
-	const float  AutoDistance = 10.0f;               //自動ができる最大距離
-	const RADIAN AutoMaxAngle = D3DXToRadian(90);   //自動ができる最大角度
-
-	const CharacterBase* pTargetEnemy = nullptr;    //ターゲット保持のポインタ
-	RADIAN MostMinAngle = PI;                       //もっとも狭い角度
-	RADIAN TempAngle;
-
-	Vector3 MyFront;      //自身の前方ベクトル
-	chr_func::GetFront(m_pBaseball, &MyFront);
-
-	auto it = ChrMap.begin();
-
-	while (it != ChrMap.end())
-	{
-		//自身を除外
-		if (m_pBaseball->m_PlayerInfo.number == it->first->m_PlayerInfo.number ||
-			chr_func::isDie(it->first)
-			)
-		{
-			++it;
-			continue;
-		}
-
-		//距離が一定以上のキャラクタを除外する
-		if (Vector3Distance(it->first->m_Params.pos, m_pBaseball->m_Params.pos) > AutoDistance)
-		{
-			it = ChrMap.erase(it);
-			continue;
-		}
-
-		//前ベクトルと敵へのベクトルの角度を計算する
-		TempAngle = Vector3Radian(MyFront, (it->first->m_Params.pos - m_pBaseball->m_Params.pos));
-
-		//角度が一番狭かったら更新
-		if (TempAngle < MostMinAngle)
-		{
-			pTargetEnemy = it->first;
-			MostMinAngle = TempAngle;
-		}
-
-		++it;
-	}
-
-	//　コンピュータなら
-	if (pTargetEnemy != nullptr&&
-		m_pBaseball->m_PlayerInfo.player_type == PlayerType::_Computer)
-	{
-		//自動回転
-		chr_func::AngleControll(m_pBaseball, pTargetEnemy->m_Params.pos, 0.7f);
-	}
-
-	return pTargetEnemy;
-
-}
 
 //-------------近距離攻撃ステートクラス-------------
 
 Baseball_PlayerControll_Attack_P::Baseball_PlayerControll_Attack_P(BaseballPlayer* b) :
-m_Attack(b, new PlayerControllEvent(b, &m_Attack))
+m_pChr(b),
+m_pStateFunc(&Baseball_PlayerControll_Attack_P::State_Atk),
+m_NextType(NextType::_PreSelect),
+m_StateTimer(0),
+m_ComboCount(0)
 {
 
 }
@@ -142,37 +32,16 @@ Baseball_PlayerControll_Attack_P::~Baseball_PlayerControll_Attack_P()
 // ステート開始
 void  Baseball_PlayerControll_Attack_P::Enter(BaseballPlayer* b)
 {
-	//攻撃クラス作成
-	BaseballAttackInfo_UsualAtk* pAtk;
 
-	BaseballAttackInfo_UsualAtk::Param AtkParam[] =
-	{
-
-		{ 4, 1.2f, 1.5f, DamageBase::Type::_WeekDamage, 28, 40, 0.07f, 5, 10, baseball_player::_mb_Atk1_P, 60, 30, 35, 35, 0, 15, D3DXToRadian(8), 20, Vector2(0.2f, 0), false },
-		{ 6, 1.2f, 1.5f, DamageBase::Type::_VanishDamage, 10, 18, 0.02f, 1, 5, baseball_player::_mb_Atk2_P, 50, -1, -1, -1, 0, 5, D3DXToRadian(8), 32, Vector2(1.0f, 0.2f), false },
-		
-	};
-
-	for (int i = 0; i < (int)ARRAYSIZE(AtkParam); ++i)
-	{
-		pAtk = new BaseballAttackInfo_UsualAtk(b);
-
-		pAtk->m_Param = AtkParam[i];
-
-		m_Attack.m_AttackInfoArray.push_back(pAtk);
-	}
 }
-
 
 // ステート実行
 void Baseball_PlayerControll_Attack_P::Execute(BaseballPlayer* b)
 {
-	m_Attack.Update();
+    m_StateTimer++;
 
-	if (m_Attack.isEnd())
-	{
-		b->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(b));
-	}
+    (this->*m_pStateFunc)();
+
 }
 
 // ステート終了
@@ -182,77 +51,199 @@ void Baseball_PlayerControll_Attack_P::Exit(BaseballPlayer* b)
 }
 
 
-bool Baseball_PlayerControll_Attack_P::PlayerControllEvent::ComDoCombo()
+void Baseball_PlayerControll_Attack_P::SetState(StateFunc state)
 {
-	int FoolPoint = rand() % 100;
-	switch (m_pBaseball->m_PlayerInfo.strong_type)
-	{
-	case StrongType::_Strong:
-		if (m_Attack->getDoHit())
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-		break;
-	case StrongType::_Usual:
-		if (m_Attack->getDoHit())
-		{
-			if (FoolPoint > 75)
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
+    m_pStateFunc = state;
+    m_StateTimer = 0;
+}
 
-		}
-		else
-		{
-			if (FoolPoint > 75)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+void Baseball_PlayerControll_Attack_P::UpdateNextType()
+{
+    if (m_pChr->m_PlayerInfo.player_type == PlayerType::_Player)
+    {
+        //プレイヤーの場合
+        if (controller::GetTRG(controller::button::shikaku, m_pChr->m_PlayerInfo.number))
+        {
+            m_NextType = NextType::DoCombo;
+        }
 
-		}
-		break;
-	case StrongType::_Weak:
-		if (m_Attack->getDoHit())
-		{
+        if (controller::GetTRG(controller::button::sankaku, m_pChr->m_PlayerInfo.number))
+        {
+            m_NextType = NextType::DoFarAtk;
+        }
+    }
+    else
+    {
+        if (frand() < 0.25f)
+        {
+            m_NextType = NextType::None;
+        }
+        else if (frand() < 0.25f)
+        {
+            m_NextType = NextType::DoFarAtk;
+        }
+        else
+        {
+            m_NextType = NextType::DoCombo;
+        }
+    }
+}
 
-			if (FoolPoint > 50)
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
+void Baseball_PlayerControll_Attack_P::AngleControll(RADIAN angle)
+{
+    CharacterBase* pTarget = nullptr;
 
-		}
-		else
-		{
-			if (FoolPoint > 50)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		break;
-	default:
-		return false;
-		break;
 
-	}
-	return false;
+    if (m_pChr->m_PlayerInfo.player_type == PlayerType::_Player)
+    {
+        //プレイヤーの場合
+
+        //一定範囲にいた場合はそのキャラクタを狙う
+        if (chr_func::CalcAtkTarget(m_pChr, D3DXToRadian(33), 50, &pTarget))
+        {
+            chr_func::AngleControll(m_pChr, pTarget->m_Params.pos, angle);
+        }
+        else
+        {
+            //スティックで方向コントロール
+            Vector2 stick = controller::GetStickValue(controller::stick::left, m_pChr->m_PlayerInfo.number);
+            Vector3 pos = m_pChr->m_Params.pos + Vector3(stick.x, 0, stick.y);
+
+            chr_func::AngleControll(m_pChr, pos, angle);
+        }
+    }
+    else
+    {
+        //自動追従
+        if (chr_func::CalcAtkTarget(m_pChr, PI, 120, &pTarget))
+        {
+            chr_func::AngleControll(m_pChr, pTarget->m_Params.pos, angle);
+        }
+    }
+}
+
+void Baseball_PlayerControll_Attack_P::State_Atk()
+{
+    const int Motions[m_sMaxCombo] =
+    {
+        baseball_player::_mb_Shot_P,
+        baseball_player::_mb_Shot_P,
+        baseball_player::_mb_Shot_P,
+    };
+
+    const int ShotFrame = 15;
+    const int SwitchFrame = 25;
+    const int CanButtonFrame = 18;
+    const int EndFrame = 33;
+    
+    //初期化
+    if (m_StateTimer == 1)
+    {
+        m_pChr->SetMotion(Motions[m_ComboCount]);
+    }
+
+    //移動値をダウン
+    chr_func::XZMoveDown(m_pChr, 0.05f);
+    
+
+    //ショット前なら
+    if (m_StateTimer < ShotFrame)
+    {
+        RADIAN angle_speed = D3DXToRadian(5);
+
+        //ショットはじめなら角度調整が強め
+        if (m_StateTimer < 5)
+        {
+            angle_speed = D3DXToRadian(30);
+        }
+
+        //アングルコントロール
+        AngleControll(angle_speed);
+    }
+
+    //ショット！
+    if (m_StateTimer == ShotFrame)
+    {
+
+        //ボール発射
+        BallBase::Params param;
+
+        //移動は前向き
+        chr_func::GetFront(m_pChr, &param.move);
+        //スピードは適当
+        param.move *= 0.68f;
+
+        //腕の位置に
+        param.pos = m_pChr->getNowModeModel()->GetWorldBonePos(33);
+        //高さをキャラ共通ボール発射のYに
+        param.pos.y = BallBase::UsualBallShotY;
+
+        //親を自分に
+        param.pParent = m_pChr;
+        //通常タイプ
+        param.type = BallBase::Type::_Usual;
+
+        //生成
+        new UsualBall(param, DamageBase::Type::_WeekDamage, 8, UsualBall::GetUsualMoveControll());
+
+        //コントローラを振動
+        chr_func::SetControllerShock(
+            m_pChr,
+            0.5f,
+            0.15f
+            );
+
+        //エフェクト
+        EffectFactory::ShotEffect(
+            m_pChr->m_PlayerInfo.number,
+            param.pos,
+            param.move
+            );
+
+    }
+
+    //コンボ可能なら
+    if (m_ComboCount < m_sMaxCombo - 1)
+    {
+        //コンボ移行判定の更新
+        if (m_NextType == NextType::_PreSelect)
+        {
+            UpdateNextType();
+        }
+
+        //コンボ移行
+        if (m_StateTimer >= SwitchFrame)
+        {
+            switch (m_NextType)
+            {
+            case NextType::None:
+            case NextType::_PreSelect:
+                break;
+
+            case NextType::DoCombo:
+                SetState(&Baseball_PlayerControll_Attack_P::State_Atk);
+                ++m_ComboCount;
+                m_NextType = NextType::_PreSelect;
+                break;
+
+            case NextType::DoFarAtk:
+                m_pChr->SetState(new BaseballState_PlayerControll_ShotAttack_P());
+                break;
+            }
+        }
+    }
+
+    //時間経過で通常ステートに
+    if (m_StateTimer >= EndFrame)
+    {
+        m_pChr->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(m_pChr));
+    }
+
+    //更新
+    {
+        chr_func::UpdateAll(m_pChr, &BaseballHitEvent(m_pChr, m_StateTimer < ShotFrame));
+        chr_func::CreateTransMatrix(m_pChr, &m_pChr->getNowModeModel()->m_TransMatrix);
+
+        m_pChr->ModelUpdate(2);
+    }
 }

@@ -696,7 +696,7 @@ void chr_func::SetControllerShock(CharacterBase* p, RATIO power, float second)
     }
 
     controller::SetVibration(
-        (DWORD)(power * 100000),
+        (DWORD)(power * 10000),
         second,
         p->m_PlayerInfo.number
         );

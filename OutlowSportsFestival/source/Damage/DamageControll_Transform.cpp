@@ -58,7 +58,7 @@ void DamageControll_Transform::AddControllClass(CharacterDamageControll* pContro
         }
     }
 
-    MyAssert(false, "‹ó‚«ŒŸõŽ¸”s!");
+    MyDebugString("‹ó‚«ŒŸõŽ¸”s! \n");
     pControllClass->ToFree();
 
     

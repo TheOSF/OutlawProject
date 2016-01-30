@@ -27,48 +27,48 @@ void BaseballState_DamageVanish::Enter(BaseballPlayer* b)
 		void FlyStart()
 		{
 			//吹き飛びモーションをセット
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Damage_Vanish_Fly);
+            m_pBaseball->getNowModeModel()->SetMotion(baseball_player::_mb_Damage_Vanish_Fly);
 		}
 
         void Flying(const Matrix& Rotate, RATIO t)
 		{
 			//モデルのアニメーション更新
-			m_pBaseball->m_Renderer.Update(1);
+            m_pBaseball->getNowModeModel()->Update(1);
 
 			//位置にもとずき、ワールド変換行列を計算
-			chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->m_Renderer.m_TransMatrix);
+            chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->getNowModeModel()->m_TransMatrix);
 
 			//吹き飛びの回転を入れる
-			m_pBaseball->m_Renderer.m_TransMatrix = Rotate*m_pBaseball->m_Renderer.m_TransMatrix;
+            m_pBaseball->getNowModeModel()->m_TransMatrix = Rotate*m_pBaseball->getNowModeModel()->m_TransMatrix;
 		}
 
 		void DownStart()
 		{
 			//ダウンモーションをセット
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Damage_Vanish_Down);
+            m_pBaseball->getNowModeModel()->SetMotion(baseball_player::_mb_Damage_Vanish_Down);
 		}
 
 		void Downing()
 		{
-			m_pBaseball->m_Renderer.Update(1);
+            m_pBaseball->getNowModeModel()->Update(1);
 
 			//ワールド変換行列を計算
-			chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->m_Renderer.m_TransMatrix);
+            chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->getNowModeModel()->m_TransMatrix);
 		}
 
 		void StandUpStart()
 		{
 			//起き上がりモーションをセット
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Damage_Vanish_StandUp);
+            m_pBaseball->getNowModeModel()->SetMotion(baseball_player::_mb_Damage_Vanish_StandUp);
 		}
 
 		void StandUping()
 		{
 			//モデルのアニメーション更新
-			m_pBaseball->m_Renderer.Update(1);
+            m_pBaseball->getNowModeModel()->Update(1);
 
 			//ワールド変換行列を計算
-			chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->m_Renderer.m_TransMatrix);
+            chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->getNowModeModel()->m_TransMatrix);
 		}
 
 		void End()
@@ -81,28 +81,28 @@ void BaseballState_DamageVanish::Enter(BaseballPlayer* b)
 		void HitWall()
 		{
 			//壁に当たったモーションをセット
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Damage_Vanish_Wall);
+            m_pBaseball->getNowModeModel()->SetMotion(baseball_player::_mb_Damage_Vanish_Wall);
 		}
 
 		void HitFloor()
 		{
 			//床に当たったモーションをセット
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Damage_Vanish_Bound);
+            m_pBaseball->getNowModeModel()->SetMotion(baseball_player::_mb_Damage_Vanish_Bound);
 		}
 
 		void HitFloorAndStandUp()
 		{
 			//立ち上がりモーションをセット
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Damage_Vanish_StandUp);
+            m_pBaseball->getNowModeModel()->SetMotion(baseball_player::_mb_Damage_Vanish_StandUp);
 		}
 
 		void HitWallUpdate()
 		{
 			//モデルのアニメーション更新
-			m_pBaseball->m_Renderer.Update(1);
+            m_pBaseball->getNowModeModel()->Update(1);
 
 			//ワールド変換行列を計算
-			chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->m_Renderer.m_TransMatrix);
+            chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->getNowModeModel()->m_TransMatrix);
 		}
 
 		void CanActionUpdate()

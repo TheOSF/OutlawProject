@@ -12,7 +12,7 @@ m_pAmefoot(pAmefoot)
         AmefootPlayer* const m_pAmefoot;
     public:
         AmefootDamageControllEvent(AmefootPlayer* p) :
-            EventClass(p, AmefootPlayer::Motion_Damage_Vanish_Start),
+            EventClass(p, AmefootPlayer::Motion_Damage_Vanish_Start, &p->m_Renderer),
             m_pAmefoot(p)
         {
 

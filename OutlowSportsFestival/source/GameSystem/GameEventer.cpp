@@ -185,15 +185,18 @@ bool MatchState::PlayerCharacterDrawCursor::GetEffectChr(CharacterBase** ppOut, 
     {
         if (ChrNum == (UINT)it.first->m_PlayerInfo.number)
         {
-            if (it.first->m_PlayerInfo.player_type == PlayerType::_Player)
-            {
-                *ppOut = it.first;
-                break;
-            }
-            else
-            {
-                break;
-            }
+            *ppOut = it.first;
+            break;
+
+            //if (it.first->m_PlayerInfo.player_type == PlayerType::_Player)
+            //{
+            //    *ppOut = it.first;
+            //    break;
+            //}
+            //else
+            //{
+            //    break;
+            //}
         }
         
     }

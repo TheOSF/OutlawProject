@@ -50,7 +50,7 @@ CharacterDefaultCounter::CharacterDefaultCounter(
      m_HitStopFrame(0),
      m_BallFreezePos(Vector3Zero)
 {
-
+    m_pRenderer = &pOwner->m_Renderer;
 }
 
 CharacterDefaultCounter::~CharacterDefaultCounter()
@@ -69,7 +69,8 @@ void CharacterDefaultCounter::Update()
     {
         m_pEventClass->ModelUpdate(1);
     }
-    else{
+    else
+    {
         m_pEventClass->ModelUpdate(0.2f);
     }
 }
@@ -80,6 +81,11 @@ void CharacterDefaultCounter::SetStickValue(CrVector2 stick)
     m_Stick = stick;
 }
 
+//キャッチするときに参照するモデルをセット(デフォルトでは通常キャラクタのレンダラーが使われる
+void CharacterDefaultCounter::SetCatchModel(CharacterRenderer* p)
+{
+    m_pRenderer = p;
+}
 
 //-----------------------------------------------//
 //  カウンター中のダメージ判定クラス
@@ -133,13 +139,12 @@ void CharacterDefaultCounter::Pose()
             const Vector3 pos = m_pOwner->m_Params.pos + Vector3(0, 3.5f, 0);
             EffectFactory::Counter(pos, 6.5f);
 
-            /*new ImpactLightObject(
+            new ImpactLightObject(
                 pos,
                 15.0f,
-                Vector3(1, 1, 1)*0.5f, 
+                Vector3(1, 1, 1)*0.3f, 
                 0.05f
                 );
-                */
         }
 
         //サウンド
@@ -383,7 +388,7 @@ void CharacterDefaultCounter::Catch()
      }
 
      // ボールをボーンに引っ付ける
-     Vector3 bonePos = m_pOwner->m_Renderer.GetWorldBonePos(m_Param.CatchBoneNumber);
+     Vector3 bonePos = m_pRenderer->GetWorldBonePos(m_Param.CatchBoneNumber);
      m_pCounterBall->m_Params.pos = bonePos;
 
      chr_func::XZMoveDown(m_pOwner, 0.2f);
@@ -487,6 +492,8 @@ void CharacterDefaultCounter::Shot()
         //若干前に進む
         chr_func::AddMoveFront(m_pOwner, 0.2f, 1.0f);
     }
+
+    chr_func::XZMoveDown(m_pOwner, 0.08f);
 
 
     //時間で終了ステートへ
@@ -606,13 +613,6 @@ void CharacterDefaultCounter::EffectApper()
     //カウンター音再生
     Sound::Play(Sound::AtkHit2);
 
-    //コントローラを振動
-
-    chr_func::SetControllerShock(
-        m_pOwner,
-        1,
-        0.10f
-        );
 }
 
 void CharacterDefaultCounter::SetAutoCounter()

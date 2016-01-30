@@ -81,7 +81,7 @@ public:
     //アニメーションの更新
     void Update(bool isRun, RATIO speed_ratio)
     {
-        m_pSoccer->m_Renderer.Update(0.5f);
+        m_pSoccer->m_Renderer.Update(0.65f);
     }
     //走り始めにモーションをセット
     void RunStart()
@@ -231,16 +231,8 @@ public:
 //プレイヤー操作の必殺技クラス
 class SoccerState_PlayerControll_Finisher : public SoccerState
 {
-private:
-	//　遠距離クラス作成
-	CharacterShotAttack* SnakeShotClass(SoccerPlayer* s);
-private:
-	//　遠距離クラス
-	CharacterShotAttack* m_pSnakeShotClass;
-	
 public:
 	int m_Timer;
-	bool timeflg;
 	//　コンストラクタ
 	SoccerState_PlayerControll_Finisher();
 	void Enter(SoccerPlayer* s);

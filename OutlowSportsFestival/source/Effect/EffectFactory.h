@@ -1,6 +1,7 @@
 #pragma once
 #include "../GameSystem/ForwardDecl.h"
 #include "../utillity/ColorUtility.h"
+#include "../GameSystem/GameSystem.h"
 
 //---------------------------------------------//
 // 　　　エフェクト出現関数集
@@ -15,6 +16,14 @@ namespace EffectFactory
         float size,
         float alpha,
         bool Soft = false);
+
+    //煙アニメーションエフェクト
+    void Smoke(
+        CrVector3 pos,
+        CrVector3 move,
+        float size,
+        float alpha,
+        int live_frame);
 
     //煙エフェクト
     void SmokeParticle(
@@ -32,8 +41,8 @@ namespace EffectFactory
 
 	//　切り替え
 	void Change(
-        CrVector3 pos,
-		float size);
+        CrVector3 pos
+		);
 
     //円が大きくなるアニメーション
     void CircleAnimationBillbord(
@@ -78,6 +87,13 @@ namespace EffectFactory
 		CrVector2 size,
 		DWORD     Color
 		);
+
+    //ショット時のエフェクト
+    void ShotEffect(
+        PlayerNum::Value    num,
+        CrVector3           pos, 
+        CrVector3           vec
+        );
 
     //攻撃ヒット時のエフェクト
     void HitEffect(

@@ -17,8 +17,8 @@
 //          サッカー攻撃ステート
 //-----------------------------------------------//
 
-const float SoccerAttackState::m_DamageValue_FirstKick = 4.0f;
-const float SoccerAttackState::m_DamageValue_ChunliKick = 2.0f;
+const float SoccerAttackState::m_DamageValue_FirstKick   = 1.0f;
+const float SoccerAttackState::m_DamageValue_ChunliKick  = 2.0f;
 const float SoccerAttackState::m_DamageValue_SummerSault = 6.0f;
 
 
@@ -80,7 +80,7 @@ void SoccerAttackState::Execute(SoccerPlayer* p)
         chr_func::UpdateAll(m_pChr, &SoccerHitEvent(m_pChr, m_isCounterHit));
 
 
-        if (m_Damage.m_Enable&&m_Damage.HitCount > 0 && m_HitStopUsed == false)
+        if (m_Damage.m_Enable && m_Damage.HitCount > 0 && m_HitStopUsed == false)
         {
             m_HitStopCount = 0;
             m_HitStopUsed = true;
@@ -90,6 +90,8 @@ void SoccerAttackState::Execute(SoccerPlayer* p)
     {
         //ヒットストップ時の更新
         --m_HitStopCount;
+
+        UpdateDoCombo();
 
         chr_func::UpdateAll(m_pChr, &SoccerHitEvent(m_pChr, m_isCounterHit), 0);
     }
@@ -219,11 +221,25 @@ void SoccerAttackState::UpdateDamage()
     }
 }
 
+void SoccerAttackState::SetHitStop(int frame)
+{
+    if (m_HitStopUsed)
+    {
+        return;
+    }
+
+    chr_func::SetControllerShock(m_pChr, 0.6f, 0.1f);
+
+    m_HitStopCount = frame;
+    m_HitStopUsed = true;
+}
+
 void SoccerAttackState::SetState(StateFunc next)
 {
     m_pStateFunc = next;
     m_Timer = 0;
     m_DoNextAtk = false;
+    m_Damage.ResetCounts();
 }
 
 void SoccerAttackState::SetDamage(UINT Frame)
@@ -265,16 +281,22 @@ void SoccerAttackState::State_Atk1()
         //カウンターヒットon
         m_isCounterHit = true;
     }
-    
 
     //ダメージフレーム
     if (m_Timer == DamageFrame)
     {
         //ダメージパラメータセット        
         m_Damage.Value = m_DamageValue_FirstKick;
-        
+        m_Damage.HitMotionFrame = 35;
+
         //発生
         SetDamage(2);
+    }
+
+    //ヒットストップ
+    if (m_Damage.HitCount > 0)
+    {
+        SetHitStop(3);
     }
 
     //時間経過で終了
@@ -395,6 +417,12 @@ void SoccerAttackState::State_Atk3()
 
         //発生
         SetDamage(2);
+    }
+
+    //ヒットストップ
+    if (m_Damage.HitCount > 0)
+    {
+        SetHitStop(3);
     }
 
     //時間経過で終了

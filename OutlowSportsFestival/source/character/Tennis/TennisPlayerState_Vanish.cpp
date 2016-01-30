@@ -151,7 +151,7 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
     Param.move = m_Damage_vec;
 
     Param.down_frame = 15;
-    Param.standup_frame = 50;
+    Param.standup_frame = 45;
 
 
     //ひるみクラスを作成
@@ -168,12 +168,6 @@ void TennisState_DamageVanish::Enter(TennisPlayer* t)
         m_Damage_vec
         );
 
-    //コントローラを振動
-    chr_func::SetControllerShock(
-        m_pTennis,
-        0.8f,
-        0.2f
-        );
 }
 
 void TennisState_DamageVanish::Execute(TennisPlayer* t)

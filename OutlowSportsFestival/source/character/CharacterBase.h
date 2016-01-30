@@ -98,8 +98,11 @@ private:
     CharacterPhysic     m_PhysicObj;  //物理判定オブジェクト
     State               m_StateType;  //現在のステートタイプ
 
-    void RendererUpdate();
     void CameraDrawObjUpdate();
+
+protected:
+
+    void RendererUpdate(CharacterRenderer* pRenderer);
 };
 
 #endif

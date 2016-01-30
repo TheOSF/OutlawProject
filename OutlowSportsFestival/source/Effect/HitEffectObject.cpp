@@ -38,7 +38,7 @@ HitEffectObject::HitEffectObject(
     m_Light.param.color = color*0.25f;
     m_Light.param.pos = pos;
     m_Light.param.size = LightSize;
-    m_Light.Visible = false;
+    m_Light.Visible = true;
 }
 
 HitEffectObject::~HitEffectObject()

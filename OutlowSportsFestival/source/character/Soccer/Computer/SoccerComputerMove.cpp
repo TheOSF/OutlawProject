@@ -24,7 +24,7 @@ void SoccerState_ComputerControll_Move::Enter(SoccerPlayer* s)
 
         p.Acceleration = 0.25f;
         p.MaxSpeed = 0.35f;
-        p.TurnSpeed = 0.3f;
+        p.TurnSpeed = 0.45f;
         p.DownSpeed = 0.08f;
         p.RunEndFrame = 35;
 

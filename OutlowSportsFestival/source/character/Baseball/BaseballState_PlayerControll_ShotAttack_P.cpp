@@ -92,12 +92,12 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 		void Update()override{
 
 			//　モデル更新
-			m_pBaseball->m_Renderer.Update(2);
+			m_pBaseball->ModelUpdate(2);
 
 			// 転送行列更新
 			chr_func::CreateTransMatrix(
 				m_pBaseball,
-				&m_pBaseball->m_Renderer.m_TransMatrix);
+                &m_pBaseball->getNowModeModel()->m_TransMatrix);
 		}
 	public:
 		// ダメージ判定開始 & ボール発射
@@ -136,7 +136,7 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 		//　遠距離攻撃開始
 		void AttackStart()override{
 			//　☆モーション
-			m_pBaseball->m_Renderer.SetMotion(baseball_player::_mb_Shot_P);
+			m_pBaseball->SetMotion(baseball_player::_mb_Shot_P);
 			//　効果音
 			Sound::Play(Sound::Swing3);
 		}

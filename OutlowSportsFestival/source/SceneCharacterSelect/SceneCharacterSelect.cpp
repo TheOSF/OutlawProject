@@ -413,6 +413,8 @@ void SceneCharacterSelect::State_Selecting()
         if ( controller::GetTRG(controller::button::batu, 0) ) {
             //ステート移行
             m_pStateFunc = &SceneCharacterSelect::State_BackToOption;
+
+            Sound::Play(Sound::Cursor_cancel);
         }
     }
 }

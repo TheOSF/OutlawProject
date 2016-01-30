@@ -84,6 +84,7 @@ void SceneStageSelect::Update()
                     count++;
                 }
             }
+            Sound::Play(Sound::Cursor_cancel);
             MainFrame->ChangeScene(new SceneCharacterSelect(initparam, count));
 		}
 		break;

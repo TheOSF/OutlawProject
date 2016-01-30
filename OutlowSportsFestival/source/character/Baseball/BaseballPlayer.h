@@ -89,11 +89,11 @@ public:
     bool SetMode(bool isBatter);
 
 	//　ゲッター・セッター
-    bool getBatterFlg()const{ return m_BatterFlg; }
-    bool getPitcherFlg()const{ return !m_BatterFlg; }
+    inline bool getBatterFlg()const{ return m_BatterFlg; }
+    inline bool getPitcherFlg()const{ return !m_BatterFlg; }
 
-    bool isBatter()const{ return m_BatterFlg; }
-    bool isPitcher()const{ return !m_BatterFlg; }
+    inline bool isBatter()const{ return m_BatterFlg; }
+    inline bool isPitcher()const{ return !m_BatterFlg; }
 
     //現在フォームのモデルをゲット
     CharacterRenderer* getNowModeModel();

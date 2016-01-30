@@ -12,7 +12,7 @@ m_pSoccer(pSoccer)
         SoccerPlayer* const m_pSoccer;
     public:
         SoccerDamageControllEvent(SoccerPlayer* p) :
-            EventClass(p, SoccerPlayer::_ms_Vanish_Fly),
+            EventClass(p, SoccerPlayer::_ms_Vanish_Fly, &p->m_Renderer),
             m_pSoccer(p)
         {
 

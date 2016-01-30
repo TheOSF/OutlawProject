@@ -5,7 +5,6 @@
 #define		DIRECTINPUT_VERSION	0x0800 
 #include	<dinput.h>
 
-
 //“ü—Í•û–@Ø‚è‘Ö‚¦
 
 #if TRUE

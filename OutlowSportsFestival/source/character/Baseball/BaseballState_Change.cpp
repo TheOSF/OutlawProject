@@ -38,13 +38,17 @@ void BaseballState_Change::Execute(BaseballPlayer* b)
     if (m_Timer == 1)
     {
         //　エフェクト
-        EffectFactory::Change(Vector3(m_pBaseball->m_Params.pos.x, m_pBaseball->m_Params.pos.y + 2.0f, m_pBaseball->m_Params.pos.z), 10.0f);
+        EffectFactory::Change(m_pBaseball->m_Params.pos + Vector3(0, 2, 0));
         //　効果音
         Sound::Play(Sound::Change);
 
         b->ChangeMode();
     }
 
+    if (m_Timer > 30)
+    {
+        b->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(b));
+    }
 	
 	chr_func::UpdateAll(b, &BaseballHitEvent(b));
     b->ModelUpdate();

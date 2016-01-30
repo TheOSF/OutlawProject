@@ -23,11 +23,12 @@ private:
 
     AmefootPlayer* const    m_pChr;
     int                     m_Timer;
+    StateFunc               m_pStateFunc;
 
-    void State_CounterPose();
+    void SetState(StateFunc state);
+
     void State_Jump();
     void State_Down();
-
 };
 
 

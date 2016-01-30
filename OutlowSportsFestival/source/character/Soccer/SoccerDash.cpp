@@ -37,7 +37,7 @@ void SoccerDash::SetDashVec(CrVector3 Vec)
         return;
     }
 
-    const float TurnSpeed = 0.05f;
+    const float TurnSpeed = 0.075f;
 
     chr_func::AngleControll(
         m_pChr,
@@ -63,7 +63,7 @@ bool SoccerDash::SetEnd()
 
 bool SoccerDash::isDash()const
 {
-    return m_pStateFunc == &SoccerDash::State_Dash && m_StateTimer > 15;
+    return m_pStateFunc == &SoccerDash::State_Dash && m_StateTimer > 5;
 }
 
 void SoccerDash::Update()
@@ -128,6 +128,8 @@ void SoccerDash::State_Start()
     Sound::Play(Sound::Soccer_Speed_Up1);
 
     m_pChr->m_Renderer.Update(1.0f);
+
+    chr_func::SetControllerShock(m_pChr, 0.1f, 0.1f);
 }
 
 void SoccerDash::State_Dash()
@@ -141,15 +143,15 @@ void SoccerDash::State_Dash()
     }
 
     {
-        if (m_StateTimer % 19 == 5)
+        if (m_StateTimer % 21 == 5)
         {
             Sound::Play(Sound::Sand1);
-
         }
+
         if (m_StateTimer % 3 == 2)
         {
             EffectFactory::Smoke(
-                m_pChr->m_Params.pos + Vector3(frand() - 0.5f, frand() + 0.5f, frand() - 0.5f)*2.0f,
+                m_pChr->m_Params.pos + Vector3(frand() - 0.5f, frand() + 0.5f, frand() - 0.5f)*2.0f, 
                 Vector3Zero,
                 1.8f,
                 1.0f,
@@ -174,6 +176,8 @@ void SoccerDash::State_DashEnd()
 
         Sound::Play(Sound::Sand2);
         Sound::Play(Sound::Soccer_Brake);
+
+        chr_func::SetControllerShock(m_pChr, 0.1f, 0.1f);
 
         for (int i = 0; i < 3; ++i)
         {
