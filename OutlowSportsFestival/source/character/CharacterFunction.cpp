@@ -54,6 +54,22 @@ void chr_func::UpdateAll(
     DamageCheck(p, pHitEvent);
 }
 
+//ダメージ判定を取らないver
+void chr_func::UpdateAll_DontCheckDamage(CharacterBase* p)
+{
+    //重力加算
+    UpdateMoveY(p);
+
+    //位置を更新
+    PositionUpdate(p);
+
+    //壁との接触判定
+    CheckWall(p);
+
+    //床との接触判定
+    CheckGround(p);
+}
+
 //座標に移動量を更新する
 void chr_func::PositionUpdate(CharacterBase* p, RATIO t)
 {

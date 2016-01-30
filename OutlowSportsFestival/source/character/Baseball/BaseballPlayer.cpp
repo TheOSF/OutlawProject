@@ -31,6 +31,8 @@ m_BatterFlg(false)
         SetMode(true);
     }
 
+    m_Params.SP = 1.0f;
+
 	m_Params.maxHP = m_Params.HP = 100;
 	
     m_ModelSize = 0.06f;

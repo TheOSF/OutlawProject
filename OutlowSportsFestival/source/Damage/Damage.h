@@ -7,6 +7,7 @@
 #include <map>
 #include <bitset>
 #include <array>
+
 //*************************************************************
 //		ダメージ判定クラスヘッダ
 //*************************************************************
@@ -39,8 +40,8 @@ public:
     public:
         virtual ~HitCallBack(){}
 
-        virtual void Hit(const SphereParam* sp) = 0;       //ダメージが当たったときに自動で呼ばれる
-        virtual void HitCharacter(CharacterBase* pHitCharacter) = 0; //キャラクタに当たったときに呼ばれる
+        virtual void Hit(const SphereParam* sp) {}      //ダメージが当たったときに自動で呼ばれる
+        virtual void HitCharacter(CharacterBase* pHitCharacter) {} //キャラクタに当たったときに呼ばれる
     };
 
 	enum Type

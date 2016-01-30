@@ -17,6 +17,9 @@ namespace chr_func
     //基本的な更新(座標更新、壁との判定など)をすべて行う
     void UpdateAll(CharacterBase* p, DamageManager::HitEventBase*	pHitEvent, RATIO Speed);
 
+    //ダメージ判定を取らないver
+    void UpdateAll_DontCheckDamage(CharacterBase* p);
+
 	//座標に移動量を更新する
     void PositionUpdate(CharacterBase* p, RATIO t = 1.0f);
 			

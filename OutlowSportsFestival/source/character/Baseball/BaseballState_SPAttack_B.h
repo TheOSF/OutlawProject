@@ -2,6 +2,7 @@
 
 #include "BaseballPlayer.h"
 #include "../../Render/LightObject.h"
+#include "../../Render/MeshRenderer.h"
 
 //***************************************************
 //		プレイヤー操作の 近距離攻撃クラス
@@ -24,25 +25,25 @@ public:
 	void Exit(BaseballPlayer* b)override;
 
 private:
-	void(BaseballState_SPAttack_B::*m_pStateFunc)();
+	typedef void(BaseballState_SPAttack_B::*StateFunc)();
 
-	int                     m_Timer;
-	bool					timeflg;
-	BaseballPlayer*         m_pBaseBall;
-	DamageShpere            m_Damage;
-	UINT                    m_ChrLiveCount;
-	PointLight              m_Light;
+    static const float      m_sDamageValue;
 
-	void State_Atk();			 //　攻撃
+    BaseballPlayer* const   m_pChr;
+    StateFunc               m_pStateFunc;
+    int                     m_StateTimer;
+    DamageCapsure           m_Damage;
 
-	void State_Finish()
-	{
-		//　雷エフェクト発動
-		ThunderInvoke(8);
-	}		 //　必殺終わり
+    MeshRenderer*           m_pBatMesh;
+    Vector3                 m_BatScale;
 
-	void FreezeGame(UINT frame); //　The World
+    void SetState(StateFunc state);
+    void UpdateBatMesh();
+    void UpdateDamagePos();
+    void OnHit();
 
-	void ThunderInvoke(UINT point_num);
+    void State_PreAtk();
+    void State_Atk();
+
 };
 
