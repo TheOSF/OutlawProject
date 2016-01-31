@@ -17,4 +17,13 @@ public:
     void Update();
     void Render();
 
+private:
+
+    iex2DObj*   m_pTitleLogoTex;
+    iex2DObj*   m_pPushButtonTex;
+
+    float       m_PushButton_AlphaCount;
+    RATIO       m_FadeOut;
+    int         m_Timer;
+    bool        m_GoNext;
 };

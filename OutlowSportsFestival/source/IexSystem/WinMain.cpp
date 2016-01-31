@@ -11,6 +11,9 @@
 #include "../SceneResult/SceneResult.h"
 
 #include "../GameSystem/GameInitilizer_UsualMatch.h"
+#include "../SceneTitle/SceneTitle.h"
+
+
 
 //*****************************************************************************************************************************
 //
@@ -64,9 +67,9 @@ BOOL	InitApp( HWND hWnd )
         MainFrame->ChangeScene(new SceneCharacterSelect(Param, 1));
 
     }
-    else if (false)
+    else if (true)
     {
-        MainFrame->ChangeScene(new SceneOption());
+        MainFrame->ChangeScene(new SceneTitle());
     }
     else if (false)
     {

@@ -1,6 +1,7 @@
 #include "CharacterHitEventFunc.h"
 #include "CharacterFunction.h"
 
+const float CharacterHitEventFunc::m_DamageAddSkillValue = 0.5f * 0.01f;
 
 CharacterHitEventFunc::SetType CharacterHitEventFunc::CheckDamage(DamageBase* pDmg, CharacterBase* pOwner, Vector3* pOutVec)
 {
@@ -26,6 +27,8 @@ CharacterHitEventFunc::SetType CharacterHitEventFunc::CheckDamage(DamageBase* pD
     //ダメージ計算
     chr_func::CalcDamage(pOwner, pDmg->Value, pDmg->isOptionOn(DamageBase::Option::_DontDie));
 
+    //受けたダメージ値によってゲージ増加
+    chr_func::AddSkillGauge(pOwner, pDmg->Value * m_DamageAddSkillValue);
 
     //もし体力がなかったら、どんな攻撃であろうと死亡ステートへ
     if (chr_func::isDie(pOwner))

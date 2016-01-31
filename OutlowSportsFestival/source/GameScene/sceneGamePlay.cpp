@@ -253,12 +253,19 @@ void	sceneGamePlay::Update()
     //カメラ更新
 	DefCamera.Update();
 
+#ifdef _DEBUG
+
     if (!GetKeyState('M'))
     {
         //全ゲームオブジェクト更新
         DefGameObjMgr.Update();
-
     }
+
+#else
+    //全ゲームオブジェクト更新
+    DefGameObjMgr.Update();
+
+#endif
 
     //キャラクタ同士の押し出しを計算する
     DefCharacterMgr.CheckCharacterSpace();
@@ -270,12 +277,16 @@ void	sceneGamePlay::Update()
     //ライト更新
     DefMatchLightManager.Update();
 
+#ifdef _DEBUG
+
     //デバッグ用描画切り替え
     if (GetKeyState('L'))
     {
         // Bullet Physics
         DefBulletSystem.DebugDrawWorld();
     }
+
+#endif
     
     //シーン移行チェック
     UpdateSceneChange();

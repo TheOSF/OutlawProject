@@ -4,6 +4,7 @@
 #include "../Sound/Sound.h"
 #include "../Effect/EffectFactory.h"
 
+#include "CharacterHitEventFunc.h"
 
 CharacterDamageControll::EventClass::EventClass(CharacterBase*  pOwner, int VanishMotion, CharacterRenderer* pRenderer) :
 pOwner(pOwner),
@@ -71,6 +72,9 @@ void CharacterDamageControll::AddDamage(float value, bool dontDie)
 {
     //ダメージ計算
     chr_func::CalcDamage(m_pEventClass->pOwner, value, dontDie);
+
+    //受けたダメージ値によってゲージ増加
+    chr_func::AddSkillGauge(m_pEventClass->pOwner, value * CharacterHitEventFunc::m_DamageAddSkillValue);
 
 
     EffectFactory::HitEffect(

@@ -4,40 +4,6 @@
 #include "../CharacterFunction.h"
 #include "TennisPlayerState_UsualMove.h"
 
-/*
-enum MotionType
-{
-    _mt_Stand = 0,
-    _mt_Run = 1,
-
-    _mt_Attack1 = 2,
-    _mt_Shot = 5,
-    _mt_CounterRight = 3,
-    _mt_CounterLeft = 4,
-    _mt_Smash = 5,
-    _mt_Guard = 6,
-    _mt_Rolling = 7,
-    _mt_BoundSmash = 3,
-    _mt_Damage_Weak = 20,
-
-    _mt_Damage_Vanish_Fly = 9,
-    _mt_Damage_Vanish_Down = 10,
-    _mt_Damage_Vanish_StandUp = 11,
-
-    _mt_WinPose = 13,
-    _mt_LosePose = 14,
-
-    _mt_Attack2 = 16,
-    _mt_Attack3 = 17,
-
-    _mt_CounterPose = 18,
-    _mt_Hakushu = 21,
-
-};
-
-*/
-
-
 //*************************************************************
 //		テニスプレイヤークラス
 //*************************************************************
@@ -48,7 +14,7 @@ m_DontBoundBallAtkTimer(0)
 {
 	m_pStateMachine = new TennisStateMachine(this);
 
-    m_Params.maxHP = m_Params.HP = 100; 
+    m_Params.maxHP = m_Params.HP = 90; 
 
     m_ModelSize = 0.055f;
 }

@@ -11,6 +11,8 @@ CharacterBase(info, new BlendAnimationMesh(GetCharacterModelPath(CharacterType::
      m_pStateMachine(new AmefootStateMachine(this)),
      m_DontThrowBallTimer(0)
 {
+    m_Params.maxHP = m_Params.HP = 120.0f;
+
     m_ModelSize = (0.058f);
 }
 //-----------------------------------------------------------------------------------------

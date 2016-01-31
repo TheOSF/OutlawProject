@@ -40,6 +40,7 @@ private:
 
         void AddRoundIcon(CrVector2 Pos);
         void UpdateRoundIcon();
+        void SetShock(RATIO power,int frame);
 
     private:
         static const int RoundCountMax = 20;

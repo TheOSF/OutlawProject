@@ -14,6 +14,8 @@
 #include "../SceneCharacterSelect/SceneCharacterSelect.h"
 #include "BreakScreenObject.h"
 #include "../Render/MeshRenderer.h"
+#include "../Sound/Sound.h"
+
 
 
 SceneResult::SceneResult(

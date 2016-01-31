@@ -65,6 +65,8 @@ void Sound::Initialize()
     RegistBGM(BGM_Title, "title\\game_maoudamashii_4_vehicle02");
     RegistBGM(BGM_Option, "option\\select2");
     RegistBGM(BGM_ChrSelect, "character_select\\select");
+    RegistBGM(BGM_Result, "staffroll\\staffroll");
+    
 
     RegistBGM(BGM_Battle,"battle\\battle_normal");
     RegistBGM(BGM_LastRound, "battle\\battle_last");

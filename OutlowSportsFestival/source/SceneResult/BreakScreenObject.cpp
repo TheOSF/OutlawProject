@@ -3,6 +3,8 @@
 #include "../GameSystem/GameController.h"
 
 #include "../Effect/GlavityLocus.h"
+#include "../Sound/Sound.h"
+
 
 BreakScreenObject::BreakScreenObject(iex2DObj* pTexture) :
 m_BreakScreenModel("DATA\\RESULT\\BreakScreen\\wall_break.iem"),
@@ -101,6 +103,9 @@ bool BreakScreenObject::Update()
             DefCamera.SetShock(Vector2(0.1f, 0.1f), 15);
 
             Effect(20);
+
+            //サウンドストップ
+            Sound::StopBGM();
         }
 
         Speed = 1.2f;
@@ -116,6 +121,8 @@ bool BreakScreenObject::Update()
         {
             Effect(20);
             DefCamera.SetShock(Vector2(0.1f, 0.1f), 15);
+
+            Sound::Play(Sound::BGM_Result);
         }
 
         Speed = 2.0f;

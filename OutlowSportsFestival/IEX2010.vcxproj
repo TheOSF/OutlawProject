@@ -174,6 +174,7 @@
     <ClCompile Include="source\character\Baseball\BaseballState_PoseMotion.cpp" />
     <ClCompile Include="source\character\Baseball\Computer\BaseballComputerUtillityClass.cpp" />
     <ClCompile Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.cpp" />
+    <ClCompile Include="source\character\Baseball\PitchingMachine.cpp" />
     <ClCompile Include="source\character\CharacterDamageControll.cpp" />
     <ClCompile Include="source\character\CharacterHitEventFunc.cpp" />
     <ClCompile Include="source\character\Computer\CharacterComputerDoAction.cpp" />
@@ -439,6 +440,7 @@
     <ClInclude Include="source\character\Baseball\BaseballState_PoseMotion.h" />
     <ClInclude Include="source\character\Baseball\Computer\BaseballComputerUtillityClass.h" />
     <ClInclude Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.h" />
+    <ClInclude Include="source\character\Baseball\PitchingMachine.h" />
     <ClInclude Include="source\character\CharacterDamageControll.h" />
     <ClInclude Include="source\character\CharacterHitEventFunc.h" />
     <ClInclude Include="source\character\Computer\CharacterComputerDoAction.h" />

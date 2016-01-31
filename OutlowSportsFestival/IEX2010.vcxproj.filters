@@ -239,6 +239,7 @@
     <ClCompile Include="source\character\Soccer\SoccerSliding.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerState_ControllVanish.cpp" />
     <ClCompile Include="source\character\Soccer\Snakeshot.cpp" />
+    <ClCompile Include="source\character\Baseball\PitchingMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -489,6 +490,7 @@
     <ClInclude Include="source\character\Soccer\SoccerRolling.h" />
     <ClInclude Include="source\character\Soccer\SoccerSliding.h" />
     <ClInclude Include="source\character\Soccer\SoccerState_ControllVanish.h" />
+    <ClInclude Include="source\character\Baseball\PitchingMachine.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DATA\Shader\3DEx.fx" />

@@ -13,7 +13,7 @@
 #include "../../Effect/SpecialAttackEffect.h"
 #include "../../GameSystem/ResourceManager.h"
 #include "../../Effect/ImpactLightObject.h"
-
+#include "../../Effect/EffectFactory.h"
 
 //攻撃力
 const float BaseballState_SPAttack_B::m_sDamageValue = 45.0f;
@@ -25,7 +25,8 @@ m_pStateFunc(&BaseballState_SPAttack_B::State_PreAtk),
 m_StateTimer(0),
 m_BatScale(0.1f, 0.1f, 0.1f),
 m_ChrLiveCount(0),
-m_DoOnHit(false)
+m_DoOnHit(false),
+m_Locus(8)
 {
     {
         //ダメージ初期化
@@ -42,6 +43,23 @@ m_DoOnHit(false)
         m_Damage.Value = m_sDamageValue;
     }
 
+    
+    {
+        //軌跡初期化
+        Vector4 LocusColor(1, 0.5f, 0, 1);
+
+        m_Locus.m_Division = 3;
+
+        m_Locus.m_StartParam.Color = LocusColor;
+        m_Locus.m_StartParam.HDRColor = LocusColor;
+        m_Locus.m_StartParam.Width = 3.5f;
+
+        LocusColor.w = 0.0f;
+
+        m_Locus.m_EndParam.Color = LocusColor;
+        m_Locus.m_EndParam.HDRColor = LocusColor;
+        m_Locus.m_EndParam.Width = 3.5f;
+    }
 
     //バットメッシュを作成
     m_pBatMesh = new MeshRenderer(
@@ -100,6 +118,9 @@ void BaseballState_SPAttack_B::Execute(BaseballPlayer* b)
     //基本更新
     chr_func::UpdateAll_DontCheckDamage(b);
     chr_func::CreateTransMatrix(b, &b->getNowModeModel()->m_TransMatrix);
+
+    //軌跡の更新
+    AddLocusPoint();
 }
 
 // ステート終了
@@ -265,7 +286,57 @@ void BaseballState_SPAttack_B::OnHit()
     }
 }
 
+void BaseballState_SPAttack_B::AddLocusPoint()
+{
+    Vector3 pos1, pos2;
+    Matrix T;
 
+    //バットをつけるボーン行列を取得
+    m_pChr->getNowModeModel()->GetWorldBoneMatirx(T, 32);
+
+    //バットの根元
+    pos1 = Vector3(T._41, T._42, T._43);
+
+    //バットの先
+    pos2 = pos1 + Vector3Normalize(-Vector3(T._31, T._32, T._33)) * 30.0f * m_BatScale.z;
+
+    //点を追加
+    m_Locus.AddPoint(
+        (pos1 + pos2)*0.5f,
+        Vector3Normalize(pos1 - pos2)
+        );
+}
+
+void BaseballState_SPAttack_B::BallCounterUpdate(CrVector3 pos, float size)
+{
+    BallBase* pBall = nullptr;
+    Vector3 OutMovePos;
+
+    //カウンター可能なボールを取得
+    if (DefBallMgr.GetCounterBall(&pBall, pos, &OutMovePos, size, 1, m_pChr) == false)
+    {
+        return;
+    }
+
+    //ボールのパラメタ更新
+    pBall->m_Params.move = Vector3Normalize(pBall->m_Params.pos - m_pChr->m_Params.pos) * 1.2f;
+    pBall->m_Params.move.y = 0.0f;
+
+    pBall->Counter(m_pChr);
+
+    //エフェクト
+    EffectFactory::CircleAnimationBillbord(
+        pBall->m_Params.pos,
+        Vector3Zero,
+        Vector3Zero,
+        Vector2(5,5),
+        0xFFFFFFFF,
+        RS_ADD
+        );
+
+    //SE
+    Sound::Play(Sound::AtkHit2);
+}
 
 void BaseballState_SPAttack_B::State_PreAtk()
 {
@@ -309,6 +380,11 @@ void BaseballState_SPAttack_B::State_Atk()
     //ダメージの有効・無効をセット
     m_Damage.m_Enable = (m_StateTimer < DamageEndFrame);
 
+    //ボールのカウンターする
+    if (m_Damage.m_Enable)
+    {
+        BallCounterUpdate(m_Damage.m_Param.pos1, 4.0f);
+    }
 
     //ヒットした場合エフェクト関数を呼ぶ
     if (m_Damage.HitCount > 0 && m_DoOnHit == false)

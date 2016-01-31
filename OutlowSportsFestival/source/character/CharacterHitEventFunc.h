@@ -22,6 +22,9 @@ public:
         _None, //何もしなくてよい
     };
 
+    //ダメージ値 * m_DamageAddSkillValue分スキルゲージを加算する
+    static const float m_DamageAddSkillValue;
+
     //戻り値：ひるむタイプ
     static SetType CheckDamage(
         DamageBase*    pDmg,   //当たったダメージへのポインタ

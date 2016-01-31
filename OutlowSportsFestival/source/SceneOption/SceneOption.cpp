@@ -774,6 +774,8 @@ void SceneOption::Update()
 }
 void SceneOption::Render()
 {
+    iexSystem::GetDevice()->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0f, 0);
+
     Back->Render(0, 0, 1296, 758, 0, 0, 500, 500);//ƒoƒbƒN
     ToppingRender();
     if (nagare == Syuryo) {

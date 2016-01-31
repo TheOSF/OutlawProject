@@ -3,9 +3,10 @@
 #include "BaseballPlayer.h"
 #include "../../Render/LightObject.h"
 #include "../../Render/MeshRenderer.h"
+#include "../../utillity/LocusHDR.h"
 
 //***************************************************
-//		プレイヤー操作の 近距離攻撃クラス
+//		野球　バッター　必殺技ステートクラス
 //***************************************************
 
 class BaseballState_SPAttack_B : public BaseballState
@@ -40,10 +41,14 @@ private:
 
     UINT                    m_ChrLiveCount;
 
+    LocusHDR                m_Locus;
+
     void SetState(StateFunc state);
     void UpdateBatMesh();
     void UpdateDamagePos();
     void OnHit();
+    void AddLocusPoint();
+    void BallCounterUpdate(CrVector3 pos, float size);
 
     void State_PreAtk();
     void State_Atk();

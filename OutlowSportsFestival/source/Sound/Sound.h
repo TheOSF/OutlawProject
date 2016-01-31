@@ -61,6 +61,7 @@ namespace Sound
         BGM_Title,
         BGM_Option,
         BGM_ChrSelect,
+        BGM_Result,
 
         BGM_Battle,
         BGM_LastRound,
