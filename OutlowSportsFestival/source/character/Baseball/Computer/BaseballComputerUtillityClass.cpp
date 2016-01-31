@@ -46,10 +46,12 @@ bool BaseballComputerUtillityClass::AttackEvent::Action_B(CharacterBase* pTarget
     {
         if (chr_func::isCanSpecialAttack(m_pChr) && len < 10.0f)
         {
+            chr_func::AngleControll(m_pChr, pTarget);
             m_pChr->SetState(new BaseballState_SPAttack_B(m_pChr));
         }
         else
         {
+            chr_func::AngleControll(m_pChr, pTarget);
             m_pChr->SetState(new Baseball_PlayerControll_Attack_B(m_pChr));
         }
 
@@ -63,6 +65,7 @@ bool BaseballComputerUtillityClass::AttackEvent::Action_B(CharacterBase* pTarget
         }
         else
         {
+            chr_func::AngleControll(m_pChr, pTarget);
             m_pChr->SetState(new BaseballState_PlayerControll_ShotAttack_B(new ShotControllClass_B(m_pChr)));
         }
         return true;
@@ -76,6 +79,7 @@ bool BaseballComputerUtillityClass::AttackEvent::Action_P(CharacterBase* pTarget
 {
     if (frand() < 0.1f && chr_func::isCanSpecialAttack(m_pChr) && len < 10.0f)
     {
+        chr_func::AngleControll(m_pChr, pTarget);
         m_pChr->SetState(new BaseballState_SPAttack_P());
         return true;
     }
@@ -88,6 +92,7 @@ bool BaseballComputerUtillityClass::AttackEvent::Action_P(CharacterBase* pTarget
         }
         else
         {
+            chr_func::AngleControll(m_pChr, pTarget);
             m_pChr->SetState(new Baseball_PlayerControll_Attack_P(m_pChr));
         }
 
@@ -101,10 +106,12 @@ bool BaseballComputerUtillityClass::AttackEvent::Action_P(CharacterBase* pTarget
         }
         else if (frand() < 0.5f)
         {
+            chr_func::AngleControll(m_pChr, pTarget);
             m_pChr->SetState(new Baseball_PlayerControll_Attack_P(m_pChr));
         }
         else
         {
+            chr_func::AngleControll(m_pChr, pTarget);
             m_pChr->SetState(new BaseballState_PlayerControll_ShotAttack_P());
         }
         return true;
@@ -162,8 +169,14 @@ void BaseballComputerUtillityClass::ReactionEvent::Reaction_B(const TypeParam& p
 
     if (param.isEnemyNear)
     {
-        if (frand() < 0.75f)
+        if (frand() < 0.5f && chr_func::isCanSpecialAttack(m_pChr))
         {
+            chr_func::AngleControll(m_pChr, m_pChr->m_Params.pos + vec);
+            m_pChr->SetState(new BaseballState_SPAttack_B(m_pChr));
+        }
+        else if (frand() < 0.75f)
+        {
+            chr_func::AngleControll(m_pChr, m_pChr->m_Params.pos + vec);
             m_pChr->SetState(new Baseball_PlayerControll_Attack_B(m_pChr));
         }
         else
@@ -214,6 +227,7 @@ void BaseballComputerUtillityClass::ReactionEvent::Reaction_P(const TypeParam& p
     {
         if (frand() < 0.3f)
         {
+            chr_func::AngleControll(m_pChr, m_pChr->m_Params.pos + vec);
             m_pChr->SetState(new Baseball_PlayerControll_Attack_P(m_pChr));
         }
         else if (frand() < 0.3f)
@@ -245,13 +259,13 @@ CharacterComputerReaction::InParam BaseballComputerUtillityClass::ReactionEvent:
 
     if (batter)
     {
-        param.CanNearAtkAreaSize = 20.0f;
-        param.CounterAreaSize = 12.0f;
+        param.CanNearAtkAreaSize = 10.0f;
+        param.CounterAreaSize = 15.0f;
     }
     else
     {
-        param.CanNearAtkAreaSize = 12.0f;
-        param.CounterAreaSize = 12.0f;
+        param.CanNearAtkAreaSize = 20.0f;
+        param.CounterAreaSize = 15.0f;
     }
 
     return param;

@@ -55,6 +55,9 @@ public:
     //ボールが相打ちに行ったときに自動的に呼ばれる関数(戻り値：相打ちが成功したかどうか)
     virtual bool HitBall(BallBase* pBall){ return true; }
 
+    //キャッチしたときに呼ばれる
+    virtual void CatchStart(){}
+
     bool isOutOfField()const;
 
 	//引数のボールがカウンター可能かどうか

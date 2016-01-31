@@ -246,12 +246,12 @@ void CharacterDamageVanish::Dowing()
     //エフェクト
     if (m_Count > 4 && m_Count < 10)
     {
-        EffectFactory::Smoke(
-            m_pCharacter->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
-            Vector3(frand() - 0.5f, frand()*0.1f, frand() - 0.5f)*0.05f, 
-            2.0f + frand()*2.0f,
-            1.0f,
-            true
+        EffectFactory::SmokeParticle(
+            m_pCharacter->m_Params.pos + Vector3Rand(),
+            Vector3((frand()*2.0f - 1.0f), frand(), (frand()*2.0f - 1.0f))*0.05f,
+            45,
+            3.0f,
+            0x20FFFFFF
             );
     }
 
@@ -413,12 +413,12 @@ void CharacterDamageVanish::HitFloorAndStandUp()
     //エフェクト
     if (m_Count < StandUpStart)
     {
-        EffectFactory::Smoke(
-            m_pCharacter->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
-            Vector3(frand() - 0.5f, frand()*0.1f, frand() - 0.5f)*0.05f,
-            2.0f + frand()*2.0f,
-            1.0f,
-            true
+        EffectFactory::SmokeParticle(
+            m_pCharacter->m_Params.pos + Vector3Rand(), 
+            Vector3((frand()*2.0f - 1.0f), frand(), (frand()*2.0f - 1.0f))*0.05f, 
+            45,
+            3.0f,
+            0x20FFFFFF
             );
     }
     

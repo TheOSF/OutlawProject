@@ -123,6 +123,7 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
     Param.move.y = 0.2f;
 
     Param.standup_frame = 50;
+    Param.down_frame = 10;
 
     //‚Ğ‚é‚İƒNƒ‰ƒX‚ğì¬
     m_pDamageVanishClass = new CharacterDamageVanish(

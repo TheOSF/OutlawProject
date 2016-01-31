@@ -117,7 +117,7 @@ void AmefootPlayerState_Die::Enter(AmefootPlayer* pCharacter)
 
     Param.move = m_Damage_vec * 0.7f;
     Param.move.y = 0.2f;
-
+    Param.down_frame = 10;
     Param.standup_frame = 50;
 
     //‚Ğ‚é‚İƒNƒ‰ƒX‚ğì¬

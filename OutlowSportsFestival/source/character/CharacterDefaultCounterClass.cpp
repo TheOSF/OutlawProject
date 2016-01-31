@@ -18,11 +18,14 @@ const float CharacterDefaultCounter::m_SkillUpValue = 0.05f; //ƒXƒLƒ‹ƒQ[ƒW‚ªã‚
 
 CharacterDefaultCounter::Param::Param()
 {
+    HitSE = Sound::AtkHit2;
+
     PoseFrame = 0;
     CanCounterFrame = 0;
     ShotFrame = 0;
     AfterShotFrame = 0;
     FailedFrame = 0;
+    HitStop = 0;
 
     CatchFrame = 0;
     CatchBoneNumber = 0;
@@ -282,7 +285,7 @@ void CharacterDefaultCounter::Move()
     {
         //ƒqƒbƒgƒXƒgƒbƒvƒJƒEƒ“ƒg
         //m_HitStopFrame = (UINT)fClamp(m_pCounterBall->m_Params.move.Length(), 8,8);
-        m_HitStopFrame = 0;
+        m_HitStopFrame = m_Param.HitStop;
         m_BallFreezePos = m_pCounterBall->m_Params.pos;
 
         SetState(&CharacterDefaultCounter::HitStop);
@@ -326,6 +329,9 @@ void CharacterDefaultCounter::HitStop() //ƒqƒbƒgƒXƒgƒbƒv
         }
         else
         {
+            //ƒLƒƒƒbƒ`ƒXƒ^[ƒg
+            m_pCounterBall->CatchStart();
+
             SetState(&CharacterDefaultCounter::Catch);
         }
     }
@@ -611,7 +617,7 @@ void CharacterDefaultCounter::EffectApper()
         );
 
     //ƒJƒEƒ“ƒ^[‰¹Ä¶
-    Sound::Play(Sound::AtkHit2);
+    Sound::Play(m_Param.HitSE);
 
 }
 

@@ -33,6 +33,7 @@ private:
         int         AllFrame;
         int         Motion;
         int         NoDamageFrame;
+        int         StandStartFrame;
 
         float       MoveValue;
         float       MoveDownFrame;

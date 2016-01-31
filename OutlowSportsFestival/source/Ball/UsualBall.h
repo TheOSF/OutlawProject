@@ -91,7 +91,7 @@ public:
 
     void ToNoWork();           //UŒ‚”»’è‚Ì‚È‚¢ó‘Ô‚É‚·‚é
 
-
+    void CatchStart()override;
 
     Vector3                     m_RotateSpeed;  //Še²‚Ì‰ñ“]‘¬“x
 

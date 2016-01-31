@@ -17,13 +17,13 @@ namespace EffectFactory
         float alpha,
         bool Soft = false);
 
-    //煙アニメーションエフェクト
-    void Smoke(
+    //簡単にそれっぽいのがでる
+    void SmokeInstant(
         CrVector3 pos,
         CrVector3 move,
         float size,
-        float alpha,
-        int live_frame);
+        int live_frame
+        );
 
     //煙エフェクト
     void SmokeParticle(

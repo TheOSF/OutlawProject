@@ -98,7 +98,7 @@ CharacterComputerReaction::StrongParam CharacterComputerReaction::GetParam()
         ret.NearEnemyReactionSpeed = 30;
 
         ret.DamageEscapeSuccess = 0.5f;
-        ret.DamageEscapeReactionSpeed = 10.0f;
+        ret.DamageEscapeReactionSpeed = 5.0f;
         break;
 
     case StrongType::_Usual:
@@ -109,7 +109,7 @@ CharacterComputerReaction::StrongParam CharacterComputerReaction::GetParam()
         ret.NearEnemyReactionSpeed = 20;
 
         ret.DamageEscapeSuccess = 0.75f;
-        ret.DamageEscapeReactionSpeed = 5.0f;
+        ret.DamageEscapeReactionSpeed = 2.0f;
         break;
 
     case StrongType::_Strong:

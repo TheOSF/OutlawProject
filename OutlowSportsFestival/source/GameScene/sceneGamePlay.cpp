@@ -272,12 +272,14 @@ void	sceneGamePlay::Update()
     
     //ダメージのデバッグ描画
     DefDamageMgr.DebugDraw();
-    DefDamageMgr.m_DebugDrawVisible = GetKeyState('P') != 0;
+    
 
     //ライト更新
     DefMatchLightManager.Update();
 
 #ifdef _DEBUG
+
+    DefDamageMgr.m_DebugDrawVisible = GetKeyState('P') != 0;
 
     //デバッグ用描画切り替え
     if (GetKeyState('L'))

@@ -3,6 +3,7 @@
 #include "CharacterBase.h"
 #include "../Damage/Damage.h"
 #include "../Ball/Ball.h"
+#include "../Sound/Sound.h"
 
 //-------------------------------------------------------//
 //  　　　キャラクタの通常カウンタークラス
@@ -38,13 +39,16 @@ public:
     {
         Param();
 
+        Sound::Type HitSE;        //当たったときのSEタイプ
+
         UINT     PoseFrame;       //構えを行うフレーム
         UINT     CanCounterFrame; //カウンター移行が可能なフレーム
         UINT     ShotFrame;       //ボールを検知してからキャッチするまでのフレーム
         UINT     AfterShotFrame;  //うち返した後のフレーム
         UINT     FailedFrame;     //打ち返しに失敗してからクラス終了までのフレーム
+        UINT     HitStop;         //打ち返す際のヒットストップ
 
-        UINT     CatchFrame = 0;     // キャッチしてから投げるまでのフレーム ※ 0なら即打ち返す
+        UINT     CatchFrame;      // キャッチしてから投げるまでのフレーム ※ 0なら即打ち返す
         UINT     CatchBoneNumber; // キャッチしたボールをどのボーンにつけるか
                                   
         float    CatchAriaSize;   //カウンター検知範囲

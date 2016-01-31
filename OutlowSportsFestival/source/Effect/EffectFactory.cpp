@@ -62,6 +62,26 @@ void EffectFactory::SmokeParticle(
         );
 }
 
+//ŠÈ’P‚É‚»‚ê‚Á‚Û‚¢‚Ì‚ª‚Å‚é
+void EffectFactory::SmokeInstant(
+    CrVector3 pos,
+    CrVector3 move,
+    float size,
+    int live_frame
+    )
+{
+    for (int i = 0; i < 8; ++i)
+    {
+        SmokeParticle(
+            pos + Vector3Rand()*(size * 0.5f),
+            move,
+            live_frame,
+            size,
+            0x20FFFFFF
+            );
+    }
+}
+
 void EffectFactory::Counter(CrVector3 pos, float size)
 {
     ParticleHDRRenderer* r = new ParticleHDRRenderer();
@@ -104,8 +124,8 @@ void EffectFactory::Change(CrVector3 pos)
         setpos.z += (frand()*2.0f - 1.0f)*xz_size;
 
         setpos.y += (frand()*2.0f - 1.0f)*y_size;
-
-        SmokeParticle(setpos, Vector3Rand()*0.085f, 20, particle_size, 0x10FFFFFF);
+        //Vector3Rand()*0.085f
+        SmokeParticle(setpos, Vector3Zero, 20, particle_size, 0x10FFFFFF);
     }
     
 

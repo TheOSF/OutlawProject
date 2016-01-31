@@ -46,7 +46,7 @@ m_Locus(8)
     
     {
         //軌跡初期化
-        Vector4 LocusColor(1, 0.5f, 0, 1);
+        Vector4 LocusColor(1, 0.5f, 0, 0.5f);
 
         m_Locus.m_Division = 3;
 
@@ -300,6 +300,9 @@ void BaseballState_SPAttack_B::AddLocusPoint()
     //バットの先
     pos2 = pos1 + Vector3Normalize(-Vector3(T._31, T._32, T._33)) * 30.0f * m_BatScale.z;
 
+    //ちょっと先側に移動
+    pos1 = pos1*0.8f + pos2*0.2f;
+
     //点を追加
     m_Locus.AddPoint(
         (pos1 + pos2)*0.5f,
@@ -370,6 +373,11 @@ void BaseballState_SPAttack_B::State_Atk()
     const int BatSmallFrame = 5;
     const int DamageEndFrame = 5;
 
+    if (m_StateTimer == 1)
+    {
+        //カメラのゆれ
+        DefCamera.SetShock(Vector2(0.5f, 0.5f), 30);
+    }
 
     //ダメージ位置をセット
     UpdateDamagePos();
@@ -384,6 +392,12 @@ void BaseballState_SPAttack_B::State_Atk()
     if (m_Damage.m_Enable)
     {
         BallCounterUpdate(m_Damage.m_Param.pos1, 4.0f);
+    }
+    else
+    {
+        //軌跡の輝度を下げる
+        m_Locus.m_StartParam.Color.w *= 0.9f;
+        m_Locus.m_StartParam.HDRColor.w *= 0.9f;
     }
 
     //ヒットした場合エフェクト関数を呼ぶ

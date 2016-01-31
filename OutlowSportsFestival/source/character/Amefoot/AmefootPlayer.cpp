@@ -13,6 +13,8 @@ CharacterBase(info, new BlendAnimationMesh(GetCharacterModelPath(CharacterType::
 {
     m_Params.maxHP = m_Params.HP = 120.0f;
 
+    m_Params.hitScale = 2.5f;
+
     m_ModelSize = (0.058f);
 }
 //-----------------------------------------------------------------------------------------

@@ -68,8 +68,6 @@ void AmefootPlayerState_SpecialAtk::Enter(AmefootPlayer* pCharacter)
     m_pDamage->type = DamageBase::Type::_ControllDamage;
 
     UpdateDamage();
-
-    chr_func::ResetSkillGauge(m_pChr);
 }
 
 void AmefootPlayerState_SpecialAtk::Execute(AmefootPlayer* pCharacter)
@@ -90,6 +88,8 @@ void AmefootPlayerState_SpecialAtk::Exit(AmefootPlayer* pCharacter)
     {
         m_pDamageTransform->m_Destroy = true;
     }
+
+    chr_func::ResetSkillGauge(m_pChr);
 
     delete m_pDamage;
 }

@@ -487,6 +487,14 @@ void UsualBall::ToNoWork()
         );
 }
 
+void UsualBall::CatchStart()
+{
+    if (m_FlyLiveFrame < 60)
+    {
+        m_FlyLiveFrame = 60;
+    }
+}
+
 RATIO UsualBall::GetMovePower()const
 {
     const float m = m_Params.move.Length();

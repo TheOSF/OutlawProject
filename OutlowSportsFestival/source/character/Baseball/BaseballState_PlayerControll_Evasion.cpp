@@ -94,46 +94,51 @@ void BaseballState_Rolling::Execute(BaseballPlayer* b)
 		//スタート時
 		if (m_Timer == 2)
 		{
-			for (int i = 0; i < 2; ++i)
-			{
-				EffectFactory::Smoke(
-					b->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
-					Vector3Zero,
-					1.5f,
-                    1.0f,
-					true
-					);
-			}
+
+            for (int i = 0; i < 15; ++i)
+            {
+                EffectFactory::SmokeParticle(
+                    b->m_Params.pos + Vector3Rand()*0.1f,
+                    Vector3(frand()*2.0f - 1.0f, frand(), frand()*2.0f - 1.0f)*0.04f,
+                    40,
+                    1.0f + frand()*1.0f,
+                    0x0AFFFFFF
+                    );
+            }
 		}
 
 		//軌跡
-		if (m_Timer < 5)
+		if (m_Timer < 12)
 		{
-			for (int i = 0; i < 2; ++i)
+            Vector3 pos;
+
+            pos =  b->getNowModeModel()->GetWorldBonePos(6);
+
+			for (int i = 0; i < 1; ++i)
 			{
-				EffectFactory::Smoke(
-					b->m_Params.pos + Vector3(0, 2, 0) + Vector3Rand() * 0.2f,
-					Vector3Zero,
-					1.0f + frand()*0.5f,
-					0x20FFA080
+                EffectFactory::SmokeParticle(
+                    pos + Vector3Rand()*0.1f,
+                    Vector3Zero,
+                    20,
+                    0.8f + frand()*0.2f * (1 - (float)m_Timer / 12.0f), 
+					0x20FFFFFF
 					);
 			}
 		}
 
-		//着地時
-		if (m_Timer == 43)
-		{
-			for (int i = 0; i < 2; ++i)
-			{
-				EffectFactory::Smoke(
-					b->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
-					Vector3Zero,
-					2.5f,
-					1.0f,
-					true
-					);
-			}
-		}
+        if (m_Timer ==  m_Param.StandStartFrame)
+        {
+            for (int i = 0; i < 15; ++i)
+            {
+                EffectFactory::SmokeParticle(
+                    b->m_Params.pos + Vector3Rand()*0.1f,
+                    Vector3(frand()*2.0f - 1.0f, frand(), frand()*2.0f - 1.0f)*0.04f,
+                    40,
+                    1.0f + frand()*1.0f,
+                    0x0AFFFFFF
+                    );
+            }
+        }
 
 	}
 
@@ -182,15 +187,19 @@ void BaseballState_Rolling::SetParam(BaseballPlayer* b)
         m_Param.AllFrame = 40;
         m_Param.Motion = baseball_player::_mb_Evasion_B;
         m_Param.NoDamageFrame = 15;
+        m_Param.StandStartFrame = 20;
+
         m_Param.MoveValue = 0.8f;
-        m_Param.MoveDownFrame = 0.05f;
+        m_Param.MoveDownFrame = 0.065f;
     }
     else
     {
         m_Param.AllFrame = 30;
         m_Param.Motion = baseball_player::_mb_Evasion_P;
         m_Param.NoDamageFrame = 10;
+        m_Param.StandStartFrame = 14;
+
         m_Param.MoveValue = 0.8f;
-        m_Param.MoveDownFrame = 0.08f;
+        m_Param.MoveDownFrame = 0.065f;
     }
 }

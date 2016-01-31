@@ -99,6 +99,8 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
 
     if (b->getBatterFlg())
     {
+        param.HitSE = Sound::BaseBall_kaki_n;
+
         param.AfterShotFrame = 15;
         param.CanCounterFrame = 30;
         param.CatchAriaSize = 8.0f;
@@ -107,6 +109,8 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
         param.PoseFrame = 24;
         param.ShotFrame = 6;
         param.BallSpeed = 1.2f;
+        param.HitStop = 8;
+   
     }
     else
     {
