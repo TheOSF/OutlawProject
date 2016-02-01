@@ -45,7 +45,7 @@ public:
 
 
 	// 状態取得
-	int GetState(GamePadIndex index)const;
+    int GetState(GamePadIndex index, int* pCallCount = nullptr);
 
 
 	// マッピング設定
@@ -59,6 +59,7 @@ private:
 	InputDevice* m_pInputDevice; // デバイス
 	int m_Mapping[GamePadIndex_Max];  // マッピング用
 	int m_State[GamePadIndex_Max]; // 状態
+    int m_CallCounter[GamePadIndex_Max][4]; // 呼び出しカウンタ
 
 	// デフォルト設定
 	static const int DefaultMapping[GamePadIndex_Max];

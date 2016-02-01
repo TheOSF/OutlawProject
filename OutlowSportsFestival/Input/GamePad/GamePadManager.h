@@ -41,7 +41,7 @@ public:
 
 
 	// 状態取得
-	static int GetState(size_t n, GamePadIndex index);
+    static int GetState(size_t n, GamePadIndex index, int* pCallCount = nullptr);
 
 
 	// マッピング設定

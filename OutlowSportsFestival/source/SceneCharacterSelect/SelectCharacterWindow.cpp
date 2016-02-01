@@ -6,11 +6,14 @@
 #include "character/Amefoot/AmefootPlayer.h"
 #include "character/Soccer/SoccerPlayer.h"
 #include "character/Baseball/BaseballPlayer.h"
+#include "../UI/SceneCharacterSelectUI.h"
 
 
-int GetCharacterSelectedMotion(CharacterType::Value type) {
+int GetCharacterSelectedMotion(CharacterType::Value type)
+{
 
-    switch ( type ) {
+    switch ( type )
+    {
     case CharacterType::_Tennis:
         return TennisPlayer::_mt_WinPose;
     case CharacterType::_Baseball:
@@ -29,9 +32,11 @@ int GetCharacterSelectedMotion(CharacterType::Value type) {
     return 0;
 }
 
-int GetCharacterDeselectedMotion(CharacterType::Value type) {
+int GetCharacterDeselectedMotion(CharacterType::Value type)
+{
 
-    switch ( type ) {
+    switch ( type )
+    {
     case CharacterType::_Tennis:
         return TennisPlayer::_mt_Stand;
     case CharacterType::_Baseball:
@@ -51,21 +56,24 @@ int GetCharacterDeselectedMotion(CharacterType::Value type) {
 }
 
 SelectCharacterWindow::SelectCharacterWindow(
-    SelectCursor*   pCursor
+    SelectCursor*   pCursor,
+    SceneCharacterSelectUI* pComUI
     ) :
     m_pCursor(pCursor),
-    m_PreFrameIsSelected(false)
+    m_PreFrameIsSelected(false),
+    m_pComUI(pComUI)
 {
     //キャラクタを読み込み
     LoadCharacterModels();
 
-    for ( auto& it : m_ChrRenderers ) {
+    for ( auto& it : m_ChrRenderers )
+    {
         it->Update(1.0f);
     }
 
     //ランダムメッシュ
  /*   m_pRandomMesh = new MeshRenderer(
-        new iexMesh("DATA\\ChrSelect\\Model\\random.imo"), 
+        new iexMesh("DATA\\ChrSelect\\Model\\random.imo"),
         true,
         MeshRenderer::RenderType::UseColor
         );*/
@@ -73,7 +81,7 @@ SelectCharacterWindow::SelectCharacterWindow(
 
 SelectCharacterWindow::~SelectCharacterWindow()
 {
-    for (auto& it : m_ChrRenderers)
+    for ( auto& it : m_ChrRenderers )
     {
         delete it;
     }
@@ -87,7 +95,7 @@ void SelectCharacterWindow::DoMotion()
 
 void SelectCharacterWindow::SelectingRenderer(SelectPointBase::PointType type)
 {
-    
+
 }
 
 void SelectCharacterWindow::LoadCharacterModels()
@@ -100,12 +108,12 @@ void SelectCharacterWindow::LoadCharacterModels()
     const float Scale = 0.055f;
     RADIAN Angle = acosf(-Vector3Normalize(Pos).z);
 
-    if (Pos.x > 0)
+    if ( Pos.x > 0 )
     {
         Angle = -Angle;
     }
-    
-    for (int i = 0; i < (int)m_ChrRenderers.size(); ++i)
+
+    for ( int i = 0; i < (int)m_ChrRenderers.size(); ++i )
     {
         const CharacterType::Value Type = (CharacterType::Value)i;
 
@@ -115,11 +123,11 @@ void SelectCharacterWindow::LoadCharacterModels()
             );
 
         //野球のみバットをつける
-        if (Type == CharacterType::_Baseball)
+        if ( Type == CharacterType::_Baseball )
         {
-            m_pBaseballEquip =  new BaseballEquip(
+            m_pBaseballEquip = new BaseballEquip(
                 m_ChrRenderers[i],
-                BaseballEquip::MeshType::Bat, 
+                BaseballEquip::MeshType::Bat,
                 1.0f
                 );
 
@@ -135,7 +143,7 @@ void SelectCharacterWindow::LoadCharacterModels()
 
             D3DXMatrixScaling(&Work, Scale, Scale, Scale);
             D3DXMatrixRotationY(T, Angle);
-            
+
             *T *= Work;
 
             T->_41 = Pos.x;
@@ -145,11 +153,11 @@ void SelectCharacterWindow::LoadCharacterModels()
 
         //描画On Off切り替え
         m_ChrRenderers[i]->m_Visible = (Type == m_pCursor->m_PlayerInfo.chr_type);
-        
+
         m_ChrRenderers[i]->SetMotion(
             GetCharacterDeselectedMotion(Type)
             );
-        
+
     }
 }
 
@@ -157,7 +165,7 @@ Vector3 SelectCharacterWindow::GetCharacterPos()
 {
     const Vector3 _1Pl(-6.0f, 0, 13), _2Pl(-2.2f, 0.0f, 15);
 
-    switch (m_pCursor->m_PlayerInfo.number)
+    switch ( m_pCursor->m_PlayerInfo.number )
     {
     case 0:
         return _1Pl;
@@ -183,17 +191,17 @@ bool SelectCharacterWindow::Update()
     CharacterRenderer* pSelectCharacter = nullptr;
 
     //描画フラグの更新
-    for (int i = 0; i < (int)m_ChrRenderers.size(); ++i)
+    for ( int i = 0; i < (int)m_ChrRenderers.size(); ++i )
     {
         m_ChrRenderers.at(i)->m_Visible =
             (CharacterType::Value)i == m_pCursor->m_PlayerInfo.chr_type;
 
-        if (m_ChrRenderers.at(i)->m_Visible)
+        if ( m_ChrRenderers.at(i)->m_Visible )
         {
             pSelectCharacter = m_ChrRenderers.at(i);
 
             //サッカーのみ応急処置
-            if (m_pCursor->m_PlayerInfo.chr_type == CharacterType::_Soccer)
+            if ( m_pCursor->m_PlayerInfo.chr_type == CharacterType::_Soccer )
             {
                 m_ChrRenderers.at(i)->Update(0.5f);
             }
@@ -207,13 +215,13 @@ bool SelectCharacterWindow::Update()
     //野球バットの描画フラグをセット
     m_pBaseballEquip->SetVisible(m_pCursor->m_PlayerInfo.chr_type == CharacterType::_Baseball);
 
-   // m_pRandomMesh
+    // m_pRandomMesh
 
 
-    if (pSelectCharacter != nullptr)
+    if ( pSelectCharacter != nullptr )
     {
         //今回フレームで選択していたら
-        if (m_PreFrameIsSelected == false &&
+        if ( m_PreFrameIsSelected == false &&
             m_pCursor->m_Selected == true
             )
         {
@@ -222,7 +230,7 @@ bool SelectCharacterWindow::Update()
                 GetCharacterSelectedMotion(m_pCursor->m_PlayerInfo.chr_type)
                 );
         }
-        else if( m_PreFrameIsSelected == true &&
+        else if ( m_PreFrameIsSelected == true &&
             m_pCursor->m_Selected == false )
         {
             m_PreFrameIsSelected = false;
@@ -233,9 +241,11 @@ bool SelectCharacterWindow::Update()
     }
 
     //コンピュータ操作で未設定なら//「コンピュータ」ＵＩ表示
-    m_DrawComputerUI = 
-        (m_pCursor->m_PlayerInfo.chr_type == CharacterType::__ErrorType);
-
+    if ( m_pComUI )
+    {
+        m_pComUI->m_Visible =
+            (m_pCursor->m_PlayerInfo.chr_type == CharacterType::__ErrorType);
+    }
 
     return true;
 }
@@ -248,12 +258,6 @@ bool SelectCharacterWindow::Msg(MsgType mt)
 
 void SelectCharacterWindow::Render()
 {
-    if (m_DrawComputerUI == false)
-    {
-        return;
-    }
-
-    //
 
 }
 

@@ -16,13 +16,15 @@ SceneCharacterSelect::SceneCharacterSelect(
     sceneGamePlay::InitParams&  LoadParams,
     UINT                        PlayerNum
     ) :
-m_Texture("DATA\\ChrSelect\\character_select.png"),
-m_pStateFunc(&SceneCharacterSelect::State_PreSelect),
-m_Timer(0),
-m_PlayerNum(PlayerNum),
-m_NextSceneType(NextSceneType::_NoChange),
-m_LoadParams(LoadParams),
-m_BackTex("DATA\\Texture\\mizu.png")
+    m_Texture("DATA\\ChrSelect\\character_select.png"),
+    m_pStateFunc(&SceneCharacterSelect::State_PreSelect),
+    m_Timer(0),
+    m_PlayerNum(PlayerNum),
+    m_NextSceneType(NextSceneType::_NoChange),
+    m_LoadParams(LoadParams),
+    m_BackTex("DATA\\Texture\\mizu.png"),
+    m_OK_Tex("DATA\\ChrSelect\\OK\\OK.png"),
+    m_pOK_UI(nullptr)
 {
     //	環境設定
     {
@@ -54,11 +56,16 @@ m_BackTex("DATA\\Texture\\mizu.png")
     //キャラクタポイントをセット
     SetCharacterPoint();
 
+    // カーソルの生成
+    SetCursor();
+
     // シーンUIをセット
     SetSceneUI();
 
     //コンピュータ用のポイントをセット
-    SetComputerPoint(4 - PlayerNum);
+    SetComputerPoint();
+
+    SetComputerStrongPoint();
 
     //ライトセット
     CreateLight();
@@ -82,8 +89,6 @@ SceneCharacterSelect::~SceneCharacterSelect()
 
     DefResource.Release();
     DefCamera.Release();
-
-    delete m_pManager;
 }
 
 void SceneCharacterSelect::Update()
@@ -97,7 +102,7 @@ void SceneCharacterSelect::Update()
 
     DefGameObjMgr.Update();
 
-    switch (m_NextSceneType)
+    switch ( m_NextSceneType )
     {
     case NextSceneType::Back:
         MainFrame->ChangeScene(new SceneOption());
@@ -122,7 +127,9 @@ void SceneCharacterSelect::Render()
 
 void SceneCharacterSelect::InitData()
 {
-    for (UINT i = 0; i < m_LoadParams.PlayerArray.size(); ++i)
+    m_Cursor.fill(nullptr);
+
+    for ( UINT i = 0; i < m_LoadParams.PlayerArray.size(); ++i )
     {
         auto& it = m_LoadParams.PlayerArray.at(i);
 
@@ -131,9 +138,9 @@ void SceneCharacterSelect::InitData()
         it.player_type = PlayerType::_Computer;
         it.strong_type = StrongType::_Usual;
     }
-    
 
-    for (UINT i = 0; i < m_PlayerNum; ++i)
+
+    for ( UINT i = 0; i < m_PlayerNum; ++i )
     {
         m_LoadParams.PlayerArray[i].player_type = PlayerType::_Player;
     }
@@ -174,7 +181,7 @@ void SceneCharacterSelect::CreateFloor()
         true,
         MeshRenderer::RenderType::UseColor_DarkToAlpha
         );
-    { 
+    {
         Matrix T, R;
 
         const float Scale = 3.8f;
@@ -198,8 +205,7 @@ void SceneCharacterSelect::CreateFloor()
 void SceneCharacterSelect::CreateBack()
 {
 
-    class Renderer :public ForwardRenderer
-    {
+    class Renderer :public ForwardRenderer {
         iex2DObj* pTexture;
         float Z;
     public:
@@ -231,29 +237,65 @@ void SceneCharacterSelect::SetSceneUI()
 {
     SceneCharacterSelectUI* p = new SceneCharacterSelectUI(&m_Texture, RectI(0, 896, 600, 128));
     Vector2 Center((float)iexSystem::ScreenWidth*0.5f, (float)iexSystem::ScreenHeight*0.5f);
-    Vector2 StartOffset(0, -(float)iexSystem::ScreenHeight*2.0f);
     Vector2 EndOffset(0, -(float)iexSystem::ScreenHeight * 0.43f);
-    p->m_Current.Pos = Center + StartOffset;
+    p->m_Current.Pos = Center;
     p->m_Target.Pos = Center + EndOffset;
     p->m_Current.Size = p->m_Target.Size = Vector2(600, 128);
+    p->m_SortZ = 0.0f;
+
+    m_pOK_UI = new SceneCharacterSelectUI(&m_OK_Tex, RectI(0, 0, 512, 512));
+    m_pOK_UI->m_Current.Pos = m_pOK_UI->m_Target.Pos = Center;
+    m_pOK_UI->m_Current.Size = Vector2(0, 0);
+    m_pOK_UI->m_Current.Color = Vector4(0, 0, 0, 0);
+    m_pOK_UI->m_SortZ = -100.0f;
 }
 
-void SceneCharacterSelect::SetComputerPoint(UINT Num) 
+void SceneCharacterSelect::SetComputerPoint()
 {
     Vector2 Center((float)iexSystem::ScreenWidth*0.5f, (float)iexSystem::ScreenHeight*0.5f);
+    const float OffsetY = -100;
 
     Vector2 ComPoints[4] = {
-        Center + Vector2(-420,0),
-        Center + Vector2(-160,0),
-        Center + Vector2(160,0),
-        Center + Vector2(420,0)
+        Center + Vector2(-420,OffsetY),
+        Center + Vector2(-160,OffsetY),
+        Center + Vector2(160,OffsetY),
+        Center + Vector2(420,OffsetY)
     };
 
-    for ( UINT i = 0; i < Num; i++ ) {
-        SelectPointBase* p;
+    for ( UINT i = 0; i < m_Cursor.size(); i++ )
+    {
+        SelectCursor* pCursor = m_Cursor.at(i);
+        if ( pCursor->m_PlayerInfo.player_type != PlayerType::_Computer )continue;
 
-        p = new SelectPointBase(m_pManager, SelectPointBase::PointType::ComputerChrSelect, &m_Texture, RectI(0, 0, 128, 128));
-        p->m_Pos = p->m_MoveTargetPos = ComPoints[i + (4 - Num)];
+        SelectPointBase* p =
+            new SelectPointBase(m_pManager, SelectPointBase::PointType::ComputerChrSelect, nullptr, RectI(0, 0, 128, 128), pCursor, m_ChrPoint.at(i));
+        p->m_Pos = Center;
+        p->m_MoveTargetPos = ComPoints[i];
+    }
+}
+
+void SceneCharacterSelect::SetComputerStrongPoint()
+{
+    Vector2 Center((float)iexSystem::ScreenWidth*0.5f, (float)iexSystem::ScreenHeight*0.5f);
+    const float OffsetY = 70;
+
+    Vector2 Points[4] = {
+        Center + Vector2(-420,OffsetY),
+        Center + Vector2(-160,OffsetY),
+        Center + Vector2(160,OffsetY),
+        Center + Vector2(420,OffsetY)
+    };
+
+    for ( UINT i = 0; i < m_Cursor.size(); i++ )
+    {
+        SelectCursor* pCursor = m_Cursor.at(i);
+        if ( pCursor->m_PlayerInfo.player_type != PlayerType::_Computer )continue;
+
+        SelectPointBase* p =
+            new SelectPointBase(m_pManager, SelectPointBase::PointType::ComputerStrong, &m_Texture, RectI(0, 384, 128, 64), pCursor, m_ChrPoint.at(i));
+        p->m_Pos = Center;
+        p->m_MoveTargetPos = Points[i];
+        p->m_Size = Vector2(120, 60);
     }
 }
 
@@ -268,8 +310,7 @@ void SceneCharacterSelect::SetCharacterPoint()
         Vector2 PosA = Vector2(-300, 230);
         Vector2 PosB = Vector2(-100, 180);
 
-        struct
-        {
+        struct {
             SelectPointBase::PointType  Type;
             Vector2                     Pos;
         }
@@ -281,7 +322,7 @@ void SceneCharacterSelect::SetCharacterPoint()
             { SelectPointBase::PointType::AmericanFootBall, Center + Vector2(-PosA.x, PosA.y) },
         };
 
-        for (int i = 0; i < (int)ARRAYSIZE(ChrPointData); ++i)
+        for ( int i = 0; i < (int)ARRAYSIZE(ChrPointData); ++i )
         {
             p = new SelectPointBase(m_pManager, ChrPointData[i].Type, &m_Texture, RectI(128 * i, 0, 128, 128));
             p->m_Pos = Center;
@@ -299,12 +340,11 @@ void SceneCharacterSelect::SetCharacterPoint()
 
 void SceneCharacterSelect::SetOtherComputerCharacter()
 {
-    struct
-    {
+    struct {
         CharacterType::Value Type;
         bool                 Use;
     }
-    CharacterData[4]=
+    CharacterData[4] =
     {
         { CharacterType::_Tennis, false },
         { CharacterType::_Soccer, false },
@@ -312,14 +352,14 @@ void SceneCharacterSelect::SetOtherComputerCharacter()
         { CharacterType::_Americanfootball, false },
     };
 
-	// 使われているキャラクタを特定
-    for (auto& it : m_LoadParams.PlayerArray)
+    // 使われているキャラクタを特定
+    for ( auto& it : m_LoadParams.PlayerArray )
     {
-        if (it.chr_type != CharacterType::__ErrorType)
+        if ( it.chr_type != CharacterType::__ErrorType )
         {
-            for (int i = 0; i < (int)ARRAYSIZE(CharacterData); ++i)
+            for ( int i = 0; i < (int)ARRAYSIZE(CharacterData); ++i )
             {
-                if (CharacterData[i].Type == it.chr_type)
+                if ( CharacterData[i].Type == it.chr_type )
                 {
                     CharacterData[i].Use = true;
                     break;
@@ -328,13 +368,13 @@ void SceneCharacterSelect::SetOtherComputerCharacter()
         }
     }
 
-    for (auto& it : m_LoadParams.PlayerArray)
+    for ( auto& it : m_LoadParams.PlayerArray )
     {
-        if (it.chr_type == CharacterType::__ErrorType)
+        if ( it.chr_type == CharacterType::__ErrorType )
         {
-            for (int i = 0; ARRAYSIZE(CharacterData); ++i)
+            for ( int i = 0; ARRAYSIZE(CharacterData); ++i )
             {
-                if (CharacterData[i].Use == false)
+                if ( CharacterData[i].Use == false )
                 {
                     CharacterData[i].Use = true;
                     it.chr_type = CharacterData[i].Type;
@@ -346,46 +386,80 @@ void SceneCharacterSelect::SetOtherComputerCharacter()
 
 }
 
+void SceneCharacterSelect::SetCursor()
+{
+    for ( UINT i = 0; i < m_Cursor.size(); ++i )
+    {
+        SelectPointBase* pDefault = m_ChrPoint.at(i);
+        if ( m_LoadParams.PlayerArray.at(i).player_type == PlayerType::_Computer )
+        {
+            pDefault = m_pComputerDefaultPoint;
+        }
+        SelectCursor* p = new SelectCursor(
+            m_pManager,
+            (controller::CONTROLLER_NUM)i,
+            &m_Texture,
+            RectI(0, 128, 256, 256),
+            m_pComputerDefaultPoint,
+            pDefault);
+
+        p->m_PlayerInfo = m_LoadParams.PlayerArray.at(i);
+
+        {
+            const CharacterType::Value Type = p->m_PlayerInfo.chr_type;
+
+            p->m_PlayerInfo = m_LoadParams.PlayerArray.at(i);
+            p->m_PlayerInfo.chr_type = Type;
+
+            //操作不能に
+            if ( p->m_PlayerInfo.player_type == PlayerType::_Computer )
+            {
+                p->m_PlayerInfo.chr_type = CharacterType::__ErrorType;
+                p->m_ControllerNum = controller::__ERROR_CONTROLLER_NUM;
+            }
+        }
+        m_Cursor.at(i) = p;
+    }
+}
 
 //-------------------------------------------------------------------//
 
 void SceneCharacterSelect::State_PreSelect()
 {
-    if (++m_Timer > 60)
+    if ( ++m_Timer > 60 )
     {
         //カーソルをセット
-        for (UINT i = 0; i < 4; ++i)
+        for ( UINT i = 0; i < m_Cursor.size(); ++i )
         {
-            SelectPointBase* pInitPoint = m_ChrPoint[i];
+            SelectCursor* p = m_Cursor.at(i);
+            SceneCharacterSelectUI* pComUI = nullptr;
 
-            if (m_LoadParams.PlayerArray.at(i).player_type == PlayerType::_Computer)
+            if ( p->m_PlayerInfo.player_type != PlayerType::_Computer )
             {
-                pInitPoint = m_pComputerDefaultPoint;
+                p->SetPoint(m_ChrPoint.at(i));
+                p->m_Lock = false;
             }
-
-            SelectCursor* p = new SelectCursor(
-                m_pManager, 
-                (controller::CONTROLLER_NUM)i, 
-                &m_Texture, 
-                RectI(0, 128, 256, 256), 
-                pInitPoint);
-
+            else
             {
-                const CharacterType::Value Type = p->m_PlayerInfo.chr_type;
+                Vector2 Center((float)iexSystem::ScreenWidth*0.5f, (float)iexSystem::ScreenHeight*0.5f);
+                const float OffsetY = -100;
 
-                p->m_PlayerInfo = m_LoadParams.PlayerArray.at(i);
-                p->m_PlayerInfo.chr_type = Type;
+                Vector2 ComPoints[4] = {
+                    Center + Vector2(-420,OffsetY),
+                    Center + Vector2(-160,OffsetY),
+                    Center + Vector2(160,OffsetY),
+                    Center + Vector2(420,OffsetY)
+                };
 
-                //操作不能に
-                if ( p->m_PlayerInfo.player_type == PlayerType::_Computer ) 
-                {
-                    p->m_PlayerInfo.chr_type = CharacterType::__ErrorType;
-                    p->m_ControllerNum = controller::__ERROR_CONTROLLER_NUM;
-                }
+                pComUI = new SceneCharacterSelectUI(&m_Texture, RectI(0, 0, 128, 128));
+                Vector2 EndOffset(0, -(float)iexSystem::ScreenHeight * 0.43f);
+                pComUI->m_Current.Pos = Center;
+                pComUI->m_Target.Pos = ComPoints[i];
+                pComUI->m_Current.Size = pComUI->m_Target.Size = Vector2(120, 120);
+                pComUI->m_Visible = false;
             }
-
             //キャラクタ表示クラスを作る
-            new SelectCharacterWindow(p);
+            new SelectCharacterWindow(p, pComUI);
         }
 
         //ステート移行
@@ -398,30 +472,101 @@ void SceneCharacterSelect::State_PreSelect()
 void SceneCharacterSelect::State_Selecting()
 {
     //全員選択していたら
-    if (m_pManager->isAllPlayerSelected())
+    if ( m_pManager->isAllPlayerSelected() )
     {
+
         //ステート移行
-        m_pStateFunc = &SceneCharacterSelect::State_FadeOut;
+        m_pStateFunc = &SceneCharacterSelect::State_Confirm;
+        m_Timer = 0;
 
         //情報を取得
         m_pManager->GetData(m_LoadParams);
 
         //あいているキャラクタデータにコンピュータを入れる
-		SetOtherComputerCharacter();
+        SetOtherComputerCharacter();
     }
-    else if ( !m_pManager->isLocked(0) ) {
-        if ( controller::GetTRG(controller::button::batu, 0) ) {
-            //ステート移行
-            m_pStateFunc = &SceneCharacterSelect::State_BackToOption;
+    else if ( !m_pManager->isLocked(0) )
+    {
+        if ( controller::GetTRG(controller::button::batu, 0) )
+        {
 
             Sound::Play(Sound::Cursor_cancel);
+
+            //ステート移行
+            m_pStateFunc = &SceneCharacterSelect::State_BackToOption;
+            m_Timer = 0;
+        }
+    }
+}
+
+void SceneCharacterSelect::State_Confirm()
+{
+    if ( m_Timer == 0 )
+    {
+        // UI 表示
+        m_pOK_UI->m_Target.Size = Vector2(500, 500);
+        m_pOK_UI->m_Current.Color = Vector4(1, 1, 1, 1);
+    }
+
+    if ( ++m_Timer >= 5 )
+    {
+        bool is_canceled = false;
+        bool is_pressed[4] = { false };
+
+        for ( size_t i = 0; i < m_Cursor.size(); i++ )
+        {
+
+            // 一応コンピュータは処理しないようにしておく
+            if ( m_Cursor.at(i)->m_PlayerInfo.player_type == PlayerType::_Computer )
+            {
+                continue;
+            }
+
+            is_pressed[i] = controller::GetTRG(controller::button::batu, (controller::CONTROLLER_NUM)i);
+            if ( is_pressed[i] )
+            {
+                m_Cursor.at(i)->m_Selected = false;
+                m_Cursor.at(i)->m_Lock = false;
+                is_canceled = true;
+            }
+        }
+
+        if ( is_canceled )
+        {
+            //ステート移行
+            m_pStateFunc = &SceneCharacterSelect::State_Selecting;
+            m_Timer = 0;
+
+            // UI 表示
+            m_pOK_UI->m_Target.Size = Vector2(0, 0);
+            m_pOK_UI->m_Current.Color = Vector4(0, 0, 0, 0);
+
+            Sound::Play(Sound::Cursor_cancel);
+        }
+        else if ( controller::GetTRGAnyController(controller::button::maru) )
+        {
+            //ステート移行
+            m_pStateFunc = &SceneCharacterSelect::State_FadeOut;
+            m_Timer = 0;
+
+            Sound::Play(Sound::Scene_Enter);
         }
     }
 }
 
 void SceneCharacterSelect::State_FadeOut()
 {
-    if (++m_Timer > 180)
+
+    if ( m_Timer == 0 )
+    {
+        // 操作不能に
+        for ( auto&& it : m_Cursor )
+        {
+            it->m_ControllerNum = controller::__ERROR_CONTROLLER_NUM;
+        }
+    }
+
+    if ( ++m_Timer > 180 )
     {
         //ステート移行
         m_pStateFunc = &SceneCharacterSelect::State_Change;
@@ -432,9 +577,20 @@ void SceneCharacterSelect::State_FadeOut()
     }
 }
 
-void SceneCharacterSelect::State_BackToOption() {
+void SceneCharacterSelect::State_BackToOption()
+{
 
-    if ( ++m_Timer > 60 ) {
+    if ( m_Timer == 0 )
+    {
+        // 操作不能に
+        for ( auto&& it : m_Cursor )
+        {
+            it->m_ControllerNum = controller::__ERROR_CONTROLLER_NUM;
+        }
+    }
+
+    if ( ++m_Timer > 60 )
+    {
         //ステート移行
         m_pStateFunc = &SceneCharacterSelect::State_Change;
 
@@ -447,5 +603,5 @@ void SceneCharacterSelect::State_BackToOption() {
 
 void SceneCharacterSelect::State_Change()
 {
-    
+
 }

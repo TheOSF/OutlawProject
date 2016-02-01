@@ -11,11 +11,9 @@ class SelectCursor;
 class CursorManager;
 
 //サークル移動可能ポイント
-class SelectPointBase :public GameObjectBase,public UserInterfaceRenderer
-{
+class SelectPointBase : public UserInterfaceRenderer {
 public:
-    enum class PointType
-    {
+    enum class PointType {
         Tennis,
         Soccer,
         BaseBall,
@@ -35,19 +33,20 @@ public:
 
     const PointType m_Type;
 
-    
     SelectPointBase(
         CursorManager* pMgr,
         PointType      Type,
         LPIEX2DOBJ     pTexture,
-        const RectI&   TexRect
+        const RectI&   TexRect,
+        SelectCursor* pLinkCursor = nullptr,
+        SelectPointBase* pLinkCharaPoint = nullptr
         );
 
     virtual ~SelectPointBase();
-    
+
     Vector2 GetOffSetPos(SelectCursor* p);
 
-    bool CanOnCursor()const;
+    bool CanOnCursor(SelectCursor* pCursor)const;
 
     void OnCursor(SelectCursor* p);
     void LeaveCursor(SelectCursor* p);
@@ -55,19 +54,21 @@ public:
     void Select(SelectCursor* p);
     void Cancel(SelectCursor* p);
 
+    bool Update();
+
 private:
     std::list<SelectCursor*>  m_OnCursorData;
 
     CursorManager* const m_pMgr;
     iex2DObj* const      m_pTexture;
-    const RectI          m_TexRect;
+    RectI          m_TexRect;
+    SelectCursor* m_pLinkCursor;
+    SelectPointBase* m_pLinkCharaPoint;
 
     int GetOnCursorID(SelectCursor* p);
 
-    bool Update()override;
-    bool Msg(MsgType mt)override;
-
     StrongType::Value GetChangeStrongType(StrongType::Value Now);
+    void SetStrongTypePointRect(StrongType::Value Now);
 
     void CalcZ()override;
     void Render()override;
@@ -75,8 +76,7 @@ private:
 
 
 //カーソルクラス
-class SelectCursor :public GameObjectBase, public UserInterfaceRenderer
-{
+class SelectCursor : public UserInterfaceRenderer {
 public:
 
     sceneGamePlay::InitParams::PlayerInfo   m_PlayerInfo;
@@ -84,20 +84,24 @@ public:
     Vector2         m_Pos;
     bool            m_Lock;
     bool            m_Selected;
+    SelectCursor* m_pControllerCursor;
+    bool m_Visible;
 
-   
     SelectCursor(
         CursorManager*                  pMgr,
         controller::CONTROLLER_NUM      Num,
         LPIEX2DOBJ                      pTexture,
         const RectI&                    TexRect,
-        SelectPointBase*                pInitPoint
+        SelectPointBase*                pInitPoint,
+        SelectPointBase* pDefaultPoint
         );
 
     ~SelectCursor();
 
     void SetPoint(SelectPointBase* pNewPoint);
     bool SelectNowPoint();
+    void MoveToDefaultPoint();
+    bool Update();
 
     inline SelectPointBase* GetPoint()
     {
@@ -111,11 +115,9 @@ private:
     const RectI                           m_TexRect;
 
     SelectPointBase*                      m_pPoint;
+    SelectPointBase* m_pDefaultPoint;
 
     void Controll();
-
-    bool Update()override;
-    bool Msg(MsgType mt)override;
 
     void CalcZ()override;
     void Render()override;
@@ -123,13 +125,14 @@ private:
 
 
 //マネージャ
-class CursorManager
-{
+class CursorManager : public GameObjectBase {
 public:
 
     CursorManager();
     ~CursorManager();
 
+    bool Update()override;
+    bool Msg(MsgType mt)override { return false; }
 
     void Regist(SelectPointBase* p);
     void Erace(SelectPointBase* p);
@@ -137,7 +140,7 @@ public:
     void Regist(SelectCursor* p);
     void Erace(SelectCursor* p);
 
-    bool GetNextPoint(CrVector2 Vec, SelectPointBase* pNow, SelectPointBase** ppOut);
+    bool GetNextPoint(CrVector2 Vec, SelectCursor* pCursor, SelectPointBase* pNow, SelectPointBase** ppOut);
 
     bool isAllPlayerSelected()const;
     bool isSelected(int player_number)const;
@@ -151,4 +154,5 @@ private:
     std::list<SelectPointBase*> m_PointData;
     std::list<SelectCursor*>    m_CursorData;
 };
+
 

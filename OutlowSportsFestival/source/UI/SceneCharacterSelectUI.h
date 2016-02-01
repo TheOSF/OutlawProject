@@ -21,6 +21,8 @@ public:
     Param m_Current; // Œ»İ’l
     Param m_Target; // –Ú•W’l
 
+    bool m_Visible;
+
 private:
     void PositionUpdate();
 

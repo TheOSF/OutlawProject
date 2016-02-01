@@ -1,5 +1,6 @@
 #include "CursorObject.h"
 #include "../Sound/Sound.h"
+#include <random>
 
 //--------------------------------------------------------------------
 //                  サークル移動可能ポイント
@@ -9,18 +10,26 @@ SelectPointBase::SelectPointBase(
     CursorManager* pMgr,
     PointType      Type,
     LPIEX2DOBJ     pTexture,
-    const RectI&   TexRect
-    ):
+    const RectI&   TexRect,
+    SelectCursor* pLinkCursor,
+    SelectPointBase* pLinkCharaPoint
+    ) :
     m_Type(Type),
     m_pTexture(pTexture),
     m_TexRect(TexRect),
-    m_pMgr(pMgr)
+    m_pMgr(pMgr),
+    m_pLinkCursor(pLinkCursor),
+    m_pLinkCharaPoint(pLinkCharaPoint)
 {
     m_MoveTargetPos = Vector2(100, 100);
     m_Pos = Vector2(0, 0);
     m_Size = Vector2(120, 120);
 
     m_pMgr->Regist(this);
+    if ( m_pLinkCursor )
+    {
+        SetStrongTypePointRect(m_pLinkCursor->m_PlayerInfo.strong_type);
+    }
 }
 
 SelectPointBase::~SelectPointBase()
@@ -32,30 +41,30 @@ Vector2 SelectPointBase::GetOffSetPos(SelectCursor* p)
 {
     const float Size = 30.0f;
     const int Id = GetOnCursorID(p);
-    
-    switch (m_OnCursorData.size())
+
+    switch ( m_OnCursorData.size() )
     {
     case 1:
         return m_Pos;
-    
+
     case 2:
         return m_Pos + Vector2((float)((Id - 1) * 2 - 1)*Size, 0);
-    
+
     case 3:
-    
-        if (Id <= 2)
+
+        if ( Id <= 2 )
         {
-            return m_Pos - Vector2(-(float)((Id - 1) *2 - 1)*Size, Size*0.66f);
+            return m_Pos - Vector2(-(float)((Id - 1) * 2 - 1)*Size, Size*0.66f);
         }
         else
         {
             return m_Pos + Vector2(0, Size * 0.66f);
         }
-    
+
     case 4:
         return m_Pos + Vector2((float)((Id - 1) % 2 * 2 - 1), (float)((Id - 1) / 2 * 2 - 1))*Size;
     default:
-    
+
         break;
     }
 
@@ -64,17 +73,57 @@ Vector2 SelectPointBase::GetOffSetPos(SelectCursor* p)
     return Vector2(0, 0);
 }
 
-bool SelectPointBase::CanOnCursor()const
+bool SelectPointBase::CanOnCursor(SelectCursor* pCursor)const
 {
-    //コンピュータ用のポイント出なければ乗れる
-    return m_Type != PointType::ComputerDefaultPoint;
+
+    bool result = false;
+
+    switch ( m_Type )
+    {
+    case PointType::Tennis:
+    case PointType::Soccer:
+    case PointType::BaseBall:
+    case PointType::AmericanFootBall:
+    case PointType::Random:
+    {// 誰でも乗れる
+        result = true;
+        break;
+    }
+
+    case PointType::ComputerDefaultPoint:
+    {// 操作していないときのコンピュータだけ乗れる
+        result = (pCursor->m_PlayerInfo.player_type == PlayerType::_Computer &&
+            pCursor->m_Lock);
+        break;
+    }
+
+    case PointType::ComputerStrong:
+    {// プレイヤーだけ乗れる
+        result = (pCursor->m_PlayerInfo.player_type == PlayerType::_Player);
+        break;
+    }
+
+    case PointType::ComputerChrSelect:
+    {// プレイヤー一人だけ乗れる
+        result = (pCursor->m_PlayerInfo.player_type == PlayerType::_Player &&
+            m_OnCursorData.size() == 0);
+        break;
+    }
+
+    default:
+    {// 乗れない
+        result = false;
+        break;
+    }
+    }
+    return result;
 }
 
 void SelectPointBase::OnCursor(SelectCursor* p)
 {
     m_OnCursorData.push_back(p);
 
-    switch (m_Type)
+    switch ( m_Type )
     {
     case PointType::Tennis:
         p->m_PlayerInfo.chr_type = CharacterType::_Tennis;
@@ -93,6 +142,10 @@ void SelectPointBase::OnCursor(SelectCursor* p)
         break;
     case PointType::ComputerDefaultPoint:
         p->m_PlayerInfo.player_type = PlayerType::_Computer;
+        if ( p->m_Selected == false )
+        {
+            p->m_PlayerInfo.chr_type = CharacterType::__ErrorType;
+        }
         break;
     }
 }
@@ -102,33 +155,48 @@ void SelectPointBase::LeaveCursor(SelectCursor* p)
     for (
         std::list<SelectCursor*>::iterator it = m_OnCursorData.begin();
         it != m_OnCursorData.end();
-        ++it)
+        ++it )
     {
-        if (*it == p)
+        if ( *it == p )
         {
             m_OnCursorData.erase(it);
             return;
         }
     }
 
-    MyAssert(false,"乗っていないカーソルが除去されました");
+    MyAssert(false, "乗っていないカーソルが除去されました");
 }
 
 void SelectPointBase::Select(SelectCursor* p)
 {
     bool PreFrameSelect = p->m_Selected;
 
-    switch (m_Type)
+    switch ( m_Type )
     {
 
     case PointType::Tennis:
     case PointType::Soccer:
     case PointType::BaseBall:
     case PointType::AmericanFootBall:
+    {
         p->m_Lock = true;
         p->m_Selected = true;
-        break;
 
+        // if computer
+        if ( p->m_PlayerInfo.player_type == PlayerType::_Computer )
+        {
+            if ( p->m_pControllerCursor )
+            {
+                p->m_pControllerCursor->m_Lock = false;
+                p->m_pControllerCursor->m_Selected = false;
+                p->m_pControllerCursor->m_Visible = true;
+                p->m_pControllerCursor = nullptr;
+            }
+            p->m_ControllerNum = controller::__ERROR_CONTROLLER_NUM;
+            p->MoveToDefaultPoint();
+        }
+        break;
+    }
 
 
     case PointType::Random:
@@ -138,13 +206,32 @@ void SelectPointBase::Select(SelectCursor* p)
 
 
     case PointType::ComputerStrong:
-        p->m_PlayerInfo.strong_type = GetChangeStrongType(p->m_PlayerInfo.strong_type);
-        break;
+    {
+        if ( m_pLinkCursor )
+        {
+            m_pLinkCursor->m_PlayerInfo.strong_type = GetChangeStrongType(m_pLinkCursor->m_PlayerInfo.strong_type);
+            SetStrongTypePointRect(m_pLinkCursor->m_PlayerInfo.strong_type);
+            Sound::Play(Sound::Cursor_enter);
+        }
+    }
+    break;
 
     case PointType::ComputerChrSelect:
-        if (p->m_PlayerInfo.player_type == PlayerType::_Player)
+        if ( p->m_PlayerInfo.player_type == PlayerType::_Player )
         {
+            Sound::Play(Sound::Cursor_enter);
             p->m_Lock = true;
+            p->m_Selected = false;
+            p->m_Visible = false;
+            if ( m_pLinkCursor && m_pLinkCharaPoint )
+            {
+                m_pLinkCursor->m_pControllerCursor = p;
+                m_pLinkCursor->m_Lock = false;
+                m_pLinkCursor->m_Selected = false;
+                m_pLinkCursor->m_Visible = true;
+                m_pLinkCursor->m_ControllerNum = p->m_ControllerNum;
+                m_pLinkCursor->SetPoint(m_pLinkCharaPoint);
+            }
         }
         break;
 
@@ -154,7 +241,7 @@ void SelectPointBase::Select(SelectCursor* p)
     }
 
     //決定していたらＳＥを鳴らす
-    if (PreFrameSelect == false && p->m_Selected)
+    if ( PreFrameSelect == false && p->m_Selected )
     {
         Sound::Play(Sound::Scene_Enter);
     }
@@ -162,14 +249,14 @@ void SelectPointBase::Select(SelectCursor* p)
 
 void SelectPointBase::Cancel(SelectCursor* p)
 {
-    if (p->m_Lock == false)
+    if ( p->m_Lock == false )
     {
         return;
     }
 
     bool PreFrameSelect = p->m_Selected;
 
-    switch (m_Type)
+    switch ( m_Type )
     {
 
     case PointType::Tennis:
@@ -185,9 +272,21 @@ void SelectPointBase::Cancel(SelectCursor* p)
         if ( p->m_PlayerInfo.player_type == PlayerType::_Player )
         {
             p->m_Lock = false;
+            p->m_Visible = true;
+            if ( m_pLinkCursor )
+            {
+                m_pLinkCursor->m_PlayerInfo.chr_type = CharacterType::__ErrorType;
+                m_pLinkCursor->m_pControllerCursor = nullptr;
+                m_pLinkCursor->m_ControllerNum = controller::__ERROR_CONTROLLER_NUM;
+                m_pLinkCursor->m_Lock = true;
+                m_pLinkCursor->m_Selected = false;
+                m_pLinkCursor->m_Visible = false; // とりあえずこうしておく
+                m_pLinkCursor->MoveToDefaultPoint();
+            }
         }
+        break;
     }
-        
+
     default:
         return;
     }
@@ -200,9 +299,9 @@ int SelectPointBase::GetOnCursorID(SelectCursor* p)
 {
     int ret_Count = 1;
 
-    for (auto& it:m_OnCursorData)
+    for ( auto& it : m_OnCursorData )
     {
-        if (it == p)
+        if ( it == p )
         {
             return ret_Count;
         }
@@ -223,11 +322,6 @@ bool SelectPointBase::Update()
     return true;
 }
 
-bool SelectPointBase::Msg(MsgType mt)
-{
-    return false;
-}
-
 void SelectPointBase::CalcZ()
 {
     m_SortZ = -2;
@@ -235,7 +329,7 @@ void SelectPointBase::CalcZ()
 
 StrongType::Value SelectPointBase::GetChangeStrongType(StrongType::Value Now)
 {
-    switch (Now)
+    switch ( Now )
     {
     case StrongType::_Weak:
         return StrongType::_Usual;
@@ -253,6 +347,12 @@ StrongType::Value SelectPointBase::GetChangeStrongType(StrongType::Value Now)
     return StrongType::_Weak;
 }
 
+void SelectPointBase::SetStrongTypePointRect(StrongType::Value Now)
+{
+    if ( m_Type != PointType::ComputerStrong )return;
+    m_TexRect.y = 384 + m_TexRect.h*(int)Now;
+}
+
 void SelectPointBase::Render()
 {
     if ( m_pTexture == nullptr )return;
@@ -265,11 +365,11 @@ void SelectPointBase::Render()
     di.w = (int)m_Size.x;
     di.h = (int)m_Size.y;
 
-        m_pTexture->Render(
-            di,
-            m_TexRect
-            );
-    
+    m_pTexture->Render(
+        di,
+        m_TexRect
+        );
+
 }
 
 //--------------------------------------------------------------------
@@ -281,16 +381,20 @@ SelectCursor::SelectCursor(
     controller::CONTROLLER_NUM      Num,
     LPIEX2DOBJ                      pTexture,
     const RectI&                    TexRect,
-    SelectPointBase*                pInitPoint
+    SelectPointBase*                pInitPoint,
+    SelectPointBase* pDefaultPoint
     ) :
     m_pMgr(pMgr),
     m_ControllerNum(Num),
     m_pTexture(pTexture),
     m_TexRect(TexRect),
     m_pPoint(pInitPoint),
-    m_Selected(false)
+    m_pDefaultPoint(pDefaultPoint),
+    m_Selected(false),
+    m_pControllerCursor(nullptr),
+    m_Visible(true)
 {
-    switch (Num)
+    switch ( Num )
     {
     case 0:
         m_Pos = Vector2(-(float)iexSystem::ScreenWidth, -(float)iexSystem::ScreenHeight);
@@ -346,13 +450,25 @@ void SelectCursor::SetPoint(SelectPointBase* pNewPoint)
 
 bool SelectCursor::SelectNowPoint()
 {
-    if (m_pPoint == nullptr )
+    if ( m_pPoint == nullptr )
     {
         return false;
     }
 
     m_pPoint->Select(this);
+
+    if ( m_PlayerInfo.player_type == PlayerType::_Computer &&
+        m_pPoint->m_Type != SelectPointBase::PointType::ComputerStrong )
+    {
+        SetPoint(m_pDefaultPoint);
+    }
+
     return true;
+}
+
+void SelectCursor::MoveToDefaultPoint()
+{
+    SetPoint(m_pDefaultPoint);
 }
 
 void SelectCursor::Controll()
@@ -364,18 +480,21 @@ void SelectCursor::Controll()
         Vector2 Vec = controller::GetStickValue(controller::stick::left, m_ControllerNum);
         Vec.y = -Vec.y;
 
-        if (StickDown &&
-            m_pMgr->GetNextPoint(Vec, m_pPoint, &pNextPoint)
+        if ( StickDown &&
+            m_pMgr->GetNextPoint(Vec, this, m_pPoint, &pNextPoint)
             )
         {
             //移動成功
             SetPoint(pNextPoint);
+            return;
         }
     }
 
-    if (controller::GetTRG(controller::button::maru, m_ControllerNum))
+    int count = 0;
+    bool result = controller::GetTRG(controller::button::maru, m_ControllerNum, &count);
+    if ( result && (count < 2) )
     {
-        m_pPoint->Select(this);
+        SelectNowPoint();
     }
 }
 
@@ -383,15 +502,17 @@ bool SelectCursor::Update()
 {
 
     //操作更新
-    if (m_ControllerNum != controller::__ERROR_CONTROLLER_NUM)
+    if ( m_ControllerNum != controller::__ERROR_CONTROLLER_NUM )
     {
-        if (m_Lock == false)
+        if ( m_Lock == false )
         {
             Controll();
         }
         else
         {
-            if (controller::GetTRG(controller::button::batu, m_ControllerNum))
+            int count = 0;
+            bool result = controller::GetTRG(controller::button::batu, m_ControllerNum, &count);
+            if ( result && (count <= 2) )
             {
                 m_pPoint->Cancel(this);
             }
@@ -399,7 +520,7 @@ bool SelectCursor::Update()
     }
 
     //移動
-    if (m_pPoint != nullptr)
+    if ( m_pPoint != nullptr )
     {
         m_Pos += (m_pPoint->GetOffSetPos(this) - m_Pos) * 0.2f;
     }
@@ -407,10 +528,6 @@ bool SelectCursor::Update()
     return true;
 }
 
-bool SelectCursor::Msg(MsgType mt)
-{
-    return false;
-}
 
 void SelectCursor::CalcZ()
 {
@@ -419,6 +536,9 @@ void SelectCursor::CalcZ()
 
 void SelectCursor::Render()
 {
+
+    if ( m_pTexture == nullptr || m_Visible == false )return;
+
     RectI di;
     const Vector2 Size(150, 175);
 
@@ -438,14 +558,35 @@ void SelectCursor::Render()
 //                  カーソルマネージャ
 //--------------------------------------------------------------------
 
-CursorManager::CursorManager()
-{
-
-}
+CursorManager::CursorManager() = default;
 
 CursorManager::~CursorManager()
 {
 
+    for ( auto&& it : m_PointData )
+    {
+        delete it;
+    }
+
+    for ( auto&& it : m_CursorData )
+    {
+        delete it;
+    }
+}
+
+bool CursorManager::Update()
+{
+    for ( auto&& it : m_PointData )
+    {
+        it->Update();
+    }
+
+    for ( auto&& it : m_CursorData )
+    {
+        it->Update();
+    }
+
+    return true;
 }
 
 void CursorManager::Regist(SelectPointBase* p)
@@ -455,9 +596,9 @@ void CursorManager::Regist(SelectPointBase* p)
 
 void CursorManager::Erace(SelectPointBase* p)
 {
-    for (auto& it : m_PointData)
+    for ( auto& it : m_PointData )
     {
-        if (it == p)
+        if ( it == p )
         {
             it = nullptr;
             break;
@@ -472,9 +613,9 @@ void CursorManager::Regist(SelectCursor* p)
 
 void CursorManager::Erace(SelectCursor* p)
 {
-    for (auto& it : m_CursorData)
+    for ( auto& it : m_CursorData )
     {
-        if (it == p)
+        if ( it == p )
         {
             it = nullptr;
             break;
@@ -484,6 +625,7 @@ void CursorManager::Erace(SelectCursor* p)
 
 bool CursorManager::GetNextPoint(
     CrVector2           Vec,
+    SelectCursor* pCursor,
     SelectPointBase*    pNow,
     SelectPointBase**   ppOut)
 {
@@ -491,27 +633,27 @@ bool CursorManager::GetNextPoint(
     RADIAN angle;
     float  MostNear = 1000000.0f, TempLen;
     Vector2 v;
-    
+
     *ppOut = nullptr;
-    
-    for (auto& it : m_PointData)
+
+    for ( auto& it : m_PointData )
     {
-        if (it == nullptr || it == pNow || it->CanOnCursor() == false)
+        if ( it == nullptr || it == pNow || it->CanOnCursor(pCursor) == false )
         {
             continue;
         }
-    
+
         v = it->m_Pos - pNow->m_Pos;
-    
+
         angle = Vector2Radian(v, Vec);
-    
+
         TempLen = Vector2Length(v);
-    
-        if (angle > OkAngle || TempLen > MostNear)
+
+        if ( angle > OkAngle || TempLen > MostNear )
         {
             continue;
         }
-    
+
         MostNear = TempLen;
         *ppOut = it;
     }
@@ -520,10 +662,11 @@ bool CursorManager::GetNextPoint(
 
 bool CursorManager::isAllPlayerSelected()const
 {
-    for (auto& it : m_CursorData)
+    for ( auto& it : m_CursorData )
     {
-        if ((it->m_PlayerInfo.player_type == PlayerType::_Player) && 
-            (it->m_Selected == false))
+        //if ( it->m_Selected == false )return false;
+        if ( (it->m_PlayerInfo.player_type == PlayerType::_Player) &&
+            (it->m_Selected == false) )
         {
             return false;
         }
@@ -531,10 +674,12 @@ bool CursorManager::isAllPlayerSelected()const
     return true;
 }
 
-bool CursorManager::isSelected(int player_number)const 
+bool CursorManager::isSelected(int player_number)const
 {
-    for ( auto& it : m_CursorData ) {
-        if ( it->m_PlayerInfo.number == player_number ) {
+    for ( auto& it : m_CursorData )
+    {
+        if ( it->m_PlayerInfo.number == player_number )
+        {
             return it->m_Selected;
         }
     }
@@ -543,8 +688,10 @@ bool CursorManager::isSelected(int player_number)const
 
 bool CursorManager::isLocked(int player_number)const
 {
-    for ( auto& it : m_CursorData ) {
-        if ( it->m_PlayerInfo.number == player_number ) {
+    for ( auto& it : m_CursorData )
+    {
+        if ( it->m_PlayerInfo.number == player_number )
+        {
             return it->m_Lock;
         }
     }
@@ -553,33 +700,37 @@ bool CursorManager::isLocked(int player_number)const
 
 void CursorManager::GetData(sceneGamePlay::InitParams& OutData)
 {
-    for (auto& it : m_CursorData)
+    for ( auto& it : m_CursorData )
     {
         sceneGamePlay::InitParams::PlayerInfo& p = it->m_PlayerInfo;
 
-        if (p.number >= 0)
+        if ( p.number >= 0 )
         {
             OutData.PlayerArray.at(p.number) = p;
         }
     }
-    
+
 }
 
 void CursorManager::RandomMove(SelectCursor* p)
 {
-    class RandomMove :public GameObjectBase
-    {
+    class RandomMove :public GameObjectBase {
         SelectCursor* const         m_pMoveCursor;
         int                         m_Timer;
+        std::default_random_engine m_RandomEngine;
+        std::uniform_int_distribution<int> m_Randomer;
     public:
 
         std::list<SelectPointBase*> m_PointData;
 
-        RandomMove(SelectCursor* p):
+        RandomMove(SelectCursor* p) :
             m_pMoveCursor(p),
-            m_Timer(0)
+            m_Timer(0),
+            m_RandomEngine(),
+            m_Randomer(0, 3)
         {
-
+            std::random_device seed_gen;
+            m_RandomEngine = std::default_random_engine(seed_gen());
         }
 
         SelectPointBase* GetRandomPoint()
@@ -588,20 +739,19 @@ void CursorManager::RandomMove(SelectCursor* p)
 
             do
             {
-                int r = rand() % (int)m_PointData.size();
+                int r = m_Randomer(m_RandomEngine);
                 int cnt = 0;
 
-                for (auto& it : m_PointData)
+                for ( auto& it : m_PointData )
                 {
-                    if (cnt == r)
+                    if ( cnt == r )
                     {
                         pRet = it;
                         break;
                     }
                     ++cnt;
                 }
-            } 
-            while (pRet == m_pMoveCursor->GetPoint());
+            } while ( pRet == m_pMoveCursor->GetPoint() );
 
             return pRet;
         }
@@ -610,12 +760,12 @@ void CursorManager::RandomMove(SelectCursor* p)
         {
             bool isLive = m_Timer < 60;
 
-            if (m_Timer++ % 5 == 0)
+            if ( m_Timer++ % 5 == 0 )
             {
                 m_pMoveCursor->SetPoint(GetRandomPoint());
             }
 
-            if (isLive == false)
+            if ( isLive == false )
             {
                 m_pMoveCursor->SelectNowPoint();
             }
@@ -633,9 +783,9 @@ void CursorManager::RandomMove(SelectCursor* p)
     //ランダムな動きを！！
     RandomMove* r = new RandomMove(p);
 
-    for (auto& it : m_PointData)
+    for ( auto& it : m_PointData )
     {
-        switch (it->m_Type)
+        switch ( it->m_Type )
         {
         case SelectPointBase::PointType::Tennis:
         case SelectPointBase::PointType::Soccer:

@@ -78,11 +78,11 @@ bool GamePadManager::IsAvailable(size_t n)
 
 
 // 状態取得
-int GamePadManager::GetState(size_t n, GamePadIndex index)
+int GamePadManager::GetState(size_t n, GamePadIndex index, int* pCallCount)
 {
 	if (n >= pGamePadArray.size())return 0;
 
-	return pGamePadArray.at(n)->GetState(index);
+	return pGamePadArray.at(n)->GetState(index, pCallCount);
 }
 
 

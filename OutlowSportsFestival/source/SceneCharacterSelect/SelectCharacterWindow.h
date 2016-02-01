@@ -8,15 +8,17 @@
 #include "../character/Baseball/BaseballEquip.h"
 #include <array>
 
+class SceneCharacterSelectUI;
+
 //---------------------------------------------------------------//
 // キャラクタセレクト時のウィンドウクラス
 //---------------------------------------------------------------//
 
-class SelectCharacterWindow :public GameObjectBase, public UserInterfaceRenderer
-{
+class SelectCharacterWindow :public GameObjectBase, public UserInterfaceRenderer {
 public:
     SelectCharacterWindow(
-        SelectCursor*   pCursor
+        SelectCursor*   pCursor,
+        SceneCharacterSelectUI* pComUI = nullptr
         );
 
     ~SelectCharacterWindow();
@@ -27,10 +29,10 @@ private:
 
     std::array<CharacterRenderer*, 4>   m_ChrRenderers;
     SelectCursor* const                 m_pCursor;
-    bool                                m_DrawComputerUI;
     MeshRenderer*                       m_pRandomMesh;
     bool                                m_PreFrameIsSelected;
     BaseballEquip*                      m_pBaseballEquip;
+    SceneCharacterSelectUI* m_pComUI;
 
     void SelectingRenderer(SelectPointBase::PointType type);
 

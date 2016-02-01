@@ -73,20 +73,20 @@ static const KEYCODE stick_key_code[][2]=
 };
 
 //押した瞬間かどうか
-bool controller::GetTRG(button::button_type x, CONTROLLER_NUM num)
+bool controller::GetTRG(button::button_type x, CONTROLLER_NUM num, int* pCallCount)
 {
-    return KEY(button_key_code[x], num) == 3;
+    return KEY_Get(button_key_code[x], num, pCallCount) == 3;
 }
 
-bool controller::GetLeave(button::button_type x, CONTROLLER_NUM num)
+bool controller::GetLeave(button::button_type x, CONTROLLER_NUM num, int* pCallCount)
 {
-    return KEY(button_key_code[x], num) == 2;
+    return KEY_Get(button_key_code[x], num, pCallCount) == 2;
 }
 
 //押しているかどうか
-bool controller::GetPush(button::button_type x, CONTROLLER_NUM num)
+bool controller::GetPush(button::button_type x, CONTROLLER_NUM num, int* pCallCount)
 {
-    return KEY(button_key_code[x], num) != 0;
+    return KEY_Get(button_key_code[x], num, pCallCount) != 0;
 }
 
 //押しているかどうか(誰かが)
@@ -94,7 +94,7 @@ bool controller::GetPushAnyController(button::button_type x)
 {
     for(int i = 0 ; i < 4 ; ++i)
     {
-        if(KEY(button_key_code[x], i)!= 0)
+        if ( KEY_Get(button_key_code[x], i, nullptr) != 0 )
         {
             return true;
         }
@@ -102,10 +102,21 @@ bool controller::GetPushAnyController(button::button_type x)
     return false;
 }
 
-// コントローラの状態取得
-controller::button::button_state controller::GetButtonState(controller::button::button_type x, CONTROLLER_NUM num)
+//押した瞬間かどうか(誰かが)
+bool	controller::GetTRGAnyController(button::button_type x)
 {
-    switch (KEY(button_key_code[x], num))
+    for ( int i = 0; i < 4; ++i ) {
+        if ( KEY_Get(button_key_code[x], i, nullptr) == 3 ) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// コントローラの状態取得
+controller::button::button_state controller::GetButtonState(controller::button::button_type x, CONTROLLER_NUM num, int* pCallCount)
+{
+    switch ( KEY_Get(button_key_code[x], num, pCallCount))
     {
     case 0: return controller::button::button_state::bs_up;
     case 3: return controller::button::button_state::bs_trg;
@@ -134,7 +145,7 @@ static Vector2 GetCursorValue(controller::CONTROLLER_NUM num)
 //スティックの傾きの値を得る
 Vector2 controller::GetStickValue(stick::stick_type x, CONTROLLER_NUM num)
 {
-    Vector2 ret(KEY(stick_key_code[x][0],num)*0.001f, KEY(stick_key_code[x][1],num)*-0.001f);
+    Vector2 ret(KEY_Get(stick_key_code[x][0], num, nullptr)*0.001f, KEY_Get(stick_key_code[x][1], num, nullptr)*-0.001f);
 
     //補正
     if (fabsf(ret.x)<g_AdjustStickValue)ret.x = 0;
@@ -242,6 +253,16 @@ bool controller::GetPushAnyController(button::button_type x)
     {
         if (GamePadManager::GetState((size_t)i, button_key_code[x]) != 0)
         {
+            return true;
+        }
+    }
+    return false;
+}
+
+//押した瞬間かどうか(誰かが)
+bool	controller::GetTRGAnyController(button::button_type x) {
+    for ( int i = 0; i < 4; ++i ) {
+        if ( GamePadManager::GetState((size_t)i, button_key_code[x]) == 3 ) {
             return true;
         }
     }

@@ -64,6 +64,8 @@ bool GamePad::Update()
 {
 	if (m_pInputDevice == nullptr)return false;
 
+    ZeroMemory(m_CallCounter, sizeof(int)*GamePadIndex_Max * 4);
+
 	DIJOYSTATE2 JoyState = { 0 };
 	if (m_pInputDevice->Update(JoyState) == false)return false;
 
@@ -137,8 +139,15 @@ bool GamePad::IsAvailable()const
 
 
 // 状態取得
-int GamePad::GetState(GamePadIndex index)const
+int GamePad::GetState(GamePadIndex index, int* pCallCount)
 {
+    if ( m_State[index] >= 0 && m_State[index] < 4 ) 
+    {
+        m_CallCounter[index][m_State[index]] += 1;
+        if ( pCallCount ) {
+            *pCallCount = m_CallCounter[index][m_State[index]];
+        }
+    }
 	return m_State[index];
 }
 
