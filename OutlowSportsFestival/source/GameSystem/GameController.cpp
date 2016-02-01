@@ -230,20 +230,20 @@ static Vector2 GetCursorValue(controller::CONTROLLER_NUM num)
 
 
 // 押した瞬間かどうか
-bool controller::GetTRG(button::button_type x, CONTROLLER_NUM num)
+bool controller::GetTRG(button::button_type x, CONTROLLER_NUM num, int* pCallCount)
 {
-	return GamePadManager::GetState(num, button_key_code[x]) == 3;
+	return GamePadManager::GetState(num, button_key_code[x],pCallCount) == 3;
 }
 
-bool controller::GetLeave(button::button_type x, CONTROLLER_NUM num)
+bool controller::GetLeave(button::button_type x, CONTROLLER_NUM num, int* pCallCount)
 {
-	return GamePadManager::GetState(num, button_key_code[x]) == 2;
+    return GamePadManager::GetState(num, button_key_code[x], pCallCount) == 2;
 }
 
 // 押しているかどうか
-bool controller::GetPush(button::button_type x, CONTROLLER_NUM num)
+bool controller::GetPush(button::button_type x, CONTROLLER_NUM num, int* pCallCount)
 {
-	return GamePadManager::GetState(num, button_key_code[x]) != 0;
+    return GamePadManager::GetState(num, button_key_code[x], pCallCount) != 0;
 }
 
 //押しているかどうか(誰かが)
@@ -270,9 +270,9 @@ bool	controller::GetTRGAnyController(button::button_type x) {
 }
 
 // コントローラの状態取得
-controller::button::button_state controller::GetButtonState(controller::button::button_type x, CONTROLLER_NUM num)
+controller::button::button_state controller::GetButtonState(controller::button::button_type x, CONTROLLER_NUM num, int* pCallCount)
 {
-    switch (KEY(button_key_code[x], num))
+    switch (GamePadManager::GetState((size_t)num, button_key_code[x], pCallCount))
     {
     case 0: return controller::button::button_state::bs_up;
     case 3: return controller::button::button_state::bs_trg;

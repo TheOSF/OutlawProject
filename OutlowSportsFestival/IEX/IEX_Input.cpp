@@ -468,6 +468,11 @@ void KEY_Asign(KEYSET& keyset, int n){  }
 
 void KEY_Vibration(u32 gain, float period, int n){  }
 
+//	キー状態取得
+int	KEY_Get(KEYCODE key, int n, int* pCallCount)
+{
+    return 0;
+}
 
 //------------------------------------------------------
 //		キー状態設定・取得

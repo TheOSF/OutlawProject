@@ -89,7 +89,7 @@ void GameInitializer_UsualMatch::GameCreate()
         param.time = m_Param.Time;
         // param.time = 60 * 3;
 
-#if TRUE
+#if FALSE
         new GameEventer(param, new MatchState::RoundResetCountdown());
 #else
         new GameEventer(param, new MatchState::PlayerCharacterDrawCursor());

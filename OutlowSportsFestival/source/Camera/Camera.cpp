@@ -75,10 +75,10 @@ void Camera::Update()
 
     shader->SetValue("g_CameraPos", temp_pos);
 
-    if (KEY(KEY_ENTER, 0) == 3)
-    {
-        WriteParam();
-    }
+    //if (KEY(KEY_ENTER, 0) == 3)
+    //{
+    //    WriteParam();
+    //}
 }
 
 //âÊñ è¡ãé

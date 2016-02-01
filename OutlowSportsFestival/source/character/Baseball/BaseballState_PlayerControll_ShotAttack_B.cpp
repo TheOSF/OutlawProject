@@ -87,6 +87,9 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 
 		//‘Å‚¿ã‚°’†‚Í‚ ‚½‚è”»’è‚È‚µ
 		m_pUpBall->m_Damage.m_Enable = false;
+
+        //ƒXƒLƒ‹ƒQ[ƒW‰ÁŽZ
+        chr_func::AddSkillGauge(b, UsualBall::AddSkillValueRatio);
 	}
 
 	if (m_Timer >= 5)

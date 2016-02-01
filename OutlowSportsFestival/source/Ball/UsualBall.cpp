@@ -12,7 +12,7 @@
 #include "../character/CharacterFunction.h"
 
 
-const float UsualBall::AddSkillValueRatio = 0.01f;
+const float UsualBall::AddSkillValueRatio = 0.025f;
 
 UsualBall::UsualBall(
     BallBase::Params	params,			//ボールパラメータ
@@ -56,6 +56,7 @@ UsualBall::UsualBall(
         m_Damage.m_VecPower.x = 0.4f;
         m_Damage.m_VecPower.y = 0.5f;
         m_Damage.m_Vec.y = 0.0f;
+        m_Damage.HitMotionFrame = 18;
 
         UpdateDamageClass();
     }

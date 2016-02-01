@@ -637,6 +637,9 @@ void SoccerState_PlayerControll_Shot::Enter(SoccerPlayer* s)
 			Sound::Play(Sound::Impact2);
 
             new UsualBall(param, DamageBase::Type::_WeekDamage, 10, UsualBall::GetUsual_ControllHeightMoveControll());
+
+            //スキルゲージ加算
+            chr_func::AddSkillGauge(m_pSoccer, UsualBall::AddSkillValueRatio);
 		}
 	};
 

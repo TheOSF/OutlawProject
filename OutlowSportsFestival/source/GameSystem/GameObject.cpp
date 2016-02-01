@@ -3,6 +3,7 @@
 #include <time.h>
 #include <chrono>
 #include "IEX_Input.h"
+#include "GameController.h"
 
 GameObjectManager*	GameObjectManager::m_pInstance = nullptr;
 
@@ -60,7 +61,7 @@ void GameObjectManager::Update()
 #if TRUE
     //デバッグ用
 
-    if (KEY(KEY_ENTER, 0) == 3)
+    if (controller::GetTRG(controller::button::_L2, 0))
     {
         MyDebugString("\n-----現在のオブジェクト-------\n\n");
         

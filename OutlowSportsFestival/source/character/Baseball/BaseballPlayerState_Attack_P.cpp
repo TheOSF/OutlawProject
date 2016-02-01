@@ -184,7 +184,7 @@ void Baseball_PlayerControll_Attack_P::State_Atk()
         param.type = BallBase::Type::_Usual;
 
         //生成
-        new UsualBall(param, DamageBase::Type::_WeekDamage, 8, UsualBall::GetUsualMoveControll());
+        new UsualBall(param, DamageBase::Type::_WeekDamage, 4, UsualBall::GetUsualMoveControll());
 
         //コントローラを振動
         chr_func::SetControllerShock(
@@ -199,6 +199,9 @@ void Baseball_PlayerControll_Attack_P::State_Atk()
             param.pos,
             param.move
             );
+
+        //スキルゲージ加算
+        chr_func::AddSkillGauge(m_pChr, UsualBall::AddSkillValueRatio);
 
     }
 

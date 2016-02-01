@@ -131,6 +131,9 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
                 0.5f,
                 0.15f
                 );
+
+            //スキルゲージ加算
+            chr_func::AddSkillGauge(m_pBaseball, UsualBall::AddSkillValueRatio);
 		}
 
 		//　遠距離攻撃開始

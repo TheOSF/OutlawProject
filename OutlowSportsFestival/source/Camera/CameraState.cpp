@@ -364,18 +364,6 @@ Vector2 CameraStateFreeMove::GetKeyWASD()const
     return ret;
 }
 
-Vector2 CameraStateFreeMove::GetRightStick()const
-{
-    Vector2 ret;
-
-    ret.x = KEY(KEY_AXISX2, 0)*0.001f;
-    ret.y = KEY(KEY_AXISY2, 0)*-0.001f;
-
-    ret.x = fabsf(ret.x) < 0.25f ? 0 : ret.x;
-    ret.y = fabsf(ret.y) < 0.25f ? 0 : ret.y;
-
-    return ret;
-}
 
 
 

@@ -52,7 +52,7 @@ public:
             *pF += Key;
         }
 
-        if ( KEY(KEY_ENTER, 0) == 3 )
+        if (controller::GetTRG(controller::button::_L2, 0))
         {
             if (pV)
             {

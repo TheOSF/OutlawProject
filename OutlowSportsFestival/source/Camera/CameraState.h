@@ -88,7 +88,6 @@ public:
     void Exit(Camera* c);
 private:
     Vector2 GetKeyWASD()const;
-    Vector2 GetRightStick()const;
 };
 
 

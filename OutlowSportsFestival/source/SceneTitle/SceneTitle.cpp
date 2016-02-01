@@ -21,8 +21,6 @@ SceneTitle::SceneTitle()
 
     {
         iexLight::SetFog(800, 1000, 0);
-
-
     }
 }
 
@@ -30,6 +28,7 @@ SceneTitle::~SceneTitle()
 {
     delete m_pTitleLogoTex;
     delete m_pPushButtonTex;
+    delete m_pBackTex;
 }
 
 void SceneTitle::Update()

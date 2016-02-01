@@ -39,7 +39,7 @@ public:
         float Restitution;
     };
 
-    //スキルゲージの伸びる量(AddSkillValueRatio*ダメージ量)
+    //スキルゲージの伸びる量
     static const float AddSkillValueRatio;
 
 	//コンストラクタ

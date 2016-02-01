@@ -85,22 +85,22 @@ void AmefootPlayerState_ThrowBall::Execute(AmefootPlayer* pCharacter)
 
         //エフェクト
         {
-        COLORf EffectColor(CharacterBase::GetPlayerColor(pCharacter->m_PlayerInfo.number));
+            COLORf EffectColor(CharacterBase::GetPlayerColor(pCharacter->m_PlayerInfo.number));
 
-        //エフェクトの設定
-        new HitEffectObject(
-        pos,
-        Vector3Normalize(move),
-        0.08f,
-        0.03f,
-        Vector3(EffectColor.r, EffectColor.g, EffectColor.b),
-        1,
-        0
-        );
+            //エフェクトの設定
+            new HitEffectObject(
+            pos,
+            Vector3Normalize(move),
+            0.08f,
+            0.03f,
+            Vector3(EffectColor.r, EffectColor.g, EffectColor.b),
+            1,
+            0
+            );
         }
 
-        //後ろに移動
-        //chr_func::AddMoveFront(pCharacter, 0.25f, 0.5f);
+        //スキルゲージ加算
+        chr_func::AddSkillGauge(pCharacter, UsualBall::AddSkillValueRatio);
     }
 
     //ステート終了
