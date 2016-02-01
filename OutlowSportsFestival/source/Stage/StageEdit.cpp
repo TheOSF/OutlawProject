@@ -33,7 +33,7 @@ StageEditer::~StageEditer()
 
 bool StageEditer::Update()
 {
-    if (KEY(KEY_ENTER, 0) == 3)
+    if ( KEY(KEY_ENTER, 0) == 3 )
     {
         m_Enable = !m_Enable;
 
@@ -93,7 +93,7 @@ bool StageEditer::Update()
 
 
     //èëÇ´çûÇ›
-    if (KEY(KEY_C, 0) == 3)
+    if ( KEY(KEY_C, 0) == 3 )
     {
         Write("DATA\\Stages\\Stage1\\StageObjData.txt");
     }
@@ -253,7 +253,7 @@ void StageEditer::CursorControll()
     }
 
 
-    if (KEY(KEY_SPACE, 0) == 3)
+    if ( KEY(KEY_SPACE, 0) == 3 )
     {
         (*m_pCreateFunc)(m_Setpos, m_SetAngle);
 

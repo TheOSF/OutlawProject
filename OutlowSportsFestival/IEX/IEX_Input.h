@@ -138,6 +138,7 @@ private:
      int KeyMap[20];
      int JoyMap[20];
      u8	KeyInfo[20], JoyInfo[20];
+     u8 CallCounter[20][4];
      int		PadAxisX, PadAxisY;
      int		PadAxisX2, PadAxisY2;
 
@@ -156,7 +157,7 @@ public:
      void PadAsign(PADSET& padset);
 
      void SetInfo();
-     int Get(KEYCODE key);
+     int Get(KEYCODE key, int* pCallCount = nullptr);
 
      void Vibration(u32 gain, float period);
 };
@@ -169,7 +170,7 @@ void	KEY_Asign(KEYSET& padset, int n);
 void	KEY_PadAsign(PADSET& padset, int n);
 
 void	KEY_SetInfo(int n);
-int		KEY_Get(KEYCODE key, int n);
+int		KEY_Get(KEYCODE key, int n, int* pCallCount = nullptr);
 void	KEY_Vibration(u32 gain, float period, int n);
 
 int		KEY_GetAxisX(int n);
@@ -180,12 +181,12 @@ int		KEY_GetAxisY2(int n);
 BOOL	IEX_InitInput();
 void	IEX_ReleaseInput();
 
-#define	KEY(x,n)	KEY_Get(x,n)
+#define	KEY(x,n)	KEY_Get(x,n,nullptr)
 
 inline bool GetAnyKey(KEYCODE key)
 {
-     for ( int i = 0; i < 4; i++ )
-          if ( KEY(key, i) == 3 )return true;
+    for ( int i = 0; i < 4; i++ )
+        if ( KEY(key, i) == 3 )return true;
      return false;
 }
 

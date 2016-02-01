@@ -52,7 +52,7 @@ public:
             *pF += Key;
         }
 
-        if (KEY(KEY_ENTER, 0) == 3)
+        if ( KEY(KEY_ENTER, 0) == 3 )
         {
             if (pV)
             {

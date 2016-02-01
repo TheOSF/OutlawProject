@@ -9,21 +9,22 @@ SceneCharacterSelectUI::Param::Param() :
 
 }
 
-SceneCharacterSelectUI::SceneCharacterSelectUI(iex2DObj* const pTexture, const RectI& TextureRect):
-m_pTexture(pTexture),
-m_TextureRect(TextureRect)
+SceneCharacterSelectUI::SceneCharacterSelectUI(iex2DObj* const pTexture, const RectI& TextureRect) :
+    m_pTexture(pTexture),
+    m_TextureRect(TextureRect),
+    m_Visible(true)
 {
 
 }
 
 
-SceneCharacterSelectUI::~SceneCharacterSelectUI() 
+SceneCharacterSelectUI::~SceneCharacterSelectUI()
 {
 
 }
 
 // 座標更新
-void SceneCharacterSelectUI::PositionUpdate() 
+void SceneCharacterSelectUI::PositionUpdate()
 {
     const float Speed = 0.2f;
 
@@ -39,7 +40,7 @@ void SceneCharacterSelectUI::SizeUpdate()
 }
 
 // カラー更新
-void SceneCharacterSelectUI::ColorUpdate() 
+void SceneCharacterSelectUI::ColorUpdate()
 {
     const float Speed = 0.2f;
 
@@ -47,7 +48,7 @@ void SceneCharacterSelectUI::ColorUpdate()
 }
 
 // 更新
-bool SceneCharacterSelectUI::Update() 
+bool SceneCharacterSelectUI::Update()
 {
     // 座標更新
     PositionUpdate();
@@ -64,6 +65,8 @@ bool SceneCharacterSelectUI::Update()
 // 描画
 void SceneCharacterSelectUI::Render()
 {
+    if ( m_pTexture == nullptr || m_Visible == false )return;
+
     const int PosX = (int)(m_Current.Pos.x - m_Current.Size.x / 2.0f);
     const int PosY = (int)(m_Current.Pos.y - m_Current.Size.y / 2.0f);
 
@@ -85,9 +88,9 @@ void SceneCharacterSelectUI::Render()
 }
 
 
-void SceneCharacterSelectUI::CalcZ() 
+void SceneCharacterSelectUI::CalcZ()
 {
-    m_SortZ = 0.0f;
+
 }
 
 

@@ -65,20 +65,23 @@ namespace controller
 		};
 	}
 	//押した瞬間かどうか
-	bool	GetTRG(button::button_type x, CONTROLLER_NUM num);
+    bool	GetTRG(button::button_type x, CONTROLLER_NUM num, int* pCallCount = nullptr);
 	//離した瞬間かどうか
-	bool	GetLeave(button::button_type x, CONTROLLER_NUM num);
+	bool	GetLeave(button::button_type x, CONTROLLER_NUM num, int* pCallCount = nullptr);
 	//押しているかどうか
-	bool	GetPush(button::button_type x, CONTROLLER_NUM num);
+	bool	GetPush(button::button_type x, CONTROLLER_NUM num, int* pCallCount = nullptr);
 
     //押しているかどうか(誰かが)
     bool	GetPushAnyController(button::button_type x);
+
+    //押した瞬間かどうか(誰かが)
+    bool	GetTRGAnyController(button::button_type x);
 
     //引数の値がスティックの誤差の値以内かどうか
     bool    isStickAdjustValue(float value);
 
 	// コントローラの状態取得
-	button::button_state GetButtonState(button::button_type x, CONTROLLER_NUM num);
+	button::button_state GetButtonState(button::button_type x, CONTROLLER_NUM num, int* pCallCount = nullptr);
 
     //スティック(またはカーソル)を倒した瞬間かどうかを得る
     bool GetStickJustMove(stick::stick_type x, CONTROLLER_NUM num);

@@ -293,6 +293,8 @@ void iexInput::SetInfo()
 	PadAxisX = PadAxisY = 0;
 	PadAxisX2 = PadAxisY2 = 0;
 
+    ZeroMemory(CallCounter, sizeof(u8) * 20 * 4);
+
 	if (lpDevice){
 		//------------------------------------------------------
 		//	パッド
@@ -398,7 +400,7 @@ void iexInput::SetInfo()
 //*****************************************************************************
 //		情報取得
 //*****************************************************************************
-int	iexInput::Get(KEYCODE key)
+int	iexInput::Get(KEYCODE key, int* pCallCount)
 {
 	//if( GetForegroundWindow() != iexSystem::Window ) return 0;
 	//return 0;
@@ -412,6 +414,11 @@ int	iexInput::Get(KEYCODE key)
     default:
         break;
 	}
+    if ( pCallCount ) 
+    {
+        CallCounter[key][KeyInfo[key]] += 1;
+        *pCallCount = (int)CallCounter[key][KeyInfo[key]];
+    }
 	return KeyInfo[key];
 }
 
@@ -444,7 +451,10 @@ void KEY_Vibration(u32 gain, float period, int n){ input[n]->Vibration(gain, per
 //	キー状態設定
 void KEY_SetInfo(int n){ input[n]->SetInfo(); }
 //	キー状態取得
-int	KEY_Get(KEYCODE key, int n){ return input[n]->Get(key); }
+int	KEY_Get(KEYCODE key, int n, int* pCallCount)
+{ 
+    return input[n]->Get(key, pCallCount);
+}
 //	軸取得
 int KEY_GetAxisX(int n) { return input[n]->Get(KEY_AXISX); }
 int KEY_GetAxisY(int n) { return input[n]->Get(KEY_AXISY); }

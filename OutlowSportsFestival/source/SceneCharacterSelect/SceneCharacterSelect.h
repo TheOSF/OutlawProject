@@ -13,8 +13,7 @@
 
 class SceneCharacterSelectUI;
 
-class SceneCharacterSelect : public Scene
-{
+class SceneCharacterSelect : public Scene {
 public:
     SceneCharacterSelect(
         sceneGamePlay::InitParams& LoadParams,
@@ -27,8 +26,7 @@ public:
     void Render();
 
 private:
-    enum class NextSceneType
-    {
+    enum class NextSceneType {
         _NoChange,
 
         Back,
@@ -36,6 +34,7 @@ private:
     };
 
     std::array<SelectPointBase*, 4> m_ChrPoint;
+    std::array<SelectCursor*, 4> m_Cursor;
     sceneGamePlay::InitParams m_LoadParams;
     NextSceneType   m_NextSceneType;
     const UINT      m_PlayerNum;
@@ -43,15 +42,19 @@ private:
     iex2DObj        m_Texture;
     int             m_Timer;
     iex2DObj        m_BackTex;
+    iex2DObj m_OK_Tex;
     SelectPointBase*m_pComputerDefaultPoint;
+    SceneCharacterSelectUI* m_pOK_UI;
 
     void(SceneCharacterSelect::*m_pStateFunc)();
-    
+
     void InitData();
-    void SetComputerPoint(UINT Num);
+    void SetComputerPoint();
+    void SetComputerStrongPoint();
     void SetSceneUI(); // シーンを構成するパーツを作成
     void SetCharacterPoint();
     void SetOtherComputerCharacter();
+    void SetCursor();
     //void CreateWindows();
     void CreateLight();
     void CreateFloor();
@@ -59,6 +62,7 @@ private:
 
     void State_PreSelect();
     void State_Selecting();
+    void State_Confirm();
     void State_FadeOut();
     void State_BackToOption();
     void State_Change();
