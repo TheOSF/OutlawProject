@@ -17,7 +17,7 @@ SceneTitle::SceneTitle()
 
     m_pTitleLogoTex  = new iex2DObj("DATA\\TITLE\\TitleLogo.png");
     m_pPushButtonTex = new iex2DObj("DATA\\TITLE\\PleaseButton.png");
-
+    m_pBackTex = new iex2DObj("DATA\\Texture\\sports.png");
 
     {
         iexLight::SetFog(800, 1000, 0);
@@ -68,6 +68,8 @@ void SceneTitle::Update()
 void SceneTitle::Render()
 {
     iexSystem::GetDevice()->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xFFFFFFFF, 1.0f, 0);
+
+    m_pBackTex->Render();
 
     {
         const int W = 700, H = 700;

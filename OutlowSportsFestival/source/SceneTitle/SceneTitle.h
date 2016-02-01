@@ -21,6 +21,7 @@ private:
 
     iex2DObj*   m_pTitleLogoTex;
     iex2DObj*   m_pPushButtonTex;
+    iex2DObj*   m_pBackTex;
 
     float       m_PushButton_AlphaCount;
     RATIO       m_FadeOut;

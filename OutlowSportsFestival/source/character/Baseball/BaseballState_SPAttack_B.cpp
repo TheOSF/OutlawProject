@@ -376,7 +376,7 @@ void BaseballState_SPAttack_B::State_Atk()
     if (m_StateTimer == 1)
     {
         //カメラのゆれ
-        DefCamera.SetShock(Vector2(0.5f, 0.5f), 30);
+        DefCamera.SetShock(Vector2(0.5f, 0.5f), 20);
     }
 
     //ダメージ位置をセット
