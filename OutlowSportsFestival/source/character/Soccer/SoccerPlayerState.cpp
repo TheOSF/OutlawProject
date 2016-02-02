@@ -415,7 +415,7 @@ void SoccerState_Sliding::State_Start()
 
 void SoccerState_Sliding::State_Sliding()
 {
-    const int SlideingFrame = 30;
+    const int SlideingFrame = 25;
     ++m_Timer;
 
     AutoAngleControll();

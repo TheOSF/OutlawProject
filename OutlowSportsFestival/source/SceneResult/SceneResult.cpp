@@ -15,8 +15,22 @@
 #include "BreakScreenObject.h"
 #include "../Render/MeshRenderer.h"
 #include "../Sound/Sound.h"
+#include "../SceneTitle/SceneTitle.h"
 
+UINT SceneResult::ResultStartParam::GetPlayerNum()const
+{
+    UINT ret = 0;
 
+    for (auto it : PlayerList)
+    {
+        if (it.PlayerType == PlayerType::_Player)
+        {
+            ret++;
+        }
+    }
+
+    return ret;
+}
 
 SceneResult::SceneResult(
     iex2DObj*                   pScreenTexture,  //スクリーンテクスチャ
@@ -65,6 +79,10 @@ bool SceneResult::Initialize()
     //ステージ生成
     CreateStage();
 
+    {
+        iexLight::SetFog(800, 1000, 0);
+    }
+
     return true;
 }
 
@@ -80,6 +98,8 @@ void SceneResult::Update()
     DefCamera.Update();
     DefGameObjMgr.Update();
 
+    sceneGamePlay::InitParams Param;
+
     //シーン分岐
     switch (m_NextSceneType)
     {
@@ -87,16 +107,23 @@ void SceneResult::Update()
 
         break;
 
+    case NextSceneType::CharacterSelect:
+        Param.Round = m_StartParam.Round;
+        Param.Time = m_StartParam.RoundFrame;
+
+        MainFrame->ChangeScene(new SceneCharacterSelect(Param, m_StartParam.GetPlayerNum()));
+        break;
+
     case NextSceneType::GameOption:
         MainFrame->ChangeScene(new SceneOption());
         return;
 
     case NextSceneType::StaffRoll:
-        MainFrame->ChangeScene(new SceneOption());
+        MainFrame->ChangeScene(new SceneTitle());
         return;
 
     case NextSceneType::Title:
-        MainFrame->ChangeScene(new SceneOption());
+        MainFrame->ChangeScene(new SceneTitle());
         return;
 
     default:
@@ -118,7 +145,7 @@ void SceneResult::State_Initialize()
     m_pStateFunc = &SceneResult::State_ScreenVanish;
 
     //キャラクタをセット
-    Vector3 pos = Vector3(-5.2f, 1.95f, 0);
+    Vector3 pos = Vector3(-6.0f, 1.95f, 0);
     const float Width = -pos.x / 1.5f;
 
     for (auto&it : m_StartParam.PlayerList)
@@ -198,24 +225,31 @@ void SceneResult::State_Back()
             );
 
         pMenu->AddMenu(
-            new SceneChangeDecide(this, NextSceneType::GameOption),
-            RectI(0,150,1024,128),
+            new SceneChangeDecide(this, NextSceneType::CharacterSelect),
+            RectI(0, 0, 500, 100), 
             500,
-            80
+            100
+            );
+
+        pMenu->AddMenu(
+            new SceneChangeDecide(this, NextSceneType::GameOption),
+            RectI(0, 100, 500, 100),
+            500,
+            100
             );
 
         pMenu->AddMenu(
             new SceneChangeDecide(this, NextSceneType::Title),
-            RectI(41, 470, 240, 110),
-            200,
-            80
+            RectI(0, 200, 500, 100),
+            500,
+            100
             );
 
         pMenu->AddMenu(
             new SceneChangeDecide(this, NextSceneType::StaffRoll),
-            RectI(41, 470, 240, 110),
-            200,
-            80
+            RectI(0, 300, 500, 100),
+            500,
+            100
             );
     }
 }

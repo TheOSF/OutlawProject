@@ -428,7 +428,7 @@ void AmefootPlayerState_SpecialAtk::NoDamageUpdate()
                 return false;
             }
 
-            //pDmg->OnHitCharacter(m_pAmefoot);
+            pDmg->OnHitCharacter(m_pAmefoot);
 
             //エフェクト
             Effect();

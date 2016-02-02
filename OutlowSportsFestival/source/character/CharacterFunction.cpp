@@ -383,16 +383,6 @@ bool chr_func::CheckWall(CharacterBase* p)
         vec = Vector3RotateAxis(Vector3AxisY, RotateCheckVec[i], CheckVec);
         dist = 100;
 
-        //if (HitCheckWall(
-        //    &calc_out,
-        //    &out,
-        //    &pos,
-        //    &vec,
-        //    &dist,
-        //    Character_size))
-        //{
-        //    isHit = true;
-        //}
 
         if (DefCollisionMgr.RayPick(
             &out,
@@ -406,12 +396,6 @@ bool chr_func::CheckWall(CharacterBase* p)
             vec.y = 0;
             vec.Normalize();
 
-
-            //pos = p->m_Params.pos - vec * Vector3Dot(vec, pos);
-            //pos -= p->m_Params.pos;
-
-            //dist = pos.Length();
-
             dist = Vector3Dot(vec, p->m_Params.pos - out);
 
             if (dist < Character_size)
@@ -423,14 +407,69 @@ bool chr_func::CheckWall(CharacterBase* p)
         }
     }
 
-    /*if (isHit)
+
+    //ステージ外かを判断
     {
-        p->m_Params.pos.x = calc_out.x;
-        p->m_Params.pos.z = calc_out.z;
-    }*/
+        Vector3 Out;
+
+        if (CheckStageOut(p, &Out))
+        {
+            Out.y = p->m_Params.pos.y;
+
+            p->m_Params.pos = Out;
+        }
+
+    }
 
     return isHit;
 }
+
+//ステージ外に出ていないかチェックし、もしステージ外なら補正した位置をpOutOKPosに入れてtrueを返す
+bool chr_func::CheckStageOut(const CharacterBase* p, Vector3* pOutOKPos)
+{
+
+    const float Character_size = 2.0f;
+
+    // 計算用パラメータ
+    Vector3 out, pos, vec;
+    float dist;
+    int material;
+
+    bool ret = false;
+
+    const Vector3 Target = p->m_Params.pos + Vector3(0, 2, 0);
+
+    pos = Vector3(0, 2, 0);
+    vec = Target - pos;
+
+    dist = vec.Length();
+
+    vec.Normalize();
+    
+
+    if (DefCollisionMgr.RayPick(
+        &out,
+        &pos,
+        &vec,
+        &dist,
+        &material,
+        CollisionManager::RayType::_Character
+        ))
+    {
+        
+        pos = out + Vector3Normalize(vec);
+
+
+
+        *pOutOKPos = pos;
+
+        ret = true;
+    }
+
+
+    return ret;
+}
+
 //XZ方向の壁との接触判定を行う(レイピック1本＆位置調整なしver)
 bool chr_func::IsHitWall(CharacterBase* p)
 {

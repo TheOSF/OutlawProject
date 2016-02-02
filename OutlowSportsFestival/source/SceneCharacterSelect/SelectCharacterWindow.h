@@ -14,34 +14,40 @@ class SceneCharacterSelectUI;
 // キャラクタセレクト時のウィンドウクラス
 //---------------------------------------------------------------//
 
-class SelectCharacterWindow :public GameObjectBase, public UserInterfaceRenderer {
+class SelectCharacterWindow :public GameObjectBase, public UserInterfaceRenderer 
+{
 public:
     SelectCharacterWindow(
         SelectCursor*   pCursor,
-        SceneCharacterSelectUI* pComUI = nullptr
+        iex2DObj*       pSelectTex
         );
 
     ~SelectCharacterWindow();
-
-    void DoMotion();
 
 private:
 
     std::array<CharacterRenderer*, 4>   m_ChrRenderers;
     SelectCursor* const                 m_pCursor;
     MeshRenderer*                       m_pRandomMesh;
-    bool                                m_PreFrameIsSelected;
-    BaseballEquip*                      m_pBaseballEquip;
-    SceneCharacterSelectUI* m_pComUI;
+    MeshRenderer*                       m_pComMesh;
+    iex2DObj* const                     m_pSelectTex;
+    float                               m_3DMeshMoveCount;
+    RATIO                               m_SelectedCount;
 
+    //描画OnOff切り替え
     void SelectingRenderer(SelectPointBase::PointType type);
+    
+    //更新
+    void ModelUpdate(SelectPointBase::PointType type);
+
+    Matrix Calc3DMeshMatrix();
 
     void LoadCharacterModels();
     Vector3 GetCharacterPos();
+    Vector2 GetUIPos();
 
     bool Update()override;
     bool Msg(MsgType mt)override;
-
 
     void CalcZ()override;
     void Render()override;

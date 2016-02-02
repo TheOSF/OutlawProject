@@ -37,7 +37,7 @@ void SoccerDash::SetDashVec(CrVector3 Vec)
         return;
     }
 
-    const float TurnSpeed = 0.075f;
+    const float TurnSpeed = 0.065f;
 
     chr_func::AngleControll(
         m_pChr,

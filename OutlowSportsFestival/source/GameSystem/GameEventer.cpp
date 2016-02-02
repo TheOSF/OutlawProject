@@ -589,7 +589,6 @@ void MatchState::WinPose::Execute(_Client_type_ptr p)
             10,
             Vector3(0.8f, 0.8f, 0.8f)
             );
-
     }
 
     
@@ -611,7 +610,7 @@ void MatchState::WinPose::Execute(_Client_type_ptr p)
         chr_func::AddWinPoint(m_pWinCharacter);
     }
 
-    if (m_Frame == 520)
+    if (m_Frame == 450)
     {
         p->SetState(new ResetRound());
     }

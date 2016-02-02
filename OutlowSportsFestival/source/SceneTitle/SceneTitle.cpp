@@ -19,6 +19,8 @@ SceneTitle::SceneTitle()
     m_pPushButtonTex = new iex2DObj("DATA\\TITLE\\PleaseButton.png");
     m_pBackTex = new iex2DObj("DATA\\Texture\\sports.png");
 
+    Sound::StopBGM();
+
     {
         iexLight::SetFog(800, 1000, 0);
     }

@@ -12,7 +12,8 @@ SceneCharacterSelectUI::Param::Param() :
 SceneCharacterSelectUI::SceneCharacterSelectUI(iex2DObj* const pTexture, const RectI& TextureRect) :
     m_pTexture(pTexture),
     m_TextureRect(TextureRect),
-    m_Visible(true)
+    m_Visible(true),
+    m_Z(0)
 {
 
 }
@@ -90,7 +91,7 @@ void SceneCharacterSelectUI::Render()
 
 void SceneCharacterSelectUI::CalcZ()
 {
-
+    m_SortZ = m_Z;
 }
 
 

@@ -22,6 +22,8 @@ public:
 
     ~SceneCharacterSelect();
 
+    bool Initialize();
+
     void Update();
     void Render();
 
@@ -55,7 +57,6 @@ private:
     void SetCharacterPoint();
     void SetOtherComputerCharacter();
     void SetCursor();
-    //void CreateWindows();
     void CreateLight();
     void CreateFloor();
     void CreateBack();

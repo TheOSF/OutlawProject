@@ -75,10 +75,13 @@ BOOL	InitApp( HWND hWnd )
     {
         SceneResult::ResultStartParam param;
 
-        param.PlayerList.push_back({ 1, (PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Soccer });
-        param.PlayerList.push_back({ 3, (PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Americanfootball });
-        param.PlayerList.push_back({ 2, (PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Americanfootball });
+        param.PlayerList.push_back({ 1, (PlayerNum::Value)0, PlayerType::_Player, CharacterType::_Tennis });
+        param.PlayerList.push_back({ 3, (PlayerNum::Value)1, PlayerType::_Player, CharacterType::_Soccer });
+        param.PlayerList.push_back({ 2, (PlayerNum::Value)2, PlayerType::_Computer, CharacterType::_Baseball });
         param.PlayerList.push_back({ 4, (PlayerNum::Value)3, PlayerType::_Computer, CharacterType::_Americanfootball });
+
+        param.Round = 2;
+        param.RoundFrame = 60 * 60 * 3;
 
         MainFrame->ChangeScene(new SceneResult(
             new iex2DObj("DATA\\Texture\\play_manual.png"),
@@ -89,13 +92,13 @@ BOOL	InitApp( HWND hWnd )
     {
         sceneGamePlay::InitParams param;
 
-        param.Round = 20;
+        param.Round = 100;
         param.Time = 60 * 60 * 5;
 
         param.PlayerArray[0] = { 0, PlayerType::_Computer, CharacterType::_Baseball, StrongType::_Strong };
         param.PlayerArray[1] = { 1, PlayerType::_Computer, CharacterType::_Americanfootball, StrongType::_Strong };
         param.PlayerArray[2] = { 2, PlayerType::_Computer, CharacterType::_Soccer, StrongType::_Strong };
-        param.PlayerArray[3] = { 3, PlayerType::_Computer, CharacterType::_Tennis, StrongType::_Strong };
+        param.PlayerArray[3] = { 3, PlayerType::_Computer, CharacterType::_Americanfootball, StrongType::_Strong };
 
         param.pInitializer = new GameInitializer_UsualMatch(GameInitializer_UsualMatch::StageType::Kasennziki,param );
         

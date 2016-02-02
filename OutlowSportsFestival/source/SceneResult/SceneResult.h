@@ -27,13 +27,18 @@ public:
     //開始に必要なパラメタ
     struct ResultStartParam
     {
-        std::list<PlayerInfo> PlayerList;
+        std::list<PlayerInfo>   PlayerList;
+        UINT                    Round;
+        UINT                    RoundFrame;
+        
+        UINT GetPlayerNum()const;
     };
 
     enum class NextSceneType
     {
         PreSelect, //未決定
 
+        CharacterSelect,
         Title,
         GameOption,
         StaffRoll,

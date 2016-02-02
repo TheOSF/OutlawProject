@@ -77,6 +77,9 @@ namespace chr_func
     //XZ方向の壁との接触判定を行う(戻り値＝壁とあたっているかどうか)
     bool CheckWall(CharacterBase* p);
 
+    //ステージ外に出ていないかチェックし、もしステージ外なら補正した位置をpOutOKPosに入れてtrueを返す
+    bool CheckStageOut(const CharacterBase* p, Vector3* pOutOKPos);
+
 	//XZ方向の壁との接触判定を行う(前方レイピックのみ＆位置調整なしver)
 	bool IsHitWall(CharacterBase* p);
 

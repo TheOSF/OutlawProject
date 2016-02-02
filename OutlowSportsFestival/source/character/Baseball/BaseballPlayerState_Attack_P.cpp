@@ -131,10 +131,22 @@ void Baseball_PlayerControll_Attack_P::State_Atk()
         baseball_player::_mb_Shot_P,
     };
 
-    const int ShotFrame = 15;
+    const int ShotFrames[m_sMaxCombo] =
+    {
+        15,
+        15,
+        25,
+    };
+
+    const int EndFrames[m_sMaxCombo] =
+    {
+        33,
+        33,
+        45,
+    };
+
     const int SwitchFrame = 25;
     const int CanButtonFrame = 18;
-    const int EndFrame = 33;
     
     //初期化
     if (m_StateTimer == 1)
@@ -147,7 +159,7 @@ void Baseball_PlayerControll_Attack_P::State_Atk()
     
 
     //ショット前なら
-    if (m_StateTimer < ShotFrame)
+    if (m_StateTimer < ShotFrames[m_ComboCount])
     {
         RADIAN angle_speed = D3DXToRadian(5);
 
@@ -162,7 +174,7 @@ void Baseball_PlayerControll_Attack_P::State_Atk()
     }
 
     //ショット！
-    if (m_StateTimer == ShotFrame)
+    if (m_StateTimer == ShotFrames[m_ComboCount])
     {
 
         //ボール発射
@@ -183,8 +195,19 @@ void Baseball_PlayerControll_Attack_P::State_Atk()
         //通常タイプ
         param.type = BallBase::Type::_Usual;
 
-        //生成
-        new UsualBall(param, DamageBase::Type::_WeekDamage, 4, UsualBall::GetUsualMoveControll());
+        if (m_ComboCount == 2)
+        {
+            param.move *= 1.2f;
+
+            //生成
+            new UsualBall(param, DamageBase::Type::_VanishDamage, 4, UsualBall::GetUsualMoveControll());
+        }
+        else
+        {
+            //生成
+            new UsualBall(param, DamageBase::Type::_WeekDamage, 4, UsualBall::GetUsualMoveControll());
+        }
+
 
         //コントローラを振動
         chr_func::SetControllerShock(
@@ -237,14 +260,14 @@ void Baseball_PlayerControll_Attack_P::State_Atk()
     }
 
     //時間経過で通常ステートに
-    if (m_StateTimer >= EndFrame)
+    if (m_StateTimer >= EndFrames[m_ComboCount])
     {
         m_pChr->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(m_pChr));
     }
 
     //更新
     {
-        chr_func::UpdateAll(m_pChr, &BaseballHitEvent(m_pChr, m_StateTimer < ShotFrame));
+        chr_func::UpdateAll(m_pChr, &BaseballHitEvent(m_pChr, m_StateTimer < ShotFrames[m_ComboCount]));
         chr_func::CreateTransMatrix(m_pChr, &m_pChr->getNowModeModel()->m_TransMatrix);
 
         m_pChr->ModelUpdate(2);

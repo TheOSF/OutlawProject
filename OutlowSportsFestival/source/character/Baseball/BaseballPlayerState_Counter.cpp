@@ -109,7 +109,7 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
         param.PoseFrame = 24;
         param.ShotFrame = 6;
         param.BallSpeed = 1.2f;
-        param.HitStop = 8;
+        param.HitStop = 6;
    
     }
     else

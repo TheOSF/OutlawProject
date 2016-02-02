@@ -22,6 +22,7 @@ public:
     Param m_Target; // –Ú•W’l
 
     bool m_Visible;
+    float m_Z;
 
 private:
     void PositionUpdate();

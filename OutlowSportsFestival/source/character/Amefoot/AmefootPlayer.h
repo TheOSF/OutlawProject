@@ -67,8 +67,8 @@ public:
         Motion_Special_Attack_Running = 43, // 必殺技走り
         Motion_Special_Attack_Finish = 44 , // 必殺技フィニッシュ
 
-        Motion_Win_Pose = 0, // 勝利ポーズ
-        Motion_Lose_Pose = 0, // 負けポーズ
+        Motion_Win_Pose = 47, // 勝利ポーズ
+        Motion_Lose_Pose = 48, // 負けポーズ
     };
 
 private:

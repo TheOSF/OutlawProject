@@ -31,13 +31,14 @@ namespace baseball_player
         _mb_Evasion_B,	                //　回避
         _mb_Atk1_B,						//　近距離攻撃1
         _mb_Atk2_B = 8,						//　近距離攻撃2
-        _mb_Atk3_B = 11 ,						//　近距離攻撃3
-		_mb_CounterPose_B,			    //　カウンター構え
-		_mb_CounterRight_B,			    //　カウンター（右）
-		_mb_CounterLeft_B,			    //　カウンター（左）
-		_mb_Change_B,			        //　切替(バッター→ピッチャー)
-		_mb_Change_P,			        //　切替(ピッチャー→バッター)
-		_mb_SpAtk_B,			        //　必殺技
+        _mb_Atk3_B = 11,						//　近距離攻撃3
+        _mb_CounterPose_B,			    //　カウンター構え
+        _mb_CounterRight_B,			    //　カウンター（右）
+        _mb_CounterLeft_B,			    //　カウンター（左）
+        _mb_Change_B,			        //　切替(バッター→ピッチャー)
+        _mb_Change_P,			        //　切替(ピッチャー→バッター)
+        _mb_SpAtk_B,			        //　必殺技
+        _mb_SpAtk_P = 30 ,			        //　必殺技
 
 		_mb_Damage_Weak = 19,			    //　ダメージ
 		_mb_Damage_Vanish_Fly,          //　吹き飛び中

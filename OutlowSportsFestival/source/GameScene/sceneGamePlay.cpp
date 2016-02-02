@@ -49,7 +49,9 @@
 sceneGamePlay::InitParams::InitParams()
 {
     pInitializer = nullptr;
+
     PlayerArray.fill({ 0, PlayerType::_Player, CharacterType::_Tennis, StrongType::_Usual });
+
     for (int i = 0; i < 4; ++i)
     {
         PlayerArray.at(i).number = i;
@@ -277,6 +279,9 @@ void	sceneGamePlay::Update()
     //ライト更新
     DefMatchLightManager.Update();
 
+
+    
+
 #ifdef _DEBUG
 
     DefDamageMgr.m_DebugDrawVisible = GetKeyState('P') != 0;
@@ -287,7 +292,9 @@ void	sceneGamePlay::Update()
         // Bullet Physics
         DefBulletSystem.DebugDrawWorld();
     }
+#else
 
+    DefDamageMgr.m_DebugDrawVisible = false;
 #endif
     
     //シーン移行チェック
@@ -370,6 +377,9 @@ void sceneGamePlay::GoResult()
             ++Rank;
         }
     }
+
+    param.Round = m_Params.Round;
+    param.RoundFrame = m_Params.Time;
 
     //リザルトシーンセット
     MainFrame->ChangeScene(new SceneResult(pScreenTexture, param));

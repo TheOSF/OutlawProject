@@ -91,16 +91,12 @@ bool BreakScreenObject::Update()
 
     ++m_Timer;
     
-    if (m_Timer < 30)
-    {
-        Speed = 0.0f;
-    }
-    else if (m_Timer < 38)
+    if (m_Timer < 8)
     {
         //ƒJƒƒ‰‚Ì‚ä‚ê
-        if (m_Timer == 30)
+        if (m_Timer == 1)
         {
-            DefCamera.SetShock(Vector2(0.1f, 0.1f), 15);
+            DefCamera.SetShock(Vector2(0.1f, 0.1f), 5);
 
             Effect(20);
 
@@ -110,23 +106,23 @@ bool BreakScreenObject::Update()
 
         Speed = 1.2f;
     }
-    else if (m_Timer < 80)
+    else if (m_Timer < 50)
     {
         Speed = 0.0f;
     }
     else if (m_Timer < 110)
     {
         //ƒJƒƒ‰‚Ì‚ä‚ê
-        if (m_Timer == 80)
+        if (m_Timer == 50)
         {
             Effect(20);
-            DefCamera.SetShock(Vector2(0.1f, 0.1f), 15);
+            DefCamera.SetShock(Vector2(0.1f, 0.1f), 10);
 
             Sound::Play(Sound::BGM_Result);
         }
 
-        Speed = 2.0f;
-        m_Alpha *= 0.85f;
+        Speed = 1.0f;
+        m_Alpha *= 0.9f;
 
       //  m_MoveY += -0.01f;
       //  m_DiffPosY += m_MoveY;

@@ -8,16 +8,7 @@
 class CharacterShotAttack;
 class BaseballState_SPAttack_P : public BaseballState
 {
-
-private:
-	CharacterShotAttack* CreateSpAttack_P(BaseballPlayer* b);
-	CharacterShotAttack* m_pSpAttack_P;
-	BaseballPlayer*      m_pBaseBall;
-	CharacterBase*		 target;
-	int                     m_Timer;
-	bool					timeflg;
-
-	void(BaseballState_SPAttack_P::*m_pStateFunc)();
+    int m_Timer;
 
 public:
 
@@ -36,10 +27,5 @@ public:
 	//　The World
 	void FreezeGame(UINT frame); 
 
-	//　ターゲット選定
-	CharacterBase* CalcTarget()const;
-
-	void State_Shot();
-	void State_End();
 };
 

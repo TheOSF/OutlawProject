@@ -26,6 +26,18 @@ SceneCharacterSelect::SceneCharacterSelect(
     m_OK_Tex("DATA\\ChrSelect\\OK\\OK.png"),
     m_pOK_UI(nullptr)
 {
+
+}
+
+SceneCharacterSelect::~SceneCharacterSelect()
+{
+    DefGameObjMgr.Release();
+
+    DefCamera.Release();
+}
+
+bool SceneCharacterSelect::Initialize()
+{
     //	環境設定
     {
         iexLight::SetAmbient(0x404040);
@@ -46,12 +58,6 @@ SceneCharacterSelect::SceneCharacterSelect(
     m_pComputerDefaultPoint = new SelectPointBase(m_pManager, SelectPointBase::PointType::ComputerDefaultPoint, &m_Texture, RectI(0, 0, 128, 128));
     m_pComputerDefaultPoint->m_MoveTargetPos = Vector2((float)iexSystem::ScreenWidth / 2, -500);
     m_pComputerDefaultPoint->m_Pos = m_pComputerDefaultPoint->m_MoveTargetPos;
-
-    //　野球関連
-    DefResource.Regist(
-        Resource::MeshType::Bat,
-        new iexMesh("DATA\\CHR\\SanoBaseball\\bat.imo")
-        );
 
     //キャラクタポイントをセット
     SetCharacterPoint();
@@ -80,15 +86,8 @@ SceneCharacterSelect::SceneCharacterSelect(
 
     Sound::StopBGM();
     Sound::Play(Sound::BGM_ChrSelect, 1, true);
-}
 
-SceneCharacterSelect::~SceneCharacterSelect()
-{
-    DefGameObjMgr.Release();
-
-
-    DefResource.Release();
-    DefCamera.Release();
+    return true;
 }
 
 void SceneCharacterSelect::Update()
@@ -235,19 +234,38 @@ void SceneCharacterSelect::CreateBack()
 
 void SceneCharacterSelect::SetSceneUI()
 {
-    SceneCharacterSelectUI* p = new SceneCharacterSelectUI(&m_Texture, RectI(0, 896, 600, 128));
-    Vector2 Center((float)iexSystem::ScreenWidth*0.5f, (float)iexSystem::ScreenHeight*0.5f);
-    Vector2 EndOffset(0, -(float)iexSystem::ScreenHeight * 0.43f);
-    p->m_Current.Pos = Center;
-    p->m_Target.Pos = Center + EndOffset;
-    p->m_Current.Size = p->m_Target.Size = Vector2(600, 128);
-    p->m_SortZ = 0.0f;
+    const Vector2 Center((float)iexSystem::ScreenWidth*0.5f, (float)iexSystem::ScreenHeight*0.5f);
+    
+    {
+        SceneCharacterSelectUI* p = new SceneCharacterSelectUI(&m_Texture, RectI(0, 732, 731, 95));
 
-    m_pOK_UI = new SceneCharacterSelectUI(&m_OK_Tex, RectI(0, 0, 512, 512));
-    m_pOK_UI->m_Current.Pos = m_pOK_UI->m_Target.Pos = Center;
-    m_pOK_UI->m_Current.Size = Vector2(0, 0);
-    m_pOK_UI->m_Current.Color = Vector4(0, 0, 0, 0);
-    m_pOK_UI->m_SortZ = -100.0f;
+        p->m_Current.Size = p->m_Target.Size = Vector2(731, 95);
+
+        p->m_Target.Pos = p->m_Current.Size*0.5f;
+        p->m_Current.Pos = p->m_Target.Pos - Vector2(0, -100);
+
+        p->m_Z = -1;
+    }
+
+    {
+        m_pOK_UI = new SceneCharacterSelectUI(&m_OK_Tex, RectI(0, 0, 512, 512));
+        m_pOK_UI->m_Current.Pos = m_pOK_UI->m_Target.Pos = Center;
+        m_pOK_UI->m_Current.Size = Vector2(0, 0);
+        m_pOK_UI->m_Current.Color = Vector4(0, 0, 0, 0);
+        m_pOK_UI->m_SortZ = 0.0f;
+        m_pOK_UI->m_Z = -5;
+    }
+
+    {
+        SceneCharacterSelectUI* p = new SceneCharacterSelectUI(&m_Texture, RectI(0, 827, 308, 102));
+
+        p->m_Current.Size = p->m_Target.Size = Vector2(308, 102);
+
+        p->m_Target.Pos = Vector2(p->m_Current.Size.x*0.5f, (float)iexSystem::ScreenHeight - p->m_Target.Size.y*0.5f);
+        p->m_Current.Pos = p->m_Target.Pos - Vector2(0, -1000);
+
+        p->m_Z = -1;
+    }
 }
 
 void SceneCharacterSelect::SetComputerPoint()
@@ -395,11 +413,12 @@ void SceneCharacterSelect::SetCursor()
         {
             pDefault = m_pComputerDefaultPoint;
         }
+
         SelectCursor* p = new SelectCursor(
             m_pManager,
             (controller::CONTROLLER_NUM)i,
             &m_Texture,
-            RectI(0, 128, 256, 256),
+            RectI(256 * i , 128, 256, 256),
             m_pComputerDefaultPoint,
             pDefault);
 
@@ -439,27 +458,27 @@ void SceneCharacterSelect::State_PreSelect()
                 p->SetPoint(m_ChrPoint.at(i));
                 p->m_Lock = false;
             }
-            else
-            {
-                Vector2 Center((float)iexSystem::ScreenWidth*0.5f, (float)iexSystem::ScreenHeight*0.5f);
-                const float OffsetY = -100;
+            //else
+            //{
+            //    Vector2 Center((float)iexSystem::ScreenWidth*0.5f, (float)iexSystem::ScreenHeight*0.5f);
+            //    const float OffsetY = -100;
 
-                Vector2 ComPoints[4] = {
-                    Center + Vector2(-420,OffsetY),
-                    Center + Vector2(-160,OffsetY),
-                    Center + Vector2(160,OffsetY),
-                    Center + Vector2(420,OffsetY)
-                };
+            //    Vector2 ComPoints[4] = {
+            //        Center + Vector2(-420,OffsetY),
+            //        Center + Vector2(-160,OffsetY),
+            //        Center + Vector2(160,OffsetY),
+            //        Center + Vector2(420,OffsetY)
+            //    };
 
-                pComUI = new SceneCharacterSelectUI(&m_Texture, RectI(0, 0, 128, 128));
-                Vector2 EndOffset(0, -(float)iexSystem::ScreenHeight * 0.43f);
-                pComUI->m_Current.Pos = Center;
-                pComUI->m_Target.Pos = ComPoints[i];
-                pComUI->m_Current.Size = pComUI->m_Target.Size = Vector2(120, 120);
-                pComUI->m_Visible = false;
-            }
+            //    pComUI = new SceneCharacterSelectUI(&m_Texture, RectI(0, 0, 128, 128));
+            //    Vector2 EndOffset(0, -(float)iexSystem::ScreenHeight * 0.43f);
+            //    pComUI->m_Current.Pos = Center;
+            //    pComUI->m_Target.Pos = ComPoints[i];
+            //    pComUI->m_Current.Size = pComUI->m_Target.Size = Vector2(120, 120);
+            //    pComUI->m_Visible = false;
+            //}
             //キャラクタ表示クラスを作る
-            new SelectCharacterWindow(p, pComUI);
+            new SelectCharacterWindow(p, &m_Texture);
         }
 
         //ステート移行
@@ -566,7 +585,7 @@ void SceneCharacterSelect::State_FadeOut()
         }
     }
 
-    if ( ++m_Timer > 180 )
+    if ( ++m_Timer > 10 )
     {
         //ステート移行
         m_pStateFunc = &SceneCharacterSelect::State_Change;
@@ -589,7 +608,7 @@ void SceneCharacterSelect::State_BackToOption()
         }
     }
 
-    if ( ++m_Timer > 60 )
+    if ( ++m_Timer > 2 )
     {
         //ステート移行
         m_pStateFunc = &SceneCharacterSelect::State_Change;

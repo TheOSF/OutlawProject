@@ -15,8 +15,8 @@ class SelectPointBase : public UserInterfaceRenderer {
 public:
     enum class PointType {
         Tennis,
-        Soccer,
         BaseBall,
+        Soccer,
         AmericanFootBall,
 
         Random,
