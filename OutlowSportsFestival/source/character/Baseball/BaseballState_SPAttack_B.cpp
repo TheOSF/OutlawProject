@@ -110,7 +110,7 @@ void BaseballState_SPAttack_B::Execute(BaseballPlayer* b)
     m_StateTimer++;
 
     //モデル更新
-    b->ModelUpdate(2);
+    b->ModelUpdate(1);
 
     //ステート実行
     (this->*m_pStateFunc)();
@@ -134,6 +134,33 @@ void BaseballState_SPAttack_B::Exit(BaseballPlayer* b)
 //                            private
 //-------------------------------------------------------------------//
 
+Matrix BaseballState_SPAttack_B::GetBatMatrix()
+{
+    Matrix T;
+
+    //バットをつけるボーン行列を取得
+    m_pChr->getNowModeModel()->GetWorldBoneMatirx(T, 37);
+
+
+    //いろいろと調整
+    {
+        Matrix Tmp = T;
+
+        T._31 = -Tmp._11;
+        T._32 = -Tmp._12;
+        T._33 = -Tmp._13;
+
+        T._11 = Tmp._31;
+        T._12 = Tmp._32;
+        T._13 = Tmp._33;
+    }
+
+    //スケール成分を正規化
+    D3DXMatrixWorldScaleNormalize(T);
+
+    return T;
+}
+
 void BaseballState_SPAttack_B::SetState(StateFunc state)
 {
     m_StateTimer = 0;
@@ -142,20 +169,7 @@ void BaseballState_SPAttack_B::SetState(StateFunc state)
 
 void BaseballState_SPAttack_B::UpdateBatMesh()
 {
-    Matrix T;
-
-    //バットをつけるボーン行列を取得
-    m_pChr->getNowModeModel()->GetWorldBoneMatirx(T, 32);
-
-    //Z軸が逆っぽいので反転(ごり押しだけど…
-    {
-        T._31 = -T._31;
-        T._32 = -T._32;
-        T._33 = -T._33;
-    }
-
-    //スケール成分を正規化
-    D3DXMatrixWorldScaleNormalize(T);
+    Matrix T = GetBatMatrix();
 
     //バットのスケールにセット
     {
@@ -289,16 +303,13 @@ void BaseballState_SPAttack_B::OnHit()
 void BaseballState_SPAttack_B::AddLocusPoint()
 {
     Vector3 pos1, pos2;
-    Matrix T;
-
-    //バットをつけるボーン行列を取得
-    m_pChr->getNowModeModel()->GetWorldBoneMatirx(T, 32);
+    Matrix T = GetBatMatrix();
 
     //バットの根元
     pos1 = Vector3(T._41, T._42, T._43);
 
     //バットの先
-    pos2 = pos1 + Vector3Normalize(-Vector3(T._31, T._32, T._33)) * 30.0f * m_BatScale.z;
+    pos2 = pos1 + Vector3Normalize(Vector3(T._31, T._32, T._33)) * 30.0f * m_BatScale.z;
 
     //ちょっと先側に移動
     pos1 = pos1*0.8f + pos2*0.2f;

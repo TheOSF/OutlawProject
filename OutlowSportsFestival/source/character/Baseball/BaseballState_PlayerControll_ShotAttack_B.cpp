@@ -220,7 +220,7 @@ void BaseballState_PlayerControll_ShotAttack_B::Execute(BaseballPlayer* b)
 			chr_func::UpdateAll(b, &HitEvent);
 
 			//モデル関連の更新
-			b->ModelUpdate(2);
+			b->ModelUpdate(1);
             chr_func::CreateTransMatrix(b, &b->getNowModeModel()->m_TransMatrix);
 		}
 	}

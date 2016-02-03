@@ -59,6 +59,18 @@ void AmefootPlayerState_Tackle::Enter(AmefootPlayer* pCharacter)
     m_pControllDamage->Value = 0.0f;
     m_pControllDamage->type = DamageBase::Type::_ControllDamage;
     m_pControllDamage->m_Param.size = 2.5f;
+
+
+    if (m_pAmefootPlayer->m_PlayerInfo.player_type == PlayerType::_Player)
+    {
+
+        const Vector2 Stick = GetControllVec();
+        const Vector3 Vec(Stick.x, 0, Stick.y);
+
+        //キャラクタ回転
+        chr_func::AngleControll(m_pAmefootPlayer, m_pAmefootPlayer->m_Params.pos + Vec, PI);
+    }
+
 }
 
 void AmefootPlayerState_Tackle::Execute(AmefootPlayer* pCharacter)
@@ -596,21 +608,12 @@ void AmefootPlayerState_Tackle::UpdateDamageTransform()
     //腕の行列を取得
     m_pAmefootPlayer->m_Renderer.GetWorldBoneMatirx(*T, 30);
 
-    //ボーン行列のスケール成分を正規化
-    for (int i = 0; i < 3; ++i)
-    {
-        const float Length = Vector3((*T)(0, i), (*T)(1, i), (*T)(2, i)).Length();
+    D3DXMatrixWorldScaleNormalize(*T);
 
-        for (int j = 0; j < 3; ++j)
-        {
-            (*T)(j, i) /= Length;
-        }
-    }
-
-    Matrix Trans;
-    const Vector3 offset(0, -3.48f, 0);
-    D3DXMatrixTranslation(&Trans, offset.x, offset.y, offset.z);
-    *T = Trans*(*T);
+    //Matrix Trans;
+    //const Vector3 offset(0, -3.48f, 0);
+    //D3DXMatrixTranslation(&Trans, offset.x, offset.y, offset.z);
+    //*T = Trans*(*T);
 
     //座標は右腕に
     /*{

@@ -29,22 +29,41 @@ void BaseballState_SPAttack_P::Enter(BaseballPlayer* b)
 
         UpdateObjList.push_back(b);
 
-        DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, 40, true);
+        DefGameObjMgr.FreezeOtherObjectUpdate(UpdateObjList, 45, true);
     }
 
-    
+    //エフェクト
+    new SpecialAttackEffect(b, 50);
+
+    //SE
+    Sound::Play(Sound::Skill);
+
 }
 
 
 //　ステート実行
 void BaseballState_SPAttack_P::Execute(BaseballPlayer* b)
 {
-    const int ShotFrame = 40;
-    const int EndFrame = 60;
+    const int ShotFrame = 48;
+    const int EndFrame = 65;
+    const int MoveFrame = 33;
 
     ++m_Timer;
 
+    //向き補正
+    CharacterBase* pTarget = nullptr;
+
+    if (chr_func::CalcAtkTarget(b, PI*0.5f, 150.0f, &pTarget))
+    {
+        chr_func::AngleControll(b, pTarget);
+    }
+
     chr_func::XZMoveDown(b, 0.08f);
+
+    if (m_Timer == MoveFrame)
+    {
+        chr_func::AddMoveFront(b, 0.8f, 1.0f);
+    }
 
     if (m_Timer == ShotFrame)
     {
@@ -60,7 +79,7 @@ void BaseballState_SPAttack_P::Execute(BaseballPlayer* b)
     }
 
 	//　モーション更新とか
-	b->ModelUpdate(1);
+    b->ModelUpdate(1);
     chr_func::CreateTransMatrix(b, &b->getNowModeModel()->m_TransMatrix);
 
 

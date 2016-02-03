@@ -315,13 +315,13 @@ void SelectCharacterWindow::ModelUpdate(SelectPointBase::PointType type)
     {
         //キャラクタ更新
     case SelectPointBase::PointType::Tennis:
-    case SelectPointBase::PointType::BaseBall:
     case SelectPointBase::PointType::AmericanFootBall:
         m_ChrRenderers.at((int)type)->Update(1);
         break;
 
-        //サッカーのみスロー再生
+        //スロー再生
     case SelectPointBase::PointType::Soccer:
+    case SelectPointBase::PointType::BaseBall:
         m_ChrRenderers.at((int)type)->Update(0.5f);
         break;
 

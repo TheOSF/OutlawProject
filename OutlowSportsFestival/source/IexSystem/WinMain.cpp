@@ -21,7 +21,7 @@
 //
 //*****************************************************************************************************************************
 
-char*	AppTitle = "Outlaw Sports Festival";
+char*	AppTitle = "Outlaw Sports Festival 2";
 
 BOOL	bFullScreen = FALSE;
 DWORD	ScreenMode = SCREEN720p;
@@ -95,10 +95,10 @@ BOOL	InitApp( HWND hWnd )
         param.Round = 100;
         param.Time = 60 * 60 * 5;
 
-        param.PlayerArray[0] = { 0, PlayerType::_Computer, CharacterType::_Baseball, StrongType::_Strong };
-        param.PlayerArray[1] = { 1, PlayerType::_Computer, CharacterType::_Americanfootball, StrongType::_Strong };
+        param.PlayerArray[0] = { 0, PlayerType::_Player, CharacterType::_Americanfootball, StrongType::_Strong };
+        param.PlayerArray[1] = { 1, PlayerType::_Computer, CharacterType::_Baseball, StrongType::_Strong };
         param.PlayerArray[2] = { 2, PlayerType::_Computer, CharacterType::_Soccer, StrongType::_Strong };
-        param.PlayerArray[3] = { 3, PlayerType::_Computer, CharacterType::_Americanfootball, StrongType::_Strong };
+        param.PlayerArray[3] = { 3, PlayerType::_Computer, CharacterType::_Tennis, StrongType::_Strong };
 
         param.pInitializer = new GameInitializer_UsualMatch(GameInitializer_UsualMatch::StageType::Kasennziki,param );
         
@@ -157,17 +157,17 @@ HWND InitWindow( HINSTANCE hInstance, int nCmdShow )
 	wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH )GetStockObject(BLACK_BRUSH);
 	wc.lpszMenuName  = NULL;
-	wc.lpszClassName = "Outlaw Sports Festival";
+	wc.lpszClassName = "Outlaw Sports Festival 2";
 	RegisterClass(&wc);
 
 	//	ウィンドウ作成
 	if( !bFullScreen ){
 		AdjustWindowRect( &WindowSize, WS_OVERLAPPEDWINDOW, FALSE );
-		hWnd = CreateWindow( "Outlaw Sports Festival", AppTitle, WS_OVERLAPPEDWINDOW, 
+		hWnd = CreateWindow( "Outlaw Sports Festival 2", AppTitle, WS_OVERLAPPEDWINDOW, 
 								0, 0, WindowSize.right-WindowSize.left, WindowSize.bottom-WindowSize.top,
 								NULL, NULL, hInstance, NULL);
 	} else {
-		hWnd = CreateWindow( "Outlaw Sports Festival", AppTitle, WS_POPUP, 0, 0, WindowSize.right,WindowSize.bottom, NULL, NULL, hInstance, NULL);
+		hWnd = CreateWindow( "Outlaw Sports Festival 2", AppTitle, WS_POPUP, 0, 0, WindowSize.right,WindowSize.bottom, NULL, NULL, hInstance, NULL);
 		ShowCursor(FALSE);
 	}
 	if( !hWnd ) return NULL;

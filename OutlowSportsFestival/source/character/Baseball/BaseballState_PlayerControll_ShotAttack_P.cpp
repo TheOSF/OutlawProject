@@ -92,7 +92,7 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 		void Update()override{
 
 			//　モデル更新
-			m_pBaseball->ModelUpdate(2);
+			m_pBaseball->ModelUpdate(1);
 
 			// 転送行列更新
 			chr_func::CreateTransMatrix(
@@ -108,9 +108,7 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 
 			chr_func::GetFront(m_pBaseball, &param.move);
 
-			param.pos = m_pBaseball->m_Params.pos;
-			
-			param.pos.z += 2.0f;
+            param.pos = m_pBaseball->getNowModeModel()->GetWorldBonePos(40);
 			param.pos.y = UsualBall::UsualBallShotY;
 
 			param.pParent = m_pBaseball;
@@ -139,7 +137,7 @@ CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttack
 		//　遠距離攻撃開始
 		void AttackStart()override{
 			//　☆モーション
-			m_pBaseball->SetMotion(baseball_player::_mb_Shot_P);
+			m_pBaseball->SetMotion(baseball_player::_mb_Atk2_P);
 			//　効果音
 			Sound::Play(Sound::Swing3);
 		}

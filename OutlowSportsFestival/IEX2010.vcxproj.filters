@@ -200,7 +200,6 @@
     <ClCompile Include="source\Ball\AmefootBoundBall.cpp" />
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_Die.cpp" />
     <ClCompile Include="source\SceneLoading\SceneLoading.cpp" />
-    <ClCompile Include="source\SceneStageSelect\SceneStageSelect.cpp" />
     <ClCompile Include="source\SceneCharacterSelect\SelectCharacterWindow.cpp" />
     <ClCompile Include="source\SceneResult\BreakScreenObject.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballPlayerState_Controll_Vanish.cpp" />
@@ -240,6 +239,7 @@
     <ClCompile Include="source\character\Soccer\SoccerState_ControllVanish.cpp" />
     <ClCompile Include="source\character\Soccer\Snakeshot.cpp" />
     <ClCompile Include="source\character\Baseball\PitchingMachine.cpp" />
+    <ClCompile Include="source\SceneStageSelect\SceneStageSelect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -451,7 +451,6 @@
     <ClInclude Include="source\character\Tennis\TennisState_ControllVanish.h" />
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_Die.h" />
     <ClInclude Include="source\SceneLoading\SceneLoading.h" />
-    <ClInclude Include="source\SceneStageSelect\SceneStageSelect.h" />
     <ClInclude Include="source\SceneCharacterSelect\SelectCharacterWindow.h" />
     <ClInclude Include="source\SceneResult\BreakScreenObject.h" />
     <ClInclude Include="source\character\Baseball\BaseballPlayerState_Controll_Vanish.h" />
@@ -491,6 +490,7 @@
     <ClInclude Include="source\character\Soccer\SoccerSliding.h" />
     <ClInclude Include="source\character\Soccer\SoccerState_ControllVanish.h" />
     <ClInclude Include="source\character\Baseball\PitchingMachine.h" />
+    <ClInclude Include="source\SceneStageSelect\SceneStageSelect.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DATA\Shader\3DEx.fx" />

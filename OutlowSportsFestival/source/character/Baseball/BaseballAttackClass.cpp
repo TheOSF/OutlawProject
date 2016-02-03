@@ -20,6 +20,7 @@ BaseballAttackClass::BaseballAttackClass(
 	m_Locus(7)
 {
 	m_Damage.m_Enable = false;
+    m_Damage.HitMotionFrame = 32;
 
 	m_Locus.m_Division = 10;
 	m_Locus.m_pTexture = DefResource.Get(Resource::TextureType::Locus1);
@@ -43,7 +44,7 @@ BaseballAttackClass::~BaseballAttackClass()
 
 void BaseballAttackClass::Update()
 {
-	m_pOwner->ModelUpdate(1);
+	m_pOwner->ModelUpdate(0.5f);
 
 	(this->*m_pStateFunc)();
 

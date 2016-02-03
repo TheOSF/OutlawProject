@@ -9,7 +9,8 @@
 CharacterDamageControll::EventClass::EventClass(CharacterBase*  pOwner, int VanishMotion, CharacterRenderer* pRenderer) :
 pOwner(pOwner),
 VanishMotion(VanishMotion),
-pRenderer(pRenderer)
+pRenderer(pRenderer),
+PosOffset(0, 0, 0)
 {
 
 }
@@ -44,7 +45,11 @@ CharacterDamageControll::~CharacterDamageControll()
 //姿勢行列をセット
 void CharacterDamageControll::SetTransform(const Matrix& m)
 {
-    m_Transform = m;
+
+    Matrix M;
+    D3DXMatrixTranslation(&M, m_pEventClass->PosOffset.x, m_pEventClass->PosOffset.y, m_pEventClass->PosOffset.z);
+
+    m_Transform = M*m;
     m_NotControllCount = 0;
 }
 

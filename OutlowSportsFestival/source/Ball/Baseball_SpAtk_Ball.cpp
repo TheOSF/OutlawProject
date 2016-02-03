@@ -29,13 +29,15 @@ Baseball_SpAtk_Ball::Baseball_SpAtk_Ball(
     {
         //ダメージ判定のパラメータを代入
         m_Damage.pParent = pParent;
-        m_Damage.m_Param.width = 0.5f;	//大きさはボールによって異なる?
-        m_Damage.type = DamageBase::Type::_VanishDamage;
+        m_Damage.m_Param.width = 1.0f;	//大きさはボールによって異なる?
+        m_Damage.type = DamageBase::Type::_WeekDamage;
         m_Damage.Value = damage_val;
         m_Damage.m_Enable = true;
         m_Damage.m_Param.pos1 = pos;
         m_Damage.m_Param.pos2 = pos;
         m_Damage.AddSkillGaugeValue = 0;
+        m_Damage.HitMotionFrame = 50;
+        m_Damage.m_VecPower.x = 2.0f;
 
         UpdateDamageClass();
     }
@@ -147,10 +149,9 @@ void Baseball_SpAtk_Ball::UpdateDamageClass()
 {
     m_Damage.m_Vec = m_Vec;
     m_Damage.m_Vec.Normalize();
-    m_Damage.m_Vec.y = 0.3f;
 
-    m_Damage.m_VecPower.x = 0.5f;
-    m_Damage.m_VecPower.y = 0.3f;
+    m_Damage.m_VecPower.x = 2.0f;
+    m_Damage.m_VecPower.y = 0.0f;
 
 	m_Damage.m_Param.pos2 = m_Damage.m_Param.pos1;
 	m_Damage.m_Param.pos1 = m_Pos;

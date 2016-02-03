@@ -45,6 +45,8 @@ public:
 
         _mt_Damage_Weak = 19,
 
+        _mt_DamageControll =  33,
+
         _mt_Damage_Vanish_Fly = 20, 
         _mt_Damage_Vanish_Down = 22,
         _mt_Damage_Vanish_StandUp = 23,

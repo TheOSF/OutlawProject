@@ -127,7 +127,7 @@ void Baseball_PlayerControll_Attack_P::State_Atk()
     const int Motions[m_sMaxCombo] =
     {
         baseball_player::_mb_Shot_P,
-        baseball_player::_mb_Shot_P,
+        baseball_player::_mb_Atk1_P,
         baseball_player::_mb_Shot_P,
     };
 
@@ -135,7 +135,7 @@ void Baseball_PlayerControll_Attack_P::State_Atk()
     {
         15,
         15,
-        25,
+        15,
     };
 
     const int EndFrames[m_sMaxCombo] =
@@ -270,6 +270,6 @@ void Baseball_PlayerControll_Attack_P::State_Atk()
         chr_func::UpdateAll(m_pChr, &BaseballHitEvent(m_pChr, m_StateTimer < ShotFrames[m_ComboCount]));
         chr_func::CreateTransMatrix(m_pChr, &m_pChr->getNowModeModel()->m_TransMatrix);
 
-        m_pChr->ModelUpdate(2);
+        m_pChr->ModelUpdate(1);
     }
 }

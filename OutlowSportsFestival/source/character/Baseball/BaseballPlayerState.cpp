@@ -131,11 +131,13 @@ bool BaseballState_PlayerControll_Move::SwitchGameState(BaseballPlayer* pb)
 		return true;
 
 	case CharacterBase::State::LosePose:
-		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_Stand_B, 0.2f, 1000));
+        pb->SetMode(true);
+		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_LosePose, 0.2f, 1000));
 		return true;
 
 	case CharacterBase::State::WinPose:
-		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_Stand_P, 0.2f, 1000));
+        pb->SetMode(true);
+		pb->SetState(new BaseballState_PoseMotion(baseball_player::_mb_WinPose, 0.2f, 1000));
 
 		return true;
 	default:
@@ -312,8 +314,9 @@ CharacterUsualMove::Params BaseballMoveEvent::GetMoveParams()
 }
 
 //　アニメーション更新
-void BaseballMoveEvent::Update(bool isRun, RATIO speed_ratio){
-    m_pBaseball->getNowModeModel()->Update(1);
+void BaseballMoveEvent::Update(bool isRun, RATIO speed_ratio)
+{
+    m_pBaseball->ModelUpdate(m_pBaseball->isBatter() ? (0.5f) : (1.0f));
 }
 
 //　走り始めにモーションセット

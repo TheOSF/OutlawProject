@@ -85,6 +85,46 @@ void AmefootPlayerState_BallTouchDown::State_Jump()
     }
 
     m_pChr->m_Renderer.Update(2);
+    /*
+        const float MoveY = 0.55f;
+    const float MoveXZ = 0.4f;
+
+    const int AllFrame = 34;
+    const int NoDamageFrame = 10;
+
+    if (m_Timer == 1)
+    {
+        //移動量をセット
+        m_pChr->m_Params.move = chr_func::GetFront(m_pChr)*MoveXZ + Vector3(0, MoveY, 0);
+
+        //モーションをセット
+        m_pChr->m_Renderer.SetMotion(AmefootPlayer::Motion_Touchdown_Finish);
+    }
+
+    if (m_Timer == AllFrame - 5)
+    {
+        m_pChr->m_Params.move.y = -1.0f;
+    }
+
+    if (m_Timer > AllFrame)
+    {
+        SetState(&AmefootPlayerState_BallTouchDown::State_Down);
+    }
+
+    //更新
+    if (m_Timer < NoDamageFrame)
+    {
+        //無敵更新
+        chr_func::UpdateAll(m_pChr, &DamageManager::HitEventBase());
+    }
+    else
+    {
+        //通常更新
+        chr_func::UpdateAll(m_pChr, &AmefootUsualHitEvent(m_pChr));
+    }
+
+    m_pChr->m_Renderer.Update(1.25f);
+    */
 }
 
 void AmefootPlayerState_BallTouchDown::State_Down()
@@ -97,9 +137,9 @@ void AmefootPlayerState_BallTouchDown::State_Down()
         {
             DamageShpere* d = new DamageShpere();
 
-            d->HitMotionFrame = 30;
+            d->HitMotionFrame = 40;
             d->m_Param.pos = m_pChr->m_Params.pos + chr_func::GetFront(m_pChr)*2.0f;
-            d->m_Param.size = 5.0f;
+            d->m_Param.size = 6.5f;
             d->m_VecPower.x = 0.1f;
             d->m_VecType = DamageShpere::DamageVecType::CenterToPosXZ;
             d->pParent = m_pChr;
@@ -129,6 +169,16 @@ void AmefootPlayerState_BallTouchDown::State_Down()
                 0.2f
                 );
         }
+
+        EffectFactory::CircleAnimation(
+            m_pChr->m_Params.pos + chr_func::GetFront(m_pChr)*3.0f + Vector3(0, 0.5f, 0),
+            Vector3AxisY,
+            Vector3Zero,
+            Vector3Zero,
+            Vector2(8, 8), 
+            0xFFFFFFFF,
+            0x20FFFFFF
+            );
 
         //SE
         Sound::Play(Sound::Explode);

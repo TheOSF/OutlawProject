@@ -113,7 +113,7 @@ bool BaseballAttackInfo_UsualAtk::isDamageEnable(int Frame)
 //–ˆƒtƒŒ[ƒ€ŒÄ‚Î‚ê‚é
 void BaseballAttackInfo_UsualAtk::Update(int Frame, LocusHDR* pLocus)
 {
-	pLocus->AddPoint(m_LocusPos, m_LocusVec);
+//	pLocus->AddPoint(m_LocusPos, m_LocusVec);
 
 	chr_func::XZMoveDown(m_pOwner, 0.1f);
 

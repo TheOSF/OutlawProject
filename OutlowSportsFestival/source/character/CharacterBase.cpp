@@ -96,7 +96,7 @@ const char* CharacterBase::GetCharacterModelPath(CharacterType::Value chr_type)
     static const char* Paths[] = 
     {
         "DATA\\CHR\\SanoTennis\\tennis.iem",
-        "DATA\\CHR\\SanoBaseBall\\baseball.iem",
+        "DATA\\CHR\\SanoBaseBall\\Batter.iem",
         "DATA\\CHR\\SanoSoccer\\soccer.iem",
         "DATA\\CHR\\AmericanFootball\\AmericanFootball_v6.iem",
     };
@@ -155,7 +155,7 @@ int CharacterBase::GetWinMotion(CharacterType::Value chr_type)
     int Motions[]=
     {
         (int)TennisPlayer::_mt_WinPose,
-        (int)baseball_player::_mb_Stand_P,
+        (int)baseball_player::_mb_WinPose,
         (int)SoccerPlayer::_ms_Win,
         (int)AmefootPlayer::Motion_Win_Pose,
     };
@@ -170,7 +170,7 @@ int CharacterBase::GetLoseMotion(CharacterType::Value chr_type)
     int Motions[] =
     {
         (int)TennisPlayer::_mt_LosePose,
-        (int)baseball_player::_mb_Stand_P,
+        (int)baseball_player::_mb_LosePose,
         (int)SoccerPlayer::_ms_Lose,
         (int)AmefootPlayer::Motion_Lose_Pose,
     };

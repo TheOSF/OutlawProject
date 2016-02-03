@@ -13,10 +13,10 @@ m_pTennis(pTennis)
         TennisPlayer* const m_pTennis;
     public:
         TennisDamageControllEvent(TennisPlayer* p) :
-            EventClass(p, TennisPlayer::_mt_Damage_Vanish_Fly, &p->m_Renderer), 
+            EventClass(p, TennisPlayer::_mt_DamageControll, &p->m_Renderer),
             m_pTennis(p)
         {
-
+            PosOffset.y = -2;
         }
 
         void SetVanishState(CrVector3 v)

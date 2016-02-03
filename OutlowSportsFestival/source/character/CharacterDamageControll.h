@@ -16,11 +16,13 @@ public:
         CharacterBase* const pOwner;            //操るキャラクタへのポインタ
         int            const VanishMotion;      //吹き飛びモーションの番号
         CharacterRenderer* const pRenderer;     //キャラクタレンダラー
+        Vector3              PosOffset;
 
         EventClass(CharacterBase*  pOwner, int VanishMotion, CharacterRenderer* pRenderer);
 
         virtual ~EventClass();
         virtual void SetVanishState(CrVector3 v) = 0;   //吹き飛びステートに移行する
+        
     };
 
     CharacterDamageControll(EventClass* pEventClass);

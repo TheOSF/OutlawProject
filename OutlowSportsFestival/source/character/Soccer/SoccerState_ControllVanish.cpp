@@ -15,7 +15,7 @@ m_pSoccer(pSoccer)
             EventClass(p, SoccerPlayer::_ms_Vanish_Fly, &p->m_Renderer),
             m_pSoccer(p)
         {
-
+            PosOffset.y = -2;
         }
 
         void SetVanishState(CrVector3 v)

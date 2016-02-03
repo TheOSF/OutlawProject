@@ -27,13 +27,21 @@ void BaseballState_DamageVanish::Enter(BaseballPlayer* b)
 		void FlyStart()
 		{
 			//吹き飛びモーションをセット
-            m_pBaseball->getNowModeModel()->SetMotion(baseball_player::_mb_Damage_Vanish_Fly);
+            if (m_pBaseball->isBatter())
+            {
+                m_pBaseball->SetMotion(baseball_player::_mb_Damage_Vanish_Fly_B);
+            }
+            else
+            {
+                m_pBaseball->SetMotion(baseball_player::_mb_Damage_Vanish_Fly_P);
+            }
+
 		}
 
         void Flying(const Matrix& Rotate, RATIO t)
 		{
 			//モデルのアニメーション更新
-            m_pBaseball->getNowModeModel()->Update(1);
+            m_pBaseball->getNowModeModel()->Update(t*0.5f);
 
 			//位置にもとずき、ワールド変換行列を計算
             chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->getNowModeModel()->m_TransMatrix);
@@ -43,14 +51,22 @@ void BaseballState_DamageVanish::Enter(BaseballPlayer* b)
 		}
 
 		void DownStart()
-		{
-			//ダウンモーションをセット
-            m_pBaseball->getNowModeModel()->SetMotion(baseball_player::_mb_Damage_Vanish_Down);
+        {
+            if (m_pBaseball->isBatter())
+            {
+                //ダウンモーションをセット
+                m_pBaseball->SetMotion(baseball_player::_mb_Damage_Vanish_Down_B);
+            }
+            else
+            {
+                //ダウンモーションをセット
+                m_pBaseball->SetMotion(baseball_player::_mb_Damage_Vanish_Down_P);
+            }
 		}
 
 		void Downing()
 		{
-            m_pBaseball->getNowModeModel()->Update(1);
+            m_pBaseball->getNowModeModel()->Update(0.5f);
 
 			//ワールド変換行列を計算
             chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->getNowModeModel()->m_TransMatrix);
@@ -59,13 +75,20 @@ void BaseballState_DamageVanish::Enter(BaseballPlayer* b)
 		void StandUpStart()
 		{
 			//起き上がりモーションをセット
-            m_pBaseball->getNowModeModel()->SetMotion(baseball_player::_mb_Damage_Vanish_StandUp);
+            if (m_pBaseball->isBatter())
+            {
+                m_pBaseball->SetMotion(baseball_player::_mb_Damage_Vanish_StandUp_B);
+            }
+            else
+            {
+                m_pBaseball->SetMotion(baseball_player::_mb_Damage_Vanish_StandUp_P);
+            }
 		}
 
 		void StandUping()
 		{
 			//モデルのアニメーション更新
-            m_pBaseball->getNowModeModel()->Update(1);
+            m_pBaseball->getNowModeModel()->Update(0.5f);
 
 			//ワールド変換行列を計算
             chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->getNowModeModel()->m_TransMatrix);
@@ -81,25 +104,47 @@ void BaseballState_DamageVanish::Enter(BaseballPlayer* b)
 		void HitWall()
 		{
 			//壁に当たったモーションをセット
-            m_pBaseball->getNowModeModel()->SetMotion(baseball_player::_mb_Damage_Vanish_Wall);
+            if (m_pBaseball->isBatter())
+            {
+                m_pBaseball->SetMotion(baseball_player::_mb_Damage_Vanish_WallHitAndDown_B);
+            }
+            else
+            {
+                m_pBaseball->SetMotion(baseball_player::_mb_Damage_Vanish_WallHitAndDown_P);
+            }
 		}
 
 		void HitFloor()
 		{
 			//床に当たったモーションをセット
-            m_pBaseball->getNowModeModel()->SetMotion(baseball_player::_mb_Damage_Vanish_Bound);
+            if (m_pBaseball->isBatter())
+            {
+                m_pBaseball->SetMotion(baseball_player::_mb_Damage_Vanish_Bound_B);
+            }
+            else
+            {
+                m_pBaseball->SetMotion(baseball_player::_mb_Damage_Vanish_Bound_P);
+            }
 		}
 
 		void HitFloorAndStandUp()
 		{
-			//立ち上がりモーションをセット
-            m_pBaseball->getNowModeModel()->SetMotion(baseball_player::_mb_Damage_Vanish_StandUp);
+            if (m_pBaseball->isBatter())
+            {
+                //立ち上がりモーションをセット
+                m_pBaseball->SetMotion(baseball_player::_mb_Damage_Vanish_StandUp_B);
+            }
+            else
+            {
+                m_pBaseball->SetMotion(baseball_player::_mb_Damage_Vanish_StandUp_P);
+            }
+            
 		}
 
 		void HitWallUpdate()
 		{
 			//モデルのアニメーション更新
-            m_pBaseball->getNowModeModel()->Update(1);
+            m_pBaseball->getNowModeModel()->Update(0.5f);
 
 			//ワールド変換行列を計算
             chr_func::CreateTransMatrix(m_pBaseball, &m_pBaseball->getNowModeModel()->m_TransMatrix);

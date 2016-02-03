@@ -25,7 +25,7 @@ m_BatterFlg(false)
 
     {
         m_pBatterModel = &m_Renderer;
-        m_pPitcherModel = new CharacterRenderer(new  BlendAnimationMesh("DATA\\CHR\\SanoBaseBall\\baseball.iem"));
+        m_pPitcherModel = new CharacterRenderer(new  BlendAnimationMesh("DATA\\CHR\\SanoBaseBall\\pitcher.iem"));
         CreateCharacterModel(m_pPitcherModel, CharacterType::_Baseball, m_PlayerInfo.number);
 
         SetMode(true);
@@ -47,7 +47,7 @@ BaseballPlayer::~BaseballPlayer()
 void BaseballPlayer::SetMotion(int motion)
 {
     CharacterRenderer* const pNow = getNowModeModel();
-    
+
     pNow->SetMotion(motion);
 }
 

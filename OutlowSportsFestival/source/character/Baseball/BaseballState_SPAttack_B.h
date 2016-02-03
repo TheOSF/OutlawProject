@@ -43,6 +43,8 @@ private:
 
     LocusHDR                m_Locus;
 
+    Matrix GetBatMatrix();
+
     void SetState(StateFunc state);
     void UpdateBatMesh();
     void UpdateDamagePos();

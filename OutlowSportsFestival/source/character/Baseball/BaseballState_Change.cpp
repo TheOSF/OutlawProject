@@ -25,6 +25,22 @@ BaseballState_Change::~BaseballState_Change()
 void  BaseballState_Change::Enter(BaseballPlayer* b)
 {
 	m_pBaseball = b;
+
+    //　エフェクト
+    EffectFactory::Change(m_pBaseball->m_Params.pos + Vector3(0, 2, 0));
+    //　効果音
+    Sound::Play(Sound::Change);
+
+    b->ChangeMode();
+
+    if (b->isBatter())
+    {
+        b->SetMotion(baseball_player::_mb_Change_B);
+    }
+    else
+    {
+        b->SetMotion(baseball_player::_mb_Change_P);
+    }
 }
 
 
@@ -35,23 +51,15 @@ void BaseballState_Change::Execute(BaseballPlayer* b)
 
     chr_func::XZMoveDown(b, 0.05f);
 
-    if (m_Timer == 1)
-    {
-        //　エフェクト
-        EffectFactory::Change(m_pBaseball->m_Params.pos + Vector3(0, 2, 0));
-        //　効果音
-        Sound::Play(Sound::Change);
-
-        b->ChangeMode();
-    }
-
-    if (m_Timer > 30)
+    if (m_Timer > 25)
     {
         b->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(b));
     }
-	
-	chr_func::UpdateAll(b, &BaseballHitEvent(b));
+
     b->ModelUpdate();
+
+	chr_func::UpdateAll(b, &BaseballHitEvent(b));
+    
     chr_func::CreateTransMatrix(b, &b->getNowModeModel()->m_TransMatrix);
 }
 

@@ -114,15 +114,15 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
     }
     else
     {
-        param.AfterShotFrame = 30;
-        param.CanCounterFrame = 30;
+        param.AfterShotFrame = 15;
+        param.CanCounterFrame = 15;
         param.CatchAriaSize = 12.0f;
         param.ControllRadian = D3DXToRadian(33);
-        param.FailedFrame = 20;
+        param.FailedFrame = 10;
         param.PoseFrame = 24;
-        param.ShotFrame = 14;
+        param.ShotFrame = 7;
         param.BallSpeed = 0.85f;
-        param.CatchFrame = 20;
+        param.CatchFrame = 10;
         param.CatchBoneNumber = 32;
     }
 
@@ -148,7 +148,7 @@ void BaseballState_PlayerControll_Counter::Execute(BaseballPlayer* b)
 	chr_func::CreateTransMatrix(b, &b->getNowModeModel()->m_TransMatrix);
 
 	//ƒ‚ƒfƒ‹XV
-	b->ModelUpdate(1);
+	b->ModelUpdate(1.0f);
 }
 
 

@@ -183,11 +183,11 @@ void AmefootPlayerState_SpecialAtk::UpdateDamageTransform()
     //‰Šú‰»
     D3DXMatrixIdentity(T);
 
-    //c‚ÉŒü‚¯‚é(X Ž²‚É 90 “x)
-    {
-        D3DXMatrixRotationX(&W, D3DXToRadian(90));
-        *T *= W;
-    }
+    ////c‚ÉŒü‚¯‚é(X Ž²‚É 90 “x)
+    //{
+    //    D3DXMatrixRotationX(&W, D3DXToRadian(90));
+    //    *T *= W;
+    //}
 
     //ƒLƒƒƒ‰ƒNƒ^‚ÌŒü‚¢‚Ä‚¢‚é•ûŒü‚ÉŒü‚¯‚é(‚xŽ²)
     {
@@ -202,7 +202,7 @@ void AmefootPlayerState_SpecialAtk::UpdateDamageTransform()
         chr_func::GetFront(m_pChr, &pos);
         pos *= 5.0f;
 
-        pos += Vector3(0, 1.5f, 0);
+        pos += Vector3(0, 2.5f, 0);
         
         pos += m_pChr->m_Params.pos;
         
