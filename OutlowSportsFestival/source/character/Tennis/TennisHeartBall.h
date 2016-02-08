@@ -49,6 +49,7 @@ private:
     float CalcScale();
     void Effect(int Level);
     void SmokeEffect();
+    bool isHitWall();
 
     void Counter(CharacterBase* pCounterCharacter);
 };

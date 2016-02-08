@@ -387,10 +387,14 @@ void RendererManager::Render()
         &Ur
         );
 
+#ifdef _DEBUG
+
     if (GetKeyState('G'))
     {
         m_DeferredLightManager.TextureRender();
     }
+
+#endif
 }
 
 //テクスチャに描画

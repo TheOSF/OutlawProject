@@ -81,7 +81,7 @@ m_Enable(true)
 
     m_VecType = DamageVecType::MemberParam;
     m_Vec = Vector3(0, 1, 0);
-    m_VecPower = Vector2(1, 1);
+    m_VecPower = Vector2(1, 1)*0.1f;
 }
 
 //ダメージクラス(球)

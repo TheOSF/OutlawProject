@@ -83,7 +83,7 @@ void TennisState_BoundShot::Execute(TennisPlayer* t)
         //移動は前向き
         chr_func::GetFront(t, &move);
         //スピードは適当
-        move *= 0.2f;
+        move *= 0.25f;
 
         new TennisHeartBall(pos, move, t);
          

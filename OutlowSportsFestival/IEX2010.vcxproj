@@ -170,8 +170,10 @@
     <ClCompile Include="source\character\Amefoot\StateClass\AmefootPlayerState_UsualMove.cpp" />
     <ClCompile Include="source\character\Amefoot\UtilityClass\AmefootComputerUtillityClass.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballEquip.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballPlayerState_ChargeBall.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballPlayerState_Controll_Vanish.cpp" />
     <ClCompile Include="source\character\Baseball\BaseballState_PoseMotion.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballAttackState.cpp" />
     <ClCompile Include="source\character\Baseball\Computer\BaseballComputerUtillityClass.cpp" />
     <ClCompile Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.cpp" />
     <ClCompile Include="source\character\Baseball\PitchingMachine.cpp" />
@@ -232,6 +234,7 @@
     <ClCompile Include="source\character\Soccer\SoccerAttackState.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerCommonState.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerDash.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerDushTurn.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerHitEvent.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerPlayer.cpp" />
     <ClCompile Include="source\character\Soccer\SoccerPlayerState.cpp" />
@@ -436,8 +439,10 @@
     <ClInclude Include="source\character\Amefoot\StateClass\AmefootPlayerState_UsualMove.h" />
     <ClInclude Include="source\character\Amefoot\UtilityClass\AmefootComputerUtillityClass.h" />
     <ClInclude Include="source\character\Baseball\BaseballEquip.h" />
+    <ClInclude Include="source\character\Baseball\BaseballPlayerState_ChargeBall.h" />
     <ClInclude Include="source\character\Baseball\BaseballPlayerState_Controll_Vanish.h" />
     <ClInclude Include="source\character\Baseball\BaseballState_PoseMotion.h" />
+    <ClInclude Include="source\character\Baseball\BaseballAttackState.h" />
     <ClInclude Include="source\character\Baseball\Computer\BaseballComputerUtillityClass.h" />
     <ClInclude Include="source\character\Baseball\Computer\BaseballPlayerState_ComMove.h" />
     <ClInclude Include="source\character\Baseball\PitchingMachine.h" />
@@ -502,6 +507,7 @@
     <ClInclude Include="source\character\Soccer\SoccerAttackState.h" />
     <ClInclude Include="source\character\Soccer\SoccerCommonState.h" />
     <ClInclude Include="source\character\Soccer\SoccerDash.h" />
+    <ClInclude Include="source\character\Soccer\SoccerDushTurn.h" />
     <ClInclude Include="source\character\Soccer\SoccerHitEvent.h" />
     <ClInclude Include="source\character\Soccer\SoccerPlayer.h" />
     <ClInclude Include="source\character\Soccer\SoccerPlayerState.h" />

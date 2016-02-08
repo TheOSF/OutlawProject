@@ -184,18 +184,13 @@ bool sceneGamePlay::Initialize()
 			);
 
 		DefResource.Regist(
-			Resource::MeshType::Helmet,
-			new iexMesh("DATA\\CHR\\SanoBaseball\\helmet.imo")
+			Resource::MeshType::PitchingMachine,
+			new iexMesh("DATA\\CHR\\SanoBaseball\\PitchingMachine\\Pitching_machine.imo")
 			);
 
         DefResource.Regist(
-            Resource::MeshType::Hat,
-            new iexMesh("DATA\\CHR\\SanoBaseball\\hat.imo")
-            );
-
-        DefResource.Regist(
-            Resource::MeshType::Mitt,
-            new iexMesh("DATA\\CHR\\SanoBaseball\\mitt.imo")
+            Resource::MeshType::PitchingMachine_arm,
+            new iexMesh("DATA\\CHR\\SanoBaseball\\PitchingMachine\\Pitching_machine_arm.imo")
             );
     }
 
@@ -211,8 +206,9 @@ bool sceneGamePlay::Initialize()
     //GameInitializer_DevelopMode
 
     m_Params.pInitializer->GameCreate();
-    delete m_Params.pInitializer;
 
+    delete m_Params.pInitializer;
+    m_Params.pInitializer = nullptr;
 
 	return true;
 }

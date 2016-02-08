@@ -73,6 +73,16 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
 
 		}
 
+        Vector3 ClacLocalOffset(bool Right)
+        {
+            if (m_pBaseball->isBatter())
+            {
+                return Vector3(1.5f, 0, 0);
+            }
+
+            return Vector3Zero;
+        }
+
 		//‘Å‚¿Ž¸”s
 		void ShotFaild()
 		{
@@ -101,15 +111,15 @@ void BaseballState_PlayerControll_Counter::Enter(BaseballPlayer* b)
     {
         param.HitSE = Sound::BaseBall_kaki_n;
 
-        param.AfterShotFrame = 15;
-        param.CanCounterFrame = 30;
+        param.AfterShotFrame = 10;
+        param.CanCounterFrame = 15;
         param.CatchAriaSize = 8.0f;
         param.ControllRadian = D3DXToRadian(33);
         param.FailedFrame = 20;
         param.PoseFrame = 24;
-        param.ShotFrame = 6;
-        param.BallSpeed = 1.2f;
-        param.HitStop = 6;
+        param.ShotFrame = 15;
+        param.BallSpeed = 1.0f;
+        param.HitStop = 3;
    
     }
     else

@@ -114,13 +114,9 @@ void TennisState_DamageMotion_Die::Enter(TennisPlayer* t)
     //ダメージモーションパラメーターを作成する
     CharacterDamageVanish::Param  Param;
 
-    m_Damage_vec.y = 0;
-    m_Damage_vec.Normalize();
-
     Param.rotate_speed = Vector3(0.0f, 0.0f, 0.0f);
 
-    Param.move = m_Damage_vec * 0.7f;
-    Param.move.y = 0.2f;
+    Param.move = m_Damage_vec;
 
     Param.standup_frame = 50;
     Param.down_frame = 10;

@@ -10,7 +10,7 @@
 
 class Baseball_PlayerControll_Attack_P : public BaseballState
 {
-public:
+private:
 
 	Baseball_PlayerControll_Attack_P(BaseballPlayer* b);
 	~Baseball_PlayerControll_Attack_P();

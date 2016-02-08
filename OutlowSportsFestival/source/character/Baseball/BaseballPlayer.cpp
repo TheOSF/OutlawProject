@@ -31,7 +31,9 @@ m_BatterFlg(false)
         SetMode(true);
     }
 
-	m_Params.maxHP = m_Params.HP = 110;
+    m_ChargeBallCount = 1;
+
+	m_Params.maxHP = m_Params.HP = 100;
 	
     m_ModelSize = 0.06f;
 }
@@ -136,4 +138,10 @@ CharacterRenderer* BaseballPlayer::getNowModeModel()
     }
 
     return m_pPitcherModel;
+}
+
+void BaseballPlayer::MinusChargeBallCount(int value)
+{
+    m_ChargeBallCount -= value;
+    m_ChargeBallCount = max(1, m_ChargeBallCount);
 }

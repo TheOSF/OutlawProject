@@ -20,6 +20,7 @@
 #include "SoccerCommonState.h"
 #include "SoccerState_ControllVanish.h"
 
+
 SoccerState* SoccerState_PlayerControll_Move::GetPlayerControllMove(
 	SoccerPlayer* ps)
 {
@@ -186,18 +187,21 @@ m_Timer(0)
     m_Damage.pParent = s;
     m_Damage.type = DamageBase::Type::_WeekDamage;
     m_Damage.m_Param.size = 1.5f;
+    m_Damage.Value = 8.0f;
+    m_Damage.HitMotionFrame = 30;
 
     m_pStateFunc = &SoccerState_Sliding::State_Start;
 }
 
 void SoccerState_Sliding::Enter(SoccerPlayer* t)
 {
-    
+    m_SaveChrSize = t->m_Params.size;
+    m_pChr->m_Params.DoCheckOtherChrSpace = false;
 }
 
 void SoccerState_Sliding::Execute(SoccerPlayer* t)
 {
-
+  
     (this->*m_pStateFunc)();
     
     SetMoveByAngle();
@@ -211,7 +215,8 @@ void SoccerState_Sliding::Execute(SoccerPlayer* t)
 
 void SoccerState_Sliding::Exit(SoccerPlayer* t)
 {
-
+    t->m_Params.size = m_SaveChrSize;
+    m_pChr->m_Params.DoCheckOtherChrSpace = true;
 }
 
 void SoccerState_Sliding::SetState(StateFunc State)
@@ -333,7 +338,7 @@ void SoccerState_Sliding::StartAngleControll()
 
 void SoccerState_Sliding::AutoAngleControll()
 {
-    const RADIAN AngleSpeed = D3DXToRadian(5);
+    const RADIAN AngleSpeed = D3DXToRadian(1.5f);
     CharacterBase* pTarget = nullptr;
 
     if (chr_func::CalcAtkTarget(m_pChr, D3DXToRadian(20), 8.0f, &pTarget))
@@ -389,6 +394,8 @@ void SoccerState_Sliding::State_Start()
     const int AllFrame = 10;
     const int DamageFrame = 5;
 
+    m_pChr->m_Params.size *= 0.9f;
+
     ++m_Timer;
 
     m_Damage.m_Enable = m_Timer > DamageFrame;
@@ -418,6 +425,8 @@ void SoccerState_Sliding::State_Sliding()
     const int SlideingFrame = 25;
     ++m_Timer;
 
+    m_pChr->m_Params.size *= 0.9f;
+
     AutoAngleControll();
 
     chr_func::XZMoveDown(m_pChr, 0.025f);
@@ -441,6 +450,8 @@ void SoccerState_Sliding::State_End()
 {
     const int AllFrame = 10;
 
+
+    m_pChr->m_Params.size += (m_SaveChrSize - m_pChr->m_Params.size)*0.15f;
 
     ++m_Timer;
 
@@ -795,18 +806,23 @@ void SoccerState_PlayerControll_Dash::Execute(SoccerPlayer* s)
         if (m_pMoveClass->isDash())
         {
 
-            // [△] で ショット
-            if (controller::GetTRG(controller::button::sankaku, s->m_PlayerInfo.number))
+            // [□] で 近距離攻撃
+            if (controller::GetTRG(controller::button::shikaku, s->m_PlayerInfo.number))
             {
-                s->SetState(new SoccerState_PlayerControll_Shot);
+                s->SetState(new SoccerAttackState(s));
             }
-            // [×] で ローリング
+
+            // [×] で ターン
             if (controller::GetTRG(controller::button::batu, s->m_PlayerInfo.number))
             {
-                s->SetState(new SoccerState_Rolling(new SoccerUtillityClass::PlayerRollingControll(s), true));
+             //   s->SetState(new SoccerState_Rolling(new SoccerUtillityClass::PlayerRollingControll(s), true));
+                Vector2 Stick = controller::GetStickValue(controller::stick::left, s->m_PlayerInfo.number);
+                
+                m_pMoveClass->SetEnd(Vector3(Stick.x, 0, Stick.y));
             }
-            // [□] で スライディング
-            if (controller::GetTRG(controller::button::shikaku, s->m_PlayerInfo.number))
+
+            // [△] で スライディング
+            if (controller::GetTRG(controller::button::sankaku, s->m_PlayerInfo.number))
             {
                 s->SetState(new SoccerState_Sliding(s));
             }

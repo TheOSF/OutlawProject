@@ -21,6 +21,7 @@ void AmefootPlayerState_Evasion::Enter(AmefootPlayer* pCharacter)
 {
     m_pChr = pCharacter;
     m_pChr->m_Params.DoCheckOtherChrSpace = false;
+    m_StandUpSpeed = 0.0f;
 }
 //-----------------------------------------------------------------------------------------
 void AmefootPlayerState_Evasion::Execute(AmefootPlayer* pCharacter)
@@ -117,6 +118,12 @@ void AmefootPlayerState_Evasion::State_DownStart()
 void AmefootPlayerState_Evasion::State_Downing()
 {
     const int CanDownFrame = 70;
+    const float MaxSpeed = 2.5f;
+    const float MinSpeed = 1.0f;
+
+    //速度設定
+    m_StandUpSpeed = 1 - ((float)m_Timer / (float)CanDownFrame);
+    m_StandUpSpeed = MinSpeed + (MaxSpeed - MinSpeed)*m_StandUpSpeed;
 
     //寝すぎの場合
     if (++m_Timer > CanDownFrame)
@@ -141,7 +148,8 @@ void AmefootPlayerState_Evasion::State_Downing()
 
 void AmefootPlayerState_Evasion::State_StandUp()
 {
-    const int DownFrame = 30;
+    const int DownFrame = (int)(30.f / m_StandUpSpeed);
+    const int NoDamageFrame = (int)(10.f / m_StandUpSpeed);
 
     m_pChr->m_Params.DoCheckOtherChrSpace = true;
 
@@ -158,10 +166,18 @@ void AmefootPlayerState_Evasion::State_StandUp()
     }
 
     //アニメーション更新
-    m_pChr->m_Renderer.Update(1);
+    m_pChr->m_Renderer.Update(m_StandUpSpeed);
 
     //更新
-    chr_func::UpdateAll(m_pChr, &AmefootUsualHitEvent(m_pChr));
+    if (m_Timer < NoDamageFrame)
+    {
+        chr_func::UpdateAll(m_pChr, &DamageManager::HitEventBase());
+    }
+    else
+    {
+        chr_func::UpdateAll(m_pChr, &AmefootUsualHitEvent(m_pChr));
+    }
+    
 }
 
 void AmefootPlayerState_Evasion::State_ViewAround()

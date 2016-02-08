@@ -756,3 +756,17 @@ void chr_func::SetControllerShock(CharacterBase* p, RATIO power, float second)
         p->m_PlayerInfo.number
         );
 }
+
+
+
+//プレイヤー操作かどうか
+bool chr_func::isPlayer(CharacterBase* p)
+{
+    return p->m_PlayerInfo.player_type == PlayerType::_Player;
+}
+
+//コンピュータ操作かどうか
+bool chr_func::isComputer(CharacterBase* p)
+{
+    return p->m_PlayerInfo.player_type == PlayerType::_Computer;
+}

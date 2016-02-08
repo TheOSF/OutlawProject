@@ -39,9 +39,13 @@ private:
     bool                      m_DoNextAtk;
     bool                      m_isCounterHit;
 
+    float                     m_MotionSpeed;
+
     Vector3                   m_LocalVec;
     Vector3                   m_LocalPosOffset;
     UINT                      m_DamageEnableCount;
+
+    int                       m_Atk2ContinueCount;
     
     void AngleControll(bool StartFrame);
 

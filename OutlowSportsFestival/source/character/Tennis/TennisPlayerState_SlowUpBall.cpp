@@ -348,6 +348,51 @@ void TennisPlayerState_SlowUpBall::State_Usual()
 
 void TennisPlayerState_SlowUpBall::State_Smash()
 {
+    class Homing :public UsualBall::MoveControll
+    {
+        int             DoHoming;
+    public:
+
+        Homing()
+        {
+            DoHoming = 2;
+        }
+
+        void HomingUpdate(UsualBall* pBall)
+        {
+            CharacterBase*  pTarget = nullptr;
+
+            if (chr_func::CalcAtkTarget(pBall->m_Params.pParent, pBall->m_Params.pos, pBall->m_Params.move, D3DXToRadian(20), 100, &pTarget))
+            {
+
+                Vector3 MoveVec = pTarget->m_Params.pos - pBall->m_Params.pos;
+                const RADIAN HomingAngle = D3DXToRadian(3);
+
+                MoveVec.y = 0.0f;
+                MoveVec.Normalize();
+
+                MoveVec *= pBall->m_Params.move.Length();
+
+                pBall->m_Params.move = Vector3RotateToTargetVec(pBall->m_Params.move, MoveVec, HomingAngle);
+            }
+        }
+
+        void Move(UsualBall* pBall)
+        {
+            if (DoHoming > 0)
+            {
+                HomingUpdate(pBall);
+            }
+
+            pBall->m_Params.pos += pBall->m_Params.move;
+        }
+
+        void Counter(CharacterBase* pCounterChr, UsualBall* pBall)
+        {
+            --DoHoming;
+        }
+    };
+
     const RADIAN angle_speed = D3DXToRadian(15);
     const int SmashFrame = 3;
     const int EndFrame = 15;
@@ -386,7 +431,7 @@ void TennisPlayerState_SlowUpBall::State_Smash()
         param.type = BallBase::Type::_Usual;
 
         //¶¬
-        (new UsualBall(param, DamageBase::Type::_VanishDamage, 15, UsualBall::GetUsualMoveControll() ))->Counter(m_pTennis);
+        (new UsualBall(param, DamageBase::Type::_VanishDamage, 15, new Homing()))->Counter(m_pTennis);
 
 
         //ƒRƒ“ƒgƒ[ƒ‰‚ğU“®

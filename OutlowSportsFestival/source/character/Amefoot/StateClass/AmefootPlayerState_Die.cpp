@@ -110,13 +110,9 @@ void AmefootPlayerState_Die::Enter(AmefootPlayer* pCharacter)
     //ダメージモーションパラメーターを作成する
     CharacterDamageVanish::Param  Param;
 
-    m_Damage_vec.y = 0;
-    m_Damage_vec.Normalize();
-
     Param.rotate_speed = Vector3(0.0f, 0.0f, 0.0f);
 
-    Param.move = m_Damage_vec * 0.7f;
-    Param.move.y = 0.2f;
+    Param.move = m_Damage_vec;
     Param.down_frame = 10;
     Param.standup_frame = 50;
 

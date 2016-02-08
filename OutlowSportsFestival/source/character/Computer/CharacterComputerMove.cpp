@@ -244,10 +244,8 @@ float CharacterComputerMove::GetBestLen()
         value -= BestLenIterator.Ratio;
     }
 
+    return m_InParam.m_BestLenList.front().Len;
 
-    MyAssert(false, "確立がおかしい？");
-
-    return 0.0f;
 }
 
 //目標地点をみてるか

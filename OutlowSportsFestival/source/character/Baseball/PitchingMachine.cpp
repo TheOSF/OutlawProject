@@ -1,5 +1,7 @@
 #include "PitchingMachine.h"
 
+
+
 PitchingMachine::PitchingMachine(
     BaseballPlayer*     pChr,
     CrVector3           pos,

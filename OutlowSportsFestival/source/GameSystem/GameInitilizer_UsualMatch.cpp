@@ -19,7 +19,7 @@
 #include "../Item/Item_BellEmitter.h"
 #include "../Item/Item_Bell.h"
 #include "../Camera/CameraState.h"
-
+#include "../Effect/FadeGameObject.h"
 
 static void CreateCharacter(
     PlayerNum::Value      n,
@@ -143,4 +143,12 @@ void GameInitializer_UsualMatch::GameCreate()
 
         CreateCharacter((PlayerNum::Value)it.number, it.player_type, it.chr_type,it.strong_type);
     }
+
+
+    (new FadeGameObject(
+        COLORf(1, 1, 1, 1),
+        0,
+        0,
+        60
+        ))->Update();
 }

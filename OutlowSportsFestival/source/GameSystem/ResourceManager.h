@@ -44,9 +44,8 @@ public:
 
 		//@–ì‹…ŠÖ˜A
 		Bat,
-		Helmet,
-        Hat,
-        Mitt,
+        PitchingMachine,
+        PitchingMachine_arm,
 
         _MaxType
     };

@@ -16,6 +16,9 @@
 #include "../Render/MeshRenderer.h"
 #include "../Sound/Sound.h"
 #include "../SceneTitle/SceneTitle.h"
+#include "../UI/SceneCharacterSelectUI.h"
+#include "../utillity/DebugControllGameObject.h"
+
 
 UINT SceneResult::ResultStartParam::GetPlayerNum()const
 {
@@ -61,6 +64,9 @@ SceneResult::~SceneResult()
 {
     DefGameObjMgr.Release(); //ゲームオブジェクト削除は一番初めに
     DefCamera.Release();
+
+    delete m_pUITex;
+    delete m_pPlayerNumTex;
 }
 
 bool SceneResult::Initialize()
@@ -68,9 +74,8 @@ bool SceneResult::Initialize()
     //カメラを初期位置にセット
     DefCamera.SetNewState(new CameraStateNoWork());
 
-    DefCamera.m_Position = Vector3(0, 5, -12);
-    DefCamera.m_Target = Vector3(0, 5, 0);
-
+    //カメラ初期化
+    GetWinChrCameraParam(DefCamera.m_Position, DefCamera.m_Target);
     DefCamera.Update();
 
     //画面オブジェクトを生成
@@ -79,6 +84,9 @@ bool SceneResult::Initialize()
     //ステージ生成
     CreateStage();
 
+    m_pUITex = new iex2DObj("DATA\\RESULT\\ResultSelect.png");
+    m_pPlayerNumTex = new iex2DObj("DATA\\RESULT\\Playernumber.png");
+    
     {
         iexLight::SetFog(800, 1000, 0);
     }
@@ -145,13 +153,9 @@ void SceneResult::State_Initialize()
     m_pStateFunc = &SceneResult::State_ScreenVanish;
 
     //キャラクタをセット
-    Vector3 pos = Vector3(-6.0f, 1.95f, 0);
-    const float Width = -pos.x / 1.5f;
-
     for (auto&it : m_StartParam.PlayerList)
     {
-        SetCharacter(pos, it);
-        pos.x += Width;
+        SetCharacter(GetChrPosByNum(it.Num), it);
     }
 
     
@@ -161,6 +165,42 @@ void SceneResult::State_Initialize()
     //ライトをセット
     SetLights();
 
+}
+
+void SceneResult::GetWinChrCameraParam(Vector3& pos, Vector3& target)
+{
+    Vector3 WinChrPos = GetChrPosByNum(GetWinCharacterPlayerNum());
+
+    WinChrPos.y += 5.0f;
+
+    pos = WinChrPos + Vector3(0, 0, -8);
+    target = WinChrPos;
+
+}
+
+int SceneResult::GetWinCharacterPlayerNum()
+{
+    for (auto& it : m_StartParam.PlayerList)
+    {
+        if (it.Ranking == 1)
+        {
+            return (int)it.Num;
+        }
+    }
+
+    MyAssert(false, "勝利キャラを特定できませんでした");
+
+    return -1;
+}
+
+Vector3 SceneResult::GetChrPosByNum(int num)
+{
+    Vector3 pos = Vector3(-6.0f, 1.95f, 0);
+    const float Width = -pos.x / 1.5f;
+
+    pos.x += Width*(float)num;
+
+    return pos;
 }
 
 void SceneResult::State_ScreenVanish()
@@ -193,20 +233,58 @@ void SceneResult::State_Back()
 
     }
 
-    //ボールをキャラクタに向かって飛ばす
-    if (m_Timer == 30)
+    //WinnerＵＩの表示
+    if (m_Timer == 40)
     {
+        SceneCharacterSelectUI* pUI = nullptr;
 
+        {
+            //プレイヤー番号
+            pUI = new SceneCharacterSelectUI(
+                m_pPlayerNumTex,
+                RectI(0, 102 * GetWinCharacterPlayerNum(), 256, 102)
+                );
+
+            pUI->m_Target.Color = Vector4(1, 1, 1, 1);
+            pUI->m_Target.Pos = Vector2(450, 460);
+            pUI->m_Target.Size = Vector2(400, 125);
+
+            pUI->m_Current = pUI->m_Target;
+            pUI->m_Current.Color.w = 0.0f;
+
+        }
+
+        {
+            //WIN
+            pUI = new SceneCharacterSelectUI(
+                m_pUITex,
+                RectI(500, 0, 524, 250)
+                );
+
+            pUI->m_Target.Color = Vector4(1, 1, 1, 1);
+            pUI->m_Target.Pos = Vector2(750, 460);
+            pUI->m_Target.Size = Vector2(300, 100);
+
+            pUI->m_Current = pUI->m_Target;
+            pUI->m_Current.Color.w = 0.0f;
+
+        }
     }
 
-    //WinnerＵＩの表示
-    if (m_Timer == 60)
+    if (m_Timer == 120)
     {
-
+        DefCamera.SetNewState(new CameraStateMovetoPoint(
+            Vector3(0, 5, -12),
+            Vector3(0, 5, 0),
+            0.05f,
+            60,
+            CameraStateMovetoPoint::CalcType::_Cos,
+            new CameraStateNoWork()
+            ));
     }
 
     //メニュー表示ステートへ
-    if (m_Timer == 200)
+    if (m_Timer == 300)
     {
         //メニュー作成
         SelectMenuUI_ControllerPlayer* pController = new SelectMenuUI_ControllerPlayer();
@@ -219,8 +297,8 @@ void SceneResult::State_Back()
         
         SelectMenuUI* pMenu = new SelectMenuUI(
             pController,
-            new iex2DObj("DATA\\RESULT\\ResultSelect.png"), 
-            true,
+            m_pUITex, 
+            false,
             -1
             );
 
@@ -352,6 +430,8 @@ void SceneResult::SetCharacter(CrVector3 pos, PlayerInfo& info)
         0.9f,
     };
 
+    const bool Winchr = info.Ranking == 1;
+
     //キャラクタレンダラーの作成
     CharacterRenderer* Renderer = 
         new CharacterRenderer(
@@ -359,6 +439,7 @@ void SceneResult::SetCharacter(CrVector3 pos, PlayerInfo& info)
             );
 
     CharacterBase::CreateCharacterModel(Renderer, info.ChrType, info.Num);
+
 
 
     //ランキング台の作成
@@ -372,14 +453,19 @@ void SceneResult::SetCharacter(CrVector3 pos, PlayerInfo& info)
 
         {
             float Angle = 0;
-            Vector3 v = DefCamera.m_Position + Vector3(0, 0, -5) - pos;
+            Vector3 v = Vector3(0, 0, -10) - pos;
 
             v.Normalize();
 
-            Angle = acosf(v.z);
+            Angle = acosf(fClamp(v.z, 1, -1));
             if (v.x < 0)
             {
                 Angle = -Angle;
+            }
+
+            if (Winchr)
+            {
+                Angle = PI;
             }
 
             D3DXMatrixRotationY(&R, Angle);
@@ -399,9 +485,37 @@ void SceneResult::SetCharacter(CrVector3 pos, PlayerInfo& info)
     {
         int(*MotionFunc)(CharacterType::Value);
 
-        if (info.Ranking == 1)
+        if (Winchr)
         {
             MotionFunc = &CharacterBase::GetWinMotion;
+
+            //SpotLight* pLight = new SpotLight();
+
+            //pLight->param.color = Vector3(1, 1, 0)*2.0f;
+
+            //pLight->param.origin = pos + Vector3(0, 0, -20);
+            //pLight->param.target = pos + Vector3(0, 5, 10);
+
+            //pLight->param.size = 15.0f;
+            //pLight->param.Shadow.visible = true;
+
+            //new DebugControllGameObject(
+            //    &pLight->param.target,
+            //    0,
+            //    0.1f,
+            //    nullptr,
+            //    'Q'
+            //    );
+
+            //new DebugControllGameObject(
+            //    &pLight->param.origin,
+            //    0,
+            //    0.1f,
+            //    nullptr,
+            //    'W'
+            //    );
+
+            //new StaticGameObjectTemplate<SpotLight>(pLight);
         }
         else 
         {

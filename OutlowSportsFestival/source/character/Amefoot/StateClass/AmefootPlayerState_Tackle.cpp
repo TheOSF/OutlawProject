@@ -120,7 +120,7 @@ void AmefootPlayerState_Tackle::SetState(StateFunc state)
 void AmefootPlayerState_Tackle::Pose()
 {
     const int kAllFrame = 10;               // 構えフレーム
-    const int kAdditionalFrame = 60;        // 延長できるフレーム
+    const int kAdditionalFrame = 30;        // 延長できるフレーム
     const RADIAN kAngleControlSpeed = 0.04f;// 角度補正スピード
     bool go_next = false;                   // ステート移行するかどうか
     const float kMoveDownSpeed = 0.2f;

@@ -16,10 +16,11 @@
 
 
 
-SoccerDash::SoccerDash(SoccerPlayer* pParent):
+SoccerDash::SoccerDash(SoccerPlayer* pParent) :
 m_pChr(pParent),
 m_pStateFunc(&SoccerDash::State_Start),
-m_SpeedEffect(1)
+m_SpeedEffect(1),
+m_TurnViewVec(0, 0, 0)
 {
 
 }
@@ -55,6 +56,23 @@ bool SoccerDash::SetEnd()
     {
         return false;
     }
+
+    m_TurnViewVec = chr_func::GetFront(m_pChr);
+
+    SetState(&SoccerDash::State_DashEnd);
+
+    return true;
+}
+
+bool SoccerDash::SetEnd(CrVector3 vec) //‘–‚é‚Ì‚â‚ß‚é
+{
+   
+    if (!isDash())
+    {
+        return false;
+    }
+
+    m_TurnViewVec = vec;
 
     SetState(&SoccerDash::State_DashEnd);
 
@@ -148,16 +166,13 @@ void SoccerDash::State_Dash()
             Sound::Play(Sound::Sand1);
         }
 
-        if (m_StateTimer % 3 == 2)
-        {
-            EffectFactory::Smoke(
-                m_pChr->m_Params.pos + Vector3(frand() - 0.5f, frand() + 0.5f, frand() - 0.5f)*2.0f, 
-                Vector3Zero,
-                1.8f,
-                1.0f,
-                true
-                );
-        }
+        EffectFactory::SmokeParticle(
+            m_pChr->m_Params.pos,
+            Vector3(0, 0.025f + frand()*0.025f, 0),
+            25,
+            1.5f*(frand()*0.5f + 0.5f),
+            0x40FFFFFF
+            );
     }
 
     Vector3 chrpos = m_pChr->m_Params.pos;
@@ -179,21 +194,20 @@ void SoccerDash::State_DashEnd()
 
         chr_func::SetControllerShock(m_pChr, 0.1f, 0.1f);
 
-        for (int i = 0; i < 3; ++i)
-        {
-            EffectFactory::Smoke(
-                m_pChr->m_Params.pos + Vector3(frand() - 0.5f, frand(), frand() - 0.5f)*2.0f,
-                Vector3Zero,
-                1.8f,
-                0.2f,
-                false
-                );
-        }
+        EffectFactory::SmokeParticle(
+            m_pChr->m_Params.pos,
+            Vector3(0, 0.025f + frand()*0.025f, 0),
+            25,
+            1.5f*(frand()*0.5f + 0.5f),
+            0x40FFFFFF
+            );
     }
+
+    chr_func::AngleControll(m_pChr, m_pChr->m_Params.pos + m_TurnViewVec, PI / 18.0f);
 
     chr_func::XZMoveDown(m_pChr, 0.08f);
 
-    if (m_StateTimer > 30)
+    if (m_StateTimer > 20)
     {
         SetState(&SoccerDash::State_Finish);
     }

@@ -80,8 +80,16 @@ private:
     NextSceneType       m_NextSceneType;
     int                 m_Timer;
     iex2DObj*           m_pScreenTex;
+    iex2DObj*           m_pUITex;
+    iex2DObj*           m_pPlayerNumTex;
 
     void(SceneResult::*m_pStateFunc)();
+
+    void GetWinChrCameraParam(Vector3& pos, Vector3& target);
+
+    int GetWinCharacterPlayerNum();
+
+    Vector3 GetChrPosByNum(int num);
 
     void State_Initialize();
     void State_ScreenVanish();

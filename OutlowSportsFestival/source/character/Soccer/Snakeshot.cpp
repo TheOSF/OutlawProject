@@ -58,7 +58,7 @@ Snakeshot::Snakeshot(
     }
 
     //É_ÉÅÅ[ÉWê›íË
-    m_Damage.m_Param.size = 1.5f;
+    m_Damage.m_Param.size = 1.0f;
     m_Damage.m_VecType = DamageShpere::DamageVecType::PosToCenterXZ;
     m_Damage.m_VecPower = Vector2(0.5f, 0.5f);
     m_Damage.pBall = this;

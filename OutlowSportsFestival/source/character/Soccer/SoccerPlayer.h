@@ -31,25 +31,26 @@ public:
 
         _ms_Atk1 = 13,
         _ms_Atk2 = 15,
-        _ms_Atk3 = 17,
+        _ms_Atk2_Continue = 16,
+        _ms_Atk3 = 18,
 
-        _ms_CounterPose = 19,
-        _ms_Counter_Right = 21,
-        _ms_Counter_Left = 23,
+        _ms_CounterPose = 20,
+        _ms_Counter_Right = 22,
+        _ms_Counter_Left = 24,
 
-        _ms_SpecialAtk = 25,
-        _ms_Damage = 27,
-        _ms_Vanish_Fly = 29,
-        _ms_Vanish_Down = 31,
-        _ms_StandUp = 32,
-        _ms_HitWallAndFall = 36,
-        _ms_FallAndDown = 38,
+        _ms_SpecialAtk = 26,
+        _ms_Damage = 28,
+        _ms_Vanish_Fly = 30,
+        _ms_Vanish_Down = 32,
+        _ms_StandUp = 33,
+        _ms_HitWallAndFall = 37,
+        _ms_FallAndDown = 39,
 
         _ms_Counter_Failed = _ms_RunStop, 
-        _ms_Shot = 39,
+        _ms_Shot = 40,
 
-        _ms_Win = 40,
-        _ms_Lose = 41,
+        _ms_Win = 41,
+        _ms_Lose = 42,
 
 	};
 protected:

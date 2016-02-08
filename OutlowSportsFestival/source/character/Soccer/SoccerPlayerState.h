@@ -122,6 +122,7 @@ private:
     SoccerPlayer* const     m_pChr;
     DamageShpere            m_Damage;
 	int                     m_Timer;
+    float                   m_SaveChrSize;
     
     void SetState(StateFunc State);
     void UpdateDamage();

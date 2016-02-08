@@ -85,46 +85,46 @@ void AmefootPlayerState_BallTouchDown::State_Jump()
     }
 
     m_pChr->m_Renderer.Update(2);
-    /*
-        const float MoveY = 0.55f;
-    const float MoveXZ = 0.4f;
+    
+    //const float MoveY = 0.55f;
+    //const float MoveXZ = 0.4f;
 
-    const int AllFrame = 34;
-    const int NoDamageFrame = 10;
+    //const int AllFrame = 34;
+    //const int NoDamageFrame = 10;
 
-    if (m_Timer == 1)
-    {
-        //移動量をセット
-        m_pChr->m_Params.move = chr_func::GetFront(m_pChr)*MoveXZ + Vector3(0, MoveY, 0);
+    //if (m_Timer == 1)
+    //{
+    //    //移動量をセット
+    //    m_pChr->m_Params.move = chr_func::GetFront(m_pChr)*MoveXZ + Vector3(0, MoveY, 0);
 
-        //モーションをセット
-        m_pChr->m_Renderer.SetMotion(AmefootPlayer::Motion_Touchdown_Finish);
-    }
+    //    //モーションをセット
+    //    m_pChr->m_Renderer.SetMotion(AmefootPlayer::Motion_Touchdown_Finish);
+    //}
 
-    if (m_Timer == AllFrame - 5)
-    {
-        m_pChr->m_Params.move.y = -1.0f;
-    }
+    //if (m_Timer == AllFrame - 5)
+    //{
+    //    m_pChr->m_Params.move.y = -1.0f;
+    //}
 
-    if (m_Timer > AllFrame)
-    {
-        SetState(&AmefootPlayerState_BallTouchDown::State_Down);
-    }
+    //if (m_Timer > AllFrame)
+    //{
+    //    SetState(&AmefootPlayerState_BallTouchDown::State_Down);
+    //}
 
-    //更新
-    if (m_Timer < NoDamageFrame)
-    {
-        //無敵更新
-        chr_func::UpdateAll(m_pChr, &DamageManager::HitEventBase());
-    }
-    else
-    {
-        //通常更新
-        chr_func::UpdateAll(m_pChr, &AmefootUsualHitEvent(m_pChr));
-    }
+    ////更新
+    //if (m_Timer < NoDamageFrame)
+    //{
+    //    //無敵更新
+    //    chr_func::UpdateAll(m_pChr, &DamageManager::HitEventBase());
+    //}
+    //else
+    //{
+    //    //通常更新
+    //    chr_func::UpdateAll(m_pChr, &AmefootUsualHitEvent(m_pChr));
+    //}
 
-    m_pChr->m_Renderer.Update(1.25f);
-    */
+    //m_pChr->m_Renderer.Update(1.25f);
+    
 }
 
 void AmefootPlayerState_BallTouchDown::State_Down()
@@ -143,7 +143,7 @@ void AmefootPlayerState_BallTouchDown::State_Down()
             d->m_VecPower.x = 0.1f;
             d->m_VecType = DamageShpere::DamageVecType::CenterToPosXZ;
             d->pParent = m_pChr;
-            d->Value = 5.0f;
+            d->Value = 3.5f;
             d->type = DamageBase::Type::_WeekDamage;
 
             new DamageObject(d, 3);

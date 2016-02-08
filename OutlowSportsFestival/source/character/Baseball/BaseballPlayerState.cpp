@@ -1,5 +1,6 @@
 #include "BaseballPlayerState.h"
 
+#include "BaseballAttackState.h"
 
 #include "BaseballState_PlayerControll_Evasion.h"
 #include "BaseballState_PlayerControll_ShotAttack_B.h"
@@ -24,6 +25,8 @@
 #include "../../Ball/MilderHoming.h"
 #include "../../Damage/Damage.h"
 #include "../../Camera/Camera.h"
+
+#include "BaseballPlayerState_ChargeBall.h"
 
 //ショット中のコントロールクラス
 
@@ -50,7 +53,7 @@ bool PlayerShotControllClass_B::DoOtherAction()
 	//　近距離攻撃[□]
 	if (controller::GetTRG(controller::button::shikaku, b->m_PlayerInfo.number))
 	{
-		b->SetState(new Baseball_PlayerControll_Attack_B(b));
+        b->SetState(new BaseballAttackState(b));
 		return true;
 	}
 	//　回避行動[×]
@@ -76,7 +79,7 @@ bool PlayerShotControllClass_B::DoShotAfterAction()
 
 	if (controller::GetTRG(controller::button::shikaku, b->m_PlayerInfo.number))
 	{// [□] で [近距離攻撃]
-		b->SetState(new Baseball_PlayerControll_Attack_B(b));
+        b->SetState(new BaseballAttackState(b));
 		return true;
 	}
 
@@ -216,7 +219,7 @@ void BaseballState_PlayerControll_Move::Batter(BaseballPlayer* b){
 	}
 	//　近距離攻撃[□]
 	if (controller::GetTRG(controller::button::shikaku, b->m_PlayerInfo.number)){
-		b->SetState(new Baseball_PlayerControll_Attack_B(b));
+        b->SetState(new BaseballAttackState(b));
 		return;
 	}
 	//　回避行動[×]
@@ -252,14 +255,14 @@ void BaseballState_PlayerControll_Move::Batter(BaseballPlayer* b){
 
 //　投手時
 void  BaseballState_PlayerControll_Move::Pitcher(BaseballPlayer* b){
-	//　遠距離攻撃[△]
+	//　チャージ[△]
 	if (controller::GetTRG(controller::button::sankaku, b->m_PlayerInfo.number)){
-		b->SetState(new BaseballState_PlayerControll_ShotAttack_P());
+		b->SetState(new BaseballPlayerState_ChargeBall());
 		return;
 	}
 	//　近距離攻撃[□]
 	if (controller::GetTRG(controller::button::shikaku, b->m_PlayerInfo.number)){
-		b->SetState(new Baseball_PlayerControll_Attack_P(b));
+		b->SetState(new BaseballState_PlayerControll_ShotAttack_P());
 		return;
 	}
 	//　回避行動[×]

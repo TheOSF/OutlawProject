@@ -8,6 +8,8 @@
 #include "../../Effect/ImpactLightObject.h"
 #include "../../Effect/EffectFactory.h"
 
+#include "../../Collision/Collision.h"
+
 TennisHeartBall::TennisHeartBall(
     CrVector3 pos,
     CrVector3 move,
@@ -15,7 +17,7 @@ TennisHeartBall::TennisHeartBall(
     ) :
     m_InitMove(move.Length()),
     m_pTennis(pTennis),
-    m_LiveCount(4),
+    m_LiveCount(5),
     m_MoveCount(0),
     m_ScaleCount(0.15f),
     m_ScaleMove(0.0025f),
@@ -31,7 +33,7 @@ TennisHeartBall::TennisHeartBall(
     }
 
     {
-        m_Damage.HitMotionFrame = 50;
+        m_Damage.HitMotionFrame = 45;
         m_Damage.m_Enable = true;
         m_Damage.m_Param.pos = pos;
         m_Damage.m_Param.size = 1.2f;
@@ -83,8 +85,7 @@ bool TennisHeartBall::Update()
             );
     }
 
-
-    if (m_LiveCount < 0)
+    if (m_LiveCount < 0 || isHitWall())
     {
         m_isLive = false;
 
@@ -288,6 +289,26 @@ void TennisHeartBall::SmokeEffect()
             0x80FFFFFF
             );
     }
+}
+
+bool TennisHeartBall::isHitWall()
+{
+    Vector3 out, pos, vec;
+    float dist;
+    int mat;
+
+    pos = m_Params.pos;
+
+    vec = m_Params.move;
+    vec.Normalize();
+    dist = 1.0f;
+        
+    if (DefCollisionMgr.RayPick(&out, &pos, &vec, &dist, &mat, CollisionManager::RayType::_Character) != nullptr)
+    {
+        return true;
+    }
+        
+    return false;
 }
 
 void TennisHeartBall::Counter(CharacterBase* pCounterCharacter)

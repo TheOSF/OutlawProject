@@ -12,7 +12,9 @@
 #include "../BaseballPlayerState_Counter.h"
 #include "../BaseballState_PlayerControll_Evasion.h"
 
+#include "../BaseballAttackState.h"
 
+#include "../BaseballPlayerState_ChargeBall.h"
 
 //----------------------------------------------------------------
 //      攻撃イベント呼び出しクラス
@@ -52,7 +54,7 @@ bool BaseballComputerUtillityClass::AttackEvent::Action_B(CharacterBase* pTarget
         else
         {
             chr_func::AngleControll(m_pChr, pTarget);
-            m_pChr->SetState(new Baseball_PlayerControll_Attack_B(m_pChr));
+            m_pChr->SetState(new BaseballAttackState(m_pChr));
         }
 
         return true;
@@ -93,7 +95,7 @@ bool BaseballComputerUtillityClass::AttackEvent::Action_P(CharacterBase* pTarget
         else
         {
             chr_func::AngleControll(m_pChr, pTarget);
-            m_pChr->SetState(new Baseball_PlayerControll_Attack_P(m_pChr));
+            m_pChr->SetState(new BaseballState_PlayerControll_ShotAttack_P());
         }
 
         return true;
@@ -107,7 +109,7 @@ bool BaseballComputerUtillityClass::AttackEvent::Action_P(CharacterBase* pTarget
         else if (frand() < 0.5f)
         {
             chr_func::AngleControll(m_pChr, pTarget);
-            m_pChr->SetState(new Baseball_PlayerControll_Attack_P(m_pChr));
+            m_pChr->SetState(new BaseballPlayerState_ChargeBall());
         }
         else
         {
@@ -177,7 +179,7 @@ void BaseballComputerUtillityClass::ReactionEvent::Reaction_B(const TypeParam& p
         else if (frand() < 0.75f)
         {
             chr_func::AngleControll(m_pChr, m_pChr->m_Params.pos + vec);
-            m_pChr->SetState(new Baseball_PlayerControll_Attack_B(m_pChr));
+            m_pChr->SetState(new BaseballAttackState(m_pChr));
         }
         else
         {
@@ -228,7 +230,7 @@ void BaseballComputerUtillityClass::ReactionEvent::Reaction_P(const TypeParam& p
         if (frand() < 0.3f)
         {
             chr_func::AngleControll(m_pChr, m_pChr->m_Params.pos + vec);
-            m_pChr->SetState(new Baseball_PlayerControll_Attack_P(m_pChr));
+            m_pChr->SetState(new BaseballState_PlayerControll_ShotAttack_P());
         }
         else if (frand() < 0.3f)
         {

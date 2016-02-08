@@ -3,7 +3,8 @@
 
 
 PlayerGauge::PlayerGauge(CharacterBase* pOwnerCharacter) :
-m_pOwnerCharacter(pOwnerCharacter)
+m_pOwnerCharacter(pOwnerCharacter),
+m_ShockPower(0)
 {
     const int ScreenLeftSpace = (int)(50.0f * iexSystem::ScreenToX1600);
 
@@ -18,6 +19,11 @@ m_pOwnerCharacter(pOwnerCharacter)
     m_Renderer.m_PlayerType = pOwnerCharacter->m_PlayerInfo.player_type;
 
     m_RoundCount = m_pOwnerCharacter->m_Params.win;
+
+
+    m_DefaultPos = m_Renderer.m_Pos;
+
+    m_PreFrameLife = pOwnerCharacter->m_Params.HP;
 }
 
 PlayerGauge::~PlayerGauge()
@@ -44,6 +50,29 @@ bool PlayerGauge::Update()
 
     //アイコン移動更新
     m_Renderer.UpdateRoundIcon();
+
+
+    {
+        if (m_PreFrameLife > m_pOwnerCharacter->m_Params.HP)
+        {
+            m_ShockPower = (m_PreFrameLife - m_pOwnerCharacter->m_Params.HP)*0.2f;
+            m_ShockPower = min(m_ShockPower, 1);
+        }
+
+        m_PreFrameLife = m_pOwnerCharacter->m_Params.HP;
+    }
+
+    {
+        const float DiffPos = 10.0f;
+
+        m_Renderer.m_Pos = m_DefaultPos + Vector2(frand()*2.0f - 1.0f, frand()*2.0f - 1.0f)*m_ShockPower * DiffPos;
+        m_ShockPower *= 0.9f;
+
+        if (m_ShockPower < 0.1f)
+        {
+            m_ShockPower = 0.0f;
+        }
+    }
 
     return true;
 }

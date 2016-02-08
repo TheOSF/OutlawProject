@@ -126,9 +126,9 @@ void Baseball_PlayerControll_Attack_P::State_Atk()
 {
     const int Motions[m_sMaxCombo] =
     {
-        baseball_player::_mb_Shot_P,
         baseball_player::_mb_Atk1_P,
-        baseball_player::_mb_Shot_P,
+        baseball_player::_mb_Atk2_P,
+        baseball_player::_mb_Atk3_P,
     };
 
     const int ShotFrames[m_sMaxCombo] =

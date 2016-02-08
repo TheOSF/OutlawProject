@@ -431,6 +431,38 @@ inline Vector3 Vector3RotateAxis(const Vector& axis,float angle,const Vector& ro
 	return Vector3RotateQuaternion(q, rotate_vector);
 }
 
+inline Vector3 Vector3RotateToTargetVec(const Vector3& from, const Vector3 to, RADIAN angle)
+{
+    RADIAN rotate_angle;
+    Vector3 out;
+
+    Vector3Cross(out, from, to);
+    out.Normalize();
+
+    rotate_angle = Vector3Radian(from, to);
+
+    if (rotate_angle > angle)
+    {
+        rotate_angle = angle;
+    }
+
+    out = Vector3RotateAxis(out, rotate_angle, from);
+
+    return out;
+}
+
+inline Vector3 Vector3SphericalLerp(const Vector3& from, const Vector3 to, RATIO t)
+{
+    Vector3 out;
+
+    Vector3Cross(out, from, to);
+    out.Normalize();
+
+    out = Vector3RotateAxis(out, Vector3Radian(from, to)*t, from);
+
+    return out;
+}
+
 //------------------------------------------------------
 //	”½ŽË
 //------------------------------------------------------

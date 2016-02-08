@@ -70,6 +70,14 @@ public:
 		scene = newScene;
 		scene->Initialize();
 	}
+
+    void SwapScene(Scene* newScene)
+    {
+        //	現在のシーン解放
+        if (scene != NULL) delete scene;
+        //	シーンの切り替え＆初期化
+        scene = newScene;
+    }
 };
 
 

@@ -25,6 +25,7 @@ private:
     AmefootPlayer*  m_pChr;
     StateFunc       m_pStateFunc;
     int             m_Timer;
+    float           m_StandUpSpeed;
 
     bool isStandUp();
     void SetState(StateFunc pNewState);

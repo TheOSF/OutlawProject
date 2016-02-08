@@ -11,6 +11,8 @@
 #include "../Sound/Sound.h"
 #include "../SceneOption/SceneOption.h"
 #include "UI/SceneCharacterSelectUI.h"
+#include "../Effect/FadeGameObject.h"
+
 
 SceneCharacterSelect::SceneCharacterSelect(
     sceneGamePlay::InitParams&  LoadParams,
@@ -23,7 +25,7 @@ SceneCharacterSelect::SceneCharacterSelect(
     m_NextSceneType(NextSceneType::_NoChange),
     m_LoadParams(LoadParams),
     m_BackTex("DATA\\Texture\\mizu.png"),
-    m_OK_Tex("DATA\\ChrSelect\\OK\\OK.png"),
+    m_OK_Tex("DATA\\Texture\\GameStr.png"),
     m_pOK_UI(nullptr)
 {
 
@@ -248,7 +250,7 @@ void SceneCharacterSelect::SetSceneUI()
     }
 
     {
-        m_pOK_UI = new SceneCharacterSelectUI(&m_OK_Tex, RectI(0, 0, 512, 512));
+        m_pOK_UI = new SceneCharacterSelectUI(&m_OK_Tex, RectI(355, 529, 530, 150));
         m_pOK_UI->m_Current.Pos = m_pOK_UI->m_Target.Pos = Center;
         m_pOK_UI->m_Current.Size = Vector2(0, 0);
         m_pOK_UI->m_Current.Color = Vector4(0, 0, 0, 0);
@@ -422,6 +424,9 @@ void SceneCharacterSelect::SetCursor()
             m_pComputerDefaultPoint,
             pDefault);
 
+        p->m_Lock = true;
+        p->m_Pos = Vector2(0, -200);
+
         p->m_PlayerInfo = m_LoadParams.PlayerArray.at(i);
 
         {
@@ -523,7 +528,7 @@ void SceneCharacterSelect::State_Confirm()
     if ( m_Timer == 0 )
     {
         // UI 表示
-        m_pOK_UI->m_Target.Size = Vector2(500, 500);
+        m_pOK_UI->m_Target.Size = Vector2(500, 200);
         m_pOK_UI->m_Current.Color = Vector4(1, 1, 1, 1);
     }
 
@@ -583,9 +588,16 @@ void SceneCharacterSelect::State_FadeOut()
         {
             it->m_ControllerNum = controller::__ERROR_CONTROLLER_NUM;
         }
+
+        new FadeGameObject(
+            COLORf(1, 1, 1, 1), 
+            20,
+            5,
+            5
+            );
     }
 
-    if ( ++m_Timer > 10 )
+    if ( ++m_Timer > 20 )
     {
         //ステート移行
         m_pStateFunc = &SceneCharacterSelect::State_Change;
@@ -606,9 +618,17 @@ void SceneCharacterSelect::State_BackToOption()
         {
             it->m_ControllerNum = controller::__ERROR_CONTROLLER_NUM;
         }
+
+
+        new FadeGameObject(
+            COLORf(1, 0, 0, 0),
+            10,
+            5,
+            5
+            );
     }
 
-    if ( ++m_Timer > 2 )
+    if ( ++m_Timer > 10 )
     {
         //ステート移行
         m_pStateFunc = &SceneCharacterSelect::State_Change;

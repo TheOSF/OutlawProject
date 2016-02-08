@@ -1,25 +1,15 @@
-#ifndef __BASEBALL_SHOTATTACK_P_H__
-#define __BASEBALL_SHOTATTACK_P_H__
-
+#pragma once
 #include "../../Damage/Damage.h"
 #include "BaseballPlayer.h"
 
 
 
 //プレイヤー操作の遠距離クラス(ピッチャー)
-class CharacterShotAttack;
-class BaseballState_PlayerControll_ShotAttack_P :public BaseballState{
-private:
-	//　遠距離クラス作成(ピッチャー)
-	CharacterShotAttack* CreateShotAttackClass_P(BaseballPlayer* b);
-private:
-	//　遠距離クラス
-	CharacterShotAttack* m_pShotAttackClass_P;
-	const CharacterBase* pTargetEnemy;
+
+class BaseballState_PlayerControll_ShotAttack_P :public BaseballState
+{
 public:
 
-	//　コンストラクタ
-	BaseballState_PlayerControll_ShotAttack_P();
 	//　ステート開始
 	void Enter(BaseballPlayer* b)override;
 	//　ステート実行
@@ -27,6 +17,24 @@ public:
 	//　ステート終了
 	void Exit(BaseballPlayer* b)override;
 
+private:
+
+    typedef void(BaseballState_PlayerControll_ShotAttack_P::*StateFunc)();
+   
+    StateFunc       m_pStateFunc;
+    BaseballPlayer* m_pChr;
+    int             m_StateTimer;
+
+    void State_Throw1();
+    void State_Throw2();
+    void State_Throw3();
+    void State_Throw4();
+    void State_Throw5();
+
+    void CreateBall(CrVector3 pos, CrVector3 move, bool Strong = false, float Damage = 4.0f);
+
+    void AngleControll();
+
+    StateFunc GetStateFunc(int ChargeCount)const;
 };
 
-#endif

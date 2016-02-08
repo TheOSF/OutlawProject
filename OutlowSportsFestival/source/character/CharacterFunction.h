@@ -126,6 +126,12 @@ namespace chr_func
 
     //コントローラの振動をセット
     void SetControllerShock(CharacterBase* p, RATIO power, float second);
+
+    //プレイヤー操作かどうか
+    bool isPlayer(CharacterBase* p);
+
+    //コンピュータ操作かどうか
+    bool isComputer(CharacterBase* p);
 }
 
 #endif

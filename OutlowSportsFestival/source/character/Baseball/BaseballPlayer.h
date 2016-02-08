@@ -35,7 +35,7 @@ namespace baseball_player
         _mb_CounterPose_B,			    //　カウンター構え
         _mb_CounterRight_B,			    //　カウンター（右）
         _mb_CounterLeft_B,			    //　カウンター（左）
-    //    _mb_Change_B,			        //　切替(バッター→ピッチャー)
+        //    _mb_Change_B,			        //　切替(バッター→ピッチャー)
         //  _mb_Change_P,			        //　切替(ピッチャー→バッター)
         _mb_SpAtk_B = 14,			        //　必殺技
 
@@ -46,37 +46,38 @@ namespace baseball_player
         _mb_Damage_Vanish_WallHitAndDown_B = 20,     //　ずり落ち
         _mb_Damage_Vanish_Bound_B,        //　地面でバウンド
 
-        _mb_Change_B = 10, 
+        _mb_Change_B = 10,
         _mb_VanishHold_B = 22,       //つかまれている
 
         _mb_WinPose,
         _mb_LosePose,
 
         //　ピッチャー
-        _mb_Stand_P = 1,               //　待機
-        _mb_Run_P = 3,					    //　走り
+        _mb_Stand_P = 2,               //　待機
+        _mb_Run_P = 4,					    //　走り
         _mb_Stop_P,						//　立ち止まり
-        _mb_Shot_P,						//　遠距離
-        _mb_Evasion_P,                  //　回避
-        _mb_Atk1_P,                     //　近距離攻撃1ー)
-        _mb_Atk2_P = 9,						//　近距離攻撃2
+        _mb_Evasion_P = 7,                  //　回避
+
+        _mb_Atk1_P = 6,                     //　近距離攻撃1ー)
+        _mb_Atk2_P = 8,
+        _mb_Atk3_P = 10,						//　近距離攻撃2
         _mb_CounterPose_P,				//　カウンター構え
-        _mb_CounterRight_P = 12,				//　カウンター（右）
+        _mb_CounterRight_P = 13,				//　カウンター（右）
         _mb_CounterLeft_P,				//　カウンター（左）
 
-        _mb_SpAtk_P = 14,			        //　必殺技
+        _mb_SpAtk_P = 15,			        //　必殺技
 
-        _mb_Damage_Weak_P = 15,			    //　ダメージ
+        _mb_Damage_Weak_P = 16,			    //　ダメージ
         _mb_Damage_Vanish_Fly_P,          //　吹き飛び中
         _mb_Damage_Vanish_Down_P,         //　吹き飛び着地
         _mb_Damage_Vanish_StandUp_P,      //　起き上がり
-        _mb_Damage_Vanish_WallHitAndDown_P = 20,     //　ずり落ち
+        _mb_Damage_Vanish_WallHitAndDown_P = 21,     //　ずり落ち
         _mb_Damage_Vanish_Bound_P,        //　地面でバウンド
 
-        _mb_Change_P = 4,
+        _mb_Change_P = 5,
+        _mb_BallCharge = 1,
 
-
-        _mb_VanishHold_P = 22,       //つかまれている
+        _mb_VanishHold_P = 23,       //つかまれている
 	};
 }
 
@@ -88,6 +89,9 @@ private:
     CharacterRenderer*          m_pPitcherModel;
     bool                        m_BatterFlg; //　(true:バッター,false:投手)
 public:
+
+    int m_ChargeBallCount;
+
 
 	BaseballPlayer(const CharacterBase::PlayerInfo& info);
 	~BaseballPlayer();
@@ -117,6 +121,8 @@ public:
 
     //現在フォームのモデルをゲット
     CharacterRenderer* getNowModeModel();
+
+    void MinusChargeBallCount(int value);
 
 private:
     //　リセット

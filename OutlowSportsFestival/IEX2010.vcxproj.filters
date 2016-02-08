@@ -240,6 +240,9 @@
     <ClCompile Include="source\character\Soccer\Snakeshot.cpp" />
     <ClCompile Include="source\character\Baseball\PitchingMachine.cpp" />
     <ClCompile Include="source\SceneStageSelect\SceneStageSelect.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballAttackState.cpp" />
+    <ClCompile Include="source\character\Soccer\SoccerDushTurn.cpp" />
+    <ClCompile Include="source\character\Baseball\BaseballPlayerState_ChargeBall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\DebugDrawManager.h" />
@@ -491,6 +494,9 @@
     <ClInclude Include="source\character\Soccer\SoccerState_ControllVanish.h" />
     <ClInclude Include="source\character\Baseball\PitchingMachine.h" />
     <ClInclude Include="source\SceneStageSelect\SceneStageSelect.h" />
+    <ClInclude Include="source\character\Baseball\BaseballAttackState.h" />
+    <ClInclude Include="source\character\Soccer\SoccerDushTurn.h" />
+    <ClInclude Include="source\character\Baseball\BaseballPlayerState_ChargeBall.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DATA\Shader\3DEx.fx" />

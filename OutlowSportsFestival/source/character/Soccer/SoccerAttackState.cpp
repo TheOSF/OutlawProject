@@ -17,8 +17,8 @@
 //          サッカー攻撃ステート
 //-----------------------------------------------//
 
-const float SoccerAttackState::m_DamageValue_FirstKick   = 1.0f;
-const float SoccerAttackState::m_DamageValue_ChunliKick  = 2.0f;
+const float SoccerAttackState::m_DamageValue_FirstKick   = 2.0f;
+const float SoccerAttackState::m_DamageValue_ChunliKick  = 1.0f;
 const float SoccerAttackState::m_DamageValue_SummerSault = 6.0f;
 
 
@@ -27,7 +27,8 @@ m_pChr(pChr),
 m_HitStopCount(0),
 m_DamageEnableCount(0),
 m_DoNextAtk(false),
-m_HitStopUsed(false)
+m_HitStopUsed(false),
+m_Atk2ContinueCount(0)
 {
     m_Damage.m_Enable = false;
 
@@ -44,8 +45,6 @@ m_HitStopUsed(false)
 
 void SoccerAttackState::Enter(SoccerPlayer* p)
 {
-    
-
     //ダメージ初期化
     m_Damage.HitMotionFrame = 25;
     m_Damage.MaxChrHit = 1;
@@ -56,10 +55,12 @@ void SoccerAttackState::Enter(SoccerPlayer* p)
     m_Damage.pParent = m_pChr;
     m_Damage.type = DamageBase::Type::_WeekDamage;
     m_Damage.Value = 1.0f;
-    m_Damage.AddSkillGaugeValue = 4.0f;
+    
 
     m_LocalPosOffset = Vector3(0, 2, 2);
     m_LocalVec = Vector3(0, 0, 1);
+
+    m_MotionSpeed = 1.0f;
 
     UpdateDamage();
 }
@@ -74,7 +75,7 @@ void SoccerAttackState::Execute(SoccerPlayer* p)
         //カウント更新
         ++m_Timer;
 
-        m_pChr->m_Renderer.Update(1);
+        m_pChr->m_Renderer.Update(m_MotionSpeed);
 
         chr_func::XZMoveDown(m_pChr, 0.1f);
         chr_func::UpdateAll(m_pChr, &SoccerHitEvent(m_pChr, m_isCounterHit));
@@ -95,6 +96,8 @@ void SoccerAttackState::Execute(SoccerPlayer* p)
 
         chr_func::UpdateAll(m_pChr, &SoccerHitEvent(m_pChr, m_isCounterHit), 0);
     }
+
+    m_MotionSpeed = 1.0f;
 
     //デフォルトでカウンタヒットoffに
     m_isCounterHit = false;
@@ -323,15 +326,12 @@ void SoccerAttackState::State_Atk2()
 {
     const int DamageFrames[] = 
     {
-        5, 14, 20, 27,
+        5, 12, 15, 18,
     };
 
-    const int EndFrame = 44;
-    const int CanButtonFrame = 25;
-
-    const int SwitchStartFrame = 32;
-    const int SwitchEndFrame = 37;
-
+    const int EndFrame = 25;
+    const int CanButtonFrame = 10;
+    const int MaxContinue = 1;
 
     //初期化
     if (m_Timer == 1)
@@ -340,6 +340,11 @@ void SoccerAttackState::State_Atk2()
 
         //移動
         chr_func::AddMoveFront(m_pChr, 0.25f, 1.0f);
+    }
+
+    if (m_Timer > 10)
+    {
+        m_MotionSpeed = 2.0f;
     }
 
     //角度調整
@@ -358,16 +363,11 @@ void SoccerAttackState::State_Atk2()
         {
             //ダメージパラメータセット        
             m_Damage.Value = m_DamageValue_ChunliKick;
+            m_Damage.AddSkillGaugeValue = 5.0f;
 
             //発生
-            SetDamage(2);
+            SetDamage(1);
         }
-    }
-
-    //時間経過で終了
-    if (m_Timer > EndFrame)
-    {
-        SetState(&SoccerAttackState::State_Finish);
     }
 
     //コンボ受付
@@ -376,8 +376,19 @@ void SoccerAttackState::State_Atk2()
         UpdateDoCombo();
     }
 
+    //追加入力
+    if (m_Atk2ContinueCount < MaxContinue && m_DoNextAtk && m_Timer == EndFrame)
+    {
+        m_pChr->m_Renderer.SetMotion(SoccerPlayer::_ms_Atk2_Continue);
+
+        m_Atk2ContinueCount++;
+
+        m_Timer = 10;
+        m_DoNextAtk = false;
+    }
+
     //次の攻撃へ
-    if (m_DoNextAtk && (m_Timer >= SwitchStartFrame) && (m_Timer <= SwitchEndFrame))
+    if (m_Timer > EndFrame)
     {
         SetState(&SoccerAttackState::State_Atk3);
     }
@@ -414,6 +425,7 @@ void SoccerAttackState::State_Atk3()
         m_LocalVec = Vector3Normalize(Vector3(0, 1, 1));
         m_Damage.m_VecPower = Vector2(0.35f, 0.7f);
         m_Damage.type = DamageBase::Type::_VanishDamage;
+        m_Damage.AddSkillGaugeValue = 1.0f;
 
         //発生
         SetDamage(2);

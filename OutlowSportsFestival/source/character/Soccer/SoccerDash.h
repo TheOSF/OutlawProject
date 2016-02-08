@@ -23,6 +23,7 @@ public:
 
     void SetDashVec(CrVector3 Vec);  //Œü‚«‚ðƒZƒbƒg
     bool SetEnd(); //‘–‚é‚Ì‚â‚ß‚é
+    bool SetEnd(CrVector3 vec); //‘–‚é‚Ì‚â‚ß‚é
 
     bool isDash()const; //‘–‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©
 
@@ -35,6 +36,7 @@ private:
     StateFunc           m_pStateFunc;
     int                 m_StateTimer;
     SpeedEffect         m_SpeedEffect;
+    Vector3             m_TurnViewVec;
 
     bool isHitWall();
     void UpdateSpeed();

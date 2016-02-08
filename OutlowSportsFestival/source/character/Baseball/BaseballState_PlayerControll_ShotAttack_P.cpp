@@ -3,12 +3,8 @@
 #include "Baseball_HitEvent.h"
 #include "BaseballState_PlayerControll_ShotAttack_P.h"
 
-#include "Computer/BaseballPlayerState_ComMove.h"
-
-#include "../../GameSystem/GameController.h"
 #include "../CharacterFunction.h"
 #include "../CharacterManager.h"
-#include "../CharacterEvasionClass.h"
 
 #include "../../Ball/UsualBall.h"
 #include "../../Ball/MilderHoming.h"
@@ -17,158 +13,336 @@
 #include "Sound/Sound.h"
 #include "../../GameSystem/GameController.h"
 
-//***************************************
-//　遠距離(投手)
-//***************************************
-class ShotAttackEvent_P;
-//　コンストラクタ
-BaseballState_PlayerControll_ShotAttack_P::BaseballState_PlayerControll_ShotAttack_P() :
-pTargetEnemy(nullptr), m_pShotAttackClass_P(nullptr)
-{
-
-}
-
+#include "../../Effect/EffectFactory.h"
 
 //　ステート開始
 void BaseballState_PlayerControll_ShotAttack_P::Enter(BaseballPlayer* b)
 {
-	// 遠距離(ピッチャー)クラス作成
-	m_pShotAttackClass_P = this->CreateShotAttackClass_P(b);
+    m_pChr = b;
+    m_StateTimer = 0;
 
+    m_pStateFunc = GetStateFunc(b->m_ChargeBallCount);
 }
 
 
 //　ステート実行
-void BaseballState_PlayerControll_ShotAttack_P::Execute(BaseballPlayer* b){
+void BaseballState_PlayerControll_ShotAttack_P::Execute(BaseballPlayer* b)
+{
+    ++m_StateTimer;
 
-	//　Playerならこっち
-	if (b->m_PlayerInfo.player_type == PlayerType::_Player)
-	{
-		// スティックの値セット
-		m_pShotAttackClass_P->SetStickValue(
-			controller::GetStickValue(controller::stick::left, b->m_PlayerInfo.number));
-		// 更新
-		if (m_pShotAttackClass_P->Update() == false)
-		{
-			return;
-		}
-	}
-	else
-	{
+    (this->*m_pStateFunc)();
+    
+    chr_func::XZMoveDown(b, 0.08f);
 
-		// 更新
-		if (m_pShotAttackClass_P->Update() == false)
-		{
-			return;
-		}
-
-
-	}
-
+    chr_func::UpdateAll(b, &BaseballHitEvent(b));
+    chr_func::CreateTransMatrix(b, &b->getNowModeModel()->m_TransMatrix);
 
 }
 
 //　ステート終了
-void BaseballState_PlayerControll_ShotAttack_P::Exit(BaseballPlayer* b){
-	delete m_pShotAttackClass_P;
+void BaseballState_PlayerControll_ShotAttack_P::Exit(BaseballPlayer* b)
+{
+    
 }
 
 
-//　遠距離クラス
-CharacterShotAttack* BaseballState_PlayerControll_ShotAttack_P::CreateShotAttackClass_P(BaseballPlayer* b){
-	class ShotAttackEvent_P :public CharacterShotAttack::Event{
-		BaseballPlayer* m_pBaseball;//　野球
-		MilderHoming* mild;
-	public:
-		//　ボール
-		BallBase::Params param;
-		//　ターゲット
-		Vector3 target;
-	public:
-		//　コンストラクタ
-		ShotAttackEvent_P(BaseballPlayer* pBaseball) :target(0, 0, 0),
-			m_pBaseball(pBaseball){}
-		//　更新
-		void Update()override{
+void BaseballState_PlayerControll_ShotAttack_P::State_Throw1()
+{
+    if (m_StateTimer == 1)
+    {
+        m_pChr->SetMotion(baseball_player::_mb_Atk2_P);
+    }
 
-			//　モデル更新
-			m_pBaseball->ModelUpdate(1);
+    if (m_StateTimer == 20)
+    {
+        Vector3 pos, move;
 
-			// 転送行列更新
-			chr_func::CreateTransMatrix(
-				m_pBaseball,
-                &m_pBaseball->getNowModeModel()->m_TransMatrix);
-		}
-	public:
-		// ダメージ判定開始 & ボール発射
-		void Shot()
-		{
-			//　遠距離攻撃(param計算)
-			BallBase::Params param;
+        pos = m_pChr->m_Params.pos;
+        pos += chr_func::GetFront(m_pChr)*2.0f;
+        pos.y = UsualBall::UsualBallShotY;
 
-			chr_func::GetFront(m_pBaseball, &param.move);
+        move = chr_func::GetFront(m_pChr)*0.55f;
 
-            param.pos = m_pBaseball->getNowModeModel()->GetWorldBonePos(40);
-			param.pos.y = UsualBall::UsualBallShotY;
+        CreateBall(pos, move);
 
-			param.pParent = m_pBaseball;
-			param.scale = 1.0f;
-			param.type = BallBase::Type::_Milder;
+        m_pChr->MinusChargeBallCount(1);
 
-			//生成
-            new UsualBall(
-                param,
-                DamageBase::Type::_WeekDamage,
-                5.0f,
-                MilderHoming::GetMilderHomingMove()
+        //SE
+        Sound::Play(Sound::Swing2);
+    }
+
+    if (m_StateTimer == 35)
+    {
+        m_pChr->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(m_pChr));
+    }
+
+    m_pChr->ModelUpdate(1);
+}
+
+void BaseballState_PlayerControll_ShotAttack_P::State_Throw2()
+{
+
+    if (m_StateTimer == 1)
+    {
+        m_pChr->SetMotion(baseball_player::_mb_Atk1_P);
+    }
+
+    if (m_StateTimer == 15 || m_StateTimer == 30)
+    {
+        Vector3 pos, move;
+
+        pos = m_pChr->m_Params.pos;
+        pos += chr_func::GetFront(m_pChr)*2.0f;
+        pos.y = UsualBall::UsualBallShotY;
+
+        move = chr_func::GetFront(m_pChr)*0.9f;
+
+        CreateBall(pos, move, m_StateTimer == 30, 5);
+
+        m_pChr->MinusChargeBallCount(1);
+
+        //SE
+        Sound::Play(Sound::Swing2);
+    }
+
+
+    if (m_StateTimer == 15)
+    {
+        m_pChr->SetMotion(baseball_player::_mb_Atk2_P);
+    }
+
+
+    if (m_StateTimer == 40)
+    {
+        m_pChr->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(m_pChr));
+    }
+
+    if (m_StateTimer < 30)
+    {
+        m_pChr->ModelUpdate(1.5f);
+    }
+    else
+    {
+        m_pChr->ModelUpdate(1.0f);
+    }
+}
+
+
+void BaseballState_PlayerControll_ShotAttack_P::State_Throw3()
+{
+    if (m_StateTimer == 1)
+    {
+        m_pChr->SetMotion(baseball_player::_mb_Atk1_P);
+    }
+
+    if (m_StateTimer == 20)
+    {
+        RADIAN rotate_angles[]=
+        {
+            D3DXToRadian(30),
+            0,
+            -D3DXToRadian(30)
+        };
+
+        Vector3 pos, move;
+
+        pos = m_pChr->m_Params.pos;
+        pos += chr_func::GetFront(m_pChr)*2.0f;
+        pos.y = UsualBall::UsualBallShotY;
+
+        move = chr_func::GetFront(m_pChr)*0.95f;
+
+        for (int i = 0; i < ARRAYSIZE(rotate_angles); ++i)
+        {
+            CreateBall(pos, Vector3RotateAxis(Vector3AxisY, rotate_angles[i], move), true, 12.0f);
+        }
+
+        m_pChr->MinusChargeBallCount(2);
+
+        //SE
+        Sound::Play(Sound::Beam2);
+    }
+
+    if (m_StateTimer == 35)
+    {
+        m_pChr->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(m_pChr));
+    }
+
+    m_pChr->ModelUpdate(1);
+}
+
+void BaseballState_PlayerControll_ShotAttack_P::State_Throw4()
+{
+    if (m_StateTimer == 1)
+    {
+        m_pChr->SetMotion(baseball_player::_mb_Atk1_P);
+    }
+
+    if (m_StateTimer == 15 || m_StateTimer == 30)
+    {
+        RADIAN rotate_angles[]=
+        {
+            D3DXToRadian(10),
+            D3DXToRadian(30)
+        };
+
+        Vector3 pos, move;
+
+        pos = m_pChr->m_Params.pos;
+        pos += chr_func::GetFront(m_pChr)*2.0f;
+        pos.y = UsualBall::UsualBallShotY;
+
+        move = chr_func::GetFront(m_pChr)*1.05f;
+
+        for (int i = 0; i < 2; ++i)
+        {
+            CreateBall(
+                pos,
+                Vector3RotateAxis(Vector3AxisY, rotate_angles[i] * ((m_StateTimer == 15) ? (1) : (-1)), move),
+                true,
+                16
                 );
+        }
 
-            //コントローラを振動
-            chr_func::SetControllerShock(
-                m_pBaseball,
-                0.5f,
-                0.15f
-                );
+        m_pChr->MinusChargeBallCount(2);
 
-            //スキルゲージ加算
-            chr_func::AddSkillGauge(m_pBaseball, UsualBall::AddSkillValueRatio);
-		}
+        //SE
+        Sound::Play(Sound::Beam2);
+    }
 
-		//　遠距離攻撃開始
-		void AttackStart()override{
-			//　☆モーション
-			m_pBaseball->SetMotion(baseball_player::_mb_Atk2_P);
-			//　効果音
-			Sound::Play(Sound::Swing3);
-		}
 
-		void AttackEnd()
+    if (m_StateTimer == 15)
+    {
+        m_pChr->SetMotion(baseball_player::_mb_Atk2_P);
+    }
 
-		{	//攻撃終了時に通常移動モードに戻る
-			if (m_pBaseball->m_PlayerInfo.player_type == PlayerType::_Player)
-			{
-				//　プレイヤー
-				m_pBaseball->SetState(new BaseballState_PlayerControll_Move());
-			}
-			else
-			{
-				//　コンピューター
-				m_pBaseball->SetState(new BaseballPlayerState_ComMove());
-			}
-		}
-	};
 
-	CharacterShotAttack::AttackParams atk;
+    if (m_StateTimer == 40)
+    {
+        m_pChr->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(m_pChr));
+    }
 
-	atk.AllFrame = 40;
-	atk.MaxTurnRadian = PI / 4;
-	atk.MoveDownSpeed = 0.8f;
-	atk.ShotFrame = 15;
+    if (m_StateTimer < 30)
+    {
+        m_pChr->ModelUpdate(1.5f);
+    }
+    else
+    {
+        m_pChr->ModelUpdate(1.0f);
+    }
+}
 
-	return m_pShotAttackClass_P = new CharacterShotAttack(
-		b,
-		new ShotAttackEvent_P(b),
-		atk,
-		new  BaseballHitEvent(b)
-		);
+
+void BaseballState_PlayerControll_ShotAttack_P::State_Throw5()
+{
+
+
+    if (m_StateTimer == 35)
+    {
+        m_pChr->SetState(BaseballState_PlayerControll_Move::GetPlayerControllMove(m_pChr));
+    }
+
+}
+
+
+void BaseballState_PlayerControll_ShotAttack_P::CreateBall(CrVector3 pos, CrVector3 move, bool Strong, float DamageValue)
+{
+    //ボール発射
+    BallBase::Params param;
+
+    param.move = move;
+    param.pos = pos;
+
+    //親を自分に
+    param.pParent = m_pChr;
+    //通常タイプ
+    param.type = BallBase::Type::_Usual;
+
+    //生成
+    {
+        UsualBall* pBall = new UsualBall(param, DamageBase::Type::_WeekDamage, DamageValue, UsualBall::GetUsualMoveControll());
+            
+        if (Strong)
+        {
+            pBall->Counter(m_pChr);
+        }
+    }
+
+    //コントローラを振動
+    chr_func::SetControllerShock(
+        m_pChr,
+        0.5f,
+        0.15f
+        );
+
+    //エフェクト
+    EffectFactory::ShotEffect(
+        m_pChr->m_PlayerInfo.number,
+        param.pos,
+        param.move
+        );
+
+    //スキルゲージ加算
+    chr_func::AddSkillGauge(m_pChr, UsualBall::AddSkillValueRatio);
+}
+
+
+
+void BaseballState_PlayerControll_ShotAttack_P::AngleControll()
+{
+    CharacterBase* pTarget = nullptr;
+    const RADIAN AngleSpeed = D3DXToRadian(4);
+
+    Vector3 ViewTargetPos = m_pChr->m_Params.pos;
+
+    if (chr_func::CalcAtkTarget(m_pChr, D3DXToRadian(30), 100, &pTarget))
+    {
+        ViewTargetPos = pTarget->m_Params.pos;
+    }
+    else
+    {
+        if (chr_func::isPlayer(m_pChr))
+        {
+            Vector2 Stick = controller::GetStickValue(controller::stick::left, m_pChr->m_PlayerInfo.number);
+
+            ViewTargetPos += Vector3(Stick.x, 0, Stick.y);
+        }
+        else
+        {
+            if (chr_func::CalcAtkTarget(m_pChr, PI, 100, &pTarget))
+            {
+                ViewTargetPos = pTarget->m_Params.pos;
+            }
+        }
+    }
+
+    chr_func::AngleControll(m_pChr, ViewTargetPos, AngleSpeed);
+}
+
+BaseballState_PlayerControll_ShotAttack_P::StateFunc 
+    BaseballState_PlayerControll_ShotAttack_P::GetStateFunc(int ChargeCount)const
+{
+        switch (ChargeCount)
+        {
+        case 1:
+            return &BaseballState_PlayerControll_ShotAttack_P::State_Throw1;
+
+        case 2:
+            return &BaseballState_PlayerControll_ShotAttack_P::State_Throw2;
+
+        case 3:
+            return &BaseballState_PlayerControll_ShotAttack_P::State_Throw3;
+
+        case 4:
+            return &BaseballState_PlayerControll_ShotAttack_P::State_Throw4;
+
+        case 5:
+            return &BaseballState_PlayerControll_ShotAttack_P::State_Throw5;
+
+        default:
+            MyAssert(false, "チャージカウントがおかしい！！");
+            break;
+        }
+
+        return &BaseballState_PlayerControll_ShotAttack_P::State_Throw1;
 }

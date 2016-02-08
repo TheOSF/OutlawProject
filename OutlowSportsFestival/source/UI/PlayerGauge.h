@@ -72,9 +72,12 @@ private:
         void Render();
     };
 
-    GaugeRenderer     m_Renderer;
-    CharacterBase*    m_pOwnerCharacter;
-    UINT              m_RoundCount;
+    GaugeRenderer       m_Renderer;
+    CharacterBase*      m_pOwnerCharacter;
+    UINT                m_RoundCount;
+    Vector2             m_DefaultPos;
+    RATIO               m_ShockPower;
+    float               m_PreFrameLife;
 
     bool Update();
     bool Msg(MsgType mt);

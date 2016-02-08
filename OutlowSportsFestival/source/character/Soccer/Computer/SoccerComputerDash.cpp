@@ -86,11 +86,19 @@ void SoccerState_ComputerControll_Dash::Exit(SoccerPlayer* s)
 Vector3 SoccerState_ComputerControll_Dash::State_Attack()
 {
     if (m_pMoveClass->isDash() &&
-        Vector3Distance(m_pChr->m_Params.pos, m_pTarget->m_Params.pos) < 25.0f&&
+        Vector3Distance(m_pChr->m_Params.pos, m_pTarget->m_Params.pos) < 15.0f&&
         Vector3Radian(chr_func::GetFront(m_pChr), m_pTarget->m_Params.pos - m_pChr->m_Params.pos) < D3DXToRadian(45)
         )
     {
-        m_pChr->SetState(new SoccerState_Sliding(m_pChr));
+        if (frand()<0.5f)
+        {
+            m_pChr->SetState(new SoccerState_PlayerControll_Attack(m_pChr));
+        }
+        else
+        {
+            m_pChr->SetState(new SoccerState_Sliding(m_pChr));
+        }
+        
     }
 
     if (frand() <= 0.005f && m_Timer > 30)

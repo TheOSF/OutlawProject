@@ -75,7 +75,7 @@ bool BaseballEquip::Msg(MsgType mt)
 
 //@‘•”õ
 void BaseballEquip::Install(MeshType mt)
-{
+{/*
 	switch (mt)
 	{
     case MeshType::Cap:
@@ -104,7 +104,7 @@ void BaseballEquip::Install(MeshType mt)
 
 	default:
 		break;
-	}
+	}*/
 
     m_pMeshRenderer = new MeshRenderer(m_pMesh, false, MeshRenderer::RenderType::UseColor);
 }

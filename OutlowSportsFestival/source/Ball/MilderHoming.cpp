@@ -830,7 +830,7 @@ UsualBall::MoveControll* MilderHoming::GetMilderHomingMove()
     class MilderHomingMoveClass :public UsualBall::MoveControll
     {
 
-        float acc = 0.21f;
+        float acc = 0.28f;
         CharacterBase* pTarget = nullptr;
         bool Countered = false;
     public:

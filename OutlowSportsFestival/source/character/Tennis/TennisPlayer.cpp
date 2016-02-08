@@ -66,6 +66,6 @@ bool TennisPlayer::isCanBoundBallAtk()
 
 void TennisPlayer::SetDontBoundBallAtkTimer()
 {
-    m_DontBoundBallAtkTimer = 5;
+    m_DontBoundBallAtkTimer = 12;
 }
 
